@@ -188,7 +188,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		String rightParameterType = parameterCondition.getRightParameterNode().getType();
 
-		if (!relationStatement.isRightParameterTypeAllowed(rightParameterType)) {
+		BasicParameterNode leftParameter = relationStatement.getLeftParameter();
+		String leftParameterType =  leftParameter.getType();
+		
+		if (!RelationStatementHelper.isRightParameterTypeAllowed(rightParameterType, leftParameterType)) {
 			return "Parameter type mismatch.";
 		}
 

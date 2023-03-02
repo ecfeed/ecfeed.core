@@ -896,57 +896,132 @@ public class ChoiceNodeHelper {
 		return new ArrayList<ConstraintNode>(result);
 	}
 
-	public static Set<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
 
-		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
-
-		if (basicParameterNode.isGlobalParameter()) {
-			return getMentioningTestCasesForGlobalChoice(choiceNodeNotFromTestCase, basicParameterNode);
-		}
-
-		return getMentioningTestCasesForLocalChoice(choiceNodeNotFromTestCase);
-
+		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
 	}
 
-	private static Set<TestCaseNode> getMentioningTestCasesForLocalChoice(ChoiceNode choiceNodeNotFromTestCase) {
+	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { // TODO MO-RE change result to List
+	//
+	//		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
+	//
+	//		if (basicParameterNode.isGlobalParameter()) {
+	//			return getMentioningTestCasesForGlobalChoice(choiceNodeNotFromTestCase, basicParameterNode);
+	//		}
+	//
+	//		return getMentioningTestCasesForLocalChoice(choiceNodeNotFromTestCase);
+	//	}
 
-		Set<TestCaseNode> result = new HashSet<>();
+	//	private static Set<TestCaseNode> getMentioningTestCasesForLocalChoice(ChoiceNode choiceNodeNotFromTestCase) {
+	//
+	//		Set<TestCaseNode> result = new HashSet<>();
+	//
+	//		MethodNode methodNode = MethodNodeHelper.findMethodNode(choiceNodeNotFromTestCase);
+	//
+	//		if (methodNode == null) {
+	//			return new HashSet<>();
+	//		}
+	//
+	//		accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+	//		return result;
+	//	}
 
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(choiceNodeNotFromTestCase);
+	//	private static Set<TestCaseNode> getMentioningTestCasesForGlobalChoice(
+	//			ChoiceNode choiceNodeNotFromTestCase,
+	//			BasicParameterNode basicParameterNode) {
+	//
+	//		Set<TestCaseNode> result = new HashSet<>();
+	//
+	//		List<BasicParameterNode> linkedParameterNodes = 
+	//				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+	//
+	//		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
+	//
+	//			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+	//			accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+	//		}
+	//
+	//		return result;
+	//	}
 
-		if (methodNode == null) {
-			return new HashSet<>();
+	//	private static void accumulateChoiceMentioningTestCases(
+	//			ChoiceNode choiceNodeNotFromTestCase,
+	//			MethodNode methodNode,
+	//			Set<TestCaseNode> result) {
+	//
+	//		List<TestCaseNode> testCaseNodes = methodNode.getMentioningTestCases(choiceNodeNotFromTestCase);
+	//		result.addAll(testCaseNodes);
+	//	}
+	//
+	private static List<TestCaseNode> getMentioningTestCases2(ChoiceNode choiceNode) { // TODO MO-RE to choice node helper - getMentioningTestCases
+
+		if (choiceNode.isPartOfGlobalParameter()) {
+			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNode);
 		}
 
-		accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
-		return result;
+		return calculateTestCasesToDeleteForLocalNode(choiceNode);
 	}
 
-	private static Set<TestCaseNode> getMentioningTestCasesForGlobalChoice(
-			ChoiceNode choiceNodeNotFromTestCase,
+	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
+
+		CompositeParameterNode compositeParameterNode = AbstractParameterNodeHelper.getTopComposite(globalChoiceNode);
+
+		if (compositeParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalComposite(compositeParameterNode);
+		}
+
+		BasicParameterNode basicParameterNode = BasicParameterNodeHelper.findBasicParameter(globalChoiceNode);
+
+		if (basicParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalBasicParameter(basicParameterNode);
+		}
+
+		return new ArrayList<>();
+	}
+
+	public static List<TestCaseNode> calculateTestCasesToDeleteForLocalNode(IAbstractNode abstractNode) { // TODO MO-RE rename
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
+
+		return methodNode.getTestCases();
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalComposite(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
+
+		List<CompositeParameterNode> linkedCompositeParameterNodes =
+				CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
+
+
+		for (CompositeParameterNode linkedCompositeParameterNode : linkedCompositeParameterNodes) {
+
+			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedCompositeParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(testCases);
+		}
+
+		return resultTestCaseNodesToDelete;
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalBasicParameter(
 			BasicParameterNode basicParameterNode) {
 
-		Set<TestCaseNode> result = new HashSet<>();
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
 
-		List<BasicParameterNode> linkedParameterNodes = 
+		List<BasicParameterNode> linkedBasicParameterNodes =
 				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
 
-		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
 
-			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
-			accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+		for (BasicParameterNode linkedBasicParameterNode : linkedBasicParameterNodes) {
+
+			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedBasicParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(testCases);
 		}
 
-		return result;
-	}
-
-	private static void accumulateChoiceMentioningTestCases(
-			ChoiceNode choiceNodeNotFromTestCase,
-			MethodNode methodNode,
-			Set<TestCaseNode> result) {
-
-		List<TestCaseNode> testCaseNodes = methodNode.getMentioningTestCases(choiceNodeNotFromTestCase);
-		result.addAll(testCaseNodes);
+		return resultTestCaseNodesToDelete;
 	}
 
 }

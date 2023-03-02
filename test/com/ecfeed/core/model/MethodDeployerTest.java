@@ -55,7 +55,7 @@ public class MethodDeployerTest {
 	public void deployMethodWithOneParameter() {
 
 		MethodNode sourceMethod = new MethodNode("method");
-		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
+		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true, null);
 		sourceMethod.addParameter(methodParameterNode);
 
 		NodeMapper mapper = new NodeMapper();
@@ -80,7 +80,7 @@ public class MethodDeployerTest {
 	public void deployMethodWithOneParameterAndChoice() {
 
 		MethodNode sourceMethod = new MethodNode("method");
-		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
+		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true, null);
 		sourceMethod.addParameter(methodParameterNode);
 
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
@@ -110,7 +110,7 @@ public class MethodDeployerTest {
 	public void deployMethodWithSimpleConstraint() {
 
 		MethodNode sourceMethod = new MethodNode("method");
-		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
+		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true, null);
 		sourceMethod.addParameter(methodParameterNode);
 
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
@@ -231,7 +231,7 @@ public class MethodDeployerTest {
 		assertEquals("S1:P2", name2);
 	}
 
-//	@Test
+	//	@Test
 	public void deployTwoLinkedParametersWithTheSameNames() {
 
 		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P1");
@@ -243,14 +243,14 @@ public class MethodDeployerTest {
 
 		// check
 
-//		assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
+		//		assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
 		String name1 = deployedParameters.get(0).getName();
 		assertEquals("P1", name1);
 	}
 
-//	@Test
+	//	@Test
 	public void deployTwoLinkedParametersWithTheSameNamesInStructures() {
 		MethodNode methodNode = createModelWithTwoLinkedParametersInCompositeParameters("P1", "P1");
 
@@ -258,12 +258,12 @@ public class MethodDeployerTest {
 		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
 
 		//int parametersCount = deployedMethod.getParametersCount();
-//		assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
+		//		assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
 		String name1 = deployedParameters.get(0).getName();
-		 assertEquals("P1", name1); //TODO MO-RE uncomment
-		
+		assertEquals("P1", name1); //TODO MO-RE uncomment
+
 		// TODO MO-RE check OTHER parameter
 	}
 
@@ -555,7 +555,7 @@ public class MethodDeployerTest {
 		nodesConstraint.addAll(constraint.getConstraint().getReferencedParameters().stream().map(e -> (AbstractNode) e).collect(Collectors.toSet()));
 		nodesConstraint.addAll(constraint.getConstraint().getReferencedChoices().stream().map(e -> (AbstractNode) e).collect(Collectors.toSet()));
 
-// The deployed constraint must contain only nodes included in the deployed method.
+		// The deployed constraint must contain only nodes included in the deployed method.
 
 		for (AbstractNode parameter : nodesConstraint) {
 			assertTrue(nodesDeployed.contains(parameter));
@@ -566,14 +566,14 @@ public class MethodDeployerTest {
 				.map(mapper::getMappedNodeSource)
 				.collect(Collectors.toSet());
 
-// The deployed (and reversed) constraint must contain only nodes included in the source method.
+		// The deployed (and reversed) constraint must contain only nodes included in the source method.
 
 		for (AbstractNode parameter : nodesConstraintMapped) {
 			assertTrue(nodesSource.contains(parameter));
 			assertFalse(nodesDeployed.contains(parameter));
 		}
 
-// The deployed (and reversed) constraint must contain only specific nodes included in the source constraint.
+		// The deployed (and reversed) constraint must contain only specific nodes included in the source constraint.
 
 		assertEquals(nodesConstraintMapped.size(), references.length);
 
@@ -683,16 +683,16 @@ public class MethodDeployerTest {
 						parameter2Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
 
 		compositeParameterNode2.addParameter(basicParameter2);
-		
+
 		// add not linked parameter
-		
+
 		BasicParameterNode basicParameter3 = 
 				new BasicParameterNode(
 						"OTHER", parameterType, "", false,	null,	null);
-		
+
 		compositeParameterNode2.addParameter(basicParameter3);
-		
+
 		return methodNode;
 	}
-	
+
 }

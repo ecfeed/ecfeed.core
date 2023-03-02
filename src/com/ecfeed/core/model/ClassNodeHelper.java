@@ -26,9 +26,14 @@ public class ClassNodeHelper {
 
 
 	public static BasicParameterNode addGlobalBasicParameterToClass(
-			ClassNode classNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
+			ClassNode classNode, 
+			String name, 
+			String type,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode globalParameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
+		BasicParameterNode globalParameterNode = 
+				BasicParameterNode.createGlobalParameter(name, type, modelChangeRegistrator);
+		
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
@@ -158,7 +163,7 @@ public class ClassNodeHelper {
 
 		String classSignature = createSignature(classNode, extLanguageManager);
 
-//		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
+		//		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
 
 		String message =
 				"Class: "
@@ -199,17 +204,18 @@ public class ClassNodeHelper {
 	}
 
 	public static ClassNode findClassNode(IAbstractNode anyNode) {
+
 		IAbstractNode parent = anyNode;
-		
+
 		while (parent != null) {
-			
+
 			if (parent instanceof ClassNode) {
 				return (ClassNode) parent;
 			}
-			
+
 			parent = parent.getParent();
 		}
-		
+
 		return null;
 	}
 }

@@ -10,21 +10,32 @@
 
 package com.ecfeed.core.serialization;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ListOfStrings;
-import org.junit.Test;
+import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.Test;
+
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ModelConverter;
+import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.serialization.ModelParser;
+import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ListOfStrings;
 
 public class ModelSerializerTest {
 
@@ -40,8 +51,8 @@ public class ModelSerializerTest {
 
 		model.addClass(new ClassNode("com.example.TestClass1", null));
 		model.addClass(new ClassNode("com.example.TestClass2", null));
-		model.addParameter(new BasicParameterNode("globalParameter1", "int", null));
-		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null));
+		model.addParameter(new BasicParameterNode("globalParameter1", "int", null, false, null));
+		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null, false, null));
 
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
@@ -59,7 +70,7 @@ public class ModelSerializerTest {
 	}
 
 	@Test
-	public void classSerializerTestWithoutAndroidBaseRunner(){
+	public void AAclassSerializerTestWithoutAndroidBaseRunner(){
 		classSerializerTest(false, null, 1);
 	}
 
@@ -71,21 +82,24 @@ public class ModelSerializerTest {
 	}
 
 	private void classSerializerTest(boolean runOnAndroid, String androidBaseRunner, int version){
+		
+		RootNode model = new RootNode("model", null, version);
+		
 		ClassNode classNode = new ClassNode("com.example.TestClass", null);
+		model.addClass(classNode);
+		
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
-		classNode.addParameter(new BasicParameterNode("parameter1", "int", null));
-		classNode.addParameter(new BasicParameterNode("parameter2", "float", null));
-		classNode.addParameter(new BasicParameterNode("parameter3", "com.example.UserType", null));
-
-		RootNode model = new RootNode("model", null, version);
-		model.addClass(classNode);
+		classNode.addParameter(new BasicParameterNode("parameter1", "int", null, false, null));
+		classNode.addParameter(new BasicParameterNode("parameter2", "float", null, false, null));
+		classNode.addParameter(new BasicParameterNode("parameter3", "com.example.UserType", null, false, null));
 
 		OutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
 		try {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
+			
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 

@@ -81,7 +81,9 @@ public class ModelSerializerWithConstraintsTest {
 
         MethodNode m1 = ClassNodeHelper.addMethodToClass(c1, "Method1", null);
 
-        BasicParameterNode m1p1 = new BasicParameterNode("M1P1", "int", "0", false);
+        BasicParameterNode m1p1 = 
+        		//BasicParameterNode.createLocalStandardParameter("M1P1", "int", null, null);
+        		new BasicParameterNode("M1P1", "int", "0", false, null);
         ChoiceNode m1p1c1 =
                 MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C1", "1");
         ChoiceNode m1p1c2 =
@@ -105,7 +107,7 @@ public class ModelSerializerWithConstraintsTest {
 //        ChoiceNode m1p22c3 =
                 MethodParameterNodeHelper.addChoiceToMethodParameter(m1p22, "M1P22C3", "3");
 
-        BasicParameterNode m1p3 = new BasicParameterNode("M1P3", "int", "0", false);
+        BasicParameterNode m1p3 = new BasicParameterNode("M1P3", "int", "0", false, null);
 //        ChoiceNode m1p3c1 =
                 MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C1", "1");
 //        ChoiceNode m1p3c2 =
@@ -129,7 +131,7 @@ public class ModelSerializerWithConstraintsTest {
 //        ChoiceNode m1p42c3 =
                 MethodParameterNodeHelper.addChoiceToMethodParameter(m1p42, "M1P42C3", "3");
 
-        BasicParameterNode m1p5 = new BasicParameterNode("M1P5", "int", "0", false);
+        BasicParameterNode m1p5 = new BasicParameterNode("M1P5", "int", "0", false, null);
 //        ChoiceNode m1p5c1 =
                 MethodParameterNodeHelper.addChoiceToMethodParameter(m1p5, "M1P5C1", "1");
 //        ChoiceNode m1p5c2 =

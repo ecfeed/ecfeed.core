@@ -139,32 +139,6 @@ public abstract class AbstractNodeHelper  {
 		return null;
 	}
 
-	public static IAbstractNode findRoot(AbstractNode abstractNode) {
-
-		IAbstractNode parent = abstractNode.getParent();
-
-		if (parent == null) {
-			return abstractNode;
-		}
-
-		return parent.getRoot();
-	}
-
-	public static RootNode findRootNode(IAbstractNode abstractNode) { // TODO MO-RE move to root node helper
-
-		IAbstractNode parent = abstractNode.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-
-		if (parent instanceof RootNode) {
-			return (RootNode) parent;
-		}
-
-		return findRootNode(parent);
-	}
-
 	public static ClassNode findClassNode(IAbstractNode abstractNode) { // TODO MO-RE move to classNodeHelper
 
 		IAbstractNode parent = abstractNode.getParent();

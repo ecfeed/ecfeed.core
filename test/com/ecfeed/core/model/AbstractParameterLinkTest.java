@@ -149,7 +149,7 @@ public class AbstractParameterLinkTest {
     private void getModel() {
         rootNode = new RootNode("Root", null);
 
-        rootBasic = new BasicParameterNode("Basic", "int", null);
+        rootBasic = new BasicParameterNode("Basic", "int", "0", false, null);
         rootNode.addParameter(rootBasic);
         rootBasicChoice = new ChoiceNode("B1", "1");
         rootBasic.addChoice(rootBasicChoice);
@@ -157,7 +157,7 @@ public class AbstractParameterLinkTest {
         rootComposite = new CompositeParameterNode("Composite", null);
         rootNode.addParameter(rootComposite);
 
-        rootCompositeBasic = new BasicParameterNode("CompositeBasic", "int", null);
+        rootCompositeBasic = new BasicParameterNode("CompositeBasic", "int", "0", false, null);
         rootComposite.addParameter(rootCompositeBasic);
         rootCompositeBasicChoice = new ChoiceNode("CB1", "2");
         rootCompositeBasic.addChoice(rootCompositeBasicChoice);
@@ -165,7 +165,7 @@ public class AbstractParameterLinkTest {
         rootCompositeComposite = new CompositeParameterNode("CompositeComposite", null);
         rootComposite.addParameter(rootCompositeComposite);
 
-        rootCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", null);
+        rootCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", "0", false, null);
         rootCompositeComposite.addParameter(rootCompositeCompositeBasic);
         rootCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         rootCompositeCompositeBasic.addChoice(rootCompositeCompositeBasicChoice);
@@ -173,7 +173,7 @@ public class AbstractParameterLinkTest {
         classNode = new ClassNode("Class", null);
         rootNode.addClass(classNode);
 
-        classBasic = new BasicParameterNode("Basic", "int", null);
+        classBasic = new BasicParameterNode("Basic", "int", "0", false, null);
         classNode.addParameter(classBasic);
         classBasicChoice = new ChoiceNode("B1", "1");
         classBasic.addChoice(classBasicChoice);
@@ -181,7 +181,7 @@ public class AbstractParameterLinkTest {
         classComposite = new CompositeParameterNode("Composite", null);
         classNode.addParameter(classComposite);
 
-        classCompositeBasic = new BasicParameterNode("CompositeBasic", "int", null);
+        classCompositeBasic = new BasicParameterNode("CompositeBasic", "int", "0", false, null);
         classComposite.addParameter(classCompositeBasic);
         classCompositeBasicChoice = new ChoiceNode("CB1", "2");
         classCompositeBasic.addChoice(classCompositeBasicChoice);
@@ -189,14 +189,14 @@ public class AbstractParameterLinkTest {
         classCompositeComposite = new CompositeParameterNode("CompositeComposite", null);
         classComposite.addParameter(classCompositeComposite);
 
-        classCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", null);
+        classCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", "0", false, null);
         classCompositeComposite.addParameter(classCompositeCompositeBasic);
         classCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         classCompositeCompositeBasic.addChoice(classCompositeCompositeBasicChoice);
 
         methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 
-        methodBasic = new BasicParameterNode("MethodBasic", "int", null);
+        methodBasic = new BasicParameterNode("MethodBasic", "int", "0", false, null);
         methodNode.addParameter(methodBasic);
         methodBasicChoice = new ChoiceNode("MB1", "4");
         methodBasic.addChoice(methodBasicChoice);
@@ -204,7 +204,7 @@ public class AbstractParameterLinkTest {
         methodComposite = new CompositeParameterNode("MethodComposite", null);
         methodNode.addParameter(methodComposite);
 
-        methodCompositeBasic = new BasicParameterNode("MethodCompositeBasic", "int", null);
+        methodCompositeBasic = new BasicParameterNode("MethodCompositeBasic", "int", "0", false, null);
         methodComposite.addParameter(methodCompositeBasic);
         methodCompositeBasicChoice = new ChoiceNode("MCB1", "5");
         methodCompositeBasic.addChoice(methodCompositeBasicChoice);

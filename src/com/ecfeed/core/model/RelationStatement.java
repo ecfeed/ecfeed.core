@@ -18,7 +18,6 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -366,7 +365,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			BasicParameterNode rightParameter = parameterCondition.getRightParameterNode();
 
-			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
+			BasicParameterNode leftParameter = getLeftParameter();
+			String leftParameterType =  leftParameter.getType();
+			
+			if (!RelationStatementHelper.isRightParameterTypeAllowed(rightParameter.getType(), leftParameterType)) {
 				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
 			}
 		}
@@ -412,49 +414,49 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getChoices(methodParameterNode);
 	}
 
-	public boolean isRightParameterTypeAllowed(String rightParameterType) {
-
-		BasicParameterNode leftParameter = getLeftParameter();
-		String leftParameterType =  leftParameter.getType();
-
-		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
-				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
-				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-
-			return false;
-		}
-
-		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
-				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
-				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		return true;
-	}
+//	public boolean isRightParameterTypeAllowed(String rightParameterType) {
+//
+//		BasicParameterNode leftParameter = getLeftParameter();
+//		String leftParameterType =  leftParameter.getType();
+//
+//		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+//				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+//				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
+//				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
+//				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
+//				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
+//				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+//
+//			return false;
+//		}
+//
+//		return true;
+//	}
 
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {

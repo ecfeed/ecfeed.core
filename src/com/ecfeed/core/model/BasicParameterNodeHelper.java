@@ -136,7 +136,7 @@ public class BasicParameterNodeHelper {
 
 		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
-	
+
 	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {
 		MethodNode parent = MethodNodeHelper.findMethodNode(parameterParent);
 
@@ -151,7 +151,7 @@ public class BasicParameterNodeHelper {
 				return parameter;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -292,7 +292,7 @@ public class BasicParameterNodeHelper {
 
 		Set<ConstraintNode> result = new HashSet<>();
 
-		RootNode rootNode = AbstractNodeHelper.findRootNode(parameter);
+		RootNode rootNode = RootNodeHelper.findRootNode(parameter);
 
 		getMentioningConstraintsRecursive(rootNode, parameter, result);
 
@@ -442,9 +442,9 @@ public class BasicParameterNodeHelper {
 		if (parameterParent == null || parameterName == null) {
 			return null;
 		}
-		
+
 		List<BasicParameterNode> parameters = new ArrayList<>();
-		
+
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
 
 		for (BasicParameterNode parameter : parameters) {
@@ -453,6 +453,22 @@ public class BasicParameterNodeHelper {
 			if (name.equals(parameterName)) {
 				return parameter;
 			}
+		}
+
+		return null;
+	}
+
+	public static BasicParameterNode findBasicParameter(ChoiceNode globalChoiceNode) {
+
+		IAbstractNode parent = globalChoiceNode;
+
+		while (parent != null) {
+
+			if (parent instanceof BasicParameterNode) {
+				return (BasicParameterNode) parent;
+			}
+
+			parent = parent.getParent();
 		}
 
 		return null;

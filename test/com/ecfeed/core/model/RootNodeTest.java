@@ -108,8 +108,8 @@ public class RootNodeTest{
 		class2.setName("name");
 		assertTrue(r1.isMatch(r2));
 
-		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", null);
-		BasicParameterNode parameter2 = new BasicParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter1", "int", "0", false, null);
 
 		r1.addParameter(parameter1);
 		assertFalse(r1.isMatch(r2));

@@ -33,6 +33,40 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	private ChoicesListHolder fChoicesListHolder;
 
+	public static BasicParameterNode createGlobalParameter(
+			String name, String type, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+
+		return globalParameterNode;
+	}
+
+	public static BasicParameterNode createLocalStandardParameter(
+			String name, 
+			String type,
+			BasicParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, null, false, link, modelChangeRegistrator);
+
+		return globalParameterNode;
+	}
+
+	public static BasicParameterNode createLocalExpectedParameter(
+			String name, 
+			String type,
+			String defaultValue,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, defaultValue, true, null, modelChangeRegistrator);
+
+		return globalParameterNode;
+	}
+
 	public BasicParameterNode(
 			String name,
 			String type,
@@ -55,7 +89,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		createDefaultProperties();
 	}
 
-	public BasicParameterNode(
+	public BasicParameterNode( // TODO MO-RE make private and use factory method instead (also other constructors)
 			String name,
 			String type,
 			String defaultValue,
@@ -63,23 +97,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		this(name, type, defaultValue, expected, null, modelChangeRegistrator);
-	}
-
-	public BasicParameterNode(
-			String name,
-			String type,
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		this(name, type, null, false, null, modelChangeRegistrator);
-	}
-
-	public BasicParameterNode(
-			String name,
-			String type,
-			String defaultValue,
-			boolean expected) {
-
-		this(name, type, defaultValue, expected, null);
 	}
 
 	public BasicParameterNode(
@@ -93,25 +110,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		addChoices(source.getChoices());
 	}
 
-	public BasicParameterNode(BasicParameterNode source,
-			String defaultValue, boolean expected) {
-		this(source, defaultValue, expected, null);
-	}
-
-	public BasicParameterNode(BasicParameterNode source) {
-
-		this(
-				source.getName(),
-				source.getType(),
-				source.getDefaultValue(),
-				source.fExpected,
-				source.getLinkToGlobalParameter(),
-				source.getModelChangeRegistrator());
-
-		for(ChoiceNode choice : source.getChoices()){
-			addChoice(choice.makeClone());
-		}
-	}
+//	private BasicParameterNode(BasicParameterNode source) {
+//
+//		this(
+//				source.getName(),
+//				source.getType(),
+//				source.getDefaultValue(),
+//				source.fExpected,
+//				source.getLinkToGlobalParameter(),
+//				source.getModelChangeRegistrator());
+//
+//		for(ChoiceNode choice : source.getChoices()){
+//			addChoice(choice.makeClone());
+//		}
+//	}
 
 	@Override
 	public void setName(String name) {
@@ -157,8 +169,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		return parameter;
 	}
-	
-// TODO LATEST [REFACTOR]	
+
+	// TODO LATEST [REFACTOR]	
 	public BasicParameterNode createCopy(NodeMapper mapper) {
 		BasicParameterNode parameter = makeClone(mapper);
 

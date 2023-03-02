@@ -27,8 +27,8 @@ public class CopyNodeTest{
 		RootNode root = new RootNode("name", null);
 		ClassNode class1 = new ClassNode("class1", null);
 		ClassNode class2 = new ClassNode("class2", null);
-		BasicParameterNode par1 = new BasicParameterNode("par1", "int", null);
-		BasicParameterNode par2 = new BasicParameterNode("par2", "int", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", false, null);
 		root.addClass(class1);
 		root.addClass(class2);
 		root.addParameter(par1);
@@ -43,8 +43,8 @@ public class CopyNodeTest{
 		ClassNode classNode = new ClassNode("Class", null);
 		MethodNode method1 = new MethodNode("method1", null);
 		MethodNode method2 = new MethodNode("method2", null);
-		BasicParameterNode par1 = new BasicParameterNode("par1", "int", null);
-		BasicParameterNode par2 = new BasicParameterNode("par2", "int", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", false, null);
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 		classNode.addParameter(par1);
@@ -83,7 +83,7 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyGlobalParameterTest(){
-		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
 		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);

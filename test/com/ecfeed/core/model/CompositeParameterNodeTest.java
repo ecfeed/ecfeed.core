@@ -52,8 +52,8 @@ public class CompositeParameterNodeTest {
 		
 		// add two parameters
 
-		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", null);
-		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName2, "int", null);
+		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", "0", false, null);
+		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName2, "int", "0", false, null);
 		
 		compositeParameterNode.addParameter(basicParameterNode2);
 		compositeParameterNode.addParameter(basicParameterNode1, 0);
@@ -136,11 +136,11 @@ public class CompositeParameterNodeTest {
 		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode(parameterName1, null);
 		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
 		
-		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", null);
+		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", "0", false, null);
 		compositeParameterNode1.addParameter(basicParameterNode1);
 		assertFalse(compositeParameterNode1.isMatch(compositeParameterNode2));
 		
-		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName1, "int", null);
+		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName1, "int", "0", false, null);
 		compositeParameterNode2.addParameter(basicParameterNode2);
 		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
 		

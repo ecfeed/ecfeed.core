@@ -20,14 +20,17 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
@@ -149,8 +152,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -250,8 +252,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -375,8 +376,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -556,8 +556,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case 
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -660,6 +659,71 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
+	public void choiceRemoveFromGlobalLinkedParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// global basic parameter
+
+		BasicParameterNode globalBasicParameterNode = 
+				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
+
+		// global choice
+
+		ChoiceNode globalChoiceNode = 
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(globalBasicParameterNode, "GC1", "A", null);
+
+		// method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// local parameter linked to global
+
+		BasicParameterNode localBasicParameterNode = MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "String", "0", null);
+		localBasicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
+
+		// test case
+
+		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {globalChoiceNode});
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
+
+		// initial checks
+
+		assertEquals(1, globalBasicParameterNode.getChoices().size());
+		assertEquals(1, methodNode.getParameters().size());
+		assertEquals(1, methodNode.getTestCases().size());
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(globalChoiceNode);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
+
+		assertEquals(0, globalBasicParameterNode.getChoices().size());
+		assertEquals(1, methodNode.getParameters().size());
+		assertEquals(0, methodNode.getTestCases().size());
+
+		// reverse
+
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		assertEquals(1, globalBasicParameterNode.getChoices().size());
+		assertEquals(1, methodNode.getParameters().size());
+		assertEquals(1, methodNode.getTestCases().size());
+	}
+
+	@Test
 	public void basicParameterRemoveFromNestedStructure() {
 
 		RootNode rootNode = new RootNode("Root", null);
@@ -710,8 +774,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -752,7 +815,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void basicParameterGlobalRemove() {
+	public void basicParameterGlobalRemove2() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -808,8 +871,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -991,8 +1053,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		//		Root
 		//		GS11
@@ -1129,8 +1190,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -1222,8 +1282,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-		methodNode.addTestCase(testCaseNode);
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
 
 		// copy parameters to deployed parameters
 
@@ -1500,9 +1559,9 @@ public class GenericRemoveNodesOperationTest {
 		GenericRemoveNodesProcessorOfNodes genericRemoveNodesProcessorOfNodes =
 				new GenericRemoveNodesProcessorOfNodes(
 						nodesToDelete, new TypeAdapterProviderForJava(), true, new ExtLanguageManagerForJava());
-		
+
 		NodesByType processedNodesToDelete = genericRemoveNodesProcessorOfNodes.getProcessedNodes();
-		
+
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				new GenericRemoveNodesOperation(
 						processedNodesToDelete,

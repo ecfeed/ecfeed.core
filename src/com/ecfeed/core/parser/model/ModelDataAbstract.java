@@ -172,9 +172,9 @@ abstract class ModelDataAbstract implements ModelData {
             if (node instanceof MethodNode) {
             	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
             } else if (node instanceof ClassNode) {
-            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else if (node instanceof RootNode) {
-            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else {
             	throw new IllegalArgumentException("The node type is not supported.");
             }
