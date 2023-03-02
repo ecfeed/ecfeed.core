@@ -124,7 +124,7 @@ public class CompositeParameterNodeHelper {
 
 	private static IAbstractNode findStartNode(AbstractParameterNode globParameterNode) {
 
-		ClassNode classNode = AbstractNodeHelper.findClassNode(globParameterNode);
+		ClassNode classNode = ClassNodeHelper.findClassNode(globParameterNode);
 
 		if (classNode != null) {
 			return classNode;
