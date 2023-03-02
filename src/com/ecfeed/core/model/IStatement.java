@@ -17,18 +17,22 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public interface IStatement{
-	public String createSignature(IExtLanguageManager extLanguageManager);
-	public EvaluationResult evaluate(List<ChoiceNode> values);
-	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices);
-	public boolean isEqualTo(IStatement statement);
-	public Object accept(IStatementVisitor visitor) throws Exception;
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
-	public boolean isAmbiguous(List<List<ChoiceNode>> values);
-	public List<ChoiceNode> getChoices();
-	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
-	public List<String> getLabels(BasicParameterNode methodParameterNode);
-	public void derandomize();
-	public AbstractStatement makeClone();
+	String createSignature(IExtLanguageManager extLanguageManager);
+	EvaluationResult evaluate(List<ChoiceNode> values);
+	boolean setExpectedValues(List<ChoiceNode> testCaseChoices);
+	boolean isEqualTo(IStatement statement);
+	Object accept(IStatementVisitor visitor) throws Exception;
+	boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
+	boolean isAmbiguous(List<List<ChoiceNode>> values);
+	List<ChoiceNode> getChoices();
+	List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
+	List<String> getLabels(BasicParameterNode methodParameterNode);
+	void derandomize();
+	AbstractStatement makeClone();
 	AbstractStatement createCopy(NodeMapper mapper);
+	String getLeftOperandName();
+	BasicParameterNode getLeftParameter();
+	CompositeParameterNode getLeftParameterLinkingContext();
+	boolean mentions(int methodParameterIndex);
 	
 }
