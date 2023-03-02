@@ -138,19 +138,4 @@ public abstract class AbstractNodeHelper  {
 
 		return null;
 	}
-
-	public static ClassNode findClassNode(IAbstractNode abstractNode) { // TODO MO-RE move to classNodeHelper
-
-		IAbstractNode parent = abstractNode.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-
-		if (parent instanceof ClassNode) {
-			return (ClassNode) parent;
-		}
-
-		return findClassNode(parent);
-	}
 }

@@ -158,42 +158,6 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
-	public static String getCompositeName( // TODO MO-RE there are methods getQualifiedName in this module
-			AbstractParameterNode abstractParameterNode, 
-			IExtLanguageManager extLanguageManager) {
-
-		AbstractParameterNode currentParameterNode = abstractParameterNode;
-		String compositeName = "";
-
-		for (;;) {
-
-			String currentParameterNodeNameInExtLanguage = getParameterName(currentParameterNode, extLanguageManager);
-
-			if (StringHelper.isNullOrEmpty(compositeName)) {
-				compositeName = currentParameterNodeNameInExtLanguage; 
-			} else {
-				compositeName = currentParameterNodeNameInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
-			}
-
-			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-
-			if (parametersParentNode == null || 
-					parametersParentNode instanceof MethodNode || 
-					parametersParentNode instanceof ClassNode || 
-					parametersParentNode instanceof RootNode) {
-
-				return compositeName;
-			}
-
-			if (parametersParentNode instanceof CompositeParameterNode) {
-				currentParameterNode = (AbstractParameterNode) parametersParentNode;
-				continue;
-			}
-
-			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
-		}
-	}
-
 	private static String getParameterName(AbstractParameterNode currentParameterNode,
 			IExtLanguageManager extLanguageManager) {
 

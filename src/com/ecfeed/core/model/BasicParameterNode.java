@@ -34,34 +34,34 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private ChoicesListHolder fChoicesListHolder;
 
 	public static BasicParameterNode createGlobalParameter(
-			String name, String type, 
+			String name, String type,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode globalParameterNode = 
+		BasicParameterNode globalParameterNode =
 				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
 
 		return globalParameterNode;
 	}
 
 	public static BasicParameterNode createLocalStandardParameter(
-			String name, 
+			String name,
 			String type,
 			BasicParameterNode link,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode globalParameterNode = 
+		BasicParameterNode globalParameterNode =
 				new BasicParameterNode (name, type, null, false, link, modelChangeRegistrator);
 
 		return globalParameterNode;
 	}
 
 	public static BasicParameterNode createLocalExpectedParameter(
-			String name, 
+			String name,
 			String type,
 			String defaultValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode globalParameterNode = 
+		BasicParameterNode globalParameterNode =
 				new BasicParameterNode (name, type, defaultValue, true, null, modelChangeRegistrator);
 
 		return globalParameterNode;
@@ -170,7 +170,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return parameter;
 	}
 
-	// TODO LATEST [REFACTOR]	
 	public BasicParameterNode createCopy(NodeMapper mapper) {
 		BasicParameterNode parameter = makeClone(mapper);
 
@@ -690,11 +689,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	@Override
 	public BasicParameterNode getLinkDestination() {
 
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((BasicParameterNode) getLinkToGlobalParameter()).getLinkDestination();
-		}
-
-		return this;
+		return (BasicParameterNode) super.getLinkDestination();
 	}
-
 }

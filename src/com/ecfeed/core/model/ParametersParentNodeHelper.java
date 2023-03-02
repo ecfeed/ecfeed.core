@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -130,4 +131,53 @@ public class ParametersParentNodeHelper {
 		return parameterTypes;
 	}
 
+//----------------------------------------------------------------------------
+
+	public static List<AbstractParameterNode> getNestedAbstractParameters(IParametersParentNode parent, boolean follow) {
+		List<AbstractParameterNode> nodes = new ArrayList<>();
+
+		if (parent instanceof AbstractParameterNode) {
+			AbstractParameterNode parsedParent = (AbstractParameterNode) parent;
+
+			if (follow) {
+				parsedParent = parsedParent.getLinkDestination();
+			}
+
+			for (AbstractParameterNode node : ((IParametersParentNode) parsedParent).getParameters()) {
+
+				nodes.add(node);
+
+				if (node instanceof CompositeParameterNode) {
+					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
+				}
+			}
+		} else {
+			for (IAbstractNode node : parent.getChildren()) {
+
+				if (node instanceof BasicParameterNode) {
+					nodes.add((AbstractParameterNode) node);
+				} else if (node instanceof IParametersParentNode) {
+					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
+				}
+			}
+		}
+
+		return nodes;
+	}
+
+	public static List<BasicParameterNode> getNestedBasicParameters(IParametersParentNode parent, boolean follow) {
+
+		return getNestedAbstractParameters(parent, follow).stream()
+				.filter(e -> e instanceof BasicParameterNode)
+				.map(e -> (BasicParameterNode) e)
+				.collect(Collectors.toList());
+	}
+
+	public static List<CompositeParameterNode> getNestedCompositeParameters(IParametersParentNode parent, boolean follow) {
+
+		return getNestedAbstractParameters(parent, follow).stream()
+				.filter(e -> e instanceof CompositeParameterNode)
+				.map(e -> (CompositeParameterNode) e)
+				.collect(Collectors.toList());
+	}
 }
