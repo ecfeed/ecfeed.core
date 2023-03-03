@@ -197,7 +197,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return compositeMethodParameterNode2;
 	}
 	
-	public static BasicParameterNode addLinkedParameterToMethod(
+	public static BasicParameterNode addLinkedParameterToMethod( // TODO MO-RE create usage of this function in method node helper: addNewLinkedParameter() 
 			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);

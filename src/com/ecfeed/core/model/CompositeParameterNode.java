@@ -380,10 +380,10 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
 
-		//		if (isLinked()) {
-		//			return new ArrayList<>();
-		//		}
-		//
+		if (isLinked()) {
+			return new ArrayList<>();
+		}
+
 		return getChildren();
 	}
 
