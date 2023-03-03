@@ -52,17 +52,15 @@ public class NodesByType {
 
 	public NodesByType(NodesByType other) {
 
-		fClasses = other.getClasses();
-		fMethods = other.getMethods();
-		fBasicParameters = other.getBasicParameters();
-		fCompositeParameters = other.getCompositeParameters();
-		fChoices = other.getChoices();
-		fConstraints = other.getConstraints();
-		fTestSuites = other.getTestSuites();
-		fTestCases = other.getTestCases();
+		fClasses = new HashSet<>(other.getClasses());
+		fMethods = new HashSet<>(other.getMethods());
+		fBasicParameters = new HashSet<>(other.getBasicParameters());
+		fCompositeParameters = new HashSet<>(other.getCompositeParameters());
+		fChoices = new HashSet<>(other.getChoices());
+		fConstraints = new HashSet<>(other.getConstraints());
+		fTestSuites = new HashSet<>(other.getTestSuites());
+		fTestCases = new HashSet<>(other.getTestCases());
 	}
-
-
 
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
 

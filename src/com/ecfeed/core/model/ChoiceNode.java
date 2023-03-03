@@ -575,4 +575,9 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return false;
 	}
 
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+
 }

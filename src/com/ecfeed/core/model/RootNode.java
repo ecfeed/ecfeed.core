@@ -296,4 +296,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		return globalParameterNodes;
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

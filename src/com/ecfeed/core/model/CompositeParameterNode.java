@@ -57,7 +57,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public String getNonQualifiedName() {
-		
+
 		return getName();
 	}
 
@@ -180,7 +180,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParametersCount();
 	}
-	
+
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
@@ -192,13 +192,13 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParameter(parameterIndex);
 	}
-	
+
 	@Override
 	public AbstractParameterNode findParameter(String parameterName) {
-		
+
 		return fParametersHolder.findParameter(parameterName);
 	}
-	
+
 	@Override
 	public int getParameterIndex(String parameterName) {
 
@@ -376,4 +376,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return (CompositeParameterNode) super.getLinkDestination();
 	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+
+		//		if (isLinked()) {
+		//			return new ArrayList<>();
+		//		}
+		//
+		return getChildren();
+	}
+
 }

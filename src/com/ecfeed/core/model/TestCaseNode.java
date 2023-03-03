@@ -295,5 +295,11 @@ public class TestCaseNode extends AbstractNode {
 			index++;
 		}
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 
 }

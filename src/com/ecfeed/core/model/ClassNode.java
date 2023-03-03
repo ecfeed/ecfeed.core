@@ -413,4 +413,10 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		return null;
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

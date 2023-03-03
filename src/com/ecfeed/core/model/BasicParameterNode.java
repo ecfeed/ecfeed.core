@@ -110,20 +110,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		addChoices(source.getChoices());
 	}
 
-//	private BasicParameterNode(BasicParameterNode source) {
-//
-//		this(
-//				source.getName(),
-//				source.getType(),
-//				source.getDefaultValue(),
-//				source.fExpected,
-//				source.getLinkToGlobalParameter(),
-//				source.getModelChangeRegistrator());
-//
-//		for(ChoiceNode choice : source.getChoices()){
-//			addChoice(choice.makeClone());
-//		}
-//	}
+	//	private BasicParameterNode(BasicParameterNode source) {
+	//
+	//		this(
+	//				source.getName(),
+	//				source.getType(),
+	//				source.getDefaultValue(),
+	//				source.fExpected,
+	//				source.getLinkToGlobalParameter(),
+	//				source.getModelChangeRegistrator());
+	//
+	//		for(ChoiceNode choice : source.getChoices()){
+	//			addChoice(choice.makeClone());
+	//		}
+	//	}
 
 	@Override
 	public void setName(String name) {
@@ -690,5 +690,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public BasicParameterNode getLinkDestination() {
 
 		return (BasicParameterNode) super.getLinkDestination();
+	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+
+		if (isLinked()) {
+			return new ArrayList<>();
+		}
+
+		return getChildren();
 	}
 }

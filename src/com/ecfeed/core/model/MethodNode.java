@@ -879,4 +879,10 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

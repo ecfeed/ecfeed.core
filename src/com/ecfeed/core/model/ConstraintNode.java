@@ -420,4 +420,9 @@ public class ConstraintNode extends AbstractNode {
 		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}
 
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

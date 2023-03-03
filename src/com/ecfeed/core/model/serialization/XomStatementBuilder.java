@@ -92,22 +92,22 @@ public class XomStatementBuilder implements IStatementVisitor {
 		Attribute operatorAttribute = null;
 
 		switch(statement.getOperator()) {
-		
+
 		case AND:
 			operatorAttribute = 
-				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
+			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
 			break;
-			
+
 		case OR:
 			operatorAttribute = 
-				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
+			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
 			break;
-			
+
 		case ASSIGN:
 			operatorAttribute = 
 			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE);
-		break;
-			
+			break;
+
 		}
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, operatorAttribute, fWhiteCharConverter);
@@ -154,7 +154,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, relationAttribute, fWhiteCharConverter);
-		
+
 		BasicParameterNode parameterRight = getRightParameter(condition);
 
 		String parameterContext = getParameterContext(parameter);
@@ -170,7 +170,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 			Attribute linkingContext = new Attribute(STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, rightParameterContext);
 			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
 		}
-		
+
 		return targetStatementElement;
 	}
 
@@ -191,7 +191,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
 
-			parameterLoop:
+			// parameterLoop: //TODO MO-RE check unused label
 			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
 				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
 					if (candidateComposite.isLinked()) {

@@ -190,4 +190,9 @@ public class TestSuiteNode extends AbstractNode {
 		return visitor.visit(this);
 	}
 
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

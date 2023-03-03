@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
@@ -158,27 +157,27 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
-	private static String getParameterName(AbstractParameterNode currentParameterNode,
-			IExtLanguageManager extLanguageManager) {
+	//	private static String getParameterName(AbstractParameterNode currentParameterNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		if (extLanguageManager == null) {
+	//			return currentParameterNode.getName();
+	//		}
+	//
+	//		return getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
+	//	}
 
-		if (extLanguageManager == null) {
-			return currentParameterNode.getName();
-		}
-
-		return getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
-	}
-
-	private static String getParameterNameInExtLanguage(
-			AbstractParameterNode currentParameterNode,
-			IExtLanguageManager extLanguageManager) {
-
-		String currentParameterNodeNameInIntrLanguage = currentParameterNode.getName();
-
-		String currentParameterNodeNameInExtLanguage = 
-				extLanguageManager.convertTextFromIntrToExtLanguage(currentParameterNodeNameInIntrLanguage);
-
-		return currentParameterNodeNameInExtLanguage;
-	}
+	//	private static String getParameterNameInExtLanguage(
+	//			AbstractParameterNode currentParameterNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String currentParameterNodeNameInIntrLanguage = currentParameterNode.getName();
+	//
+	//		String currentParameterNodeNameInExtLanguage = 
+	//				extLanguageManager.convertTextFromIntrToExtLanguage(currentParameterNodeNameInIntrLanguage);
+	//
+	//		return currentParameterNodeNameInExtLanguage;
+	//	}
 
 	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 

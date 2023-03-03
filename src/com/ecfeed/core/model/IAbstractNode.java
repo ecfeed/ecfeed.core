@@ -25,6 +25,7 @@ public interface IAbstractNode {
 	public void setParent(IAbstractNode newParent);
 	public void setDescription(String desc);
 	public String getDescription();
+	public List<IAbstractNode> getDirectChildren();
 	public List<IAbstractNode> getChildren();
 	public abstract int getChildrenCount();
 	public boolean hasChildren();

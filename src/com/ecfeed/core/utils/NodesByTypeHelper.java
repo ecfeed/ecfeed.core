@@ -30,7 +30,7 @@ public class NodesByTypeHelper {
 			accumulateNodes(initialNodes.getTestSuites(), children);
 			accumulateNodes(initialNodes.getTestCases(), children);
 			
-			NodesByType result = add(initialNodes, children);
+			NodesByType result = createSum(initialNodes, children);
 			
 			return result;
 		}
@@ -46,14 +46,14 @@ public class NodesByTypeHelper {
 			
 			inOutChildren.addNode(parentNode);
 			
-			List<IAbstractNode> children = parentNode.getChildren();
+			List<IAbstractNode> children = parentNode.getDirectChildren();
 			
 			for (IAbstractNode child : children) {
 				accumulateNodes(child, inOutChildren);
 			}
 		}
 
-		public static NodesByType add(NodesByType nodes1, NodesByType nodes2) {
+		public static NodesByType createSum(NodesByType nodes1, NodesByType nodes2) {
 			
 			NodesByType result = new NodesByType(nodes1);
 			
