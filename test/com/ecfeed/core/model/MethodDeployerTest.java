@@ -290,9 +290,10 @@ public class MethodDeployerTest {
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
+		NodeMapper mapper = new NodeMapper();
+		MethodDeployer.deploy(methodNode, mapper);
+		
 		// TODO MO-RE
-//		NodeMapper mapper = new NodeMapper();
-//		MethodDeployer.deploy(methodNode, mapper);
 	}
 
 	@Test

@@ -177,11 +177,28 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			CompositeParameterNode linkingCompositeParameterNode) {
+		
+		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, this);
+	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			CompositeParameterNode linkingCompositeParameterNode,
+			int index) {
+		
+		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, index, this);
+	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 		
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
 	}
 	
 	@Override

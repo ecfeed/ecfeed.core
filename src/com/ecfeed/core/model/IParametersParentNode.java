@@ -15,7 +15,9 @@ import java.util.List;
 public interface IParametersParentNode extends IAbstractNode {
 
 	public void addParameter(AbstractParameterNode parameter);	
+	public void addParameter(AbstractParameterNode parameter, CompositeParameterNode linkingCompositeParameterNode);
 	public void addParameter(AbstractParameterNode parameter, int index);
+	public void addParameter(AbstractParameterNode parameter, CompositeParameterNode linkingCompositeParameterNode, int index);
 	public void addParameters(List<AbstractParameterNode> parameters);
 	
 	public boolean removeParameter(AbstractParameterNode parameter);
