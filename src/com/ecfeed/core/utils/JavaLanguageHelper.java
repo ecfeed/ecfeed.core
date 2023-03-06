@@ -1606,5 +1606,10 @@ public final class JavaLanguageHelper {
 	private static ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
 		return new TypeAdapterBaseForUserType(type);
 	}
-	
+
+	// TODO MO-RE do we need this ?
+//	protected ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
+//		return new EclipseTypeAdapterForUserType(type);
+//	}
+
 }
