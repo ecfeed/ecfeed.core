@@ -33,19 +33,19 @@ public class ClassNodeHelper {
 
 		BasicParameterNode globalParameterNode = 
 				BasicParameterNode.createGlobalParameter(name, type, modelChangeRegistrator);
-		
+
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
 	}
 
-	public static MethodNode addMethodToClass(
+	public static MethodNode addMethodToClass( // TODO MO-RE addNewMethodToClass because create
 			ClassNode classNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
-		MethodNode globalParameterNode = new MethodNode(name, modelChangeRegistrator);
-		classNode.addMethod(globalParameterNode);
+		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
+		classNode.addMethod(methodNode);
 
-		return globalParameterNode;
+		return methodNode;
 	}
 
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
