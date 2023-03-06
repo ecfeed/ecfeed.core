@@ -22,7 +22,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 
-public class ParametersContainer {
+public class ParametersMapper {
 
 	public enum ParameterType {
 
