@@ -26,7 +26,6 @@ import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -34,11 +33,10 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	private IAbstractNode fChild;
 	private boolean fValidate;
-	private ITypeAdapterProvider fAdapterProvider;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public FactoryRemoveChildOperation(
-			IAbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
+			IAbstractNode child, boolean validate, IExtLanguageManager extLanguageManager) {
 		fChild = child;
 		fValidate = validate;
 		fExtLanguageManager = extLanguageManager;
@@ -88,14 +86,14 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 
 		if (node.isGlobalParameter()) {
 			if(fChild instanceof ChoiceNode){
-				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fValidate, fExtLanguageManager);
 			}
 			return null;
 
 		} else {
 
 			if(fChild instanceof ChoiceNode){
-				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fValidate, fExtLanguageManager);
 			}
 			return null;
 		}
@@ -125,7 +123,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fValidate, fExtLanguageManager);
 		}
 		return null;
 	}

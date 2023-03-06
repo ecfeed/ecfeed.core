@@ -16,6 +16,21 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterBaseForUserType;
+import com.ecfeed.core.type.adapter.TypeAdapterForBoolean;
+import com.ecfeed.core.type.adapter.TypeAdapterForByte;
+import com.ecfeed.core.type.adapter.TypeAdapterForChar;
+import com.ecfeed.core.type.adapter.TypeAdapterForDouble;
+import com.ecfeed.core.type.adapter.TypeAdapterForFloat;
+import com.ecfeed.core.type.adapter.TypeAdapterForInt;
+import com.ecfeed.core.type.adapter.TypeAdapterForLogical;
+import com.ecfeed.core.type.adapter.TypeAdapterForLong;
+import com.ecfeed.core.type.adapter.TypeAdapterForNumber;
+import com.ecfeed.core.type.adapter.TypeAdapterForShort;
+import com.ecfeed.core.type.adapter.TypeAdapterForString;
+import com.ecfeed.core.type.adapter.TypeAdapterForText;
+import com.ecfeed.core.type.adapter.TypeAdapterHelper;
 import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 
 public final class JavaLanguageHelper {
@@ -1553,4 +1568,43 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	public static ITypeAdapter<?> getAdapter(String type){ // TODO MO-RE rename to getTypeAdapter
+		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
+			type = TypeAdapterHelper.USER_TYPE;
+		}
+		switch(type){
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
+			return new TypeAdapterForBoolean();
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
+			return new TypeAdapterForByte();
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
+			return new TypeAdapterForChar();
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
+			return new TypeAdapterForDouble();
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
+			return new TypeAdapterForFloat();
+		case JavaLanguageHelper.TYPE_NAME_INT:
+			return new TypeAdapterForInt();
+		case JavaLanguageHelper.TYPE_NAME_LONG:
+			return new TypeAdapterForLong();
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
+			return new TypeAdapterForShort();
+		case JavaLanguageHelper.TYPE_NAME_STRING:
+			return new TypeAdapterForString();
+		case SimpleLanguageHelper.TYPE_NAME_TEXT:
+			return new TypeAdapterForText();
+		case SimpleLanguageHelper.TYPE_NAME_NUMBER:
+			return new TypeAdapterForNumber();
+		case SimpleLanguageHelper.TYPE_NAME_LOGICAL:
+			return new TypeAdapterForLogical();
+		default:
+			return getTypeAdapterBaseForUserType(type);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private static ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
+		return new TypeAdapterBaseForUserType(type);
+	}
+	
 }

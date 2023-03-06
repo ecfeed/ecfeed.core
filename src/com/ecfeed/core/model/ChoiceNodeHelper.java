@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
@@ -197,9 +195,7 @@ public class ChoiceNodeHelper {
 			String newType, 
 			boolean isChoiceRandomized) {
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(newType);
 
 		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
 

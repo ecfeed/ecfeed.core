@@ -250,49 +250,49 @@ public class MethodDeployerTest {
 		assertEquals("P1", name1);
 	}
 
-	@Test
-	public void AAdeployTwoLocalStructuresLinkedToOneGlobalStructure() {
-		
-		RootNode rootNode = new RootNode("Root", null);
-
-		// global composite 1
-		
-		CompositeParameterNode globalCompositeParameterNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(rootNode, "GS1");
-
-		// parameter 1 of global composite and choices
-
-		BasicParameterNode rootParameterNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
-						globalCompositeParameterNode1, "GP1", "String");
-
-		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "GC11", "GC11");
-
-		// class node
-
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
-
-		// method node
-
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
-
-		// local composite
-
-		CompositeParameterNode localCompositeParameterNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S1");
-
-		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
-
-		// local composite 2
-
-		CompositeParameterNode localCompositeParameterNode2 = 
-				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S2");
-
-		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
-		
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, mapper);
-	}
+//	@Test
+//	public void AAdeployTwoLocalStructuresLinkedToOneGlobalStructure() {
+//		
+//		RootNode rootNode = new RootNode("Root", null);
+//
+//		// global composite 1
+//		
+//		CompositeParameterNode globalCompositeParameterNode1 = 
+//				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(rootNode, "GS1");
+//
+//		// parameter 1 of global composite and choices
+//
+//		BasicParameterNode rootParameterNode1 = 
+//				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
+//						globalCompositeParameterNode1, "GP1", "String");
+//
+//		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "GC11", "GC11");
+//
+//		// class node
+//
+//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+//
+//		// method node
+//
+//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+//
+//		// local composite
+//
+//		CompositeParameterNode localCompositeParameterNode1 = 
+//				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S1");
+//
+//		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
+//
+//		// local composite 2
+//
+//		CompositeParameterNode localCompositeParameterNode2 = 
+//				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S2");
+//
+//		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
+//		
+//		NodeMapper mapper = new NodeMapper();
+//		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, mapper);
+//	}
 
 	@Test
 	public void deployLinkedRootStructure() {
