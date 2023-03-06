@@ -236,11 +236,11 @@ public class GenericRemoveNodesOperationTest {
 	//		
 	//		// class node 
 	//
-	//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null); // XYX rename
+	//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null); 
 	//		
 	//		// method node
 	//
-	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null); // XYX rename
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 	//		
 	//		// linked basic parameter 
 	//
@@ -268,7 +268,7 @@ public class GenericRemoveNodesOperationTest {
 	//		deployedParameters.add(basicParameterNode2);
 	//		methodNode.setDeployedParameters(deployedParameters);
 	//
-	//		// initial checks XYX TODO
+	//		// initial checks 
 	//		
 	//		// list of nodes to delete
 	//

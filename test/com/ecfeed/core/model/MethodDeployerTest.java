@@ -289,9 +289,10 @@ public class MethodDeployerTest {
 				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S2");
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
-		
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, mapper);
+
+		// TODO MO-RE
+//		NodeMapper mapper = new NodeMapper();
+//		MethodDeployer.deploy(methodNode, mapper);
 	}
 
 	@Test

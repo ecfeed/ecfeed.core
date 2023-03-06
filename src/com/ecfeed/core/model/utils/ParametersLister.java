@@ -26,18 +26,18 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersLister {
 
-	private List<AbstractParameterNode> fParameters;
+	private List<ParameterWithLinkingContext> fParametersWithContexts;
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
 	public ParametersLister(IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
-		fParameters = new ArrayList<AbstractParameterNode>();
+		fParametersWithContexts = new ArrayList<ParameterWithLinkingContext>();
 	}
 
 	public void addParameter(AbstractParameterNode parameter, IAbstractNode parent) {
 
-		addParameter(parameter, fParameters.size(), parent);
+		addParameter(parameter, fParametersWithContexts.size(), parent);
 	}
 
 	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
@@ -49,8 +49,12 @@ public class ParametersLister {
 
 	public void setBasicParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
 
-		fParameters.clear();
-		fParameters.addAll(parameters);
+		fParametersWithContexts.clear();
+
+		for (BasicParameterNode basicParameterNode : parameters) {
+
+			fParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode, null));
+		}
 	}
 
 	public void addParameter(AbstractParameterNode parameter, int index, IAbstractNode parent) {
@@ -59,7 +63,7 @@ public class ParametersLister {
 			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
 		}
 
-		fParameters.add(index, parameter);
+		fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, null));
 		parameter.setParent(parent);
 
 		registerChange();
@@ -67,14 +71,23 @@ public class ParametersLister {
 
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParameters;
+		List<AbstractParameterNode> result = new ArrayList<>();
+
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			result.add(parameterWithLinkingContext.getParameter());
+		}
+
+		return result;
 	}
 
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		List<BasicParameterNode> result = new ArrayList<>();
 
-		for (AbstractParameterNode abstractParameterNode : fParameters) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			AbstractParameterNode abstractParameterNode = parameterWithLinkingContext.getParameter();
 
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				ExceptionHelper.reportRuntimeException("Attempt to get not basic parameter.");
@@ -88,7 +101,7 @@ public class ParametersLister {
 
 	public int getParametersCount(){
 
-		return fParameters.size();
+		return fParametersWithContexts.size();
 	}	
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
@@ -131,14 +144,19 @@ public class ParametersLister {
 
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		return fParameters.get(parameterIndex);
+		ParameterWithLinkingContext parameterWithLinkingContext = fParametersWithContexts.get(parameterIndex);
+
+		return parameterWithLinkingContext.getParameter();
 	}	
 
 	public int getParameterIndex(String parameterName) {
 
 		int index = 0;
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+			
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
+			
 			if (parameter.getName().equals(parameterName)) {
 				return index;
 			}
@@ -169,7 +187,9 @@ public class ParametersLister {
 
 		List<String> types = new ArrayList<String>();
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+			
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
 
 			if (parameter instanceof BasicParameterNode) {
 
@@ -185,7 +205,10 @@ public class ParametersLister {
 
 		List<String> names = new ArrayList<String>();
 
-		for(AbstractParameterNode parameter : fParameters){
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+			
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
+			
 			names.add(parameter.getName());
 		}
 
@@ -196,7 +219,7 @@ public class ParametersLister {
 
 		parameter.setParent(null);
 
-		boolean result = fParameters.remove(parameter);
+		boolean result = fParametersWithContexts.removeIf(e -> e.getParameter().equals(parameter));
 		registerChange();
 
 		return result;
@@ -204,13 +227,13 @@ public class ParametersLister {
 
 	public void removeAllParameters() {
 
-		fParameters.clear();
+		fParametersWithContexts.clear();
 	}
 
-	public void replaceParameters(List<AbstractParameterNode> parameters) {
+	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
-		fParameters.clear();
-		fParameters.addAll(parameters);
+		fParametersWithContexts.clear();
+		addParameters(parameters, parent);
 
 		registerChange();
 	}

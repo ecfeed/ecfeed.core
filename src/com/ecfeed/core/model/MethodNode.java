@@ -813,7 +813,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override

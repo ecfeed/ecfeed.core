@@ -14,6 +14,9 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterProviderForJava implements ITypeAdapterProvider{
+	
+	// TODO MO-RE 1) remove interface as there is only one deriving class (this class) 
+	// TODO MO-RE 2) make this class static or move method getAdapter to some helper
 
 	@SuppressWarnings("rawtypes")
 	protected ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {

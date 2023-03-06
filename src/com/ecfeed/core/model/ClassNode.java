@@ -269,7 +269,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override

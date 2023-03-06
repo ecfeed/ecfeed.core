@@ -173,7 +173,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
