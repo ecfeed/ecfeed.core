@@ -13,6 +13,8 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.utils.ParametersHolder;
+
 public class RootNode extends AbstractNode implements IParametersParentNode {
 
 	ParametersHolder fParametersHolder;

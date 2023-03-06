@@ -8,12 +8,18 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model;
+package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -65,18 +71,18 @@ public class ParametersHolder {
 	}
 
 	public List<BasicParameterNode> getParametersAsBasic() {
-		
+
 		List<BasicParameterNode> result = new ArrayList<>();
-		
+
 		for (AbstractParameterNode abstractParameterNode : fParameters) {
-		
+
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				ExceptionHelper.reportRuntimeException("Attempt to get not basic parameter.");
 			}
-			
+
 			result.add((BasicParameterNode) abstractParameterNode);
 		}
-		
+
 		return result;
 	}
 
@@ -86,7 +92,7 @@ public class ParametersHolder {
 	}	
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-	
+
 		if (parameterNameToFind.contains(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
 			return findParameterQualified(parameterNameToFind);
 		} else {
@@ -164,9 +170,9 @@ public class ParametersHolder {
 		List<String> types = new ArrayList<String>();
 
 		for (AbstractParameterNode parameter : fParameters) {
-			
+
 			if (parameter instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
 				types.add(basicParameterNode.getType());
 			}
@@ -195,9 +201,9 @@ public class ParametersHolder {
 
 		return result;
 	}
-	
+
 	public void removeAllParameters() {
-		
+
 		fParameters.clear();
 	}
 
@@ -228,12 +234,12 @@ public class ParametersHolder {
 	}
 
 	public boolean isMatch(ParametersHolder otherParametersHolder) {
-		
+
 		List<AbstractParameterNode> parameters = getParameters();
 		List<AbstractParameterNode> otherParameters = otherParametersHolder.getParameters();
-		
+
 		int parametersSize = parameters.size();
-		
+
 		if (parametersSize != otherParameters.size()) {
 			return false;
 		}
@@ -242,12 +248,12 @@ public class ParametersHolder {
 
 			AbstractParameterNode abstractParameterNode = parameters.get(i);
 			AbstractParameterNode otherParameter = otherParameters.get(i);
-			
+
 			if (!abstractParameterNode.isMatch(otherParameter)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
