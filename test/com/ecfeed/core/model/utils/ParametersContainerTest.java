@@ -29,7 +29,7 @@ import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.ParametersAndConstraintsParentNodeHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
-import com.ecfeed.core.model.utils.ParametersContainer.ParameterType;
+import com.ecfeed.core.model.utils.ParametersMapper.ParameterType;
 
 public class ParametersContainerTest {
 
@@ -61,7 +61,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
+		ParametersMapper parametersContainer = new ParametersMapper();
 		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
@@ -168,7 +168,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
+		ParametersMapper parametersContainer = new ParametersMapper();
 		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
@@ -312,7 +312,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
+		ParametersMapper parametersContainer = new ParametersMapper();
 		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
@@ -382,7 +382,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
+		ParametersMapper parametersContainer = new ParametersMapper();
 		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
