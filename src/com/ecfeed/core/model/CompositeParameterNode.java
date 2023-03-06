@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
-import com.ecfeed.core.model.utils.ParametersHolder;
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -23,7 +23,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
 
-	private ParametersHolder fParametersHolder; 
+	private ParametersLister fParametersHolder; 
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	public CompositeParameterNode(
@@ -44,7 +44,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		setLinkToGlobalParameter(link);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 

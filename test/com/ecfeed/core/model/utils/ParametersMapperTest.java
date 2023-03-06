@@ -31,7 +31,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.utils.ParametersMapper.ParameterType;
 
-public class ParametersContainerTest {
+public class ParametersMapperTest {
 
 	@Test
 	public void localParametersBasic() {

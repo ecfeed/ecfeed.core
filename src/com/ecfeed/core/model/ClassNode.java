@@ -15,13 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.utils.ParametersHolder;
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersHolder fParametersHolder;
+	ParametersLister fParametersHolder;
 	private List<MethodNode> fMethods;
 
 	public ClassNode(String qualifiedName) {
@@ -34,7 +34,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fMethods = new ArrayList<MethodNode>();
 	}
 

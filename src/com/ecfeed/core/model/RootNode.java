@@ -13,11 +13,11 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.utils.ParametersHolder;
+import com.ecfeed.core.model.utils.ParametersLister;
 
 public class RootNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersHolder fParametersHolder;
+	ParametersLister fParametersHolder;
 	private List<ClassNode> fClasses;
 	private int fModelVersion;
 
@@ -32,7 +32,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 		super(name, modelChangeRegistrator);
 		
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 
 		fClasses = new ArrayList<ClassNode>();
 		fModelVersion = modelVersion;

@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.model.utils.ParametersHolder;
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
-	ParametersHolder fParametersHolder;
-	ParametersHolder fDeployedParametersHolder;
+	ParametersLister fParametersHolder;
+	ParametersLister fDeployedParametersHolder;
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
@@ -40,7 +40,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fDeployedParametersHolder = null;
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
@@ -798,7 +798,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void setDeployedParameters(List<BasicParameterNode> parameters) {
 
 		if (fDeployedParametersHolder == null) {
-			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
+			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
 		} 
 
 		fDeployedParametersHolder.setBasicParameters(parameters, this);
