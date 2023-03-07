@@ -33,7 +33,7 @@ public class ModelDataCSV extends ModelDataAbstract {
             throw new IllegalArgumentException("The data must contain at least one line.");
         }
 
-        this.header = Arrays.asList(this.raw.get(0).split(","));
+        this.header = Arrays.asList(lineUnify(this.raw.get(0)).split(","));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ModelDataCSV extends ModelDataAbstract {
     }
 
     private void lineParse(String line) {
-        String[] arg = line.split(",");
+        String[] arg = lineUnify(line).split(",");
 
         lineValidate(line, arg.length);
 
@@ -59,5 +59,10 @@ public class ModelDataCSV extends ModelDataAbstract {
             		+ "The line '" + line + "' consists of an incorrect number elements. " +
                     "Expected '" + this.body.size() + "'. Got '" + length + "'.");
         }
+    }
+    
+    private String lineUnify(String line) {
+    	
+    	return line.replace("\r", "");
     }
 }
