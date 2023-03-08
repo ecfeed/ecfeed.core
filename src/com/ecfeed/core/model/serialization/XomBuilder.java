@@ -463,7 +463,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createTargetMethodDeployedParametersElement(MethodNode methodNode) {
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_NAME);
 
-		for (BasicParameterNode parameter : Objects.requireNonNull(methodNode.getDeployedMethodParameters())) {
+		for (BasicParameterNode parameter : Objects.requireNonNull(methodNode.getDeployedParameters())) {
 			targetMethodDeployedParameters.appendChild(createDeployedParameter(parameter));
 		}
 

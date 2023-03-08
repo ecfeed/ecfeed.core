@@ -12,6 +12,7 @@ package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ObjectHelper;
 
@@ -40,7 +41,7 @@ public class ParameterWithLinkingContext {
 		return fAbstractParameterNode;
 	}
 
-	public BasicParameterNode getBasicParameter() {
+	public BasicParameterNode getParameterAsBasic() {
 
 		if (!(fAbstractParameterNode instanceof BasicParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Cannot get basic parameter. Invalid parameter type.");
@@ -54,6 +55,10 @@ public class ParameterWithLinkingContext {
 		return fLinkingContext;
 	}
 
+	public CompositeParameterNode getLinkingContextAsCompositeParameter() {
+		return (CompositeParameterNode) fLinkingContext;
+	}
+	
 	public boolean isMatch(ParameterWithLinkingContext other) {
 
 		AbstractParameterNode thisParameter = this.getParameter();

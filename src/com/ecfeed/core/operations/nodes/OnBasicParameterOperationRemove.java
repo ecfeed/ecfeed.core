@@ -55,7 +55,7 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 		fMethodNode.removeAllTestCases();
 
 		fOriginalDeployedParameters.clear();
-		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedMethodParameters());
+		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
 		fMethodNode.removeAllDeployedParameters();
 
 		fMethodNode.removeParameter(fBasicParameterNode);

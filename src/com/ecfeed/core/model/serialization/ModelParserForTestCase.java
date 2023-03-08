@@ -49,7 +49,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		List<BasicParameterNode> parameters;
 
 		if (method.isDeployed()) {
-			parameters = method.getDeployedMethodParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
+			parameters = method.getDeployedParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
 		} else {
 			try {
 				parameters = method.getParametersAsBasic();

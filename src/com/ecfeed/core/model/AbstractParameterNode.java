@@ -156,4 +156,25 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 		return this;
 	}
+	
+	public boolean isMatch(AbstractParameterNode other) {
+		
+		if ((this instanceof BasicParameterNode) && !(other instanceof BasicParameterNode)) {
+			return false;
+		}
+
+		if ((this instanceof CompositeParameterNode) && !(other instanceof CompositeParameterNode)) {
+			return false;
+		}
+
+		if (this instanceof BasicParameterNode) {
+			return ((BasicParameterNode)this).isMatch((BasicParameterNode)other);
+		}
+
+		if (this instanceof CompositeParameterNode) {
+			return ((CompositeParameterNode)this).isMatch((CompositeParameterNode)other);
+		}
+		
+		return false;
+	}
 }

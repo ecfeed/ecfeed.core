@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
@@ -41,14 +42,15 @@ public class BasicParameterNodeHelper {
 	}
 
 	public static boolean propertiesOfBasicParametrsMatch(
-			List<BasicParameterNode> parameters1, List<BasicParameterNode> parameters2) {
+			List<ParameterWithLinkingContext> parameters1, 
+			List<ParameterWithLinkingContext> parameters2) {
 
 		if (parameters1.size() != parameters2.size()) {
 			return false;
 		}
 
-		ListIterator<BasicParameterNode> iterator1 = parameters1.listIterator();
-		ListIterator<BasicParameterNode> iterator2 = parameters2.listIterator();
+		ListIterator<ParameterWithLinkingContext> iterator1 = parameters1.listIterator();
+		ListIterator<ParameterWithLinkingContext> iterator2 = parameters2.listIterator();
 
 		for(;;) {
 
@@ -63,30 +65,35 @@ public class BasicParameterNodeHelper {
 				return false;
 			}
 
-			BasicParameterNode basicParameterNode1 = iterator1.next();
-			BasicParameterNode basicParameterNode2 = iterator2.next();
+			ParameterWithLinkingContext item1 = iterator1.next();
+			ParameterWithLinkingContext item2 = iterator2.next();
 
-			if (!basicParameterNode1.propertiesMatch(basicParameterNode2)) {
+			if (!item1.getParameterAsBasic().isMatch(item2.getParameterAsBasic())) {
+				return false;
+			}
+
+			if (!item1.getLinkingContext().isMatch(item2.getLinkingContext())) {
 				return false;
 			}
 		}
 	}
 
-	public static List<BasicParameterNode> convertAbstractListToBasicList(List<AbstractParameterNode> abstractParameterNodes) {
-
-		List<BasicParameterNode> result = new ArrayList<>(); 
-
-		for(AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
-
-			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-				ExceptionHelper.reportRuntimeException("Cannot convert abstract parameters to basic parameters.");
-			}
-
-			result.add((BasicParameterNode) abstractParameterNode);
-		}
-
-		return result;
-	}
+	//	public static List<BasicParameterNode> convertAbstractListToBasicList(
+	//			List<AbstractParameterNode> abstractParameterNodes) {
+	//
+	//		List<BasicParameterNode> result = new ArrayList<>(); 
+	//
+	//		for(AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
+	//
+	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+	//				ExceptionHelper.reportRuntimeException("Cannot convert abstract parameters to basic parameters.");
+	//			}
+	//
+	//			result.add((BasicParameterNode) abstractParameterNode);
+	//		}
+	//
+	//		return result;
+	//	}
 
 	public static List<BasicParameterNode> getBasicParametersForParentNodeSubtree(
 			IParametersParentNode parametersParentNode) {

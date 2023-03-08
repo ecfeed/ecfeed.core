@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
@@ -46,7 +47,7 @@ public abstract class AbstractParameterNodeHelper {
 		return (type + " " + qualifiedName).trim();
 	}
 
-	public static String getQualifiedName(
+	public static String getQualifiedName(  // TODO MO-RE convert to create signature
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
@@ -59,7 +60,7 @@ public abstract class AbstractParameterNodeHelper {
 		return qualifiedName;
 	}
 
-	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) {
+	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE convert to create signature
 
 		LinkedList<String> segments = new LinkedList<>();
 
@@ -73,7 +74,7 @@ public abstract class AbstractParameterNodeHelper {
 		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 	}
 
-	public static String getQualifiedName(
+	public static String getQualifiedName(  // TODO MO-RE convert to create signature
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
@@ -107,7 +108,7 @@ public abstract class AbstractParameterNodeHelper {
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
 
-	public static String getQualifiedName(
+	public static String getQualifiedName(  // TODO MO-RE convert to create signature
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext) {
 
@@ -598,5 +599,11 @@ public abstract class AbstractParameterNodeHelper {
 
 			currentNode = parent;
 		}
+	}
+
+	public static String createSignature(AbstractParameterNode parameter,
+			ExtLanguageManagerForJava extLanguageManagerForJava) {
+		
+		return getQualifiedName(parameter);
 	}
 }

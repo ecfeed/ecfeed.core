@@ -33,7 +33,7 @@ public class MethodDeploymentConsistencyUpdater {
 			return false;
 		}
 
-		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
+		List<BasicParameterNode> deployment = method.getDeployedParameters();
 
 		if (deployment == null) {
 			return false;
@@ -48,7 +48,7 @@ public class MethodDeploymentConsistencyUpdater {
 			return;
 		}
 
-		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
+		List<BasicParameterNode> deployment = method.getDeployedParameters();
 
 		if (deployment == null) {
 			return;

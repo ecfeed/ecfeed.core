@@ -105,7 +105,6 @@ public class CompositeParameterNodeHelper {
 			if ((link != null) && (link.equals(targetCompositeParameterNode))) {
 				resultLinkedCompositeParameters.add(currentCompositeParameterNode);
 			}
-
 		}
 
 		List<IAbstractNode> children = currentAbstractNode.getChildren();

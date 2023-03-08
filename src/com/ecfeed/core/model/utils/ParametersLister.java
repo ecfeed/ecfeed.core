@@ -97,6 +97,13 @@ public class ParametersLister {
 			fParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode, null));
 		}
 	}
+	
+	public void setParametersWithLinkingContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
+		
+		fParametersWithContexts.clear();
+		fParametersWithContexts.addAll(parametersWithContexts);
+	}
+
 
 	private boolean parameterWithContextExists(
 			AbstractParameterNode parameter,

@@ -35,29 +35,69 @@ public abstract class MethodDeployer {
 		return targetMethodNode;
 	}
 
-	public static boolean deployedParametersDiffer(
+	public static boolean isMatchFoDeployedParameters(
 			MethodNode methodNode,
 			MethodNode deployedMethodNode) {
 
-		List<BasicParameterNode> oldDeployedParameters = methodNode.getDeployedMethodParameters();
+		List<ParameterWithLinkingContext> oldDeployedParameters = 
+				methodNode.getDeployedParametersWithLinkingContexs();
 
-		List<AbstractParameterNode> newDeployedParameters = deployedMethodNode.getParameters();
+		List<ParameterWithLinkingContext> newDeployedParameters = 
+				deployedMethodNode.getParametersWithLinkingContexts();
 
-		List<BasicParameterNode> convertedNewParameters = 
-				BasicParameterNodeHelper.convertAbstractListToBasicList(newDeployedParameters);
-
-		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(oldDeployedParameters, convertedNewParameters)) {
-			return false;
+		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(
+				oldDeployedParameters, newDeployedParameters)) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
-	public static void copyDeployedParameters(MethodNode deployedMethodNode, MethodNode methodNode) {
+	public static void copyDeployedParameters(
+			MethodNode deployedMethodNode, MethodNode methodNode, NodeMapper nodeMapper) {
 
-		List<BasicParameterNode> deployedParameters = deployedMethodNode.getParametersAsBasic();
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethodNode.getParametersWithLinkingContexts();
+		methodNode.setDeployedParametersWithContexts(deployedParametersWithContexts);
+
+		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
+		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
+		//		}
+
+		//		List<ParameterWithLinkingContext> originalParametersWithContexts =
+		//				convertDeployedParametersWithContextsToOriginal(deployedParametersWithContexts, nodeMapper);
+		//		
+		//		methodNode.setOriginalParametersWithContexts(originalParametersWithContexts);
 	}
+
+	//	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginal(
+	//			List<ParameterWithLinkingContext> deployedParametersWithContexts,
+	//			NodeMapper nodeMapper) {
+	//		
+	//		List<ParameterWithLinkingContext> result = new ArrayList<>();
+	//		
+	//		for (ParameterWithLinkingContext deployed : deployedParametersWithContexts) {
+	//			
+	//			System.out.println(ParameterWithLinkingContextHelper.createSignature(deployed));
+	//			
+	//			BasicParameterNode deployedBasicParameterNode = deployed.getParameterAsBasic();
+	//			BasicParameterNode originalBasicParameterNode = nodeMapper.getSourceNode(deployedBasicParameterNode);
+	//			
+	//			CompositeParameterNode deployedCompositeParameterNode = 
+	//					deployed.getLinkingContextAsCompositeParameter();
+	//			
+	//			CompositeParameterNode originalCompositeParameterNode =
+	//					nodeMapper.getSourceNode(deployedCompositeParameterNode);
+	//			
+	//			ParameterWithLinkingContext original = 
+	//					new ParameterWithLinkingContext(originalBasicParameterNode, originalCompositeParameterNode);
+	//			
+	//			System.out.println(ParameterWithLinkingContextHelper.createSignature(original));
+	//			
+	//			result.add(original);
+	//		}
+	//		
+	//		return result;
+	//	}
 
 	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper nodeMapper) {
 
@@ -67,13 +107,12 @@ public abstract class MethodDeployer {
 		nestedBasicParameters.stream().forEach(e -> deployBasicParameter(e, methodTarget, nodeMapper));
 	}
 
-
 	private static void deployBasicParameter(
 			ParameterWithLinkingContext parameterWithLinkingContext,
 			MethodNode targetMethodNode, 
 			NodeMapper nodeMapper) {
 
-		BasicParameterNode copy = parameterWithLinkingContext.getBasicParameter().createCopy(nodeMapper);
+		BasicParameterNode copy = parameterWithLinkingContext.getParameterAsBasic().createCopy(nodeMapper);
 
 		copy.setCompositeName(copy.getName());
 

@@ -127,7 +127,7 @@ public class TestCaseNode extends AbstractNode {
 		List<BasicParameterNode> methodParameters;
 
 		if (getMethod().isDeployed()) {
-			methodParameters = getMethod().getDeployedMethodParameters();
+			methodParameters = getMethod().getDeployedParameters();
 		} else {
 			methodParameters = getMethod().getParametersAsBasic();
 		}
@@ -187,7 +187,7 @@ public class TestCaseNode extends AbstractNode {
 			return true;
 		}
 
-		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
+		List<BasicParameterNode> parameters = parentMethodNode.getDeployedParameters();
 
 		if (parameters.size() != getTestData().size()) {
 			return false;
