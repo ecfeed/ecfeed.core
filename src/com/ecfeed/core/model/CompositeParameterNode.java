@@ -155,18 +155,18 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			CompositeParameterNode linkingCompositeParameterNode) {
+			AbstractParameterNode linkingContext) {
 		
-		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, this);
+		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
 	
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			CompositeParameterNode linkingCompositeParameterNode,
+			AbstractParameterNode linkingContext,
 			int index) {
 		
-		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, index, this);
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
 	@Override

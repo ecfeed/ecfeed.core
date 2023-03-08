@@ -171,7 +171,7 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fRightParameterNode);
+		BasicParameterNode parameter = mapper.getDeployedNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}

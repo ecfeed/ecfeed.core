@@ -11,36 +11,47 @@
 package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ObjectHelper;
 
 public class ParameterWithLinkingContext {
 
 	private AbstractParameterNode fAbstractParameterNode;
-	private CompositeParameterNode fLinkingCompositeParameterNode;
+	private AbstractParameterNode fLinkingContext;
 
-	ParameterWithLinkingContext(
+	public ParameterWithLinkingContext(
 			AbstractParameterNode abstractParameterNode, 
-			CompositeParameterNode linkingCompositeParameterNode) {
+			AbstractParameterNode linkingContext) {
 
 		fAbstractParameterNode = abstractParameterNode;
-		fLinkingCompositeParameterNode = linkingCompositeParameterNode;
-	}
-
-	AbstractParameterNode getParameter() {
-		return fAbstractParameterNode;
-	}
-
-	CompositeParameterNode getLinkingParameter() {
-		return fLinkingCompositeParameterNode;
+		fLinkingContext = linkingContext;
 	}
 
 	@Override
 	public String toString() {
 
 		return 
-				"Par:" + fAbstractParameterNode.getName() 
-				+ " LinkingComposite: " + getLinkingCompositeName(fLinkingCompositeParameterNode); 
+				"Pararam:" + fAbstractParameterNode.getName() 
+				+ " LinkContext: " + getParameterName(fLinkingContext); 
+	}
+
+	public AbstractParameterNode getParameter() {
+		return fAbstractParameterNode;
+	}
+
+	public BasicParameterNode getBasicParameter() {
+
+		if (!(fAbstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Cannot get basic parameter. Invalid parameter type.");
+
+		}
+
+		return (BasicParameterNode)fAbstractParameterNode;
+	}
+
+	public AbstractParameterNode getLinkingContext() {
+		return fLinkingContext;
 	}
 
 	public boolean isMatch(ParameterWithLinkingContext other) {
@@ -48,27 +59,24 @@ public class ParameterWithLinkingContext {
 		AbstractParameterNode thisParameter = this.getParameter();
 		AbstractParameterNode otherParameter = other.getParameter();
 
-		//		int thisHash = thisParameter.hashCode();
-		//		int otherHash = otherParameter.hashCode();
-
 		if (!ObjectHelper.isEqual(thisParameter, otherParameter)) {
 			return false;
 		}
 
-		if (!ObjectHelper.isEqual(this.getLinkingParameter(), other.getLinkingParameter())) {
+		if (!ObjectHelper.isEqual(this.getLinkingContext(), other.getLinkingContext())) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private String getLinkingCompositeName(CompositeParameterNode linkingCompositeParameterNode) {
+	private String getParameterName(AbstractParameterNode linkingContext) {
 
-		if (linkingCompositeParameterNode == null) {
+		if (linkingContext == null) {
 			return "Null";
 		}
 
-		return linkingCompositeParameterNode.getName();
+		return linkingContext.getName();
 	}
 
 }

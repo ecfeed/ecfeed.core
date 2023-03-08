@@ -15,11 +15,11 @@ import java.util.List;
 public interface IParametersParentNode extends IAbstractNode {
 
 	public void addParameter(AbstractParameterNode parameter);	
-	public void addParameter(AbstractParameterNode parameter, CompositeParameterNode linkingCompositeParameterNode);
+	public void addParameter(AbstractParameterNode parameter, AbstractParameterNode linkingContext);
 	public void addParameter(AbstractParameterNode parameter, int index);
-	public void addParameter(AbstractParameterNode parameter, CompositeParameterNode linkingCompositeParameterNode, int index);
+	public void addParameter(AbstractParameterNode parameter, AbstractParameterNode linkingContext, int index);
 	public void addParameters(List<AbstractParameterNode> parameters);
-	
+
 	public boolean removeParameter(AbstractParameterNode parameter);
 	public void replaceParameters(List<AbstractParameterNode> parameters);
 
@@ -38,17 +38,18 @@ public interface IParametersParentNode extends IAbstractNode {
 
 	public String generateNewParameterName(String startParameterName);
 
-//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
-	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
+	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) { // TODO MO-RE move to helper ?
 		return ParametersParentNodeHelper.getNestedAbstractParameters(this, follow);
 	}
 
-	default List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+	default List<BasicParameterNode> getNestedBasicParameters(boolean follow) { // TODO MO-RE remove ?
 		return ParametersParentNodeHelper.getNestedBasicParameters(this, follow);
 	}
 
-	default List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
+	default List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) { // TODO MO-RE move to helper ?
 		return ParametersParentNodeHelper.getNestedCompositeParameters(this, follow);
 	}
+
 }

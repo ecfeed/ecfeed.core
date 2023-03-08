@@ -44,27 +44,23 @@ public class ParametersLister {
 
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			CompositeParameterNode linkingCompositeParameterNode, 
+			AbstractParameterNode linkingContext, 
 			IAbstractNode parent) {
 
-		addParameter(parameter, linkingCompositeParameterNode, fParametersWithContexts.size(), parent);
+		addParameter(parameter, linkingContext, fParametersWithContexts.size(), parent);
 	}
 
 	public void addParameter(
 			AbstractParameterNode parameter,
-			CompositeParameterNode linkingCompositeParameterNode,			
+			AbstractParameterNode linkingContext,			
 			int index, 
 			IAbstractNode parent) {
 
-		//		if (parameterExists(parameter)) {
-		//			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
-		//		}
-
-		if (parameterWithContextExists(parameter, linkingCompositeParameterNode)) { // XYX
-			reportErrorParameterExists(parameter, linkingCompositeParameterNode);
+		if (parameterWithContextExists(parameter, linkingContext)) {
+			reportErrorParameterExists(parameter, linkingContext);
 		}
 
-		fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, linkingCompositeParameterNode));
+		fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, linkingContext));
 		parameter.setParent(parent);
 
 		registerChange();
@@ -72,15 +68,15 @@ public class ParametersLister {
 
 	private void reportErrorParameterExists(
 			AbstractParameterNode parameter,
-			CompositeParameterNode linkingCompositeParameterNode) {
+			AbstractParameterNode linkingContext) {
 
-		if (linkingCompositeParameterNode == null) {
+		if (linkingContext == null) {
 			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
 		}
 
 		ExceptionHelper.reportRuntimeException(
 				"Parameter: " + parameter.getName() 
-				+ " with linking context" + linkingCompositeParameterNode.getName() 
+				+ " with linking context" + linkingContext.getName() 
 				+ " already exists.");
 
 	}
@@ -104,10 +100,10 @@ public class ParametersLister {
 
 	private boolean parameterWithContextExists(
 			AbstractParameterNode parameter,
-			CompositeParameterNode linkingCompositeParameterNode) {
+			AbstractParameterNode linkingContext) {
 		
 		ParameterWithLinkingContext parameterWithLinkingContextToFind = 
-				new ParameterWithLinkingContext(parameter, linkingCompositeParameterNode);
+				new ParameterWithLinkingContext(parameter, linkingContext);
 		
 		for (ParameterWithLinkingContext currentParameterWithLinkingContext : fParametersWithContexts) {
 			
@@ -130,6 +126,14 @@ public class ParametersLister {
 
 		return result;
 	}
+	
+	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
+		
+		List<ParameterWithLinkingContext> result = new ArrayList<>(fParametersWithContexts); // copy
+		
+		return result;
+	}
+	
 
 	public List<BasicParameterNode> getParametersAsBasic() {
 

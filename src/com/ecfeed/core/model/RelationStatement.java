@@ -224,7 +224,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public RelationStatement createCopy(NodeMapper mapper) {
 
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameter);
+		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameter);
 
 		RelationStatement statement = 
 				new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);

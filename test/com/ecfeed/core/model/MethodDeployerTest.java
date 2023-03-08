@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
 import org.junit.Test;
 
@@ -30,8 +31,8 @@ public class MethodDeployerTest {
 	public void deployNull() {
 
 		try {
-			NodeMapper mapper = new NodeMapper();
-			MethodDeployer.deploy(null, mapper);
+			NodeMapper nodeMapper = new NodeMapper();
+			MethodDeployer.deploy(null, nodeMapper);
 		} catch (Exception e) {
 		}
 	}
@@ -41,8 +42,8 @@ public class MethodDeployerTest {
 
 		MethodNode sourceMethod = new MethodNode("method");
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
 
 		assertNotNull(deployedMethod);
 		assertFalse(sourceMethod.hashCode() == deployedMethod.hashCode());
@@ -58,8 +59,8 @@ public class MethodDeployerTest {
 		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true, null);
 		sourceMethod.addParameter(methodParameterNode);
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
@@ -86,8 +87,8 @@ public class MethodDeployerTest {
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
 		methodParameterNode.addChoice(sourceChoiceNode);
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
@@ -102,7 +103,7 @@ public class MethodDeployerTest {
 		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
 		assertEquals(sourceChoiceNode.getValueString(), deployedChoiceNode.getValueString());
 
-		ChoiceNode originalChoiceNode = mapper.getMappedNodeSource(deployedChoiceNode);
+		ChoiceNode originalChoiceNode = nodeMapper.getSourceNode(deployedChoiceNode);
 		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
 	}
 
@@ -184,8 +185,8 @@ public class MethodDeployerTest {
 
 		// deploy 
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, nodeMapper);
 
 		// check
 
@@ -211,14 +212,14 @@ public class MethodDeployerTest {
 	}
 
 	@Test
-	public void deployTwoLinkedParametersWithDifferentNames() {
+	public void AAdeployTwoBasicLinkedParametersWithDifferentNames() {
 
-		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P2");
+		MethodNode methodNode = createModelWithTwoBasicLinkedParametersOneAtMethodLevel("P1", "P2");
 
 		// deploy 
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, nodeMapper);
 
 		// check
 
@@ -232,14 +233,14 @@ public class MethodDeployerTest {
 	}
 
 	//	@Test
-	public void deployTwoLinkedParametersWithTheSameNames() {
+	public void deployTwoBasicLinkedParametersWithTheSameNames() {
 
-		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P1");
+		MethodNode methodNode = createModelWithTwoBasicLinkedParametersOneAtMethodLevel("P1", "P1");
 
 		// deploy 
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, nodeMapper);
 
 		// check
 
@@ -251,22 +252,22 @@ public class MethodDeployerTest {
 	}
 
 	@Test
-	public void AAdeployTwoLocalStructuresLinkedToOneGlobalStructure() {
-		
+	public void deployTwoLocalStructuresLinkedToOneGlobalStructure() {
+
 		RootNode rootNode = new RootNode("Root", null);
 
 		// global composite 1
-		
-		CompositeParameterNode globalCompositeParameterNode1 = 
+
+		CompositeParameterNode globalCompositeNode = 
 				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(rootNode, "GS1");
 
 		// parameter 1 of global composite and choices
 
-		BasicParameterNode rootParameterNode1 = 
+		BasicParameterNode globalBasicParameterNode = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
-						globalCompositeParameterNode1, "GP1", "String");
+						globalCompositeNode, "GP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "GC11", "GC11");
+		MethodParameterNodeHelper.addChoiceToMethodParameter(globalBasicParameterNode, "GC11", "GC11");
 
 		// class node
 
@@ -278,22 +279,32 @@ public class MethodDeployerTest {
 
 		// local composite
 
-		CompositeParameterNode localCompositeParameterNode1 = 
+		CompositeParameterNode localCompositeNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S1");
 
-		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
+		localCompositeNode1.setLinkToGlobalParameter(globalCompositeNode);
 
 		// local composite 2
 
-		CompositeParameterNode localCompositeParameterNode2 = 
+		CompositeParameterNode localCompositeNode2 = 
 				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S2");
 
-		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
+		localCompositeNode2.setLinkToGlobalParameter(globalCompositeNode);
 
-		NodeMapper mapper = new NodeMapper();
-		MethodDeployer.deploy(methodNode, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, nodeMapper);
+
+		List<ParameterWithLinkingContext> deployedParameters = deployedMethod.getParametersWithLinkingContexts();
+
+		assertEquals(2, deployedParameters.size());
 		
-		// TODO MO-RE
+		ParameterWithLinkingContext first = deployedParameters.get(0);
+		assertEquals(globalBasicParameterNode, nodeMapper.getSourceNode(first.getParameter()));
+		assertEquals(localCompositeNode1, nodeMapper.getSourceNode(first.getLinkingContext()));
+		
+		ParameterWithLinkingContext second = deployedParameters.get(1);
+		assertEquals(globalBasicParameterNode, nodeMapper.getSourceNode(second.getParameter()));
+		assertEquals(localCompositeNode2, nodeMapper.getSourceNode(second.getLinkingContext()));
 	}
 
 	@Test
@@ -320,8 +331,8 @@ public class MethodDeployerTest {
 
 		ms1.setLinkToGlobalParameter(gs1);
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, nodeMapper);
 
 		List<BasicParameterNode> parameters = c1m1.getNestedBasicParameters(true);
 		List<BasicParameterNode> parametersDeployed = deployedMethod.getNestedBasicParameters(false);
@@ -334,8 +345,8 @@ public class MethodDeployerTest {
 		assertNotSame(parametersDeployed.get(0), parameters.get(0));
 		assertNotSame(parametersDeployed.get(1), parameters.get(1));
 
-		assertEquals(parameters.get(0), mapper.getMappedNodeSource(parametersDeployed.get(0)));
-		assertEquals(parameters.get(1), mapper.getMappedNodeSource(parametersDeployed.get(1)));
+		assertEquals(parameters.get(0), nodeMapper.getSourceNode(parametersDeployed.get(0)));
+		assertEquals(parameters.get(1), nodeMapper.getSourceNode(parametersDeployed.get(1)));
 
 		List<ChoiceNode> choices = new ArrayList<>();
 
@@ -345,11 +356,11 @@ public class MethodDeployerTest {
 		List<ChoiceNode> choicesDeployed = new ArrayList<>();
 
 		choicesDeployed.addAll(parametersDeployed.get(0).getChoices().stream()
-				.map(mapper::getMappedNodeSource)
+				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 
 		choicesDeployed.addAll(parametersDeployed.get(1).getChoices().stream()
-				.map(mapper::getMappedNodeSource)
+				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 
 		for (ChoiceNode choice : choices) {
@@ -381,8 +392,8 @@ public class MethodDeployerTest {
 
 		ms1.setLinkToGlobalParameter(gs1);
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, nodeMapper);
 
 		List<BasicParameterNode> parameters = c1m1.getNestedBasicParameters(true);
 		List<BasicParameterNode> parametersDeployed = deployedMethod.getNestedBasicParameters(false);
@@ -395,8 +406,8 @@ public class MethodDeployerTest {
 		assertNotSame(parametersDeployed.get(0), parameters.get(0));
 		assertNotSame(parametersDeployed.get(1), parameters.get(1));
 
-		assertEquals(parameters.get(0), mapper.getMappedNodeSource(parametersDeployed.get(0)));
-		assertEquals(parameters.get(1), mapper.getMappedNodeSource(parametersDeployed.get(1)));
+		assertEquals(parameters.get(0), nodeMapper.getSourceNode(parametersDeployed.get(0)));
+		assertEquals(parameters.get(1), nodeMapper.getSourceNode(parametersDeployed.get(1)));
 
 		List<ChoiceNode> choices = new ArrayList<>();
 
@@ -406,11 +417,11 @@ public class MethodDeployerTest {
 		List<ChoiceNode> choicesDeployed = new ArrayList<>();
 
 		choicesDeployed.addAll(parametersDeployed.get(0).getChoices().stream()
-				.map(mapper::getMappedNodeSource)
+				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 
 		choicesDeployed.addAll(parametersDeployed.get(1).getChoices().stream()
-				.map(mapper::getMappedNodeSource)
+				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 
 		for (ChoiceNode choice : choices) {
@@ -565,8 +576,8 @@ public class MethodDeployerTest {
 	}
 
 	private void validateConstraint(MethodNode method, AbstractNode... references) {
-		NodeMapper mapper = new NodeMapper();
-		MethodNode methodDeployed = MethodDeployer.deploy(method, mapper);
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode methodDeployed = MethodDeployer.deploy(method, nodeMapper);
 
 		assertEquals(1, methodDeployed.getConstraintNodes().size());
 
@@ -598,7 +609,7 @@ public class MethodDeployerTest {
 		}
 
 		Set<AbstractNode> nodesConstraintMapped = nodesConstraint.stream()
-				.map(mapper::getMappedNodeSource)
+				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toSet());
 
 		// The deployed (and reversed) constraint must contain only nodes included in the source method.
@@ -617,7 +628,7 @@ public class MethodDeployerTest {
 		}
 	}
 
-	private MethodNode createModelWithTwoLinkedParametersOneAtMethodLevel(String parameter1Name, String parameter2Name) {
+	private MethodNode createModelWithTwoBasicLinkedParametersOneAtMethodLevel(String parameter1Name, String parameter2Name) {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -666,68 +677,68 @@ public class MethodDeployerTest {
 		return methodNode;
 	}
 
-//	private MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
-//
-//		RootNode rootNode = new RootNode("Root", null);
-//
-//		// add global parameter of root and choice node
-//
-//		final String parameterType = "String";
-//
-//		String globalParameterName = "RP1";
-//
-//		BasicParameterNode globalParameterNodeOfRoot = 
-//				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, parameterType, null);
-//
-//		String globalChoiceNodeName = "RC11";
-//
-//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-//				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
-//
-//		// add class node
-//
-//		ClassNode classNode = new ClassNode("Class", null);
-//		rootNode.addClass(classNode);
-//
-//		// add method node
-//
-//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
-//
-//		// add composite parameter 1 and linked parameter 
-//
-//		CompositeParameterNode compositeParameterNode1 = 
-//				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S1");
-//
-//		// add linked basic parameter to composite parameter
-//
-//		BasicParameterNode basicParameter1 = 
-//				new BasicParameterNode(
-//						parameter1Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
-//
-//		compositeParameterNode1.addParameter(basicParameter1);
-//
-//		// add composite parameter 2 and linked parameter 
-//
-//		CompositeParameterNode compositeParameterNode2 = 
-//				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S2");
-//
-//		// add linked basic parameter to composite parameter
-//
-//		BasicParameterNode basicParameter2 = 
-//				new BasicParameterNode(
-//						parameter2Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
-//
-//		compositeParameterNode2.addParameter(basicParameter2);
-//
-//		// add not linked parameter
-//
-//		BasicParameterNode basicParameter3 = 
-//				new BasicParameterNode(
-//						"OTHER", parameterType, "", false,	null,	null);
-//
-//		compositeParameterNode2.addParameter(basicParameter3);
-//
-//		return methodNode;
-//	}
+	//	private MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
+	//
+	//		RootNode rootNode = new RootNode("Root", null);
+	//
+	//		// add global parameter of root and choice node
+	//
+	//		final String parameterType = "String";
+	//
+	//		String globalParameterName = "RP1";
+	//
+	//		BasicParameterNode globalParameterNodeOfRoot = 
+	//				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, parameterType, null);
+	//
+	//		String globalChoiceNodeName = "RC11";
+	//
+	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
+	//
+	//		// add class node
+	//
+	//		ClassNode classNode = new ClassNode("Class", null);
+	//		rootNode.addClass(classNode);
+	//
+	//		// add method node
+	//
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+	//
+	//		// add composite parameter 1 and linked parameter 
+	//
+	//		CompositeParameterNode compositeParameterNode1 = 
+	//				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S1");
+	//
+	//		// add linked basic parameter to composite parameter
+	//
+	//		BasicParameterNode basicParameter1 = 
+	//				new BasicParameterNode(
+	//						parameter1Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+	//
+	//		compositeParameterNode1.addParameter(basicParameter1);
+	//
+	//		// add composite parameter 2 and linked parameter 
+	//
+	//		CompositeParameterNode compositeParameterNode2 = 
+	//				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S2");
+	//
+	//		// add linked basic parameter to composite parameter
+	//
+	//		BasicParameterNode basicParameter2 = 
+	//				new BasicParameterNode(
+	//						parameter2Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+	//
+	//		compositeParameterNode2.addParameter(basicParameter2);
+	//
+	//		// add not linked parameter
+	//
+	//		BasicParameterNode basicParameter3 = 
+	//				new BasicParameterNode(
+	//						"OTHER", parameterType, "", false,	null,	null);
+	//
+	//		compositeParameterNode2.addParameter(basicParameter3);
+	//
+	//		return methodNode;
+	//	}
 
 }

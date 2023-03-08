@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -786,18 +787,18 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			CompositeParameterNode linkingCompositeParameterNode) {
+			AbstractParameterNode linkingContext) {
 		
-		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, this);
+		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
 	
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			CompositeParameterNode linkingCompositeParameterNode,
+			AbstractParameterNode linkingContext,
 			int index) {
 		
-		fParametersHolder.addParameter(parameter, linkingCompositeParameterNode, index, this);
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
 	@Override
@@ -887,6 +888,11 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
+	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
+		
+		return fParametersHolder.getParametersWithLinkingContexts();
+	}
+	
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();
@@ -902,5 +908,5 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
 	}
-	
+
 }
