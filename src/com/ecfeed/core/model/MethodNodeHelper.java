@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -463,5 +464,73 @@ public class MethodNodeHelper {
 		return testCaseNode;
 	}
 
+	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts(
+			MethodNode methodSource) {
+
+		List<ParameterWithLinkingContext> result = new ArrayList<>();
+
+		List<AbstractParameterNode> parameters = methodSource.getParameters();
+
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+
+			accumulateBasicParametersAndContextsRecursive(
+					abstractParameterNode, 
+					abstractParameterNode.getLinkToGlobalParameter(), 
+					result);
+		}
+
+		return result;
+	}
+
+	private static void accumulateBasicParametersAndContextsRecursive(
+			AbstractParameterNode currentAbstractParameterNode, 
+			AbstractParameterNode linkingContext,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		if (currentAbstractParameterNode instanceof BasicParameterNode) {
+			accumulateBasicParameter(currentAbstractParameterNode, linkingContext, inOutResult);
+			return;
+		}
+
+		CompositeParameterNode currentCompositeParameterNode = 
+				(CompositeParameterNode) currentAbstractParameterNode;
+
+		AbstractParameterNode linkToGlobalParameter = currentAbstractParameterNode.getLinkToGlobalParameter();
+
+		if (linkToGlobalParameter != null) {
+
+			accumulateBasicParametersAndContextsRecursive(
+					linkToGlobalParameter, currentCompositeParameterNode, inOutResult);
+
+			return;
+		}
+
+		accumulateBasicParametersInChildComposites(linkingContext, inOutResult, currentCompositeParameterNode);
+	}
+
+	private static void accumulateBasicParametersInChildComposites(
+			AbstractParameterNode currentParameterNode,
+			List<ParameterWithLinkingContext> inOutResult, CompositeParameterNode currentCompositeParameterNode) {
+
+		List<AbstractParameterNode> parameters = currentCompositeParameterNode.getParameters();
+
+
+		for (AbstractParameterNode childAbstractParameterNode : parameters) {
+
+			accumulateBasicParametersAndContextsRecursive(
+					childAbstractParameterNode, currentParameterNode, inOutResult);
+		}
+	}
+
+	private static void accumulateBasicParameter(
+			AbstractParameterNode currentAbstractParameterNode,
+			AbstractParameterNode linkingContext, 
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				new ParameterWithLinkingContext(currentAbstractParameterNode, linkingContext);
+
+		inOutResult.add(parameterWithLinkingContext);
+	}
 
 }
