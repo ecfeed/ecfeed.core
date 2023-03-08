@@ -251,7 +251,6 @@ public class MethodDeployerTest {
 		assertEquals("P1", name1);
 	}
 
-<<<<<<< HEAD
 	@Test
 	public void deployTwoLocalStructuresLinkedToOneGlobalStructure() {
 
@@ -307,7 +306,7 @@ public class MethodDeployerTest {
 		assertEquals(globalBasicParameterNode, nodeMapper.getSourceNode(second.getParameter()));
 		assertEquals(localCompositeNode2, nodeMapper.getSourceNode(second.getLinkingContext()));
 	}
-=======
+
 //	@Test
 //	public void AAdeployTwoLocalStructuresLinkedToOneGlobalStructure() {
 //		
@@ -351,7 +350,7 @@ public class MethodDeployerTest {
 //		NodeMapper mapper = new NodeMapper();
 //		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, mapper);
 //	}
->>>>>>> dev-model-rework-01
+
 
 	@Test
 	public void deployLinkedRootStructure() {
