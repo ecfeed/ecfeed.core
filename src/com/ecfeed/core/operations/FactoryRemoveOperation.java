@@ -32,7 +32,6 @@ import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -75,12 +74,10 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 	private static class RemoveOperationVisitor implements IModelVisitor{
 
 		private boolean fValidate;
-		private ITypeAdapterProvider fAdapterProvider;
 		IExtLanguageManager fExtLanguageManager;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
+		public RemoveOperationVisitor(boolean validate, IExtLanguageManager extLanguageManager) {
 			fValidate = validate;
-			fAdapterProvider = adapterProvider;
 			fExtLanguageManager = extLanguageManager;
 		}
 
@@ -203,20 +200,19 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
 
-			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
+			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fValidate, fExtLanguageManager);
 		}
 
 	}
 
 	public static IModelOperation getRemoveOperation(
 			IAbstractNode node, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate, 
 			IExtLanguageManager extLanguageManager){
 
 		try {
 			RemoveOperationVisitor removeOperationVisitor = 
-					new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager);
+					new RemoveOperationVisitor(validate, extLanguageManager);
 
 			return (IModelOperation)node.accept(removeOperationVisitor);
 		} catch (Exception e) {

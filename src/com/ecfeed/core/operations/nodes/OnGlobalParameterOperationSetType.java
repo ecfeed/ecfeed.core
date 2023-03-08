@@ -14,7 +14,6 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
@@ -29,7 +28,6 @@ public class OnGlobalParameterOperationSetType extends CompositeOperation {
 			BasicParameterNode globalParameterNode, 
 			String newType, 
 			ParameterConversionDefinition parameterConversionDefinition,
-			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_TYPE, true, globalParameterNode, globalParameterNode, extLanguageManager);
@@ -46,7 +44,6 @@ public class OnGlobalParameterOperationSetType extends CompositeOperation {
 						globalParameterNode, 
 						newType, 
 						parameterConversionDefinition,
-						adapterProvider, 
 						extLanguageManager);
 
 		addOperation(abstractParameterOperationSetType);
