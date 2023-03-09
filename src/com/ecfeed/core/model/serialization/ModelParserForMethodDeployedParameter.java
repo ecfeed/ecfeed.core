@@ -92,7 +92,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		}
 
 		BasicParameterNode parameter = new BasicParameterNode("tmp", type, defaultValue, expected, method.getModelChangeRegistrator());
-		parameter.setNameUnsafe(name);
+		parameter.setNameWithoutChecks(name);
 
 		ModelParserHelper.parseParameterProperties(element, parameter);
 

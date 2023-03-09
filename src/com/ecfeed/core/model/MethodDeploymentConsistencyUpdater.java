@@ -56,7 +56,7 @@ public class MethodDeploymentConsistencyUpdater {
 
 		for (BasicParameterNode parameter : deployment) {
 			AbstractParameterNode parameterReference = parameter.getDeploymentParameter();
-			parameter.setNameUnsafe(getQualifiedDeploymentName(parameterReference));
+			parameter.setNameWithoutChecks(getQualifiedDeploymentName(parameterReference));
 		}
 	}
 
