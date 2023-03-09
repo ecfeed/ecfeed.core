@@ -97,7 +97,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 			if (parent instanceof MethodNode) {
 				return false;
 			}
-			
+
 			if (parent instanceof ClassNode) {
 				return true;
 			}
@@ -121,19 +121,19 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	}
 
 	public boolean isGlobalParameter() {
-		
+
 		RootNode rootNode = RootNodeHelper.findRootNode(this);
-		
+
 		if (rootNode == null) {
 			return false;
 		}
-		
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
-		
+
 		if (methodNode != null) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -156,25 +156,5 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 		return this;
 	}
-	
-	public boolean isMatch(AbstractParameterNode other) {
-		
-		if ((this instanceof BasicParameterNode) && !(other instanceof BasicParameterNode)) {
-			return false;
-		}
 
-		if ((this instanceof CompositeParameterNode) && !(other instanceof CompositeParameterNode)) {
-			return false;
-		}
-
-		if (this instanceof BasicParameterNode) {
-			return ((BasicParameterNode)this).isMatch((BasicParameterNode)other);
-		}
-
-		if (this instanceof CompositeParameterNode) {
-			return ((CompositeParameterNode)this).isMatch((CompositeParameterNode)other);
-		}
-		
-		return false;
-	}
 }

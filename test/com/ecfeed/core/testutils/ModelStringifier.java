@@ -101,7 +101,7 @@ public class ModelStringifier {
 			result += stringify(child, indent + 2);
 		}
 		if (m.isDeployed()) {
-			for (AbstractParameterNode child : m.getDeployedMethodParameters()) {
+			for (AbstractParameterNode child : m.getDeployedParameters()) {
 				result += "\n";
 				result += stringify(child, indent + 2);
 			}
