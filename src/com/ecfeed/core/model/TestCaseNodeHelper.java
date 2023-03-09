@@ -22,6 +22,28 @@ import com.ecfeed.core.utils.MessageStack;
 
 public class TestCaseNodeHelper {
 
+	public static String createShortSignature(
+			TestCaseNode testCaseNode, boolean displayTestSuiteName, IExtLanguageManager extLanguageManager) {
+		
+		String methodName = getMethodName(testCaseNode, extLanguageManager);
+
+		String result = "";
+
+		if (displayTestSuiteName) { 
+			String testCaseNodeName = testCaseNode.getName();
+
+			result += "[" + testCaseNodeName + "]";
+		}
+
+		if (methodName != null) {
+			result += " " + methodName + "(";
+			result += getShortTestDataString(testCaseNode.getTestData(), extLanguageManager);
+			result += ")";
+		}
+
+		return result;
+	}
+	
 	public static String createSignature(
 			TestCaseNode testCaseNode, boolean displayTestSuiteName, IExtLanguageManager extLanguageManager) {
 
@@ -49,6 +71,11 @@ public class TestCaseNodeHelper {
 		return getTestDataString(testCaseNode.getTestData(), extLanguageManager);
 	}
 
+	public static String getShortTestDataString(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
+
+		return getShortTestDataString(testCaseNode.getTestData(), extLanguageManager);
+	}
+	
 	private static String getTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
@@ -65,6 +92,24 @@ public class TestCaseNodeHelper {
 
 		return result;
 	}
+	
+	private static String getShortTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
+
+		String result = new String();
+
+		for (int index = 0; index < testData.size(); index++) {
+
+			ChoiceNode choice = testData.get(index);
+			result += choice.getName(); //ChoiceNodeHelper.createSignature(choice, extLanguageManager); // XYX
+
+			if (index < testData.size() - 1) {
+				result += ", ";
+			}
+		}
+
+		return result;
+	}
+	
 
 	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
