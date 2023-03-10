@@ -72,7 +72,22 @@ public class BasicParameterNodeHelper {
 				return false;
 			}
 
-			if (!item1.getLinkingContext().isMatch(item2.getLinkingContext())) {
+			AbstractParameterNode linkingContext1 = item1.getLinkingContext();
+			AbstractParameterNode linkingContext2 = item2.getLinkingContext();
+			
+			if (linkingContext1 == null && linkingContext2 == null) {
+				return true;
+			}
+			
+			if (linkingContext1 != null && linkingContext2 == null) {
+				return false;
+			}
+			
+			if (linkingContext1 == null && linkingContext2 != null) {
+				return false;
+			}
+			
+			if (!linkingContext1.isMatch(linkingContext2)) {
 				return false;
 			}
 		}
