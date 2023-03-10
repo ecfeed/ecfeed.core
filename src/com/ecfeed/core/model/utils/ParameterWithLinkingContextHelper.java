@@ -11,26 +11,16 @@
 package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class ParameterWithLinkingContextHelper {
 
 	public static String createSignature(ParameterWithLinkingContext parameterWithLinkingContext) {
 		
 		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
+		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
 		
-		String signatureOfContext = 
-				AbstractParameterNodeHelper.createSignature(context, new ExtLanguageManagerForJava());  // TODO MO-RE
-		
-		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
-		
-		String signatureOfParameter = 
-				AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-		
-		
-		return signatureOfContext + "->" + signatureOfParameter;
-		
+		return SignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 	}
 
 }
