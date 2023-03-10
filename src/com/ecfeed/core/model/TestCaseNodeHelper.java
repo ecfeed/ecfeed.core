@@ -24,7 +24,7 @@ public class TestCaseNodeHelper {
 
 	public static String createShortSignature(
 			TestCaseNode testCaseNode, boolean displayTestSuiteName, IExtLanguageManager extLanguageManager) {
-		
+
 		String methodName = getMethodName(testCaseNode, extLanguageManager);
 
 		String result = "";
@@ -43,7 +43,7 @@ public class TestCaseNodeHelper {
 
 		return result;
 	}
-	
+
 	public static String createSignature(
 			TestCaseNode testCaseNode, boolean displayTestSuiteName, IExtLanguageManager extLanguageManager) {
 
@@ -75,7 +75,7 @@ public class TestCaseNodeHelper {
 
 		return getShortTestDataString(testCaseNode.getTestData(), extLanguageManager);
 	}
-	
+
 	private static String getTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
@@ -92,7 +92,7 @@ public class TestCaseNodeHelper {
 
 		return result;
 	}
-	
+
 	private static String getShortTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
@@ -100,7 +100,7 @@ public class TestCaseNodeHelper {
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
-			result += choice.getName(); //ChoiceNodeHelper.createSignature(choice, extLanguageManager); // XYX
+			result += choice.getName();
 
 			if (index < testData.size() - 1) {
 				result += ", ";
@@ -109,7 +109,6 @@ public class TestCaseNodeHelper {
 
 		return result;
 	}
-	
 
 	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
@@ -286,19 +285,19 @@ public class TestCaseNodeHelper {
 			List<ConstraintNode> constraintNodes, 
 			TestCaseNode testCaseNode, 
 			AmbiguousConstraintAction ambiguousConstraintAction) {
-		
+
 		if (ambiguousConstraintAction == AmbiguousConstraintAction.INCLUDE) {
 			return true;
 		}
-		
+
 		if (ambiguousConstraintAction == AmbiguousConstraintAction.EVALUATE) {
 			return true;
 		}
-		
+
 		if (ambiguousConstraintAction == AmbiguousConstraintAction.EXCLUDE) {
-			
+
 			boolean isAmbiguous = isTestCaseNodeAmbiguous(testCaseNode, constraintNodes);
-			
+
 			if (isAmbiguous) {
 				return false;
 			} else {
@@ -313,11 +312,11 @@ public class TestCaseNodeHelper {
 	public static List<TestCaseNode> filterNotAmbiguousTestCases(
 			List<TestCaseNode> testCaseNodes,
 			List<ConstraintNode> constraintNodes) {
-		
+
 		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			
+
 			if (!shouldIncludeTestCase2(constraintNodes, testCaseNode)) {
 				continue;
 			}
@@ -327,37 +326,37 @@ public class TestCaseNodeHelper {
 
 		return filteredTestCaseNodes;
 	}
-	
+
 	private static boolean shouldIncludeTestCase2(
 			List<ConstraintNode> constraintNodes, 
 			TestCaseNode testCaseNode) {
-		
+
 		if (isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
 			return true;
 		}
-		
+
 		boolean isIncluded = TestCaseNodeHelper.evaluateConstraints(testCaseNode, constraintNodes);
-		
+
 		if (isIncluded) {
 			return true;
 		}
-		
+
 		return false;
 	}
- 
+
 	public static List<List<ChoiceNode>> convertToDoubleListOfChoices(Collection<TestCaseNode> testCaseNodes) {
-		
+
 		List<List<ChoiceNode>> result = new ArrayList<>();
-		
+
 		if (testCaseNodes != null) {
 			for (TestCaseNode testCaseNode : testCaseNodes) {
-				
+
 				List<ChoiceNode> listOfChoiceNodes = testCaseNode.getTestCase().getListOfChoiceNodes();
-				
+
 				result.add(listOfChoiceNodes);
 			}
 		}
-		
+
 		return result;
 	}
 

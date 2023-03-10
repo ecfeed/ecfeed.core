@@ -29,6 +29,12 @@ public class ParameterWithLinkingContext {
 		fLinkingContext = linkingContext;
 	}
 
+	public ParameterWithLinkingContext(ParameterWithLinkingContext otherParameterWithLinkingContext) {
+
+		fAbstractParameterNode = otherParameterWithLinkingContext.getParameter();
+		fLinkingContext = otherParameterWithLinkingContext.getLinkingContext();
+	}
+
 	@Override
 	public String toString() {
 
@@ -58,7 +64,7 @@ public class ParameterWithLinkingContext {
 	public CompositeParameterNode getLinkingContextAsCompositeParameter() {
 		return (CompositeParameterNode) fLinkingContext;
 	}
-	
+
 	public boolean isMatch(ParameterWithLinkingContext other) {
 
 		AbstractParameterNode thisParameter = this.getParameter();

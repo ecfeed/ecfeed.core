@@ -917,6 +917,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fParametersHolder.getParametersWithLinkingContexts();
 	}
 
+	public ParameterWithLinkingContext getParameterWithLinkingContexts(int index) {
+
+		return fParametersHolder.getParameterWithLinkingContexts(index);
+	}
+
+
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();

@@ -97,9 +97,9 @@ public class ParametersLister {
 			fParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode, null));
 		}
 	}
-	
+
 	public void setParametersWithLinkingContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
-		
+
 		fParametersWithContexts.clear();
 		fParametersWithContexts.addAll(parametersWithContexts);
 	}
@@ -108,17 +108,17 @@ public class ParametersLister {
 	private boolean parameterWithContextExists(
 			AbstractParameterNode parameter,
 			AbstractParameterNode linkingContext) {
-		
+
 		ParameterWithLinkingContext parameterWithLinkingContextToFind = 
 				new ParameterWithLinkingContext(parameter, linkingContext);
-		
+
 		for (ParameterWithLinkingContext currentParameterWithLinkingContext : fParametersWithContexts) {
-			
+
 			if (parameterWithLinkingContextToFind.isMatch(currentParameterWithLinkingContext)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -133,14 +133,21 @@ public class ParametersLister {
 
 		return result;
 	}
-	
+
 	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
-		
-		List<ParameterWithLinkingContext> result = new ArrayList<>(fParametersWithContexts); // copy
-		
-		return result;
+
+		List<ParameterWithLinkingContext> copy = new ArrayList<>(fParametersWithContexts);
+
+		return copy;
 	}
-	
+
+	public ParameterWithLinkingContext getParameterWithLinkingContexts(int index) {
+
+		ParameterWithLinkingContext copy = 
+				new ParameterWithLinkingContext(fParametersWithContexts.get(index));
+
+		return copy;
+	}
 
 	public List<BasicParameterNode> getParametersAsBasic() {
 

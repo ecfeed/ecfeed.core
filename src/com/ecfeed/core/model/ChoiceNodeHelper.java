@@ -27,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -46,6 +47,32 @@ public class ChoiceNodeHelper {
 	public static BasicParameterNode getBasicParameter(ChoiceNode choiceNode) {
 
 		return getParameterRecursive(choiceNode);
+	}
+
+	public static ParameterWithLinkingContext getParameterWithLinkingContext(ChoiceNode choice) {
+
+		BasicParameterNode parameter = choice.getParameter();
+
+		if (parameter == null) {
+			return null;
+		}
+
+		int index = parameter.getMyIndex();
+
+		if (index == -1) {
+			return null;
+		}
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(parameter);
+
+		if (methodNode == null) {
+			return null;
+		}
+
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				methodNode.getParameterWithLinkingContexts(index);
+
+		return parameterWithLinkingContext;
 	}
 
 	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {
