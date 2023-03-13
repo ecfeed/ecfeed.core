@@ -464,18 +464,20 @@ public class MethodNodeHelper {
 		return testCaseNode;
 	}
 
-	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts(
+	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts( // TODO MO-RE unit tests
 			MethodNode methodSource) {
 
 		List<ParameterWithLinkingContext> result = new ArrayList<>();
 
 		List<AbstractParameterNode> parameters = methodSource.getParameters();
 
-		for (AbstractParameterNode abstractParameterNode : parameters) {
+		for (AbstractParameterNode currentParameterNode : parameters) {
+
+			AbstractParameterNode currentLinkingContext = currentParameterNode;
 
 			accumulateBasicParametersAndContextsRecursive(
-					abstractParameterNode, 
-					abstractParameterNode.getLinkToGlobalParameter(), 
+					currentParameterNode, 
+					currentLinkingContext, 
 					result);
 		}
 
@@ -484,42 +486,86 @@ public class MethodNodeHelper {
 
 	private static void accumulateBasicParametersAndContextsRecursive(
 			AbstractParameterNode currentAbstractParameterNode, 
-			AbstractParameterNode linkingContext,
+			AbstractParameterNode currentLinkingContext,
 			List<ParameterWithLinkingContext> inOutResult) {
 
 		if (currentAbstractParameterNode instanceof BasicParameterNode) {
-			accumulateBasicParameter(currentAbstractParameterNode, linkingContext, inOutResult);
+
+			if (currentAbstractParameterNode.isLinked()) {
+				accumulateBasicLinkedParameter(currentAbstractParameterNode, inOutResult);
+				return;
+			}
+
+			accumulateBasicParameter(currentAbstractParameterNode, null, inOutResult);
 			return;
 		}
 
 		CompositeParameterNode currentCompositeParameterNode = 
 				(CompositeParameterNode) currentAbstractParameterNode;
 
-		AbstractParameterNode linkToGlobalParameter = currentAbstractParameterNode.getLinkToGlobalParameter();
+		if (currentCompositeParameterNode.isGlobalParameter()) {
+			accumulateBasicParametersInGlobalCompositesRecursive(
+					currentCompositeParameterNode, currentLinkingContext, inOutResult);
+			return;
+		} 
+
+		// accumulating parameters in local composites
+
+		AbstractParameterNode linkToGlobalParameter = currentCompositeParameterNode.getLinkToGlobalParameter();
 
 		if (linkToGlobalParameter != null) {
 
+			// jump to global composites 
+
 			accumulateBasicParametersAndContextsRecursive(
-					linkToGlobalParameter, currentCompositeParameterNode, inOutResult);
+					linkToGlobalParameter, currentLinkingContext, inOutResult);
 
 			return;
 		}
 
-		accumulateBasicParametersInChildComposites(linkingContext, inOutResult, currentCompositeParameterNode);
-	}
-
-	private static void accumulateBasicParametersInChildComposites(
-			AbstractParameterNode currentParameterNode,
-			List<ParameterWithLinkingContext> inOutResult, CompositeParameterNode currentCompositeParameterNode) {
-
 		List<AbstractParameterNode> parameters = currentCompositeParameterNode.getParameters();
-
 
 		for (AbstractParameterNode childAbstractParameterNode : parameters) {
 
+			AbstractParameterNode newLinkingContext = childAbstractParameterNode;
+
 			accumulateBasicParametersAndContextsRecursive(
-					childAbstractParameterNode, currentParameterNode, inOutResult);
+					childAbstractParameterNode, newLinkingContext, inOutResult);
 		}
+	}
+
+	private static void accumulateBasicParametersInGlobalCompositesRecursive(
+			CompositeParameterNode currentCompositeParameterNode, 
+			AbstractParameterNode currentLinkingContext,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		List<AbstractParameterNode> childParameters = currentCompositeParameterNode.getParameters();
+
+		for (AbstractParameterNode childParameter : childParameters) {
+
+			if (childParameter instanceof BasicParameterNode) {
+				accumulateBasicParameter(childParameter, currentLinkingContext, inOutResult);
+				continue;
+			}
+
+			CompositeParameterNode childCompositeParameterNode = (CompositeParameterNode) childParameter;
+
+			accumulateBasicParametersInGlobalCompositesRecursive(
+					childCompositeParameterNode, 
+					currentLinkingContext, 
+					inOutResult);
+		}
+	}
+
+	private static void accumulateBasicLinkedParameter(
+			AbstractParameterNode currentAbstractParameterNode,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		AbstractParameterNode newContext = currentAbstractParameterNode;
+		AbstractParameterNode newParameter = newContext.getLinkToGlobalParameter();
+
+		accumulateBasicParameter(newParameter, newContext, inOutResult);
+
 	}
 
 	private static void accumulateBasicParameter(
