@@ -40,7 +40,7 @@ public interface IParametersParentNode extends IAbstractNode {
 
 	//----------------------------------------------------------------------------
 
-	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) { // TODO MO-RE move to helper ?
+	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) { // TODO MO-RE remove ?
 		return ParametersParentNodeHelper.getNestedAbstractParameters(this, follow);
 	}
 

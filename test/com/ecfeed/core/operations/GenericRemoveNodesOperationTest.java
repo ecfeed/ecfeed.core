@@ -789,7 +789,7 @@ public class GenericRemoveNodesOperationTest {
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// local parameter linked to global
 

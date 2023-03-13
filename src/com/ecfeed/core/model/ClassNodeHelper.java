@@ -39,7 +39,7 @@ public class ClassNodeHelper {
 		return globalParameterNode;
 	}
 
-	public static MethodNode addMethodToClass( // TODO MO-RE addNewMethodToClass because create
+	public static MethodNode addNewMethodToClass(
 			ClassNode classNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
