@@ -50,7 +50,7 @@ public class MethodParameterNodeHelper {
 		}
 
 		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
-		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
+		String name = AbstractParameterNodeHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
 
 		String signature = 
 				AbstractParameterNodeHelper.createSignature(

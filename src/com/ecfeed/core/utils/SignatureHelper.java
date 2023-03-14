@@ -29,7 +29,7 @@ public class SignatureHelper {
 	public static String createSignatureOfParameterWithContext(
 			AbstractParameterNode parameter,
 			AbstractParameterNode context) {
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
 		}
@@ -38,7 +38,7 @@ public class SignatureHelper {
 
 			String signatureOfParameter = 
 					AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-			
+
 			return signatureOfParameter;
 		}
 
@@ -56,7 +56,7 @@ public class SignatureHelper {
 	public static String createSignatureOfParameterWithLink(
 			AbstractParameterNode parameter,
 			AbstractParameterNode link) {
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
 		}
@@ -65,7 +65,7 @@ public class SignatureHelper {
 
 			String signatureOfParameter = 
 					AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-			
+
 			return signatureOfParameter;
 		}
 

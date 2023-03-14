@@ -124,12 +124,6 @@ public abstract class AbstractParameterNodeHelper {
 		return type;
 	}
 
-	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-
-		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
-		return name;
-	}
-
 	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
 
 		//		return getCompositeName(abstractParameterNode, null);
@@ -239,14 +233,14 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createSignature(
+	public static String createSignature( // TODO MO-RE remove ?
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
 		String signature = 
 				createSignature(
 						getType(parameter, extLanguageManager),
-						createNameSignature(parameter, extLanguageManager),
+						createSignatureOfParameterName(parameter, extLanguageManager),
 						parameter.isExpected(),
 						extLanguageManager);
 
@@ -260,7 +254,7 @@ public abstract class AbstractParameterNodeHelper {
 		String signature = 
 				createSignature(
 						getType(parameter, extLanguageManager),
-						createNameSignature(parameter, extLanguageManager),
+						createSignatureOfParameterName(parameter, extLanguageManager),
 						false,
 						extLanguageManager);
 
@@ -310,13 +304,13 @@ public abstract class AbstractParameterNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		String type = CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-		
+
 		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
 
 		return signature;
 
 	}
-	
+
 	private static String createReverseSignatureOfAbstractParameter(AbstractParameterNode parameter, String type) {
 
 		String signature = 
@@ -390,13 +384,6 @@ public abstract class AbstractParameterNodeHelper {
 
 		String label = type + " " + name;
 		return label;
-	}
-
-	public static String createNameSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-
-		String name = abstractParameterNode.getName();
-		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
-		return name;
 	}
 
 	public static List<String> convertParameterTypesToExtLanguage(
@@ -600,6 +587,13 @@ public abstract class AbstractParameterNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		return getQualifiedName(abstractParameterNode, extLanguageManager);
+	}
+
+	public static String createSignatureOfParameterName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+
+		String name = abstractParameterNode.getName();
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
+		return name;
 	}
 
 }
