@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -113,10 +112,12 @@ public abstract class MethodDeployer {
 			MethodNode targetMethodNode, 
 			NodeMapper nodeMapper) {
 
-		BasicParameterNode copy = parameterWithLinkingContext.getParameterAsBasic().createCopy(nodeMapper);
-		
-		String signatureOfParameterWithContex = ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext);
-		copy.setNameWithoutChecks(signatureOfParameterWithContex);
+		BasicParameterNode basicParameterNode = parameterWithLinkingContext.getParameterAsBasic();
+
+		BasicParameterNode copy = basicParameterNode.createCopyForDeployment(nodeMapper);
+
+		//		String signatureOfParameterWithContex = ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext);
+		//		copy.setNameWithoutChecks(signatureOfParameterWithContex);
 
 		targetMethodNode.addParameter(copy, parameterWithLinkingContext.getLinkingContext());
 	}
@@ -196,6 +197,17 @@ public abstract class MethodDeployer {
 		}
 
 		return new TestCase(revertedChoices);
+	}
+
+	public static String createSignatureOfOriginalNodes(
+			ParameterWithLinkingContext deployedParameterWithLinkingContext,
+			NodeMapper nodeMapper) {
+
+		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());		
+		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
+
+		String signature = SignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		return signature;
 	}
 
 }

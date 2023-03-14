@@ -10,21 +10,26 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.Test;
+
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.EMathRelation;
-import org.junit.Test;
-
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.TestHelper;
-
-
-import static org.junit.Assert.*;
 
 public class MethodDeployerTest {
 
@@ -198,7 +203,7 @@ public class MethodDeployerTest {
 		BasicParameterNode deployedParameterNode = (BasicParameterNode) deployedMethod.getParameter(0);
 
 		String deployedParameterName = deployedParameterNode.getName();
-		assertEquals(deployedParameterName, "S1:P1->RP1");
+		assertEquals(deployedParameterName, "RP1");
 
 		AbstractParameterNode link = deployedParameterNode.getLinkToGlobalParameter();
 		assertNull(link); // link should be resolved in deployment
@@ -229,11 +234,36 @@ public class MethodDeployerTest {
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
 		String name1 = deployedParameters.get(0).getName();
-		assertEquals("P1->RP1", name1);
+		assertEquals("RP1", name1);
 		String name2 = deployedParameters.get(1).getName();
-		assertEquals("S1:P2->RP1", name2);
-	}
+		assertEquals("RP1", name2);
 
+		// with linking contexts
+
+		assertEquals(2, deployedMethod.getParametersCount());
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethod.getParametersWithLinkingContexts();
+
+		// param1
+		
+		ParameterWithLinkingContext parameterWithLinkingContext1 = deployedParametersWithContexts.get(0);
+		assertEquals("RP1", parameterWithLinkingContext1.getParameter().getName());
+		String linkingContext = parameterWithLinkingContext1.getLinkingContext().getName();
+		assertEquals("P1", linkingContext);
+		
+		String testedSignature1 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext1, nodeMapper);
+		assertEquals("P1->RP1", testedSignature1);
+		
+		// param2
+		
+		ParameterWithLinkingContext parameterWithLinkingContext2 = deployedParametersWithContexts.get(1);
+		assertEquals("RP1", parameterWithLinkingContext2.getParameter().getName());
+		linkingContext = parameterWithLinkingContext2.getLinkingContext().getName();
+		assertEquals("P2", linkingContext);
+		
+		String testedSignature2 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext2, nodeMapper);
+		assertEquals("S1:P2->RP1", testedSignature2);
+	}
+	
 	//	@Test
 	public void deployTwoBasicLinkedParametersWithTheSameNames() {
 
@@ -293,6 +323,15 @@ public class MethodDeployerTest {
 
 		localCompositeNode2.setLinkToGlobalParameter(globalCompositeNode);
 
+		// Root
+		//   GS1
+		//     GP1
+		//       GC11
+		//   Class
+		//     Method
+		//       S1->GS1
+		//       S2->Gs1
+
 		NodeMapper nodeMapper = new NodeMapper();
 		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, nodeMapper);
 
@@ -300,17 +339,41 @@ public class MethodDeployerTest {
 
 		assertEquals(2, deployedParameters.size());
 
+		// check the first parameter
+
 		ParameterWithLinkingContext deployedPar1 = deployedParameters.get(0);
-		assertEquals(globalBasicParameterNode, nodeMapper.getSourceNode(deployedPar1.getParameter()));
-		assertEquals(localCompositeNode1, nodeMapper.getSourceNode(deployedPar1.getLinkingContext()));
 		String signature1 = ParameterWithLinkingContextHelper.createSignature(deployedPar1);
-		assertEquals("S1->GS1:GP1", signature1);
+		assertEquals("S1->GP1", signature1);
+
+		AbstractParameterNode originalGlobalParameter1 = nodeMapper.getSourceNode(deployedPar1.getParameter());
+		assertEquals(globalBasicParameterNode, originalGlobalParameter1);
+
+		AbstractParameterNode originalLinkingContext1 = nodeMapper.getSourceNode(deployedPar1.getLinkingContext());
+		assertEquals(localCompositeNode1, originalLinkingContext1);
+
+		String originalSignature1 = 
+				SignatureHelper.createSignatureOfParameterWithContext(
+						originalGlobalParameter1, originalLinkingContext1);
+
+		assertEquals("S1->GS1:GP1", originalSignature1);
+
+		// check the second parameter
 
 		ParameterWithLinkingContext deployedPar2 = deployedParameters.get(1);
-		assertEquals(globalBasicParameterNode, nodeMapper.getSourceNode(deployedPar2.getParameter()));
-		assertEquals(localCompositeNode2, nodeMapper.getSourceNode(deployedPar2.getLinkingContext()));
 		String signature2 = ParameterWithLinkingContextHelper.createSignature(deployedPar2);
-		assertEquals("S2->GS1:GP1", signature2);
+		assertEquals("S2->GP1", signature2);
+
+		AbstractParameterNode originalGlobalParameter2 = nodeMapper.getSourceNode(deployedPar2.getParameter());
+		assertEquals(globalBasicParameterNode, originalGlobalParameter2);
+
+		AbstractParameterNode originalLinkingContext2 = nodeMapper.getSourceNode(deployedPar2.getLinkingContext());
+		assertEquals(localCompositeNode2, originalLinkingContext2);
+
+		String originalSignature2 = 
+				SignatureHelper.createSignatureOfParameterWithContext(
+						originalGlobalParameter2, originalLinkingContext2);
+
+		assertEquals("S2->GS1:GP1", originalSignature2);
 	}
 
 	//	@Test
@@ -392,8 +455,8 @@ public class MethodDeployerTest {
 
 		assertEquals(parameters.size(), parametersDeployed.size());
 
-		assertEquals("MS1->GS1:GS1P1", parametersDeployed.get(0).getName());
-		assertEquals("MS1->GS1:GS1P2", parametersDeployed.get(1).getName());
+		assertEquals("GS1P1", parametersDeployed.get(0).getName());
+		assertEquals("GS1P2", parametersDeployed.get(1).getName());
 
 		assertNotSame(parametersDeployed.get(0), parameters.get(0));
 		assertNotSame(parametersDeployed.get(1), parameters.get(1));
@@ -465,18 +528,19 @@ public class MethodDeployerTest {
 		List<ParameterWithLinkingContext> parameters2 = 
 				MethodNodeHelper.getNestedBasicParametersWithLinkingContexts(c1m1);
 
-		List<BasicParameterNode> parametersDeployed = deployedMethod.getNestedBasicParameters(false);
+		List<BasicParameterNode> deployedParameters = deployedMethod.getNestedBasicParameters(false);
 
-		assertEquals(parameters2.size(), parametersDeployed.size());
+		assertEquals(parameters2.size(), deployedParameters.size());
 
-		assertEquals("MS1->Class:GS1:GS1P1", parametersDeployed.get(0).getName());
-		assertEquals("MS1->Class:GS1:GS1P2", parametersDeployed.get(1).getName());
+		String name1 = deployedParameters.get(0).getName();
+		assertEquals("GS1P1", name1);
+		assertEquals("GS1P2", deployedParameters.get(1).getName());
 
-		assertNotSame(parametersDeployed.get(0), parameters2.get(0));
-		assertNotSame(parametersDeployed.get(1), parameters2.get(1));
+		assertNotSame(deployedParameters.get(0), parameters2.get(0));
+		assertNotSame(deployedParameters.get(1), parameters2.get(1));
 
-		assertEquals(parameters2.get(0).getParameter(), nodeMapper.getSourceNode(parametersDeployed.get(0)));
-		assertEquals(parameters2.get(1).getParameter(), nodeMapper.getSourceNode(parametersDeployed.get(1)));
+		assertEquals(parameters2.get(0).getParameter(), nodeMapper.getSourceNode(deployedParameters.get(0)));
+		assertEquals(parameters2.get(1).getParameter(), nodeMapper.getSourceNode(deployedParameters.get(1)));
 
 		List<ChoiceNode> choices = new ArrayList<>();
 
@@ -485,11 +549,11 @@ public class MethodDeployerTest {
 
 		List<ChoiceNode> choicesDeployed = new ArrayList<>();
 
-		choicesDeployed.addAll(parametersDeployed.get(0).getChoices().stream()
+		choicesDeployed.addAll(deployedParameters.get(0).getChoices().stream()
 				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 
-		choicesDeployed.addAll(parametersDeployed.get(1).getChoices().stream()
+		choicesDeployed.addAll(deployedParameters.get(1).getChoices().stream()
 				.map(nodeMapper::getSourceNode)
 				.collect(Collectors.toList()));
 

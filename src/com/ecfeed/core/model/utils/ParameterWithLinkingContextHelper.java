@@ -16,11 +16,12 @@ import com.ecfeed.core.utils.SignatureHelper;
 public class ParameterWithLinkingContextHelper {
 
 	public static String createSignature(ParameterWithLinkingContext parameterWithLinkingContext) {
-		
-		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
+
 		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
-		
+		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
+
 		return SignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 	}
+
 
 }

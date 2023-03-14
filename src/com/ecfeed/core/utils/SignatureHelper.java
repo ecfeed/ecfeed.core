@@ -43,10 +43,12 @@ public class SignatureHelper {
 		}
 
 		String signatureOfContext = 
-				AbstractParameterNodeHelper.createSignature(context, new ExtLanguageManagerForJava());  // TODO MO-RE
+				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
+						context, new ExtLanguageManagerForJava());  // TODO MO-RE
 
 		String signatureOfParameter = 
-				AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
+				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
+						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
 
 		return signatureOfContext + LINK_SPECIFIER + signatureOfParameter;
 	}

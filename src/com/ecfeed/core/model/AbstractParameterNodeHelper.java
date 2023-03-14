@@ -60,7 +60,7 @@ public abstract class AbstractParameterNodeHelper {
 		return qualifiedName;
 	}
 
-	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE convert to create signature
+	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead 
 
 		LinkedList<String> segments = new LinkedList<>();
 
@@ -239,8 +239,6 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	//--------------------------------------------------------------------------------------------------		
-
 	public static String createSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -376,8 +374,6 @@ public abstract class AbstractParameterNodeHelper {
 
 		return "";
 	}
-
-	//--------------------------------------------------------------------------------------------------	
 
 	private static String createExpectedDecoration(Boolean expectedFlag) {
 
@@ -601,9 +597,17 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
-	public static String createSignature(AbstractParameterNode parameter,
+	public static String createSignature(AbstractParameterNode parameter,  // TODO MO-RE remove this method ?
 			ExtLanguageManagerForJava extLanguageManagerForJava) {
-		
+
 		return getQualifiedName(parameter);
 	}
+
+	public static String createSignatureWithPathToTopParametersParent(
+			AbstractParameterNode abstractParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		return getQualifiedName(abstractParameterNode, extLanguageManager);
+	}
+
 }

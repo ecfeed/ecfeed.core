@@ -65,7 +65,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public String toString() {
 
-		return getName();
+		return getName() + " : " + "Structure";
 	}
 
 	@Override
