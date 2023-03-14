@@ -294,7 +294,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createReverseSignature(
+	public static String createReverseSignatureWithOptionalLink(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -305,7 +305,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createReverseSignature(
+	public static String createReverseSignatureWithOptionalLink(
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 

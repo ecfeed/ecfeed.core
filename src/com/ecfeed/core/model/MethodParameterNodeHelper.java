@@ -115,6 +115,6 @@ public class MethodParameterNodeHelper {
 	}
 
 	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
-		return AbstractParameterNodeHelper.createReverseSignature(methodParameterNode, extLanguageManage);
+		return AbstractParameterNodeHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
 	}
 }
