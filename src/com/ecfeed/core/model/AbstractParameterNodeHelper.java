@@ -298,25 +298,9 @@ public abstract class AbstractParameterNodeHelper {
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
-		//		IAbstractNode parent = parameter.getParent();
-		String parentCompositeSignature = "";
-
-		//		if (parent instanceof CompositeParameterNode) {
-		//			
-		//			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
-		//			
-		//			parentCompositeSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-		//		}
-
-		String name = createNameSignature(parameter, extLanguageManager);
 		String type = getType(parameter, extLanguageManager);
 
-		String signature = parentCompositeSignature + createReverseSignature(type, name, parameter.isExpected());
-
-		if (parameter.isLinked()) {
-
-			signature += addLinkedPrefix(parameter, extLanguageManager);
-		}
+		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
 
 		return signature;
 	}
@@ -325,18 +309,26 @@ public abstract class AbstractParameterNodeHelper {
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
-		String name = createNameSignature(parameter, extLanguageManager);
+		String type = CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		
+		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
 
-		String signature = name;
+		return signature;
+
+	}
+	
+	private static String createReverseSignatureOfAbstractParameter(AbstractParameterNode parameter, String type) {
+
+		String signature = 
+				SignatureHelper.createSignatureOfParameterWithLink(
+						parameter, parameter.getLinkToGlobalParameter());
+
 		signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-		signature += CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-
-		if (parameter.isLinked()) {
-			signature += addLinkedPrefix(parameter, extLanguageManager);
-		}
+		signature += type;
 
 		return signature;
 	}
+
 
 	public static String createReverseSignature(
 			String type, 
@@ -362,18 +354,18 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	private static String addLinkedPrefix(
-			AbstractParameterNode parameter, 
-			IExtLanguageManager languageManager) {
-
-		AbstractParameterNode parameterLinked = parameter.getLinkToGlobalParameter();
-
-		if (parameterLinked != null) {
-			return " [LINKED]->" + getQualifiedName(parameterLinked, languageManager);
-		}
-
-		return "";
-	}
+	//	private static String addLinkedPrefix(
+	//			AbstractParameterNode parameter, 
+	//			IExtLanguageManager languageManager) {
+	//
+	//		AbstractParameterNode parameterLinked = parameter.getLinkToGlobalParameter();
+	//
+	//		if (parameterLinked != null) {
+	//			return " [LINKED]->" + getQualifiedName(parameterLinked, languageManager);
+	//		}
+	//
+	//		return "";
+	//	}
 
 	private static String createExpectedDecoration(Boolean expectedFlag) {
 

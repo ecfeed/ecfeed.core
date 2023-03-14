@@ -53,4 +53,31 @@ public class SignatureHelper {
 		return signatureOfContext + LINK_SPECIFIER + signatureOfParameter;
 	}
 
+	public static String createSignatureOfParameterWithLink(
+			AbstractParameterNode parameter,
+			AbstractParameterNode link) {
+		
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
+		}
+
+		if (link == null) {
+
+			String signatureOfParameter = 
+					AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
+			
+			return signatureOfParameter;
+		}
+
+		String signatureOfLink = 
+				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
+						link, new ExtLanguageManagerForJava());  // TODO MO-RE
+
+		String signatureOfParameter = 
+				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
+						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
+
+		return signatureOfParameter + LINK_SPECIFIER  + signatureOfLink;
+	}
+
 }
