@@ -169,7 +169,7 @@ public class BasicParameterNodeHelper {
 		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterName)) {
+			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterName)) {
 				return parameter;
 			}
 		}
@@ -470,7 +470,7 @@ public class BasicParameterNodeHelper {
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
 
 		for (BasicParameterNode parameter : parameters) {
-			String name = AbstractParameterNodeHelper.getQualifiedName(parameter);
+			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
 
 			if (name.equals(parameterName)) {
 				return parameter;

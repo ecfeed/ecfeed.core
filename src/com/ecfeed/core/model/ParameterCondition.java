@@ -228,7 +228,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String name = AbstractParameterSignatureHelper.getCompositeName(fRightParameterNode);
 		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
 		return parameterDescription;
 	}
@@ -237,7 +237,7 @@ public class ParameterCondition implements IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		String name = 
-				AbstractParameterNodeHelper.getQualifiedName(
+				AbstractParameterSignatureHelper.getQualifiedName(
 						fRightParameterNode, fRightParameterLinkingContext);
 		
 		return StatementConditionHelper.createParameterDescription(name);

@@ -34,7 +34,7 @@ public class MethodParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
-	public static String createSignature(
+	public static String createSignature( // XYX REMOVE - use method from AbstractParameterSignatureHelper
 			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -49,11 +49,11 @@ public class MethodParameterNodeHelper {
 			parentCompositeParameterSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 		}
 
-		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
-		String name = AbstractParameterNodeHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
+		String type = AbstractParameterSignatureHelper.createSignatureOfType(methodParameterNode, extLanguageManager);
+		String name = AbstractParameterSignatureHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
 
 		String signature = 
-				AbstractParameterNodeHelper.createSignature(
+				AbstractParameterSignatureHelper.createSignature(
 						type,
 						parentCompositeParameterSignature + name,
 						methodParameterNode.isExpected(),
@@ -62,7 +62,7 @@ public class MethodParameterNodeHelper {
 		final AbstractParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + AbstractParameterNodeHelper.getQualifiedName(link, extLanguageManager);
+			signature += "[LINKED]->" + AbstractParameterSignatureHelper.getQualifiedName(link, extLanguageManager);
 		}
 
 		return signature;
@@ -115,6 +115,8 @@ public class MethodParameterNodeHelper {
 	}
 
 	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
-		return AbstractParameterNodeHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
+		
+		// TODO XYX REMOVE
+		return AbstractParameterSignatureHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
 	}
 }

@@ -10,12 +10,7 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
-
 public class SignatureHelper {
-
-	private static final String LINK_SPECIFIER = "->";
 
 	public enum SignatureType {
 		WITH_TYPE,
@@ -25,59 +20,5 @@ public class SignatureHelper {
 	public static final String SIGNATURE_NAME_SEPARATOR = ":";  // separates sections of composite 
 	public static final String SIGNATURE_TYPE_SEPARATOR = " : ";  // name from type
 	public static final String SIGNATURE_CONTENT_SEPARATOR = " : "; // name from content
-
-	public static String createSignatureOfParameterWithContext(
-			AbstractParameterNode parameter,
-			AbstractParameterNode context) {
-
-		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
-		}
-
-		if (context == null) {
-
-			String signatureOfParameter = 
-					AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-			return signatureOfParameter;
-		}
-
-		String signatureOfContext = 
-				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
-						context, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		String signatureOfParameter = 
-				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
-						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		return signatureOfContext + LINK_SPECIFIER + signatureOfParameter;
-	}
-
-	public static String createSignatureOfParameterWithLink(
-			AbstractParameterNode parameter,
-			AbstractParameterNode link) {
-
-		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
-		}
-
-		if (link == null) {
-
-			String signatureOfParameter = 
-					AbstractParameterNodeHelper.createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-			return signatureOfParameter;
-		}
-
-		String signatureOfLink = 
-				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
-						link, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		String signatureOfParameter = 
-				AbstractParameterNodeHelper.createSignatureWithPathToTopParametersParent(
-						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		return signatureOfParameter + LINK_SPECIFIER  + signatureOfLink;
-	}
 
 }

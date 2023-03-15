@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
@@ -198,7 +198,7 @@ public class ParametersLister {
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
 				return parameter;
 			}
 

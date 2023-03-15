@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
@@ -188,7 +188,7 @@ public class ParametersMapper {
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
 
 		String qualifiedName = 
-				AbstractParameterNodeHelper.getQualifiedName(basicParameterNode, linkingParameterNode);
+				AbstractParameterSignatureHelper.getQualifiedName(basicParameterNode, linkingParameterNode);
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 

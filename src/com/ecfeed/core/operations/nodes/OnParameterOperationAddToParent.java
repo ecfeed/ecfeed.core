@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -44,17 +44,17 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 		fIParametersParentNode = parametersParentNode;
 		fParameterNode = abstractParameterNode;
 		fNewIndex = index != -1 ? index : parametersParentNode.getParameters().size();
-		
+
 		fTestCasesParentNode = MethodNodeHelper.findMethodNode(parametersParentNode);
 		fRemovedTestCases = getCurrentTestCases();
 	}
 
 	private ArrayList<TestCaseNode> getCurrentTestCases() {
-		
+
 		if (fTestCasesParentNode == null) {
 			return new ArrayList<>();
 		}
-		
+
 		return new ArrayList<TestCaseNode>(fTestCasesParentNode.getTestCases());
 	}
 
@@ -73,7 +73,7 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 
 		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fIParametersParentNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterNodeHelper.getType(fParameterNode, extLanguageManager);
+		String newParameterType = AbstractParameterSignatureHelper.getType(fParameterNode, extLanguageManager);
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 

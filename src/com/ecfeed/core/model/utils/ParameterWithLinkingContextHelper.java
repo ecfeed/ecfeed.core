@@ -11,7 +11,7 @@
 package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 
 public class ParameterWithLinkingContextHelper {
 
@@ -20,8 +20,7 @@ public class ParameterWithLinkingContextHelper {
 		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
 		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
 
-		return SignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		return AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 	}
-
 
 }

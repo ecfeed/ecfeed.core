@@ -206,7 +206,7 @@ public abstract class MethodDeployer {
 		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());		
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
 
-		String signature = SignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		String signature = AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 		return signature;
 	}
 

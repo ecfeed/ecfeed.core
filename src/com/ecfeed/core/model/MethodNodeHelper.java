@@ -180,7 +180,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter =
-					AbstractParameterNodeHelper.createSignature(
+					AbstractParameterSignatureHelper.createSignature(
 							parameterType, parameterName, expectedFlag, extLanguageManager);
 
 			signature += signatureOfOneParameter;
@@ -212,7 +212,7 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+						AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
 								basicParameterNode.getType(),
 								basicParameterNode.getName(),
 								basicParameterNode.isExpected(), 
@@ -222,7 +222,7 @@ public class MethodNodeHelper {
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterNodeHelper.createSignature(compositeParameterNode, extLanguageManager);
+						AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
 			}
 
 			signature += signatureOfOneParameter;
@@ -251,7 +251,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter = 
-					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
 							parameterType,
 							parameterName,
 							expectedFlag, 

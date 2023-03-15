@@ -248,7 +248,7 @@ public class CompositeParameterNodeHelper {
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedCompositeParameters(true));
 
 		for (CompositeParameterNode parameter : parameters) {
-			String name = AbstractParameterNodeHelper.getQualifiedName(parameter);
+			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
 
 			if (name.equals(parameterName)) {
 				return parameter;

@@ -18,7 +18,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -32,40 +32,40 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		Optional<BasicParameterNode> parameter = parseMethodBasicParameter(element, method, errors);
 
 		try {
-		
+
 			if (!parameter.isPresent()) {
-				
+
 				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
 			}
-	
+
 			if (parameter.get().isLinked() && parameter.get().getLinkToGlobalParameter() != null) {
-				
+
 				AbstractParameterNode candidate = parameter.get().getLinkToGlobalParameter();
 				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
 			} else {
-		
-				String candidateName = AbstractParameterNodeHelper.getQualifiedName(parameter.get());
-				
+
+				String candidateName = AbstractParameterSignatureHelper.getQualifiedName(parameter.get());
+
 				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateName))
-					.findAny();
-				
+						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(candidateName))
+						.findAny();
+
 				if (candidate.isPresent()) {
-					
+
 					parameter.get().setDeploymentParameter(candidate.get());
 				} else {
-					
+
 					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
 					return Optional.empty();
 				}
 			}
 
 		} catch(Exception e) {
-			
+
 			ExceptionHelper.reportRuntimeException("The deployed parameter could not be parsed.");
 			return Optional.empty();
 		}
-		
+
 		return parameter;
 	}
 
@@ -100,12 +100,12 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 			try {
 				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
-				
+
 				method.getNestedBasicParameters(true).stream()
-					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(linkPath))
-					.findAny()
-					.ifPresent(parameter::setLinkToGlobalParameter);
-				
+				.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+				.findAny()
+				.ifPresent(parameter::setLinkToGlobalParameter);
+
 			} catch (ParserException e) {
 				return Optional.empty();
 			}
