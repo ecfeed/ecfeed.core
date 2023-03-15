@@ -12,6 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.Set;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
@@ -50,7 +53,13 @@ public class MethodParameterNodeHelper {
 		}
 
 		String type = AbstractParameterSignatureHelper.createSignatureOfType(methodParameterNode, extLanguageManager);
-		String name = AbstractParameterSignatureHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
+		
+//		String name = AbstractParameterSignatureHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
+		String name = 
+				AbstractParameterSignatureHelper.createSignatureNewStandard(
+				methodParameterNode,
+				ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
+				extLanguageManager);
 
 		String signature = 
 				AbstractParameterSignatureHelper.createSignature(

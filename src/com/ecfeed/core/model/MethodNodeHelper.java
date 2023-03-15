@@ -13,6 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -60,9 +63,58 @@ public class MethodNodeHelper {
 		return true;
 	}
 
+	public static String createSignatureNewStandard(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signature = new String(nameInExtLanguage) + "(";
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode,
+						extLanguageManager);
+
+		signature += signaturesOfParameters;
+
+		signature += ")";
+
+		return signature;
+		
+	}
+	
+	private static String createSignaturesOfParametersNewStandard(
+			MethodNode methodNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String signature = "";
+		
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+
+		int parametersSize = parameters.size();
+		for (int paramIndex = 0; paramIndex < parametersSize; paramIndex++) {
+
+			AbstractParameterNode parameter = parameters.get(paramIndex);
+
+			String signatureOfOneParameter = 
+					AbstractParameterSignatureHelper.createSignatureNewStandard(
+							parameter, 
+							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
+							extLanguageManager);
+							
+
+			signature += signatureOfOneParameter;
+
+			if (paramIndex < parametersSize - 1) {
+				signature += ", ";
+			}
+		}
+
+		return signature;
+	}
+	
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		return createSignature(
+		return createSignature( 
 				methodNode,
 				isParamNameAdded,
 				false, extLanguageManager);

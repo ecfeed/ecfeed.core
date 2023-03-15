@@ -50,7 +50,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromIntrToExtLanguage(String text) {
-
+		
 		String errorMessage = JavaLanguageHelper.verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
