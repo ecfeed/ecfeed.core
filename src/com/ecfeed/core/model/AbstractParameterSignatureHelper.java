@@ -128,13 +128,40 @@ public abstract class AbstractParameterSignatureHelper {
 		}
 
 		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER) {
-			
-			// TODO MO-RE use getQualifiedNameNewStandard (create copy)
-			String signature = getQualifiedName(abstractParameterNode, new ExtLanguageManagerForJava());
+
+			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, new ExtLanguageManagerForJava());
 			return signature;
 		}
 
 		return "";
+	}
+
+	public static String createSignatureToTopContainerNewStandard(
+			AbstractParameterNode abstractParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String qualifiedName = createSignatureToTopContainerNewStandard(abstractParameterNode);
+
+		if (extLanguageManager != null) {
+			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		}
+
+		return qualifiedName;
+	}
+
+	private static String createSignatureToTopContainerNewStandard(
+			AbstractParameterNode abstractParameterNode) { 
+
+		LinkedList<String> segments = new LinkedList<>();
+
+		IAbstractNode parent = abstractParameterNode;
+
+		do {
+			segments.addFirst(parent.getName());
+			parent = parent.getParent();
+		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+
+		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
