@@ -34,7 +34,7 @@ public class MethodParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
-	public static String createSignature( // XYX REMOVE - use method from AbstractParameterSignatureHelper
+	public static String createSignature( // TODO MO-RE remov - use method from AbstractParameterSignatureHelper
 			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -116,7 +116,7 @@ public class MethodParameterNodeHelper {
 
 	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
 		
-		// TODO XYX REMOVE
+		// TODO MO-RE REMOVE transfer function
 		return AbstractParameterSignatureHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
 	}
 }

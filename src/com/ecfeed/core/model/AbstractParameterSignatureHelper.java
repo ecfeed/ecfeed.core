@@ -77,7 +77,7 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 
-	public static String createSignature( // XYX in use
+	public static String createSignature(
 			AbstractParameterNode globalParameterNode, 
 			SignatureHelper.SignatureType signatureType,
 			IExtLanguageManager extLanguageManager) {
