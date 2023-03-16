@@ -21,6 +21,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParametersMapper {
 
@@ -34,13 +35,18 @@ public class ParametersMapper {
 
 	public void calculateParametersData(
 			IParametersParentNode parametersParentNode,
-			ParameterType parameterType) {
+			ParameterType parameterType,
+			IExtLanguageManager extLanguageManager) {
 
 		fParametersDescriptions = new HashMap<>();
 		CompositeParameterNode linkingParameterNode = null;
 
 		calculateParametersDataRecursive(
-				parametersParentNode, parameterType, linkingParameterNode, fParametersDescriptions);
+				parametersParentNode, 
+				parameterType, 
+				linkingParameterNode, 
+				fParametersDescriptions, 
+				extLanguageManager);
 	}
 
 	public List<String> getParameterNames() {
@@ -120,7 +126,8 @@ public class ParametersMapper {
 			IParametersParentNode parametersParentNode,
 			ParameterType parameterType, 
 			CompositeParameterNode linkingParameterNode,
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
 		List<AbstractParameterNode> childParameters = parametersParentNode.getParameters();
 
@@ -134,7 +141,8 @@ public class ParametersMapper {
 						basicParameterNode, 
 						parameterType, 
 						linkingParameterNode, 
-						inOutParametersDescriptions);
+						inOutParametersDescriptions,
+						extLanguageManager);
 
 				continue;
 			}
@@ -147,7 +155,8 @@ public class ParametersMapper {
 						currentCompositeParameterNode, 
 						parameterType, 
 						linkingParameterNode,
-						inOutParametersDescriptions);
+						inOutParametersDescriptions, 
+						extLanguageManager);
 
 				continue;
 			}
@@ -158,7 +167,8 @@ public class ParametersMapper {
 			CompositeParameterNode currentCompositeParameterNode,
 			ParameterType parameterType, 
 			CompositeParameterNode linkingParameterNode,
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode newlinkingParameterNode = 
 				currentCompositeParameterNode.getLinkToGlobalParameter();
@@ -169,7 +179,8 @@ public class ParametersMapper {
 					currentCompositeParameterNode,
 					parameterType, 
 					linkingParameterNode,
-					inOutParametersDescriptions);
+					inOutParametersDescriptions, 
+					extLanguageManager);
 
 			return;
 		}
@@ -178,17 +189,20 @@ public class ParametersMapper {
 				(IParametersParentNode)newlinkingParameterNode,
 				parameterType, 
 				currentCompositeParameterNode,
-				inOutParametersDescriptions);
+				inOutParametersDescriptions, 
+				extLanguageManager);
 	}
 
 	private void addBasicParameter(
 			BasicParameterNode basicParameterNode,
 			ParameterType parameterType,
 			CompositeParameterNode linkingParameterNode, 
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = 
-				AbstractParameterSignatureHelper.getQualifiedName(basicParameterNode, linkingParameterNode);
+				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
+						basicParameterNode, linkingParameterNode, extLanguageManager);
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 
@@ -211,7 +225,6 @@ public class ParametersMapper {
 
 		return;
 	}
-
 
 	private static boolean shouldAddParameter(
 			BasicParameterNode basicParameterNode,
