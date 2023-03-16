@@ -104,21 +104,21 @@ public class ParametersMapper {
 	public List<BasicParameterDescription> getListOfParameterDescriptions() {
 
 		List<BasicParameterDescription> result = new ArrayList<>();
-		
+
 		for (Map.Entry<String, BasicParameterWithLinkingContext> entry : fParametersDescriptions.entrySet()) {
-			
+
 			String qualifiedName = entry.getKey();
 			BasicParameterWithLinkingContext basicParameterWithLinkingContext = entry.getValue();
-			
+
 			BasicParameterDescription basicParameterDescription = 
 					new BasicParameterDescription(
 							qualifiedName, 
 							basicParameterWithLinkingContext.getBasicParameterNode(), 
 							basicParameterWithLinkingContext.getLinkingParameterNode());
-			
+
 			result.add(basicParameterDescription);
 		}		
-		
+
 		return result;
 	}
 
@@ -196,13 +196,13 @@ public class ParametersMapper {
 	private void addBasicParameter(
 			BasicParameterNode basicParameterNode,
 			ParameterType parameterType,
-			CompositeParameterNode linkingParameterNode, 
+			CompositeParameterNode parameterNodeWhichHasLink, 
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
 			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = 
 				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
-						basicParameterNode, linkingParameterNode, extLanguageManager);
+						parameterNodeWhichHasLink, basicParameterNode, extLanguageManager);
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 
@@ -210,7 +210,7 @@ public class ParametersMapper {
 
 			if (shouldAddParameter(basicParameterNode, parameterType)) {
 				BasicParameterWithLinkingContext parametersData = 
-						new BasicParameterWithLinkingContext(basicParameterNode, linkingParameterNode);
+						new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
 				inOutParametersDescriptions.put(qualifiedName, parametersData);
 			}
 
@@ -219,7 +219,7 @@ public class ParametersMapper {
 
 		if (shouldAddParameter(link, parameterType)) {
 			BasicParameterWithLinkingContext parametersData = 
-					new BasicParameterWithLinkingContext(basicParameterNode, linkingParameterNode);
+					new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
 			inOutParametersDescriptions.put(qualifiedName, parametersData);
 		}
 

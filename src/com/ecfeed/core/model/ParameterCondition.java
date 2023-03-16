@@ -236,10 +236,15 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String name = 
-				AbstractParameterSignatureHelper.getQualifiedName(
-						fRightParameterNode, fRightParameterLinkingContext);
-		
+		//		String name = 
+		//				AbstractParameterSignatureHelper.getQualifiedName(
+		//						fRightParameterNode, fRightParameterLinkingContext);
+
+		String name =
+				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
+						fRightParameterLinkingContext, fRightParameterNode, extLanguageManager);
+
+
 		return StatementConditionHelper.createParameterDescription(name);
 	}
 

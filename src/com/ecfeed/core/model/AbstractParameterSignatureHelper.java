@@ -20,19 +20,20 @@ import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractParameterSignatureHelper {
 
-	private static final String LINK_SPECIFIER = "->";
+	private static final String SHORTENED_LINK_TEXT = ":";
+	private static final String LINK_SPECIFIER_TEXT = "->";
 
 	public enum ExtendedName {
 		IRRELEVANT,
 		NAME_ONLY,
 		PATH_TO_TOP_CONTAINTER,
-		PATH_TO_TOP_CONTAINTER_WITHOUT_FIRST_ITEM
+		PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
 	}
-	
+
 	public enum TypeOfLink {
 		IRRELEVANT,
 		NORMAL,
-		INVISIBLE
+		SHORTENED
 	}
 
 	public enum Decorations {
@@ -67,10 +68,10 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	public static String createSignatureWithLinkNewStandard(
-			AbstractParameterNode parameter,
+			AbstractParameterNode parameterWhichHasLink, // may be parameter or linking context
 			ExtendedName extendedNameTypeOfParameter,
 			TypeOfLink typeOfLink,
-			AbstractParameterNode linkToParameterOrParent,
+			AbstractParameterNode link,
 			ExtendedName extendedNameTypeOfLink,
 			Decorations decorations,
 			TypeIncluded typeIncluded,
@@ -78,56 +79,74 @@ public abstract class AbstractParameterSignatureHelper {
 
 		String signature = 
 				createSignatureOfParameterNameNewStandard(
-						parameter, 
+						parameterWhichHasLink, 
 						extendedNameTypeOfParameter,
-						linkToParameterOrParent,
+						typeOfLink,
+						link,
 						extendedNameTypeOfLink,
 						extLanguageManager);
 
 		if (typeIncluded == TypeIncluded.YES) {
 			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-			signature += getExtendedType(parameter);
+			signature += getExtendedType(parameterWhichHasLink);
 		}
 
 		return signature;
 	}
-	
+
 	public static String createCompressedSignatureWithLinkNewStandard(
-			AbstractParameterNode abstractParameterNode, 
-			CompositeParameterNode linkingContext,
+			AbstractParameterNode parameterWhichHasLink, 
+			AbstractParameterNode link,
 			IExtLanguageManager extLanguageManager) {
 
-		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
-			return getQualifiedName(abstractParameterNode, extLanguageManager);
-		}
+		String signatureNew = 
+				createSignatureWithLinkNewStandard(
+						parameterWhichHasLink,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						link,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 
-		String ownQualifiedName = 
-				createSignatureToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+		System.out.println(signatureNew);
 
-		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		//		if (link == null || !parameterWhichHasLink.isGlobalParameter()) {
+		//			return getQualifiedName(parameterWhichHasLink, extLanguageManager);
+		//		}
+		//
+		//		String ownQualifiedName = 
+		//				createSignatureToTopContainerNewStandard(parameterWhichHasLink, extLanguageManager);
+		//
+		//		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		//
+		//		if (parameterWhichHasLink.isClassParameter()) {
+		//			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
+		//		}
+		//
+		//		CompositeParameterNode candidate = null;
+		//
+		//		parameterLoop:
+		//			for (CompositeParameterNode candidateComposite : ((CompositeParameterNode)link).getNestedCompositeParameters(false)) {
+		//				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+		//					if (candidateParametr == parameterWhichHasLink) {
+		//						candidate = candidateComposite;
+		//						break parameterLoop;
+		//					}
+		//				}
+		//			}
+		//
+		//		String linkingSignature = 
+		//				createSignatureToTopContainerNewStandard(candidate != null ? candidate : link, extLanguageManager);
+		//
+		//		String signatureOld = linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+		//		System.out.println(signatureOld);
+		////		return signatureOld;
 
-		if (abstractParameterNode.isClassParameter()) {
-			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
-		}
-
-		CompositeParameterNode candidate = null;
-
-		parameterLoop:
-			for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
-				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-					if (candidateParametr == abstractParameterNode) {
-						candidate = candidateComposite;
-						break parameterLoop;
-					}
-				}
-			}
-
-		String linkingSignature = 
-				createSignatureToTopContainerNewStandard(candidate != null ? candidate : linkingContext, extLanguageManager);
-
-		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+		return signatureNew;
 	}
-	
+
 	public static String createSignatureToTopContainerNewStandard(
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
@@ -140,39 +159,50 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return qualifiedName;
 	}
-	
+
 	private static String createSignatureOfParameterNameNewStandard(
-			AbstractParameterNode parameter,
+			AbstractParameterNode parameterWhichHasLink,
 			ExtendedName extendedNameTypeOfParameter,
-			AbstractParameterNode linkToParameterOrParentOfParameter,
+			TypeOfLink typeOfLink,
+			AbstractParameterNode link,
 			ExtendedName extendedNameTypeOfLink,
 			IExtLanguageManager extLanguageManager) {
 
-		if (parameter == null) {
+		if (parameterWhichHasLink == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
 		}
 
 		String signatureOfParameter = 
 				createSignatureOfSingleParameterNameNewStandard(
-						parameter, 
+						parameterWhichHasLink, 
 						extendedNameTypeOfParameter,
-						new ExtLanguageManagerForJava());  // TODO MO-RE
+						extLanguageManager);
 
 
-		if (linkToParameterOrParentOfParameter == null) {
+		if (link == null) {
 
 			return signatureOfParameter;
 		}
 
 		String signatureOfLink = 
 				createSignatureOfSingleParameterNameNewStandard(
-						linkToParameterOrParentOfParameter, 
+						link, 
 						extendedNameTypeOfLink,
-						new ExtLanguageManagerForJava());  // TODO MO-RE
+						extLanguageManager);
 
-		String signature = signatureOfParameter + LINK_SPECIFIER  + signatureOfLink;
+		String signature = signatureOfParameter + getLinkSpecifier(typeOfLink)  + signatureOfLink;
+		System.out.println(signature);
 
 		return signature;
+	}
+
+	private static String getLinkSpecifier(TypeOfLink typeOfLink) {
+
+		if (typeOfLink == TypeOfLink.SHORTENED) {
+			return SHORTENED_LINK_TEXT;
+		}
+
+		return LINK_SPECIFIER_TEXT;
 	}
 
 	private static String createSignatureOfSingleParameterNameNewStandard(
@@ -186,7 +216,15 @@ public abstract class AbstractParameterSignatureHelper {
 
 		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER) {
 
-			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, new ExtLanguageManagerForJava());
+			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+			return signature;
+		}
+
+		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM) {
+
+			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+			signature = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, signature);
+
 			return signature;
 		}
 
@@ -205,7 +243,8 @@ public abstract class AbstractParameterSignatureHelper {
 			parent = parent.getParent();
 		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
 
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		String signature = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		return signature;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,7 +274,7 @@ public abstract class AbstractParameterSignatureHelper {
 				createSignatureWithPathToTopParametersParent(
 						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
 
-		return signatureOfParameter + LINK_SPECIFIER  + signatureOfLink;
+		return signatureOfParameter + LINK_SPECIFIER_TEXT  + signatureOfLink;
 	}
 
 	//	private static String createSignatureOfParameterName(
@@ -294,7 +333,7 @@ public abstract class AbstractParameterSignatureHelper {
 				createSignatureWithPathToTopParametersParent(
 						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
 
-		return signatureOfContext + LINK_SPECIFIER + signatureOfParameter;
+		return signatureOfContext + LINK_SPECIFIER_TEXT + signatureOfParameter;
 	}
 
 	// OBSOLETE
