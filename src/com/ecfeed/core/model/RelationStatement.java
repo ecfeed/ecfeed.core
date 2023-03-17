@@ -13,6 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -180,13 +184,22 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftParameter = getLeftParameter();
 		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
+		String signatureNew = 
+		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				linkingContext,
+				ExtendedName.PATH_TO_TOP_CONTAINTER,
+				TypeOfLink.SHORTENED,
+				leftParameter,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				Decorations.NO,
+				TypeIncluded.NO,
+				new ExtLanguageManagerForJava());
 
 		//		String nameInIntrLanguage = 
 		//				AbstractParameterSignatureHelper.getQualifiedName(leftParameter, linkingContext);
 
 		String nameInIntrLanguage =
-				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
-						linkingContext, leftParameter, new ExtLanguageManagerForJava());
+				signatureNew;
 
 
 		return nameInIntrLanguage;
@@ -205,14 +218,23 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftBasicParameterNode = getLeftParameter();
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
+		String signatureNew = 
+		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				leftParameterLinkingCondition,
+				ExtendedName.PATH_TO_TOP_CONTAINTER,
+				TypeOfLink.SHORTENED,
+				leftBasicParameterNode,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				Decorations.NO,
+				TypeIncluded.NO,
+				extLanguageManager);
 
 		//		String parameterName = 
 		//				AbstractParameterSignatureHelper.getQualifiedName(
 		//						leftBasicParameterNode, leftParameterLinkingCondition, extLanguageManager);
 
 		String parameterName =
-				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
-						leftParameterLinkingCondition, leftBasicParameterNode, extLanguageManager);
+				signatureNew;
 
 
 		return parameterName + getRelation() + conditionSignature;

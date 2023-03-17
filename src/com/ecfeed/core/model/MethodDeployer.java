@@ -213,15 +213,16 @@ public abstract class MethodDeployer {
 
 		//String signatureOld = AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 
-		String signature = AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				context,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.NORMAL,
-				parameter,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				Decorations.NO,
-				TypeIncluded.NO,
-				new ExtLanguageManagerForJava());
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
 
 		return signature;
 	}

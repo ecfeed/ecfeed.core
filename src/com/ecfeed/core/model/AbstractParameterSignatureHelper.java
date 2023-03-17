@@ -76,7 +76,7 @@ public abstract class AbstractParameterSignatureHelper {
 			Decorations decorations,
 			TypeIncluded typeIncluded,
 			IExtLanguageManager extLanguageManager) {
-
+		
 		String signature = 
 				createSignatureOfParameterNameNewStandard(
 						parameterWhichHasLink, 
@@ -92,59 +92,6 @@ public abstract class AbstractParameterSignatureHelper {
 		}
 
 		return signature;
-	}
-
-	public static String createCompressedSignatureWithLinkNewStandard(
-			AbstractParameterNode parameterWhichHasLink, 
-			AbstractParameterNode link,
-			IExtLanguageManager extLanguageManager) {
-
-		String signatureNew = 
-				createSignatureWithLinkNewStandard(
-						parameterWhichHasLink,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
-						link,
-						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
-						Decorations.NO,
-						TypeIncluded.NO,
-						extLanguageManager);
-
-		//System.out.println(signatureNew);
-
-		//		if (link == null || !parameterWhichHasLink.isGlobalParameter()) {
-		//			return getQualifiedName(parameterWhichHasLink, extLanguageManager);
-		//		}
-		//
-		//		String ownQualifiedName = 
-		//				createSignatureToTopContainerNewStandard(parameterWhichHasLink, extLanguageManager);
-		//
-		//		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-		//
-		//		if (parameterWhichHasLink.isClassParameter()) {
-		//			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
-		//		}
-		//
-		//		CompositeParameterNode candidate = null;
-		//
-		//		parameterLoop:
-		//			for (CompositeParameterNode candidateComposite : ((CompositeParameterNode)link).getNestedCompositeParameters(false)) {
-		//				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-		//					if (candidateParametr == parameterWhichHasLink) {
-		//						candidate = candidateComposite;
-		//						break parameterLoop;
-		//					}
-		//				}
-		//			}
-		//
-		//		String linkingSignature = 
-		//				createSignatureToTopContainerNewStandard(candidate != null ? candidate : link, extLanguageManager);
-		//
-		//		String signatureOld = linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
-		//		System.out.println(signatureOld);
-		////		return signatureOld;
-
-		return signatureNew;
 	}
 
 	public static String createSignatureToTopContainerNewStandard( // old getQualifiedName

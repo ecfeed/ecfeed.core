@@ -32,9 +32,9 @@ public class ParameterWithLinkingContextHelper {
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						context,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.NORMAL,
+						TypeOfLink.SHORTENED,
 						parameter,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
 						Decorations.NO,
 						TypeIncluded.NO,
 						new ExtLanguageManagerForJava());
