@@ -110,7 +110,7 @@ public abstract class AbstractParameterSignatureHelper {
 						TypeIncluded.NO,
 						extLanguageManager);
 
-		System.out.println(signatureNew);
+		//System.out.println(signatureNew);
 
 		//		if (link == null || !parameterWhichHasLink.isGlobalParameter()) {
 		//			return getQualifiedName(parameterWhichHasLink, extLanguageManager);
@@ -147,11 +147,11 @@ public abstract class AbstractParameterSignatureHelper {
 		return signatureNew;
 	}
 
-	public static String createSignatureToTopContainerNewStandard(
+	public static String createSignatureToTopContainerNewStandard( // old getQualifiedName
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = createSignatureToTopContainerNewStandard(abstractParameterNode);
+		String qualifiedName = createSignatureToTopContainerNewStandardIntr(abstractParameterNode);
 
 		if (extLanguageManager != null) {
 			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
@@ -191,7 +191,7 @@ public abstract class AbstractParameterSignatureHelper {
 						extLanguageManager);
 
 		String signature = signatureOfParameter + getLinkSpecifier(typeOfLink)  + signatureOfLink;
-		System.out.println(signature);
+		//System.out.println(signature);
 
 		return signature;
 	}
@@ -231,7 +231,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return "";
 	}
 
-	private static String createSignatureToTopContainerNewStandard(
+	private static String createSignatureToTopContainerNewStandardIntr(
 			AbstractParameterNode abstractParameterNode) { 
 
 		LinkedList<String> segments = new LinkedList<>();
@@ -394,7 +394,8 @@ public abstract class AbstractParameterSignatureHelper {
 			parent = parent.getParent();
 		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
 
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		String qualifiedName = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		return qualifiedName;
 	}
 
 	// OBSOLETE

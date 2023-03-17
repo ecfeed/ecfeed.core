@@ -12,6 +12,11 @@ package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class ParameterWithLinkingContextHelper {
 
@@ -20,7 +25,21 @@ public class ParameterWithLinkingContextHelper {
 		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
 		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
 
-		return AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		//		String signatureOld = 
+		//				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		//
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
+
+		return signature;
 	}
 
 }

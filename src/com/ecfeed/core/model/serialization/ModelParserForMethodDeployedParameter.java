@@ -22,6 +22,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -44,10 +45,12 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
 			} else {
 
-				String candidateName = AbstractParameterSignatureHelper.getQualifiedName(parameter.get());
+				String candidateName = 
+						AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(
+								parameter.get(), new ExtLanguageManagerForJava());
 
 				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(candidateName))
+						.filter(e -> AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(e, new ExtLanguageManagerForJava()).equals(candidateName))
 						.findAny();
 
 				if (candidate.isPresent()) {
@@ -102,7 +105,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
 
 				method.getNestedBasicParameters(true).stream()
-				.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+				.filter(e -> AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(e, new ExtLanguageManagerForJava()).equals(linkPath))
 				.findAny()
 				.ifPresent(parameter::setLinkToGlobalParameter);
 

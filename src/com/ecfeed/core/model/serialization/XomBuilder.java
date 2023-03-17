@@ -12,6 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.LogHelperCore;
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -383,7 +384,12 @@ public abstract class XomBuilder implements IModelVisitor {
 		if (node.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
 					targetCompositeParameterElement,
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, AbstractParameterSignatureHelper.getQualifiedName(node.getLinkToGlobalParameter())),
+					new Attribute(
+							PARAMETER_LINK_ATTRIBUTE_NAME, 
+							AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(
+									node.getLinkToGlobalParameter(), 
+									new ExtLanguageManagerForJava())),
+					
 					fWhiteCharConverter);
 		}
 

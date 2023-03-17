@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends AbstractNode implements IParametersParentNode {
@@ -422,7 +423,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		for (BasicParameterNode parameter : globalParameters) {
 
-			String currentQualifiedName = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+			String currentQualifiedName = 
+					AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
 
 			if(currentQualifiedName.equals(qualifiedName)){
 				return parameter;
