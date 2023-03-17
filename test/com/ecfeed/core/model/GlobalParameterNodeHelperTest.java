@@ -28,17 +28,17 @@ public class GlobalParameterNodeHelperTest {
 		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		globalParameterNode.setParent(rootNode);
 
-		String qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
+		String qualifiedName = AbstractParameterSignatureHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterSignatureHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("global 1", qualifiedName);
 
 
-		String type = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
+		String type = AbstractParameterSignatureHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String", type);
 
-		qualifiedName = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterSignatureHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text", qualifiedName);
 	}
 
@@ -51,7 +51,7 @@ public class GlobalParameterNodeHelperTest {
 		globalParameterNode.setParent(rootNode);
 
 		String signature = 
-				AbstractParameterNodeHelper.createSignature(
+				AbstractParameterSignatureHelper.createSignature(
 						globalParameterNode,
 						SignatureHelper.SignatureType.WITH_TYPE,
 						new ExtLanguageManagerForJava());
@@ -59,7 +59,7 @@ public class GlobalParameterNodeHelperTest {
 		assertEquals("String global_1", signature);
 
 		signature = 
-				AbstractParameterNodeHelper.createSignature(
+				AbstractParameterSignatureHelper.createSignature(
 						globalParameterNode, 
 						SignatureHelper.SignatureType.WITH_TYPE, 
 						new ExtLanguageManagerForSimple());

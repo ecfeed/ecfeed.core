@@ -30,6 +30,7 @@ import com.ecfeed.core.model.ParametersAndConstraintsParentNodeHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.utils.ParametersMapper.ParameterType;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class ParametersMapperTest {
 
@@ -62,7 +63,7 @@ public class ParametersMapperTest {
 		// parameters container from level of method node
 
 		ParametersMapper parametersContainer = new ParametersMapper();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -169,7 +170,7 @@ public class ParametersMapperTest {
 		// parameters container from level of method node
 
 		ParametersMapper parametersContainer = new ParametersMapper();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -205,7 +206,7 @@ public class ParametersMapperTest {
 
 		// parameters container from level of composite 1
 
-		parametersContainer.calculateParametersData(compositeParameterNode1, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(compositeParameterNode1, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 		parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(4, parameterNames.size());
@@ -236,7 +237,7 @@ public class ParametersMapperTest {
 
 		// parameters container from level of composite 2
 
-		parametersContainer.calculateParametersData(compositeParameterNode2, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(compositeParameterNode2, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 		parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(1, parameterNames.size());
@@ -313,7 +314,7 @@ public class ParametersMapperTest {
 		// parameters container from level of method node
 
 		ParametersMapper parametersContainer = new ParametersMapper();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -383,7 +384,7 @@ public class ParametersMapperTest {
 		// parameters container from level of method node
 
 		ParametersMapper parametersContainer = new ParametersMapper();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
