@@ -20,11 +20,13 @@ import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractParameterSignatureHelper {
 
+	private static final String EXPECTED_DECORATION = "[EXP]";
 	private static final String SHORTENED_LINK_TEXT = ":";
 	private static final String LINK_SPECIFIER_TEXT = "->";
 
 	public enum ExtendedName {
 		IRRELEVANT,
+		EMPTY,
 		NAME_ONLY,
 		PATH_TO_TOP_CONTAINTER,
 		PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
@@ -85,10 +87,24 @@ public abstract class AbstractParameterSignatureHelper {
 						link,
 						extendedNameTypeOfLink,
 						extLanguageManager);
+		
+		if (decorations == Decorations.YES && parameterWhichHasLink instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameterWhichHasLink;
+			
+			if (basicParameterNode.isExpected()) {
+				signature += EXPECTED_DECORATION;
+			}
+		}
 
 		if (typeIncluded == TypeIncluded.YES) {
-			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-			signature += getExtendedType(parameterWhichHasLink);
+
+			if (extendedNameTypeOfParameter != ExtendedName.EMPTY) {
+				signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
+			}
+
+			String type = getType(parameterWhichHasLink, extLanguageManager);
+			signature += type;
 		}
 
 		return signature;
@@ -115,8 +131,30 @@ public abstract class AbstractParameterSignatureHelper {
 			ExtendedName extendedNameTypeOfLink,
 			IExtLanguageManager extLanguageManager) {
 
+		if (parameterWhichHasLink == null && link == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter and link.");
+		}
+
+		if (link == null) {
+
+			String signatureOfParameterOnly = 
+					createSignatureOfSingleParameterNameNewStandard(
+							parameterWhichHasLink, 
+							extendedNameTypeOfParameter,
+							extLanguageManager);
+
+			return signatureOfParameterOnly;
+		}
+
 		if (parameterWhichHasLink == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
+
+			String signatureOfLinkOnly = 
+					createSignatureOfSingleParameterNameNewStandard(
+							link, 
+							extendedNameTypeOfLink,
+							extLanguageManager);
+
+			return signatureOfLinkOnly;
 		}
 
 		String signatureOfParameter = 
@@ -125,12 +163,6 @@ public abstract class AbstractParameterSignatureHelper {
 						extendedNameTypeOfParameter,
 						extLanguageManager);
 
-
-		if (link == null) {
-
-			return signatureOfParameter;
-		}
-
 		String signatureOfLink = 
 				createSignatureOfSingleParameterNameNewStandard(
 						link, 
@@ -138,7 +170,6 @@ public abstract class AbstractParameterSignatureHelper {
 						extLanguageManager);
 
 		String signature = signatureOfParameter + getLinkSpecifier(typeOfLink)  + signatureOfLink;
-		//System.out.println(signature);
 
 		return signature;
 	}
@@ -158,7 +189,11 @@ public abstract class AbstractParameterSignatureHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		if (extendedNameType == ExtendedName.NAME_ONLY) {
-			return abstractParameterNode.getName();
+			return extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
+		}
+
+		if (extendedNameType == ExtendedName.EMPTY) {
+			return "";
 		}
 
 		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER) {
@@ -192,6 +227,25 @@ public abstract class AbstractParameterSignatureHelper {
 
 		String signature = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 		return signature;
+	}
+
+	// TODO MO-RE rename to createSignatureOfType
+	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+		String type = basicParameterNode.getType();
+
+		if (type == null) {
+			return null;
+		}
+
+		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
+		return type;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,16 +298,16 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-	// OBSOLETE
-	private static String getExtendedType(AbstractParameterNode abstractParameterNode) {
-
-		if (abstractParameterNode instanceof CompositeParameterNode) {
-			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-		}
-
-		String typeOfBasicParameter = ((BasicParameterNode)abstractParameterNode).getType();
-		return typeOfBasicParameter;
-	}
+	//	// OBSOLETE
+	//	private static String getExtendedType(AbstractParameterNode abstractParameterNode) {
+	//
+	//		if (abstractParameterNode instanceof CompositeParameterNode) {
+	//			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+	//		}
+	//
+	//		String typeOfBasicParameter = ((BasicParameterNode)abstractParameterNode).getType();
+	//		return typeOfBasicParameter;
+	//	}
 
 	// OBSOLETE
 	public static String createSignatureOfParameterWithContext(
@@ -416,25 +470,6 @@ public abstract class AbstractParameterSignatureHelper {
 
 			return compositeName;
 		}
-	}
-
-	// OBSOLETE
-	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-
-		if (abstractParameterNode instanceof CompositeParameterNode) {
-			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-		String type = basicParameterNode.getType();
-
-		if (type == null) {
-			return null;
-		}
-
-		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-		return type;
 	}
 
 	// OBSOLETE
@@ -621,7 +656,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		if (expectedFlag != null) {
 			if (expectedFlag == true) {
-				signature += "[EXP]";
+				signature += EXPECTED_DECORATION;
 			}
 		}
 

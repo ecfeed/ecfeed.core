@@ -40,7 +40,7 @@ public class ConstraintNodeHelperTest {
 	}
 
 	@Test
-	public void createSignatureTest2() {
+	public void AAcreateSignatureTest2() {
 
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();

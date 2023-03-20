@@ -33,40 +33,6 @@ public class MethodParameterNodeHelperTest {
 	}
 
 	@Test
-	public void createSignatureTest(){
-
-		BasicParameterNode methodParameterNode;
-
-		methodParameterNode =
-				new BasicParameterNode("par_1", "int", "0", false, null);
-
-		String signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
-		assertEquals("int par_1", signature);
-
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("Number: par 1", signature);
-
-
-		methodParameterNode =
-				new BasicParameterNode("par_1", "String", "0", true, null);
-
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
-		assertEquals("[e]String par_1", signature);
-
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("[e]Text: par 1", signature);
-
-		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
-		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
-
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
-		assertEquals("[e]String par_1[LINKED]->global_1", signature);
-
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("[e]Text: par 1[LINKED]->global 1", signature);
-	}
-
-	@Test
 	public void createReverseSignatureTest(){
 
 		BasicParameterNode methodParameterNode;

@@ -63,61 +63,61 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	public static String createSignatureNewStandard(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-		
-		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+	public static String createSignatureNewStandard(
+			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
 
-		String signature = new String(nameInExtLanguage) + "(";
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
 
 		String signaturesOfParameters = 
 				createSignaturesOfParametersNewStandard(
 						methodNode,
+						paramNamesAdded,
+						expectedDecorationsAdded, 
 						extLanguageManager);
 
-		signature += signaturesOfParameters;
-
-		signature += ")";
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
 
 		return signature;
-		
+
 	}
-	
+
 	private static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
 			IExtLanguageManager extLanguageManager) {
 
-		String signature = "";
-		
+		ExtendedName extendedName = (paramNamesAdded == true ? ExtendedName.NAME_ONLY : ExtendedName.EMPTY);
+		Decorations parameterDecorations = (expectedDecorationsAdded == true ? Decorations.YES : Decorations.NO);
+
+		List<String> signaturesOfSingleParameters = new ArrayList<>();
+
 		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
-		int parametersSize = parameters.size();
-		for (int paramIndex = 0; paramIndex < parametersSize; paramIndex++) {
-
-			AbstractParameterNode parameter = parameters.get(paramIndex);
+		for (AbstractParameterNode parameter : parameters) {
 
 			String signatureOfOneParameter = 
 					AbstractParameterSignatureHelper.createSignatureNewStandard(
-							parameter, 
-							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
+							parameter,
+							extendedName,
+							parameterDecorations,
+							TypeIncluded.YES,
 							extLanguageManager);
-							
 
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < parametersSize - 1) {
-				signature += ", ";
-			}
+			signaturesOfSingleParameters.add(signatureOfOneParameter);
 		}
 
-		return signature;
-	}
-	
-	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+		String result = String.join(", ", signaturesOfSingleParameters);
 
-		return createSignature( 
-				methodNode,
-				isParamNameAdded,
-				false, extLanguageManager);
+		return result;
+	}
+
+	public static String createSignature(MethodNode methodNode, boolean paramNamesAdded, IExtLanguageManager extLanguageManager) {
+
+		return createSignature( methodNode, paramNamesAdded, false, extLanguageManager);
 	}
 
 	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -136,35 +136,46 @@ public class MethodNodeHelper {
 
 	public static String createSignature(
 			MethodNode methodNode,
-			boolean isParamNameAdded,
-			boolean isExpectedDecorationAdded, 
-			IExtLanguageManager extLanguageOfTheResult) {
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode, 
+						paramNamesAdded,
+						expectedDecorationsAdded, 
+						extLanguageManager);
 
 
-		final List<Boolean> expectedParametersFlags =
-				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
-
-		List<String> parametersNames = new ArrayList<>();
-
-		if (isParamNameAdded == true) {
-			parametersNames = methodNode.getParametersNames();
-		} else {
-			parametersNames = null;
-		}
-
-		List<String> parameterTypes = methodNode.getParameterTypes();
-
-		String methodName = methodNode.getName();
-
-		String signature =
-				createSignatureByIntrLanguage(
-						methodName,
-						parameterTypes,
-						parametersNames,
-						expectedParametersFlags,
-						extLanguageOfTheResult);
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
 
 		return signature;
+
+		//		final List<Boolean> expectedParametersFlags =
+		//				(expectedDecorationsAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
+		//
+		//		List<String> parametersNames = new ArrayList<>();
+		//
+		//		if (paramNamesAdded == true) {
+		//			parametersNames = methodNode.getParametersNames();
+		//		} else {
+		//			parametersNames = null;
+		//		}
+		//
+		//		List<String> parameterTypes = methodNode.getParameterTypes();
+		//
+		//		String methodName = methodNode.getName();
+		//
+		//		String signature =
+		//				createSignatureByIntrLanguage(
+		//						methodName,
+		//						parameterTypes,
+		//						parametersNames,
+		//						expectedParametersFlags,
+		//						extLanguageOfTheResult);
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -197,6 +208,7 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
+	// OBSOLETE 
 	public static String createSignature(
 			String methodName,
 			List<String> parameterTypes,
@@ -319,27 +331,27 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
-
-		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-
-		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-
-			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-				continue;
-			}
-
-			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-			if (basicParameterNode.isExpected()) {
-				expectedFlags.add(true);
-			} else {
-				expectedFlags.add(false);
-			}
-		}
-
-		return expectedFlags;
-	}
+	//	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
+	//
+	//		List<Boolean> expectedFlags = new ArrayList<Boolean>();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+	//
+	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+	//				continue;
+	//			}
+	//
+	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+	//
+	//			if (basicParameterNode.isExpected()) {
+	//				expectedFlags.add(true);
+	//			} else {
+	//				expectedFlags.add(false);
+	//			}
+	//		}
+	//
+	//		return expectedFlags;
+	//	}
 
 	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
 	//
