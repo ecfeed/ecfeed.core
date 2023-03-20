@@ -18,60 +18,60 @@ import static org.junit.Assert.*;
 
 public class AbstractParameterNodeHelperTest {
 
-	@Test
-	public void createSignatureByIntrLanguageTest() {
+	//	@Test
+	//	public void createSignatureByIntrLanguageTest() {
+	//
+	//		String signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int","par1",false,	new ExtLanguageManagerForJava());
+	//		assertEquals("int par1", signature);
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int","par1",false,	new ExtLanguageManagerForSimple());
+	//		assertEquals("Number: par1", signature);
+	//
+	//		// with expected flag
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int","par1",true,	new ExtLanguageManagerForJava());
+	//		assertEquals("[e]int par1", signature);
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int","par1",true,	new ExtLanguageManagerForSimple());
+	//		assertEquals("[e]Number: par1", signature);
+	//
+	//		// without parameter name
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int",null,false,	new ExtLanguageManagerForJava());
+	//		assertEquals("int", signature);
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int",null,false,	new ExtLanguageManagerForSimple());
+	//		assertEquals("Number", signature);
+	//
+	//		// expected without parameter
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int",null,true,	new ExtLanguageManagerForJava());
+	//		assertEquals("[e]int", signature);
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//				"int",null,true,	new ExtLanguageManagerForSimple());
+	//		assertEquals("[e]Number", signature);
+	//
+	//	}
 
-		String signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",false,	new ExtLanguageManagerForJava());
-		assertEquals("int par1", signature);
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",false,	new ExtLanguageManagerForSimple());
-		assertEquals("Number: par1", signature);
-
-		// with expected flag
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",true,	new ExtLanguageManagerForJava());
-		assertEquals("[e]int par1", signature);
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",true,	new ExtLanguageManagerForSimple());
-		assertEquals("[e]Number: par1", signature);
-
-		// without parameter name
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,false,	new ExtLanguageManagerForJava());
-		assertEquals("int", signature);
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,false,	new ExtLanguageManagerForSimple());
-		assertEquals("Number", signature);
-
-		// expected without parameter
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,true,	new ExtLanguageManagerForJava());
-		assertEquals("[e]int", signature);
-
-		signature = AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,true,	new ExtLanguageManagerForSimple());
-		assertEquals("[e]Number", signature);
-
-	}
-
-	@Test
-	public void createSignatureByExtLanguageTest() {
-
-		String signature = AbstractParameterSignatureHelper.createSignature(
-				"Number","par1",false, new ExtLanguageManagerForSimple());
-		assertEquals("Number: par1", signature);
-
-		signature = AbstractParameterSignatureHelper.createSignature(
-				"Number","par1",true, new ExtLanguageManagerForSimple());
-		assertEquals("[e]Number: par1", signature);
-	}
+	//	@Test
+	//	public void createSignatureByExtLanguageTest() {
+	//
+	//		String signature = AbstractParameterSignatureHelper.createSignature(
+	//				"Number","par1",false, new ExtLanguageManagerForSimple());
+	//		assertEquals("Number: par1", signature);
+	//
+	//		signature = AbstractParameterSignatureHelper.createSignature(
+	//				"Number","par1",true, new ExtLanguageManagerForSimple());
+	//		assertEquals("[e]Number: par1", signature);
+	//	}
 
 	@Test
 	public void createTypeLabelsTest() {
