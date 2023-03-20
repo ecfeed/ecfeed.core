@@ -128,10 +128,10 @@ public class ChoiceNodeHelperTest {
 		methodParameterNode.setExpected(false);
 
 		label = ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, new ExtLanguageManagerForJava());
-		assertEquals("par1:choice_1", label);
+		assertEquals("par1.choice_1", label);
 
 		label = ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, new ExtLanguageManagerForSimple());
-		assertEquals("par1:choice_1", label);
+		assertEquals("par1.choice_1", label);
 	}
 
 	@Test
