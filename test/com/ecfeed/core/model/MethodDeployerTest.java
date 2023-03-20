@@ -218,7 +218,7 @@ public class MethodDeployerTest {
 	}
 
 	@Test
-	public void AAdeployTwoBasicLinkedParametersWithDifferentNames() {
+	public void deployTwoBasicLinkedParametersWithDifferentNames() {
 
 		MethodNode methodNode = createModelWithTwoBasicLinkedParametersOneAtMethodLevel("P1", "P2");
 
@@ -342,7 +342,7 @@ public class MethodDeployerTest {
 
 		ParameterWithLinkingContext deployedPar1 = deployedParameters.get(0);
 		String signature1 = ParameterWithLinkingContextHelper.createSignature(deployedPar1);
-		assertEquals("S1->GP1", signature1);
+		assertEquals("S1:GP1", signature1);
 
 		AbstractParameterNode originalGlobalParameter1 = nodeMapper.getSourceNode(deployedPar1.getParameter());
 		assertEquals(globalBasicParameterNode, originalGlobalParameter1);
@@ -354,13 +354,13 @@ public class MethodDeployerTest {
 				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
 						originalGlobalParameter1, originalLinkingContext1);
 
-		assertEquals("S1->GS1:GP1", originalSignature1);
+		assertEquals("S1->GS1.GP1", originalSignature1);
 
 		// check the second parameter
 
 		ParameterWithLinkingContext deployedPar2 = deployedParameters.get(1);
 		String signature2 = ParameterWithLinkingContextHelper.createSignature(deployedPar2);
-		assertEquals("S2->GP1", signature2);
+		assertEquals("S2:GP1", signature2);
 
 		AbstractParameterNode originalGlobalParameter2 = nodeMapper.getSourceNode(deployedPar2.getParameter());
 		assertEquals(globalBasicParameterNode, originalGlobalParameter2);
@@ -372,7 +372,7 @@ public class MethodDeployerTest {
 				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
 						originalGlobalParameter2, originalLinkingContext2);
 
-		assertEquals("S2->GS1:GP1", originalSignature2);
+		assertEquals("S2->GS1.GP1", originalSignature2);
 	}
 
 	//	@Test
