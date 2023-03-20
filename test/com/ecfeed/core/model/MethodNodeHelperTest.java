@@ -368,10 +368,10 @@ public class MethodNodeHelperTest {
 		methodNode.addParameter(param2);
 
 		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
-		assertEquals("int param_1, [e]double param_2", signature);
+		assertEquals("param_1 : int, param_2[EXP] : double", signature);
 
 		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
-		assertEquals("Number: param 1, [e]Number: param 2", signature);
+		assertEquals("param 1 : Number, param 2[EXP] : Number", signature);
 	}
 
 	@Test
