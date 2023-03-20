@@ -218,7 +218,7 @@ public class MethodDeployerTest {
 	}
 
 	@Test
-	public void deployTwoBasicLinkedParametersWithDifferentNames() {
+	public void AAdeployTwoBasicLinkedParametersWithDifferentNames() {
 
 		MethodNode methodNode = createModelWithTwoBasicLinkedParametersOneAtMethodLevel("P1", "P2");
 
@@ -250,7 +250,7 @@ public class MethodDeployerTest {
 		assertEquals("P1", linkingContext);
 		
 		String testedSignature1 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext1, nodeMapper);
-		assertEquals("P1->RP1", testedSignature1);
+		assertEquals("P1:RP1", testedSignature1);
 		
 		// param2
 		
@@ -260,7 +260,7 @@ public class MethodDeployerTest {
 		assertEquals("P2", linkingContext);
 		
 		String testedSignature2 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext2, nodeMapper);
-		assertEquals("S1:P2->RP1", testedSignature2);
+		assertEquals("S1.P2:RP1", testedSignature2);
 	}
 	
 	//	@Test
@@ -768,7 +768,8 @@ public class MethodDeployerTest {
 		}
 	}
 
-	private MethodNode createModelWithTwoBasicLinkedParametersOneAtMethodLevel(String parameter1Name, String parameter2Name) {
+	private MethodNode createModelWithTwoBasicLinkedParametersOneAtMethodLevel(
+			String parameter1Name, String parameter2Name) {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -817,7 +818,7 @@ public class MethodDeployerTest {
 		//     Method
 		//       [parameter1]->RP1 
 		//       S1
-		//         [parameter1]->RP1
+		//         [parameter2]->RP1
 
 		return methodNode;
 	}
