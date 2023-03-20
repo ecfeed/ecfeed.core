@@ -81,7 +81,7 @@ public class ParametersMapperTest {
 	}
 
 	@Test
-	public void localParameters() {
+	public void AAlocalParameters() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -178,10 +178,10 @@ public class ParametersMapperTest {
 
 		assertEquals("MP1", parameterNames.get(0));
 		assertEquals("MP2", parameterNames.get(1));		
-		assertEquals("S1:P10", parameterNames.get(2));
-		assertEquals("S1:P11", parameterNames.get(3));
-		assertEquals("S1:P12", parameterNames.get(4));
-		assertEquals("S1:S2:P21", parameterNames.get(5));
+		assertEquals("S1.P10", parameterNames.get(2));
+		assertEquals("S1.P11", parameterNames.get(3));
+		assertEquals("S1.P12", parameterNames.get(4));
+		assertEquals("S1.S2.P21", parameterNames.get(5));
 
 		assertNull(parametersContainer.findBasicParameter("NO-PARAM"));
 
@@ -191,16 +191,16 @@ public class ParametersMapperTest {
 		assertEquals(methodParameterNode1, resultMethodParameter1);
 		assertEquals(methodParameterNode2, resultMethodParameter2);
 
-		BasicParameterNode resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1:P10");
-		BasicParameterNode resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1:P11");
-		BasicParameterNode resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1:P12");
+		BasicParameterNode resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1.P10");
+		BasicParameterNode resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1.P11");
+		BasicParameterNode resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1.P12");
 
 		assertEquals(basicParameterNode0OfComposite1, resultParameter0OfComposite1);
 		assertEquals(basicParameterNode1OfComposite1, resultParameter1OfComposite1);
 		assertEquals(basicParameterNode2Ofcomposite1, resultParameter2OfComposite1);
 
 		BasicParameterNode resultParameter1OfComposite2 =
-				parametersContainer.findBasicParameter("S1:S2:P21");
+				parametersContainer.findBasicParameter("S1.S2.P21");
 
 		assertEquals(basicParameterNode1OfComposite2, resultParameter1OfComposite2);
 
@@ -211,10 +211,10 @@ public class ParametersMapperTest {
 
 		assertEquals(4, parameterNames.size());
 
-		assertEquals("S1:P10", parameterNames.get(0));
-		assertEquals("S1:P11", parameterNames.get(1));
-		assertEquals("S1:P12", parameterNames.get(2));
-		assertEquals("S1:S2:P21", parameterNames.get(3));
+		assertEquals("S1.P10", parameterNames.get(0));
+		assertEquals("S1.P11", parameterNames.get(1));
+		assertEquals("S1.P12", parameterNames.get(2));
+		assertEquals("S1.S2.P21", parameterNames.get(3));
 
 		resultMethodParameter1 = parametersContainer.findBasicParameter("MP1");
 		resultMethodParameter2 = parametersContainer.findBasicParameter("MP2");
@@ -222,16 +222,16 @@ public class ParametersMapperTest {
 		assertNull(resultMethodParameter1);
 		assertNull(resultMethodParameter2);
 
-		resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1:P10");
-		resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1:P11");
-		resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1:P12");
+		resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1.P10");
+		resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1.P11");
+		resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1.P12");
 
 		assertEquals(basicParameterNode0OfComposite1, resultParameter0OfComposite1);
 		assertEquals(basicParameterNode1OfComposite1, resultParameter1OfComposite1);
 		assertEquals(basicParameterNode2Ofcomposite1, resultParameter2OfComposite1);
 
 		resultParameter1OfComposite2 =
-				parametersContainer.findBasicParameter("S1:S2:P21");
+				parametersContainer.findBasicParameter("S1.S2.P21");
 
 		assertEquals(basicParameterNode1OfComposite2, resultParameter1OfComposite2);
 
@@ -241,7 +241,7 @@ public class ParametersMapperTest {
 		parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(1, parameterNames.size());
-		assertEquals("S1:S2:P21", parameterNames.get(0));
+		assertEquals("S1.S2.P21", parameterNames.get(0));
 
 		resultMethodParameter1 = parametersContainer.findBasicParameter("MP1");
 		resultMethodParameter2 = parametersContainer.findBasicParameter("MP2");
@@ -249,15 +249,15 @@ public class ParametersMapperTest {
 		assertNull(resultMethodParameter1);
 		assertNull(resultMethodParameter2);
 
-		resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1:P10");
-		resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1:P11");
-		resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1:P12");
+		resultParameter0OfComposite1 = parametersContainer.findBasicParameter("S1.P10");
+		resultParameter1OfComposite1 = parametersContainer.findBasicParameter("S1.P11");
+		resultParameter2OfComposite1 = parametersContainer.findBasicParameter("S1.P12");
 
 		assertNull(resultParameter0OfComposite1);
 		assertNull(resultParameter1OfComposite1);
 		assertNull(resultParameter2OfComposite1);
 
-		resultParameter1OfComposite2 = parametersContainer.findBasicParameter("S1:S2:P21");
+		resultParameter1OfComposite2 = parametersContainer.findBasicParameter("S1.S2.P21");
 
 		assertEquals(basicParameterNode1OfComposite2, resultParameter1OfComposite2);
 	}

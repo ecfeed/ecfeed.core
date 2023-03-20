@@ -204,19 +204,8 @@ public class ParametersMapper {
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
 			IExtLanguageManager extLanguageManager) {
 
-		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-						parameterNodeWhichHasLink,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
-						basicParameterNode,
-						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
-						Decorations.NO,
-						TypeIncluded.NO,
-						extLanguageManager);
+		String signatureNew = createSignature(basicParameterNode, parameterNodeWhichHasLink, extLanguageManager);
 		
-		String qualifiedName = signatureNew;
-
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 
 		if (link == null) {
@@ -224,7 +213,7 @@ public class ParametersMapper {
 			if (shouldAddParameter(basicParameterNode, parameterType)) {
 				BasicParameterWithLinkingContext parametersData = 
 						new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
-				inOutParametersDescriptions.put(qualifiedName, parametersData);
+				inOutParametersDescriptions.put(signatureNew, parametersData);
 			}
 
 			return;
@@ -233,10 +222,31 @@ public class ParametersMapper {
 		if (shouldAddParameter(link, parameterType)) {
 			BasicParameterWithLinkingContext parametersData = 
 					new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
-			inOutParametersDescriptions.put(qualifiedName, parametersData);
+			inOutParametersDescriptions.put(signatureNew, parametersData);
 		}
 
 		return;
+	}
+
+	private String createSignature(BasicParameterNode basicParameterNode,
+			CompositeParameterNode parameterNodeWhichHasLink, IExtLanguageManager extLanguageManager) {
+		ExtendedName extendedNameOfBasicParmeterNode = ExtendedName.PATH_TO_TOP_CONTAINTER;
+		
+		if (parameterNodeWhichHasLink != null) {
+			extendedNameOfBasicParmeterNode = ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM;
+		}
+		
+		String signatureNew = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						parameterNodeWhichHasLink,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						basicParameterNode,
+						extendedNameOfBasicParmeterNode,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+		return signatureNew;
 	}
 
 	private static boolean shouldAddParameter(
