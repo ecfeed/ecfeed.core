@@ -15,7 +15,7 @@ import java.util.Set;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterNodeHelper {
+public class MethodParameterNodeHelper { // TODO MO-RE remove this file - put references to AbstractParameterNodeHelper
 
 	public static ChoiceNode addNewChoiceToMethodParameter(
 			BasicParameterNode methodParameterNode, 
@@ -119,9 +119,17 @@ public class MethodParameterNodeHelper {
 		return null;
 	}
 
-	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
-
-		// TODO MO-RE REMOVE transfer function
-		return AbstractParameterSignatureHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
-	}
+	//	public static String createReverseSignature(
+	//			BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = 
+	//				AbstractParameterSignatureHelper.createSignatureNewStandard(
+	//						methodParameterNode,
+	//						ExtendedName.PATH_TO_TOP_CONTAINTER,
+	//						Decorations.YES,
+	//						TypeIncluded.YES,
+	//						extLanguageManager);
+	//		
+	//		return signature;
+	//	}
 }

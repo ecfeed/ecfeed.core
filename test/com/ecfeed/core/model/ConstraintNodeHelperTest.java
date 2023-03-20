@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -32,10 +31,10 @@ public class ConstraintNodeHelperTest {
 
 		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 
-		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
+		String signature = ConstraintNodeHelper.createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1 : false => false", signature);
 
-		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
+		signature = ConstraintNodeHelper.createSignature(c1,  new ExtLanguageManagerForSimple());
 		assertEquals("c_1 : false => false", signature);
 	}
 
@@ -105,7 +104,7 @@ public class ConstraintNodeHelperTest {
 	}
 
 	@Test
-	public void createSignatureForCompositeParameterTest(){
+	public void AAcreateSignatureForCompositeParameterTest(){
 
 		// add method and composite parameter
 
@@ -130,11 +129,11 @@ public class ConstraintNodeHelperTest {
 
 		// check signatures
 
-		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
-		assertEquals("Composite:c_1 : false => false", signature);
+		String signature = ConstraintNodeHelper.createSignature(c1,  new ExtLanguageManagerForJava());
+		assertEquals("Composite.c_1 : false => false", signature);
 
-		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
-		assertEquals("Composite:c_1 : false => false", signature);
+		signature = ConstraintNodeHelper.createSignature(c1,  new ExtLanguageManagerForSimple());
+		assertEquals("Composite.c_1 : false => false", signature);
 	}
 
 }

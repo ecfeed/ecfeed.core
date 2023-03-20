@@ -114,7 +114,7 @@ public class ConstraintNodeHelper {
 
 		prefix = prefix.trim();
 
-		prefix = StringHelper.removeFromPostfix(":", prefix);
+		prefix = StringHelper.removeFromPostfix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefix);
 
 		prefix = prefix.trim();
 
