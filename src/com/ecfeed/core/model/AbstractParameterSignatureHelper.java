@@ -25,6 +25,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 	public enum ExtendedName {
 		IRRELEVANT,
+		EMPTY,
 		NAME_ONLY,
 		PATH_TO_TOP_CONTAINTER,
 		PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1

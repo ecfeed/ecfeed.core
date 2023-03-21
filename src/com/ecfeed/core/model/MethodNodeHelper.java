@@ -82,6 +82,58 @@ public class MethodNodeHelper {
 		
 	}
 	
+	public static String createSignatureNewStandard(
+			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode,
+						paramNamesAdded,
+						expectedDecorationsAdded, 
+						extLanguageManager);
+
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
+
+		return signature;
+
+	}
+	
+	private static String createSignaturesOfParametersNewStandard(
+			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		ExtendedName extendedName = (paramNamesAdded == true ? ExtendedName.NAME_ONLY : ExtendedName.EMPTY);
+		Decorations parameterDecorations = (expectedDecorationsAdded == true ? Decorations.YES : Decorations.NO);
+
+		List<String> signaturesOfSingleParameters = new ArrayList<>();
+
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+
+		for (AbstractParameterNode parameter : parameters) {
+
+			String signatureOfOneParameter = 
+					AbstractParameterSignatureHelper.createSignatureNewStandard(
+							parameter,
+							extendedName,
+							parameterDecorations,
+							TypeIncluded.YES,
+							extLanguageManager);
+
+			signaturesOfSingleParameters.add(signatureOfOneParameter);
+		}
+
+		String result = String.join(", ", signaturesOfSingleParameters);
+
+		return result;
+	}
+	
 	private static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
 			IExtLanguageManager extLanguageManager) {
