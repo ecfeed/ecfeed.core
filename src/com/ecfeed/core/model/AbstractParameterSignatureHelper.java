@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractParameterSignatureHelper {
 
+	private static final String EXPECTED_DECORATION = "[EXP]";	
 	private static final String SHORTENED_LINK_TEXT = ":";
 	private static final String LINK_SPECIFIER_TEXT = "->";
 
@@ -45,7 +46,6 @@ public abstract class AbstractParameterSignatureHelper {
 	public enum TypeIncluded {
 		NO,
 		YES
-
 	}
 
 	public static String createSignatureNewStandard(
@@ -68,6 +68,33 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
+//	public static String createSignatureWithLinkNewStandard(
+//			AbstractParameterNode parameterWhichHasLink, // may be parameter or linking context
+//			ExtendedName extendedNameTypeOfParameter,
+//			TypeOfLink typeOfLink,
+//			AbstractParameterNode link,
+//			ExtendedName extendedNameTypeOfLink,
+//			Decorations decorations,
+//			TypeIncluded typeIncluded,
+//			IExtLanguageManager extLanguageManager) {
+//
+//		String signature = 
+//				createSignatureOfParameterNameNewStandard(
+//						parameterWhichHasLink, 
+//						extendedNameTypeOfParameter,
+//						typeOfLink,
+//						link,
+//						extendedNameTypeOfLink,
+//						extLanguageManager);
+//
+//		if (typeIncluded == TypeIncluded.YES) {
+//			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
+//			signature += getExtendedType(parameterWhichHasLink);
+//		}
+//
+//		return signature;
+//	}
+	
 	public static String createSignatureWithLinkNewStandard(
 			AbstractParameterNode parameterWhichHasLink, // may be parameter or linking context
 			ExtendedName extendedNameTypeOfParameter,
@@ -77,7 +104,7 @@ public abstract class AbstractParameterSignatureHelper {
 			Decorations decorations,
 			TypeIncluded typeIncluded,
 			IExtLanguageManager extLanguageManager) {
-
+		
 		String signature = 
 				createSignatureOfParameterNameNewStandard(
 						parameterWhichHasLink, 
@@ -86,14 +113,29 @@ public abstract class AbstractParameterSignatureHelper {
 						link,
 						extendedNameTypeOfLink,
 						extLanguageManager);
+		
+		if (decorations == Decorations.YES && parameterWhichHasLink instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameterWhichHasLink;
+			
+			if (basicParameterNode.isExpected()) {
+				signature += EXPECTED_DECORATION;
+			}
+		}
 
 		if (typeIncluded == TypeIncluded.YES) {
-			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-			signature += getExtendedType(parameterWhichHasLink);
+
+			if (extendedNameTypeOfParameter != ExtendedName.EMPTY) {
+				signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
+			}
+
+			String type = getType(parameterWhichHasLink, extLanguageManager);
+			signature += type;
 		}
 
 		return signature;
 	}
+	
 
 	public static String createCompressedSignatureWithLinkNewStandard(
 			AbstractParameterNode parameterWhichHasLink, 
@@ -169,8 +211,30 @@ public abstract class AbstractParameterSignatureHelper {
 			ExtendedName extendedNameTypeOfLink,
 			IExtLanguageManager extLanguageManager) {
 
+		if (parameterWhichHasLink == null && link == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter and link.");
+		}
+
+		if (link == null) {
+
+			String signatureOfParameterOnly = 
+					createSignatureOfSingleParameterNameNewStandard(
+							parameterWhichHasLink, 
+							extendedNameTypeOfParameter,
+							extLanguageManager);
+
+			return signatureOfParameterOnly;
+		}
+
 		if (parameterWhichHasLink == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
+
+			String signatureOfLinkOnly = 
+					createSignatureOfSingleParameterNameNewStandard(
+							link, 
+							extendedNameTypeOfLink,
+							extLanguageManager);
+
+			return signatureOfLinkOnly;
 		}
 
 		String signatureOfParameter = 
@@ -179,12 +243,6 @@ public abstract class AbstractParameterSignatureHelper {
 						extendedNameTypeOfParameter,
 						extLanguageManager);
 
-
-		if (link == null) {
-
-			return signatureOfParameter;
-		}
-
 		String signatureOfLink = 
 				createSignatureOfSingleParameterNameNewStandard(
 						link, 
@@ -192,7 +250,6 @@ public abstract class AbstractParameterSignatureHelper {
 						extLanguageManager);
 
 		String signature = signatureOfParameter + getLinkSpecifier(typeOfLink)  + signatureOfLink;
-		System.out.println(signature);
 
 		return signature;
 	}

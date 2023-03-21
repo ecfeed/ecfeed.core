@@ -188,35 +188,46 @@ public class MethodNodeHelper {
 
 	public static String createSignature(
 			MethodNode methodNode,
-			boolean isParamNameAdded,
-			boolean isExpectedDecorationAdded, 
-			IExtLanguageManager extLanguageOfTheResult) {
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode, 
+						paramNamesAdded,
+						expectedDecorationsAdded, 
+						extLanguageManager);
 
 
-		final List<Boolean> expectedParametersFlags =
-				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
-
-		List<String> parametersNames = new ArrayList<>();
-
-		if (isParamNameAdded == true) {
-			parametersNames = methodNode.getParametersNames();
-		} else {
-			parametersNames = null;
-		}
-
-		List<String> parameterTypes = methodNode.getParameterTypes();
-
-		String methodName = methodNode.getName();
-
-		String signature =
-				createSignatureByIntrLanguage(
-						methodName,
-						parameterTypes,
-						parametersNames,
-						expectedParametersFlags,
-						extLanguageOfTheResult);
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
 
 		return signature;
+
+		//		final List<Boolean> expectedParametersFlags =
+		//				(expectedDecorationsAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
+		//
+		//		List<String> parametersNames = new ArrayList<>();
+		//
+		//		if (paramNamesAdded == true) {
+		//			parametersNames = methodNode.getParametersNames();
+		//		} else {
+		//			parametersNames = null;
+		//		}
+		//
+		//		List<String> parameterTypes = methodNode.getParameterTypes();
+		//
+		//		String methodName = methodNode.getName();
+		//
+		//		String signature =
+		//				createSignatureByIntrLanguage(
+		//						methodName,
+		//						parameterTypes,
+		//						parametersNames,
+		//						expectedParametersFlags,
+		//						extLanguageOfTheResult);
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {

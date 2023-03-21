@@ -28,7 +28,6 @@ import org.junit.Test;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.TestHelper;
 
 public class MethodDeployerTest {
@@ -352,7 +351,7 @@ public class MethodDeployerTest {
 		assertEquals(localCompositeNode1, originalLinkingContext1);
 
 		String originalSignature1 = 
-				SignatureHelper.createSignatureOfParameterWithContext(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
 						originalGlobalParameter1, originalLinkingContext1);
 
 		assertEquals("S1->GS1:GP1", originalSignature1);
@@ -370,7 +369,7 @@ public class MethodDeployerTest {
 		assertEquals(localCompositeNode2, originalLinkingContext2);
 
 		String originalSignature2 = 
-				SignatureHelper.createSignatureOfParameterWithContext(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
 						originalGlobalParameter2, originalLinkingContext2);
 
 		assertEquals("S2->GS1:GP1", originalSignature2);
