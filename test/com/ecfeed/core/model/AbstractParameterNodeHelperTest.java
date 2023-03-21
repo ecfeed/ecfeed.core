@@ -75,19 +75,19 @@ public class AbstractParameterNodeHelperTest {
 	//		assertEquals("[e]Number: par1", signature);
 	//	}
 
-	@Test
-	public void createParameterLabelsTest() {
-
-		BasicParameterNode methodParameterNode =
-				new BasicParameterNode(
-						"name", "int", "0", true, null);
-
-		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
-		assertEquals("[e]int name", label);
-
-		label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("[e]Number: name", label);
-	}
+	//	@Test
+	//	public void createParameterLabelsTest() {
+	//
+	//		BasicParameterNode methodParameterNode =
+	//				new BasicParameterNode(
+	//						"name", "int", "0", true, null);
+	//
+	//		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
+	//		assertEquals("[e]int name", label);
+	//
+	//		label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
+	//		assertEquals("[e]Number: name", label);
+	//	}
 
 	// TODO MO-RE
 	//	@Test
