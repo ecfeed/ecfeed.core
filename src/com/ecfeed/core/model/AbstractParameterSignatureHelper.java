@@ -105,10 +105,6 @@ public abstract class AbstractParameterSignatureHelper {
 			TypeIncluded typeIncluded,
 			IExtLanguageManager extLanguageManager) {
 
-		if (link.getName().equals("P10")) {
-			System.out.println("XYX");
-		}
-
 		String signature = 
 				createSignatureOfParameterNameNewStandard(
 						parameterWhichHasLink, 
