@@ -191,7 +191,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C2\"/>\n" +
                 "                <TestParameter choice=\"M1P5C3\"/>\n" +
                 "                <TestParameter choice=\"M1P611C3\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3B\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3B\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C1\"/>\n" +
@@ -224,7 +224,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C1\"/>\n" +
                 "                <TestParameter choice=\"M1P5C3\"/>\n" +
                 "                <TestParameter choice=\"M1P611C3\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C2\"/>\n" +
@@ -257,7 +257,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C3\"/>\n" +
                 "                <TestParameter choice=\"M1P5C2\"/>\n" +
                 "                <TestParameter choice=\"M1P611C1\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C3\"/>\n" +
@@ -268,7 +268,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C3\"/>\n" +
                 "                <TestParameter choice=\"M1P5C1\"/>\n" +
                 "                <TestParameter choice=\"M1P611C3\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3B\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3B\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C2\"/>\n" +
@@ -279,7 +279,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C1\"/>\n" +
                 "                <TestParameter choice=\"M1P5C2\"/>\n" +
                 "                <TestParameter choice=\"M1P611C2\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3B\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3B\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C1\"/>\n" +
@@ -301,7 +301,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C2\"/>\n" +
                 "                <TestParameter choice=\"M1P5C1\"/>\n" +
                 "                <TestParameter choice=\"M1P611C1\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C2\"/>\n" +
@@ -323,7 +323,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C1\"/>\n" +
                 "                <TestParameter choice=\"M1P5C3\"/>\n" +
                 "                <TestParameter choice=\"M1P611C2\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C1\"/>\n" +
@@ -334,7 +334,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C2\"/>\n" +
                 "                <TestParameter choice=\"M1P5C2\"/>\n" +
                 "                <TestParameter choice=\"M1P611C3\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3B\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3B\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C3\"/>\n" +
@@ -356,7 +356,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C3\"/>\n" +
                 "                <TestParameter choice=\"M1P5C1\"/>\n" +
                 "                <TestParameter choice=\"M1P611C1\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3B\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3B\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C1\"/>\n" +
@@ -378,7 +378,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C1\"/>\n" +
                 "                <TestParameter choice=\"M1P5C2\"/>\n" +
                 "                <TestParameter choice=\"M1P611C1\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C2\"/>\n" +
@@ -389,7 +389,7 @@ public class ModelParserStructureTest {
                 "                <TestParameter choice=\"M1P42C3\"/>\n" +
                 "                <TestParameter choice=\"M1P5C1\"/>\n" +
                 "                <TestParameter choice=\"M1P611C2\"/>\n" +
-                "                <TestParameter choice=\"M1P621C3:M1P621C3A\"/>\n" +
+                "                <TestParameter choice=\"M1P621C3.M1P621C3A\"/>\n" +
                 "            </TestCase>\n" +
                 "            <TestCase testSuite=\"default\\ssuite\">\n" +
                 "                <TestParameter choice=\"M1P1C3\"/>\n" +
@@ -404,14 +404,14 @@ public class ModelParserStructureTest {
                 "            </TestCase>\n" +
                 "            <Deployment>\n" +
                 "                <Parameter name=\"M1P1\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P2:M1P21\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P2:M1P22\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P2.M1P21\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P2.M1P22\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
                 "                <Parameter name=\"M1P3\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P4:M1P41\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P4:M1P42\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P4.M1P41\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P4.M1P42\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
                 "                <Parameter name=\"M1P5\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P6:M1P61:M1P611\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
-                "                <Parameter name=\"M1P6:M1P62:M1P621\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P6.M1P61.M1P611\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
+                "                <Parameter name=\"M1P6.M1P62.M1P621\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\"/>\n" +
                 "            </Deployment>\n" +
                 "        </Method>\n" +
                 "        <Parameter name=\"C1P1\" type=\"int\">\n" +

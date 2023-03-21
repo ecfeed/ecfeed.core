@@ -19,6 +19,7 @@ import java.util.Set;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class AbstractNode implements IAbstractNode {
 
@@ -201,7 +202,9 @@ public abstract class AbstractNode implements IAbstractNode {
 	@Override
 	public IAbstractNode getChild(String qualifiedName) {
 
-		String[] tokens = qualifiedName.split(":");
+		String regex = "\\" + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		String[] tokens = qualifiedName.split(regex);
+		
 		if(tokens.length == 0){
 			return null;
 		}
@@ -224,7 +227,7 @@ public abstract class AbstractNode implements IAbstractNode {
 			}
 
 			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
-			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
+			String newName = qualifiedName.substring(qualifiedName.indexOf(SignatureHelper.SIGNATURE_NAME_SEPARATOR) + 1);
 			return nextChild.getChild(newName);
 		}
 

@@ -131,10 +131,6 @@ public abstract class XomBuilder implements IModelVisitor {
 		
 		String name = parameterNode.getName();
 		
-		if (name.equals("arg01")) {
-			System.out.println("XYX");
-		}
-
 		if (parameterNode.isGlobalParameter()) {
 			targetParamElement = createTargetGlobalBasicParameterElement(parameterNode);
 

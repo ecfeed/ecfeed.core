@@ -49,7 +49,12 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		List<BasicParameterNode> parameters;
 
 		if (method.isDeployed()) {
-			parameters = method.getDeployedParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
+			List<BasicParameterNode> deployedParameters = method.getDeployedParameters();
+			
+			parameters = 
+					deployedParameters.stream().
+					map(BasicParameterNode::getDeploymentParameter).
+					collect(Collectors.toList());
 		} else {
 			try {
 				parameters = method.getParametersAsBasic();
@@ -69,7 +74,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 			Element testParameterElement = parameterElements.get(i);
 			BasicParameterNode parameter = parameters.get(i);
 			ChoiceNode testValue = null;
-
+			
 			if (testParameterElement.getLocalName().equals(SerializationConstants.TEST_PARAMETER_NODE_NAME)) {
 				String choiceName;
 

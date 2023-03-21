@@ -294,7 +294,7 @@ public class ModelPartialSerializerTest {
 	}
 
 	@Test
-	public void AAshouldSeritalizePartially4() throws Exception {
+	public void shouldSeritalizePartially4() throws Exception {
 
 		String xml = prepareSourceXml4();
 
