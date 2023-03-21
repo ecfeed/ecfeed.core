@@ -204,18 +204,21 @@ public class ParametersMapper {
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
 			IExtLanguageManager extLanguageManager) {
 
+		ExtendedName extendedNameOfParameter = 
+				(parameterNodeWhichHasLink == null ? 
+						ExtendedName.PATH_TO_TOP_CONTAINTER : 
+							ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM); 
+		
 		String signatureNew = 
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						parameterNodeWhichHasLink,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.SHORTENED,
 						basicParameterNode,
-						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+						extendedNameOfParameter,
 						Decorations.NO,
 						TypeIncluded.NO,
 						extLanguageManager);
-		String qualifiedName = 
-				signatureNew;
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 
@@ -224,7 +227,7 @@ public class ParametersMapper {
 			if (shouldAddParameter(basicParameterNode, parameterType)) {
 				BasicParameterWithLinkingContext parametersData = 
 						new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
-				inOutParametersDescriptions.put(qualifiedName, parametersData);
+				inOutParametersDescriptions.put(signatureNew, parametersData);
 			}
 
 			return;
@@ -233,7 +236,7 @@ public class ParametersMapper {
 		if (shouldAddParameter(link, parameterType)) {
 			BasicParameterWithLinkingContext parametersData = 
 					new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
-			inOutParametersDescriptions.put(qualifiedName, parametersData);
+			inOutParametersDescriptions.put(signatureNew, parametersData);
 		}
 
 		return;

@@ -81,7 +81,7 @@ public class ParametersMapperTest {
 	}
 
 	@Test
-	public void AAlocalParameters() {
+	public void localParameters() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
