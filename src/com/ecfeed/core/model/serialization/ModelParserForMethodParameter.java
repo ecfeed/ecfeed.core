@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -76,18 +77,21 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			//targetMethodParameterNode.setLinked(linked);
 		}
 
-		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
+		ClassNode classNode = method.getClassNode();
+		
+		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && classNode != null) {
 			String linkPath;
 
 			try {
 				linkPath = 
 						ModelParserHelper.getAttributeValue(
 								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
+				
 			} catch (ParserException e) {
 				return Optional.empty();
 			}
-
-			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			
+			AbstractParameterNode link = findGlobalParameter(classNode, linkPath);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
@@ -101,9 +105,11 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		ModelParserForChoice modelParserForChoice = 
 				new ModelParserForChoice(targetMethodParameterNode.getModelChangeRegistrator());
 
+		String choiceNodeName = SerializationHelperVersion1.getChoiceNodeName();
+		
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(
-						parameterElement, SerializationHelperVersion1.getChoiceNodeName());
+						parameterElement, choiceNodeName);
 
 		for (Element child : children) {
 			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, errorList);
@@ -125,5 +131,32 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		return SerializationHelperVersion1.getBasicParameterNodeName();
 	}
 
+	private static BasicParameterNode findGlobalParameter(ClassNode classNode, String qualifiedName) {
+		
+		String qualifiedNameNewStandard = createQualifiedNameNewStandard(qualifiedName);
+
+		List<BasicParameterNode> globalParameters = classNode.getAllGlobalParametersAvailableForLinking();
+
+		for (BasicParameterNode parameter : globalParameters) {
+
+			String currentQualifiedNameNew = 
+					AbstractParameterSignatureHelper.createSignatureToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+
+			if (currentQualifiedNameNew.equals(qualifiedNameNewStandard)) {
+				return parameter;
+			}
+		}
+
+		return null;
+	}
+
+	private static String createQualifiedNameNewStandard(String currentQualifiedInOldStandard) {
+		
+		String qualifiedNameNewStandard = currentQualifiedInOldStandard.replace(":", ".");
+		
+		return qualifiedNameNewStandard;
+	}
+ 
 
 }

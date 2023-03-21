@@ -294,7 +294,7 @@ public class ModelPartialSerializerTest {
 	}
 
 	@Test
-	public void shouldSeritalizePartially4() throws Exception {
+	public void AAshouldSeritalizePartially4() throws Exception {
 
 		String xml = prepareSourceXml4();
 
@@ -372,7 +372,7 @@ public class ModelPartialSerializerTest {
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
-		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1:arg11'/>");
+		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1.arg11'/>");
 		sb.append("        </Method>");
 		sb.append("        <Parameter name='arg11' type='int'>");
 		sb.append("            <Choice name='choice111' value='0' isRandomized='false'/>");

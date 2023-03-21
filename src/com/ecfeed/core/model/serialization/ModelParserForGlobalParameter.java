@@ -33,7 +33,6 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 	public Optional<BasicParameterNode> parseGlobalBasicParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrator, 
-			
 			ListOfStrings errorList) {
 
 		String name, type;

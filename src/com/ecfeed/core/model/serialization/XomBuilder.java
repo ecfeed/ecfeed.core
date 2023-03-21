@@ -18,6 +18,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.*;
@@ -127,11 +128,19 @@ public abstract class XomBuilder implements IModelVisitor {
 	@Override
 	public Object visit(BasicParameterNode parameterNode)  throws Exception {
 		Element targetParamElement;
+		
+		String name = parameterNode.getName();
+		
+		if (name.equals("arg01")) {
+			System.out.println("XYX");
+		}
 
 		if (parameterNode.isGlobalParameter()) {
 			targetParamElement = createTargetGlobalBasicParameterElement(parameterNode);
 
-			for (ChoiceNode choiceNode : parameterNode.getChoices()) {
+			List<ChoiceNode> choices = parameterNode.getChoices();
+			
+			for (ChoiceNode choiceNode : choices) {
 
 				if (shouldSerializeNode(choiceNode)) {
 					targetParamElement.appendChild((Element) choiceNode.accept(this));
