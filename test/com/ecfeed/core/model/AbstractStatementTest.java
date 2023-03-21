@@ -16,10 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class AbstractStatementTest {
 
@@ -30,17 +31,25 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftParameterName() {
+		public CompositeParameterNode getLeftParameterLinkingContext() {
+			// TODO Auto-generated method stub
 			return null;
 		}
+		
 		@Override
 		public AbstractStatement makeClone(){
 			return null;
 		}
+
 		@Override
-		public boolean updateReferences(MethodNode method){
-			return true;
+		public AbstractStatement createCopy(NodeMapper mapper) {
+			return null;
 		}
+
+		//		@Override
+		//		public boolean updateReferences(IParametersAndConstraintsParentNode method){
+		//			return true;
+		//		}
 
 		@Override
 		public String createSignature(IExtLanguageManager extLanguageManager) {
@@ -51,22 +60,67 @@ public class AbstractStatementTest {
 		public boolean isEqualTo(IStatement statement) {
 			return false;
 		}
+
 		@Override
 		public Object accept(IStatementVisitor visitor) {
 			return null;
 		}
+
 		@Override
 		public boolean mentions(int methodParameterIndex) {
 			return false;
 		}
+
 		@Override
 		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
 		}
+
 		@Override
-		public List<ChoiceNode> getListOfChoices() {
+		public void derandomize() {
+		}
+
+		@Override
+		public boolean isAmbiguous(List<List<ChoiceNode>> values) {
+			return false;
+		}
+
+		@Override
+		protected void convert(ParameterConversionItem parameterConversionItem) {
+		}
+
+		@Override
+		public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
+			return false;
+		}
+
+		@Override
+		public List<ChoiceNode> getChoices() {
 			return null;
 		}
+
+		@Override
+		public List<String> getLabels(BasicParameterNode methodParameterNode) {
+			return null;
+		}
+
+		@Override
+		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
+			return null;
+		}
+
+		@Override
+		public String getLeftOperandName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public BasicParameterNode getLeftParameter() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
 	@Test

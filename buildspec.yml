@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  build:            
+    commands:
+      - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+      - ./gradlew test
+      - export success=1     
+    finally: 
+      - ./scripts/notify.sh $success
+                
+reports:
+  gradle:
+    files:
+      - '**/*'
+    base-directory: $CODEBUILD_SRC_DIR/build/test-results
+
+cache:
+  paths:
+    - /root/.gradle/**/*

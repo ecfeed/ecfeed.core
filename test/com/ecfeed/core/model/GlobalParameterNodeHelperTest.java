@@ -10,12 +10,13 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class GlobalParameterNodeHelperTest {
 
@@ -24,20 +25,20 @@ public class GlobalParameterNodeHelperTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		globalParameterNode.setParent(rootNode);
 
-		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
+		String qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("global 1", qualifiedName);
 
 
-		String type = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
+		String type = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String", type);
 
-		qualifiedName = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text", qualifiedName);
 	}
 
@@ -46,13 +47,23 @@ public class GlobalParameterNodeHelperTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		globalParameterNode.setParent(rootNode);
 
-		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForJava());
+		String signature = 
+				AbstractParameterNodeHelper.createSignature(
+						globalParameterNode,
+						SignatureHelper.SignatureType.WITH_TYPE,
+						new ExtLanguageManagerForJava());
+		
 		assertEquals("String global_1", signature);
 
-		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForSimple());
+		signature = 
+				AbstractParameterNodeHelper.createSignature(
+						globalParameterNode, 
+						SignatureHelper.SignatureType.WITH_TYPE, 
+						new ExtLanguageManagerForSimple());
+		
 		assertEquals("Text global 1", signature);
 	}
 

@@ -1,15 +1,11 @@
 package com.ecfeed.core.evaluator;
 
-import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.model.IConstraint;
-import com.ecfeed.core.utils.EvaluationResult;
-
-import java.util.Collection;
 import java.util.List;
 
-public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
+import com.ecfeed.core.utils.EvaluationResult;
 
-    //    public DummyEvaluator(Collection<IConstraint<E>> constraints) {}
+public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
 
     public DummyEvaluator() {
     }

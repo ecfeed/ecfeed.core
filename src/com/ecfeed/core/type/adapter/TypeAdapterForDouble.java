@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
+public class TypeAdapterForDouble extends TypeAdapterForFloatingPoint<Double>{
 
 	@Override
 	public String getMyTypeName() {
@@ -32,6 +32,42 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 		result = extLanguageManager.formatNumber(result);
 
 		return result;
+	}
+
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = null;
+		try {
+			range = RangeHelper.splitToRange(value);
+		} catch (Exception e) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		try {
+			Double.parseDouble(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
@@ -52,7 +88,7 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}
 
 	@Override
-	public Double generateValue(String rangeTxt) {
+	public Double generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
@@ -67,16 +103,26 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}
 
 	protected final Double getLowerDouble(String range) {
-		return Double.parseDouble(range.split(DELIMITER)[0]);
+		return Double.parseDouble(range.split(RangeHelper.DELIMITER)[0]);
 	}
 
 	protected final Double getUpperDouble(String range) {
-		return Double.parseDouble(range.split(DELIMITER)[1]);
+		return Double.parseDouble(range.split(RangeHelper.DELIMITER)[1]);
 	}	
 
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_DOUBLE;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
 	}	
 
 }

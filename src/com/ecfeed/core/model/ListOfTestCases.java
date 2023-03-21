@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ListOfTestCases {
 
-	List<TestCase> fTestCases;
+	private List<TestCase> fTestCases;
 
 	public ListOfTestCases() {
 		

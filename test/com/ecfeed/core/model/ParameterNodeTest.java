@@ -24,7 +24,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void addChoiceTest() {
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 
 		assertEquals(0, parameter.getChoices().size());
 
@@ -36,7 +36,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getChoiceTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode p = new ChoiceNode("p", "0", null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
@@ -54,7 +54,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getChoicesTest() {
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
@@ -68,13 +68,13 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getChildrenTest() {
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
-		List<? extends AbstractNode> children = parameter.getChildren();
+		List<IAbstractNode> children = parameter.getChildren();
 		assertEquals(2, children.size());
 		assertTrue(children.contains(choice1));
 		assertTrue(children.contains(choice2));
@@ -82,7 +82,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getChoiceNames() {
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
@@ -95,7 +95,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getLeafChoiceNamesTest() {
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
@@ -114,7 +114,7 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getAllChoiceNamesTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
@@ -136,15 +136,15 @@ public class ParameterNodeTest{
 	@Test
 	public void getMethodTest() {
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		method.addParameter(parameter);
 
-		assertEquals(method, parameter.getMethod());
+		assertEquals(method, parameter.getParent());
 	}
 
 	@Test
 	public void getLeafChoicesTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p2 = new ChoiceNode("p1", "0", null);
@@ -225,7 +225,7 @@ public class ParameterNodeTest{
 		p2.addChoice(p21);
 		p2.addChoice(p22);
 
-		MethodParameterNode c = new MethodParameterNode("c", "type", "0", false, null);
+		BasicParameterNode c = new BasicParameterNode("c", "type", "0", false, null);
 		c.addChoice(p1);
 		c.addChoice(p2);
 
@@ -251,7 +251,7 @@ public class ParameterNodeTest{
 	public void compareSmokeTest(){
 		for(String type : SUPPORTED_TYPES){
 			for(Boolean expected : new Boolean[]{true, false}){
-				MethodParameterNode c = new RandomModelGenerator().generateParameter(type, expected, 3, 3, 3);
+				BasicParameterNode c = new RandomModelGenerator().generateParameter(type, expected, 3, 3, 3);
 
 				assertTrue(c.isMatch(c));
 			}
@@ -261,7 +261,7 @@ public class ParameterNodeTest{
 	@Test
 	public void setNameTest(){
 
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
 
 		try {
 			c1.setName("c*1");
@@ -278,8 +278,8 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareNameTest(){
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		assertTrue(c1.isMatch(c2));
 
@@ -291,8 +291,8 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareTypeTest(){
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		assertTrue(c1.isMatch(c2));
 
@@ -304,8 +304,8 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareExpectedTest(){
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		assertTrue(c1.isMatch(c2));
 
@@ -317,8 +317,8 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareDefaultValueTest(){
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		assertTrue(c1.isMatch(c2));
 
@@ -330,8 +330,8 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareChoicesTest(){
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		assertTrue(c1.isMatch(c2));
 
@@ -352,15 +352,15 @@ public class ParameterNodeTest{
 
 	@Test
 	public void compareTest(){
-		assertTrue(new MethodParameterNode("c", "int", "0", true, null).isMatch(new MethodParameterNode("c", "int", "0", true, null)));
-		assertTrue(new MethodParameterNode("c", "int", "0", false, null).isMatch(new MethodParameterNode("c", "int", "0", false, null)));
+		assertTrue(new BasicParameterNode("c", "int", "0", true, null).isMatch(new BasicParameterNode("c", "int", "0", true, null)));
+		assertTrue(new BasicParameterNode("c", "int", "0", false, null).isMatch(new BasicParameterNode("c", "int", "0", false, null)));
 
-		assertFalse(new MethodParameterNode("c1", "int", "0", false, null).isMatch(new MethodParameterNode("c", "int", "0", false, null)));
-		assertFalse(new MethodParameterNode("c", "boolean", "0", false, null).isMatch(new MethodParameterNode("c", "int", "0", false, null)));
-		assertFalse(new MethodParameterNode("c", "int", "0", true, null).isMatch(new MethodParameterNode("c", "int", "0", false, null)));
+		assertFalse(new BasicParameterNode("c1", "int", "0", false, null).isMatch(new BasicParameterNode("c", "int", "0", false, null)));
+		assertFalse(new BasicParameterNode("c", "boolean", "0", false, null).isMatch(new BasicParameterNode("c", "int", "0", false, null)));
+		assertFalse(new BasicParameterNode("c", "int", "0", true, null).isMatch(new BasicParameterNode("c", "int", "0", false, null)));
 
-		MethodParameterNode c1 = new MethodParameterNode("c", "int", "0", false, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "int", "0", false, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "int", "0", false, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "int", "0", false, null);
 		assertTrue(c1.isMatch(c2));
 
 		c1.setDefaultValueString("cc");

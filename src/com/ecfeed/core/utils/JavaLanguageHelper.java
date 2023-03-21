@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 
 public final class JavaLanguageHelper {
 
@@ -108,7 +109,7 @@ public final class JavaLanguageHelper {
 
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
-	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
+	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier";
 	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
 	public static final String NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS = "Name must not contain only underline characters.";
 
@@ -179,7 +180,7 @@ public final class JavaLanguageHelper {
 	public static void verifyIsValidJavaIdentifier(String name) {
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
+			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER + " - " + name + ".");
 		}
 	}
 
@@ -1069,6 +1070,107 @@ public final class JavaLanguageHelper {
 		return typeName1;
 	}
 
+	public static String getLargerType(String type1, String type2) {
+
+		if (type1 == null || type2 == null) {
+			ExceptionHelper.reportRuntimeException("Empty type.");
+		}
+
+		if (isNumericTypeName(type1) && isNumericTypeName(type2)) {
+			return getLargerNumericType(type1, type2);
+		}
+
+		if (!isNumericTypeName(type1) && !isNumericTypeName(type2)) {
+			return getLargerNonNumericType(type1, type2);
+		}
+
+		ExceptionHelper.reportRuntimeException("Mixing groups of types is not allowed.");
+		return null;
+	}
+
+
+	private static String getLargerNumericType(String type1, String type2) {
+
+		int weight1 = getWeightOfNumericType(type1);
+		int weight2 = getWeightOfNumericType(type2);
+
+		if (weight1 >= weight2) {
+			return type1;
+		}
+
+		return type2;
+	}
+
+	private static int getWeightOfNumericType(String type1) {
+
+		if (isByteTypeName(type1)) {
+			return 1;
+		}
+
+		if (isShortTypeName(type1)) {
+			return 2;
+		}
+
+		if (isIntTypeName(type1)) {
+			return 3;
+		}
+
+		if (isLongTypeName(type1)) {
+			return 4;
+		}
+
+		if (isFloatTypeName(type1)) {
+			return 5;
+		}
+
+		if (isDoubleTypeName(type1)) {
+			return 6;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid numeric type.");
+		return 0;
+	}
+
+	private static String getLargerNonNumericType(String type1, String type2) {
+
+		if (isBooleanTypeName(type1) && isBooleanTypeName(type2)) {
+			return TYPE_NAME_BOOLEAN;
+		}
+
+		String message = "Boolean should not be mixed with other types";
+
+		if (isBooleanTypeName(type1) && !isBooleanTypeName(type2)) {
+			ExceptionHelper.reportRuntimeException(message);
+		}
+
+		if (!isBooleanTypeName(type1) && isBooleanTypeName(type2)) {
+			ExceptionHelper.reportRuntimeException(message);
+		}
+
+		int weight1 = getWeightOfCharacterType(type1);
+		int weight2 = getWeightOfCharacterType(type2);
+
+		if (weight1 >= weight2) {
+			return type1;
+		}
+
+		return type2;
+	}
+
+	private static int getWeightOfCharacterType(String type1) {
+
+		if (isCharTypeName(type1)) {
+			return 1;
+		}
+
+		if (isStringTypeName(type1)) {
+			return 2;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid non numeric type.");
+		return 0;
+	}
+
 	public static JustifyType getTypeJustification(String typeName) {
 
 		if (!isJavaType(typeName)) {
@@ -1389,4 +1491,66 @@ public final class JavaLanguageHelper {
 
 		return null;
 	}
+
+	public static String getMaxTypeForValue(
+			String value, 
+			String currentJavaType, 
+			boolean isRandomizedValue) {
+
+		if (!RangeHelper.isRange(value)) {
+			return getMaxTypeForSingleValue(value, currentJavaType);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		String extendedType = getMaxTypeForSingleValue(range[0], currentJavaType);
+		extendedType = getMaxTypeForSingleValue(range[1], extendedType);
+
+		return extendedType;
+
+	}
+
+	private static String getMaxTypeForSingleValue(String value, String currentJavaType) {
+
+		if (JavaLanguageHelper.isCharTypeName(currentJavaType)
+				&& ((value.length() > 1) || (value.length() == 0))) {
+
+			return JavaLanguageHelper.TYPE_NAME_STRING;
+		}
+
+		if (!JavaLanguageHelper.isNumericTypeName(currentJavaType)) {
+			return currentJavaType;
+		}
+
+		String typeCompatibleWithValue = JavaLanguageHelper.getCompatibleNumericType(value);
+
+		if (typeCompatibleWithValue == null) {
+			return currentJavaType;
+		}
+
+		if (JavaLanguageHelper.isNumericTypeLarger(typeCompatibleWithValue, currentJavaType)) {
+			return typeCompatibleWithValue;
+		}
+
+		return currentJavaType;
+	}
+
+	public static String getSmallestTypeForCathegory(TypeCathegory typeCathegory) {
+
+		if (typeCathegory == TypeCathegory.BOOLEAN) {
+			return TYPE_NAME_BOOLEAN;
+		}
+
+		if (typeCathegory == TypeCathegory.ALFANUMERIC) {
+			return TYPE_NAME_CHAR;
+		}
+
+		if (typeCathegory == TypeCathegory.NUMERIC) {
+			return TYPE_NAME_BYTE;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid java type cathegory.");
+		return null;
+	}
+
 }

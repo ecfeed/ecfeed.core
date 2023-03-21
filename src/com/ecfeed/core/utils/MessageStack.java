@@ -22,6 +22,12 @@ public class MessageStack {
 		return false;
 	}
 	
+	public String getMessage(int index) {
+		
+		String message = fMessages.get(index);
+		return message;
+	}
+	
 	public String getLongMessage() {
 
 		StringBuilder sb = new StringBuilder();

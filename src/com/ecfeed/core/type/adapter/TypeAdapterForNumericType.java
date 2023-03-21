@@ -22,11 +22,6 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 	public static final String DELIMITER = ":";
 	public static final String SPECIAL_VALUES_ARE_NOT_ALLOWED = "Special values are not allowed.";
 
-	@Override
-	public boolean isCompatible(String type) {
-		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
-	}
-
 	protected boolean isSymbolicValue(String value) {
 
 		boolean isSymbolicValue = Arrays.asList(getSymbolicValues()).contains(value);
@@ -59,8 +54,8 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 }

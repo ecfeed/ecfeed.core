@@ -13,19 +13,30 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.RangeHelper;
+import com.ecfeed.core.utils.RelationMatcher;
 
 
 public class ParameterCondition implements IStatementCondition {
 
-	private MethodParameterNode fRightParameterNode;
+	private BasicParameterNode fRightParameterNode;
+	private CompositeParameterNode fRightParameterLinkingContext;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
-			MethodParameterNode rightParameter, 
+			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
+		fRightParameterLinkingContext = rightParameterLinkingContext;
 		fParentRelationStatement = parentRelationStatement;
 	}
 
@@ -47,6 +58,11 @@ public class ParameterCondition implements IStatementCondition {
 		return evaluateForLeftAndRightString(choices, substituteType);
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
 
 		return isChoiceRandomizedString(choices, fParentRelationStatement.getLeftParameter());
@@ -58,7 +74,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	private boolean isChoiceRandomizedString(
-			List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+			List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode leftChoiceNode = getChoiceNode(choices, methodParameterNode);
 
@@ -124,7 +140,7 @@ public class ParameterCondition implements IStatementCondition {
 		return EvaluationResult.FALSE;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = getChoiceNode(choices, methodParameterNode);
 
@@ -135,7 +151,7 @@ public class ParameterCondition implements IStatementCondition {
 		return choiceNode.getValueString();
 	}
 
-	private static ChoiceNode getChoiceNode(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static ChoiceNode getChoiceNode(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		return StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 	}
@@ -147,22 +163,35 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ParameterCondition getCopy() {
+	public ParameterCondition makeClone() {
 
-		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
+		// parameters are not cloned
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fRightParameterNode);
 
-		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
-		if (tmpParameterNode == null) {
-			return false;
-		}
-		fRightParameterNode = tmpParameterNode;
-
-		return true;
+		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+	//		
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(compositeName, methodNode);
+	//
+	//		if (basicParameterNode == null) {
+	//			return false;
+	//		}
+	//
+	//		fRightParameterNode = basicParameterNode;
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -199,28 +228,32 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
+		return parameterDescription;
 	}
 
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		return StatementConditionHelper.createParameterDescription(
-				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
-
+		String name = 
+				AbstractParameterNodeHelper.getQualifiedName(
+						fRightParameterNode, fRightParameterLinkingContext);
+		
+		return StatementConditionHelper.createParameterDescription(name);
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode methodParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
-		if (fRightParameterNode == methodParameterNode) {
+		if (fRightParameterNode == abstractParameterNode) {
 			return true;
 		}
 
 		return false;
 	}	
 
-	public MethodParameterNode getRightParameterNode() {
+	public BasicParameterNode getRightParameterNode() {
 
 		return fRightParameterNode;
 	}
@@ -275,6 +308,10 @@ public class ParameterCondition implements IStatementCondition {
 			return false;
 		}
 
+		if (extLanguageManager == null) {
+			extLanguageManager = new ExtLanguageManagerForJava();
+		}
+
 		if (ConditionHelper.isRandomizedChoiceAmbiguous(
 				leftChoiceNode, rightChoiceNode.getValueString(),
 				fParentRelationStatement, relation, substituteType)) {
@@ -305,10 +342,50 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 		return new ArrayList<ChoiceNode>();
 	}
 
+	@Override
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public void derandomize() {
+	}
+
+	@Override
+	public void convert(
+			ParameterConversionItem parameterConversionItem) {
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
+		return false;
+	}
+
+	@Override
+	public String getLabel(BasicParameterNode methodParameterNode) {
+		return null;
+	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
+	//		BasicParameterNode deployedMethodParameterNode =
+	//				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		ParameterCondition deployedParameterCondition =
+	//				new ParameterCondition(
+	//						deployedMethodParameterNode,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedParameterCondition;
+	//	}
+
 }	
-
-

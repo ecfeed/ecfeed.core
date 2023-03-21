@@ -10,8 +10,11 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +52,13 @@ public class StringHelper {
 
 	public static boolean isTrimmedEmpty(String str) {
 
-		return str.trim().isEmpty();
+		String str2 = new String(str);
+
+		if (str2.trim().isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static String cutToMaxSize(String stringToCut, int maxSize) {
@@ -183,6 +192,17 @@ public class StringHelper {
 		return System.lineSeparator();
 	}
 
+	public static String getSubstringStartingFromFindString(String str, String findString) {
+
+		int separatorPosition = str.indexOf(findString);
+
+		if (separatorPosition == -1) {
+			return null;
+		}
+
+		return str.substring(separatorPosition);
+	}
+
 	public static String getLastToken(String tokenizedString, String tokenSeparator) {
 
 		int separatorPosition = tokenizedString.lastIndexOf(tokenSeparator);
@@ -218,15 +238,15 @@ public class StringHelper {
 		return tokenizedString.split(tokenSeparatorRegex);
 	}
 
-	// TODO - create specialized method for separating class from method in MethodSignatureHelper or MethodNode
-	public static String getAllBeforeLastToken(String packageWithClass, String tokenSeparator) { 
+	public static String getAllBeforeLastToken(String str, String tokenSeparator) { 
 
-		int separatorPosition = packageWithClass.lastIndexOf(tokenSeparator);
+		int separatorPosition = str.lastIndexOf(tokenSeparator);
 
 		if (separatorPosition == -1) {
 			return null;
 		}
-		return packageWithClass.substring(0, separatorPosition);
+
+		return str.substring(0, separatorPosition);
 	}
 
 	public static String getPackageWithClass(String methodSignature) {
@@ -297,6 +317,11 @@ public class StringHelper {
 		}
 
 		return false;
+	}
+
+	public static boolean endsWithPostfix(String postfix, String str) {
+
+		return str.endsWith(postfix);
 	}
 
 	public static int countOccurencesOfChar(String str, char charToCount) {
@@ -439,7 +464,7 @@ public class StringHelper {
 		return result;
 	}
 
-	public static boolean containsOnly(char character, String str) { // TODO SIMPLE-VIEW test
+	public static boolean containsOnly(char character, String str) {
 
 		for (int i = 0; i < str.length(); i++){
 			char charInStr = str.charAt(i);
@@ -450,6 +475,75 @@ public class StringHelper {
 		}
 
 		return true;
+	}
+
+	public static String convertWhiteCharsToSingleSpaces(String str) {
+
+		str = str.replace("\n", " ");
+		str = str.replace("\t", " ");
+
+		while (str.contains("  ")) {
+			str = str.replace("  ", " ");
+		}
+
+		return str;
+	}
+
+	public static int findFirstDifference(String str1, String str2) {
+
+		if (str1 == null || str2 == null) {
+			ExceptionHelper.reportRuntimeException("Invalid parameters in function find first difference.");
+		}
+
+		int length1 = str1.length();
+		int length2 = str2.length();
+
+		int minLength = Math.min(length1, length2);
+
+		int index = 0;
+
+		for (; index < minLength; index++) {
+
+			char chr1 = str1.charAt(index);
+			char chr2 = str2.charAt(index);
+
+			if (chr1 != chr2) {
+				return index;
+			}
+		}
+
+		if (length1 == length2) {
+			return -1; // no differences
+		}
+
+		return index;  // the first char of the longer string
+	}
+
+	public static String convertListToStringWithSeparators(List<String> listOfStrings, String separator) {
+
+		int listSize = listOfStrings.size();
+		int lastIndex = listSize - 1;
+
+		String convertedString = "";
+
+		for (int index = 0; index < listSize; index++) {
+
+			convertedString += listOfStrings.get(index);
+
+			if (index < lastIndex) {
+				convertedString += separator;
+			}
+		}
+
+		return convertedString;
+	}
+
+	public static List<String> removeDuplicates(List<String> strings) {
+
+		HashSet<String> set = new HashSet<String>(strings);
+		List<String> result = new ArrayList<>(set);
+
+		return result;
 	}
 
 }

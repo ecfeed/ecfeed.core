@@ -16,22 +16,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ChoicesParentNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
+import com.ecfeed.core.operations.nodes.OnTestCasesOperationRename;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericMoveOperation extends BulkOperation {
+public class GenericMoveOperation extends CompositeOperation {
 
 	public GenericMoveOperation(
-			List<? extends AbstractNode> moved, 
-			AbstractNode newParent, 
+			List<? extends IAbstractNode> moved, 
+			IAbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -39,8 +40,8 @@ public class GenericMoveOperation extends BulkOperation {
 	}
 
 	public GenericMoveOperation(
-			List<? extends AbstractNode> moved, 
-			AbstractNode newParent, 
+			List<? extends IAbstractNode> moved, 
+			IAbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
 			IExtLanguageManager extLanguageManager) {
@@ -51,7 +52,7 @@ public class GenericMoveOperation extends BulkOperation {
 		try {
 			//all nodes have parents other than newParent
 			if(externalNodes(moved, newParent)){
-				for(AbstractNode node : moved){
+				for(IAbstractNode node : moved){
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
 						
@@ -66,15 +67,15 @@ public class GenericMoveOperation extends BulkOperation {
 						continue;
 					}
 					
-					if(node instanceof ChoicesParentNode){
-						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
+					if(node instanceof IChoicesParentNode){
+						methodsInvolved.addAll(((IChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
 							new FactoryRemoveChildOperation(node, adapterProvider, false, extLanguageManager)));
 
-					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
-						GlobalParameterNode parameter = (GlobalParameterNode)node;
-						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
+					if((node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) && newParent instanceof MethodNode){
+						BasicParameterNode parameter = (BasicParameterNode)node;
+						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false, null);
 					}
 					
 					if(newIndex != -1){
@@ -89,7 +90,7 @@ public class GenericMoveOperation extends BulkOperation {
 					}
 					
 					for(MethodNode method : methodsInvolved){
-						addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
+						addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 					}
 				}
 			}
@@ -109,12 +110,12 @@ public class GenericMoveOperation extends BulkOperation {
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
 				TestCaseNode nodeCopy = node.makeClone();
 				element.add(nodeCopy);
 				
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}
@@ -130,14 +131,14 @@ public class GenericMoveOperation extends BulkOperation {
 				TestSuiteNode nodeCopy = node.makeClone();
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
-				addOperation(new MethodOperationRenameTestCases(element, node.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, node.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}
 	}
 
-	protected boolean externalNodes(List<? extends AbstractNode> moved, AbstractNode newParent){
-		for(AbstractNode node : moved){
+	protected boolean externalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
+		for(IAbstractNode node : moved){
 			if(node.getParent() == newParent){
 				return false;
 			}
@@ -145,8 +146,8 @@ public class GenericMoveOperation extends BulkOperation {
 		return true;
 	}
 
-	protected boolean internalNodes(List<? extends AbstractNode> moved, AbstractNode newParent){
-		for(AbstractNode node : moved){
+	protected boolean internalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
+		for(IAbstractNode node : moved){
 			if(node.getParent() != newParent){
 				return false;
 			}
@@ -154,7 +155,7 @@ public class GenericMoveOperation extends BulkOperation {
 		return true;
 	}
 
-	private static AbstractNode getParent(List<? extends AbstractNode> children) {
+	private static IAbstractNode getParent(List<? extends IAbstractNode> children) {
 		return children.get(0).getParent();
 	}
 }

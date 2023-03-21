@@ -21,12 +21,12 @@ import java.util.Random;
 import java.util.Set;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class GeneratorTestUtils{
+	
 	private static class Constraint implements IConstraint<String>{
 		private Set<String> fRestrictedValues;
 
@@ -57,6 +57,11 @@ public class GeneratorTestUtils{
 		@Override
 		public boolean mentions(int dimension) {
 			return false;
+		}
+
+
+		@Override
+		public void derandomize() {
 		}
 
 	}
@@ -93,7 +98,7 @@ public class GeneratorTestUtils{
 			while((next = initializedAlgorithm.getNext()) != null){
 				result.add(next);
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected algorithm exception: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -107,7 +112,7 @@ public class GeneratorTestUtils{
 			while((next = initializedGenerator.next()) != null){
 				result.add(next);
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected algorithm exception: " + e.getMessage());
 		}
 		return result;

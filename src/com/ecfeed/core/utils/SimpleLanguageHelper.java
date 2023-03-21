@@ -25,6 +25,62 @@ public final class SimpleLanguageHelper {
 			TYPE_NAME_LOGICAL
 	};
 
+	public static boolean isTextTypeName(String typeName) {
+
+		if (typeName == null) {
+			ExceptionHelper.reportRuntimeException("Empty type name is not allowed.");
+		}
+
+		if (typeName.equals(TYPE_NAME_TEXT)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean isNumberTypeName(String typeName) {
+
+		if (typeName == null) {
+			ExceptionHelper.reportRuntimeException("Empty type name is not allowed.");
+		}
+
+		if (typeName.equals(TYPE_NAME_NUMBER)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean isLogicalTypeName(String typeName) {
+
+		if (typeName == null) {
+			ExceptionHelper.reportRuntimeException("Empty type name is not allowed.");
+		}
+
+		if (typeName.equals(TYPE_NAME_LOGICAL)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean isSimpleTypeName(String typeName) {
+	
+		if (isTextTypeName(typeName)) {
+			return true;
+		}
+		
+		if (isNumberTypeName(typeName)) {
+			return true;
+		}
+		
+		if (isLogicalTypeName(typeName)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains("_")) {
@@ -145,14 +201,6 @@ public final class SimpleLanguageHelper {
 
 		return simpleType;
 	}
-
-	public static boolean isLogicalTypeName(String typeName) {
-
-		if (typeName.equals(TYPE_NAME_LOGICAL)) {
-			return true;
-		}
-		return false;
-	}	
 
 	public static String convertTextFromJavaToSimpleLanguage(String text) {
 

@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IGenerator;
 
 public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactoryWithCodes (get/create generator using enum GeneratorType, not by String)
@@ -19,9 +19,14 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 	private static final String CARTESIAN = "Cartesian Product generator";
 	private static final String RANDOM = "Random generator";
 	
-	public IGenerator<E> createGenerator(String code) throws GeneratorException {
+	public IGenerator<E> createGenerator(String code) {
 
 		if (code.equals(N_WISE)) {
+			
+			if (isScoredNWiseGeneratorActive()) {
+				return new NWiseScoredGenerator<E>();
+			}
+			
 			return new NWiseGenerator<E>();
 		}
 
@@ -33,10 +38,14 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 			return new RandomGenerator<E>();
 		}
 
-		GeneratorException.report("Cannot create generator for code:" + code );
+		GeneratorExceptionHelper.reportException("Cannot create generator for code:" + code );
 		return null;
 	}
 
+	public static boolean isScoredNWiseGeneratorActive() {
+		return false;
+	}
+	
 	public String[] getGeneratorNames() {
 		
 		return new String[] { N_WISE, CARTESIAN, RANDOM };

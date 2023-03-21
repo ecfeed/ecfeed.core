@@ -36,8 +36,9 @@ public interface OperationNames {
 	public static final String ADD_TEST_CASES = "Add test cases";
 	public static final String CONVERT_METHOD = "Convert method";
 	public static final String MAKE_CONSISTENT = "Make method consistent";
+	public static final String CONVERT_VALUES = "Convert values";
 	public static final String REMOVE_CONSTRAINT = "Remove constraint";
-	public static final String REMOVE_METHOD_PARAMETER = "Remove method parameter";
+	public static final String REMOVE_PARAMETER = "Remove parameter";
 	public static final String REMOVE_GLOBAL_PARAMETER = "Remove global parameter";
 	public static final String REMOVE_TEST_SUITE = "Remove test suite";
 	public static final String REMOVE_TEST_CASE = "Remove test case";
@@ -62,4 +63,7 @@ public interface OperationNames {
 	public static final String REPLACE_PARAMETER_WITH_LINK = "Replace parameter with link";
 	public static final String SET_ANDROID_BASE_RUNNER = "Set Android base runner";
 	public static final String SET_PROPERTY = "Set property";
+	public static final String IMPORT_PARAMETERS = "Import parameters";
+	public static final String POPULATE_PARAMETER_WITH_CHOICES = "Populate parameter with choices";
+	public static final String POPULATE_WITH_CHOICES = "Populate with choices";
 }

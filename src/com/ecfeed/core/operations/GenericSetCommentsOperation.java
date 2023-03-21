@@ -10,16 +10,16 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericSetCommentsOperation extends AbstractModelOperation {
 
 	private String fComments;
-	private AbstractNode fTarget;
+	private IAbstractNode fTarget;
 	private String fCurrentComments;
 
-	public GenericSetCommentsOperation(AbstractNode target, String comments, IExtLanguageManager extLanguageManager) {
+	public GenericSetCommentsOperation(IAbstractNode target, String comments, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_COMMENTS, extLanguageManager);
 		

@@ -14,9 +14,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -82,7 +83,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
-	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
+	public String createPreview(Collection<TestCaseNode> selectedTestCases, MethodNode methodNode) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -92,7 +93,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append("\n");
 
-		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
+		appendPreviewOfTestCases(selectedTestCases, methodNode, stringBuilder);
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
@@ -108,6 +109,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
+			MethodNode methodNode,
 			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
@@ -119,6 +121,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
+							methodNode,
 							fTemplateText.getTestCaseTemplateText(), 
 							fExtLanguageManager));
 
@@ -160,20 +163,33 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		List<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 
 		for (int index = 0; index < maxPreviewTestCases; index++) {
-			testCases.add(createRandomTestCaseNode(fMethodNode, index));
+			testCases.add(createTestCase(fMethodNode, index));
 		}
 
 		return testCases;
 	}
 
-	private TestCaseNode createRandomTestCaseNode(MethodNode methodNode, int testCaseNumber) {
+	private TestCaseNode createTestCase(MethodNode methodNode, int testCaseNumber) {
 
 		Random randomGenerator = new Random();
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
-		List<String> parameterNames = methodNode.getParametersNames();
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
-		for (String parameterName : parameterNames) {
-			choiceNodes.add(getRandomChoiceNode(methodNode, parameterName, randomGenerator));
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+			
+			BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			ChoiceNode choiceNode;
+			
+			if (methodParameterNode.isExpected()) {
+				choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, methodParameterNode.getDefaultValue(), null);
+				choiceNode.setParent(methodParameterNode);
+			} else {
+				String parameterName = methodParameterNode.getName();
+				choiceNode = getRandomChoiceNode(methodNode, parameterName, randomGenerator);
+			}
+			
+			choiceNodes.add(choiceNode);
 		}
 
 		TestCaseNode testCaseNode = 
@@ -186,7 +202,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	ChoiceNode getRandomChoiceNode(MethodNode methodNode, String parameterName, Random randomGenerator) {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.findParameter(parameterName);
+		BasicParameterNode methodParameterNode = (BasicParameterNode)methodNode.findParameter(parameterName);
 		List<ChoiceNode> choices = methodParameterNode.getLeafChoicesWithCopies();
 
 		ChoiceNode choiceNode = choices.get(randomGenerator.nextInt(choices.size()));

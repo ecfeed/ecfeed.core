@@ -12,16 +12,16 @@ package com.ecfeed.core.operations;
 
 import java.util.Collection;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericAddChildrenOperation extends BulkOperation {
+public class GenericAddChildrenOperation extends CompositeOperation {
 
 	public GenericAddChildrenOperation(
-			AbstractNode target, 
-			Collection<? extends AbstractNode> children, 
+			IAbstractNode target, 
+			Collection<? extends IAbstractNode> children, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
@@ -30,8 +30,8 @@ public class GenericAddChildrenOperation extends BulkOperation {
 	}
 
 	public GenericAddChildrenOperation(
-			AbstractNode target, 
-			Collection<? extends AbstractNode> children, 
+			IAbstractNode target, 
+			Collection<? extends IAbstractNode> children, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
@@ -39,7 +39,7 @@ public class GenericAddChildrenOperation extends BulkOperation {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
 
-		for (AbstractNode child : children) {
+		for (IAbstractNode child : children) {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
@@ -55,11 +55,12 @@ public class GenericAddChildrenOperation extends BulkOperation {
 				if (operation != null) {
 					addOperation(operation);
 				}
-			} catch (Exception e) {SystemLogger.logCatch(e);}
+			} catch (Exception e) {
+				LogHelperCore.logCatch(e);}
 		}
 	}
 
 	public boolean enabled(){
-		return operations().isEmpty() == false;
+		return getOperations().isEmpty() == false;
 	}
 }

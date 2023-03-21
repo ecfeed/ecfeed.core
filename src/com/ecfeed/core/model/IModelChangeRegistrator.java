@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-public interface IModelChangeRegistrator {
+public interface IModelChangeRegistrator { // TODO MO-RE remove and keep info about changes in top node (root node)
 
 	void registerChange();
 

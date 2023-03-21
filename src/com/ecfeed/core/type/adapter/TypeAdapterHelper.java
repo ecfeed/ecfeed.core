@@ -19,7 +19,7 @@ public class TypeAdapterHelper {
 
 	public static final String USER_TYPE = "USER_TYPE";
 
-	public static final String[] TYPES_CONVERTABLE_TO_NUMBERS = new String[] {
+	public static final String[] TYPES_CONVERTIBLE_TO_NUMBERS = new String[] {
 		JavaLanguageHelper.TYPE_NAME_INT,
 		JavaLanguageHelper.TYPE_NAME_FLOAT,
 		JavaLanguageHelper.TYPE_NAME_DOUBLE,
@@ -31,7 +31,7 @@ public class TypeAdapterHelper {
 		SimpleLanguageHelper.TYPE_NAME_NUMBER
 	};
 
-	private static final String CANNOT_CONVERT_VALUE = "Cannot convert value";
+	public static final String CANNOT_CONVERT_VALUE = "Cannot convert value";
 
 	public static void reportRuntimeExceptionCannotConvert(String value, String typeName) {
 

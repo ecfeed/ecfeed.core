@@ -29,15 +29,15 @@ public class ConstraintTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "1", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "1", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode11 = new ChoiceNode("choice1", "7", null);
 		methodParameterNode1.addChoice(choiceNode11);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "1", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "1", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		// static statements
@@ -58,7 +58,7 @@ public class ConstraintTest {
 
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		String signature = constraint.createSignature(extLanguageManager);
+		String signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 
 		assertEquals("false", signature);
 
@@ -66,55 +66,60 @@ public class ConstraintTest {
 
 		constraint.setType(ConstraintType.EXTENDED_FILTER);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => false", signature);
 
 		// value condition
 
 		RelationStatement relationStatement =
-				RelationStatement.createRelationStatementWithValueCondition(methodParameterNode1, EMathRelation.EQUAL, "5");
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, "5");
 
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=5", signature);
 
 		// label condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, EMathRelation.EQUAL, "label1");
+				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");  // TODO MO-RE leftParameterLinkingContext
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=label1[label]", signature);
 
 		// choice condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);
+		
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=choice1[choice]", signature);
 
 		// parameter condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);
+		
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=par2[parameter]", signature);
 	}
 
 	@Test
 	public void createSignatureWithAssignmetStatementTest() {
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "1", true, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "1", true, null);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "2", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "2", true, null);
 
 		ChoiceNode choiceNode21 = new ChoiceNode("choice1", "5", null);
 		methodParameterNode2.addChoice(choiceNode21);
@@ -146,7 +151,7 @@ public class ConstraintTest {
 
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		String signature = constraint.createSignature(extLanguageManager);
+		String signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 
 		assertEquals("true => (par2:=3)", signature);
 
@@ -157,17 +162,17 @@ public class ConstraintTest {
 
 		postconditionStatementArray.addStatement(assignmentWithChoiceCondition);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => (par2:=3 , par2:=choice1[choice])", signature);
 
 		//  postcondition - assignment with parameter conditions
 
 		AssignmentStatement assignmentStatementWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1, null);
 
 		postconditionStatementArray.addStatement(assignmentStatementWithParameterCondition);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => (par2:=3 , par2:=choice1[choice] , par2:=par1[parameter])", signature);
 	}
 
@@ -176,8 +181,8 @@ public class ConstraintTest {
 
 		MethodNode  methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
@@ -191,9 +196,10 @@ public class ConstraintTest {
 
 		RelationStatement relationStatementWithChoice =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-					methodParameterNode1,
-					EMathRelation.EQUAL,
-					choiceNode1);
+						methodParameterNode1,
+						null,
+						EMathRelation.EQUAL,
+						choiceNode1);
 
 		// constraints
 
@@ -261,12 +267,12 @@ public class ConstraintTest {
 
 		MethodNode  methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
@@ -305,6 +311,7 @@ public class ConstraintTest {
 		RelationStatement relationStatementWithChoiceAndEqual =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						methodParameterNode1,
+						null,
 						EMathRelation.EQUAL,
 						choiceNode1);
 
@@ -361,7 +368,7 @@ public class ConstraintTest {
 
 		assignmentStatement =
 				AssignmentStatement.createAssignmentWithParameterCondition(
-						methodParameterNode2, methodParameterNode1);
+						methodParameterNode2, methodParameterNode1, null);
 
 		StatementArray statementArray1 = new StatementArray(StatementArrayOperator.ASSIGN, null);
 		statementArray1.addStatement(assignmentStatement);
@@ -465,8 +472,8 @@ public class ConstraintTest {
 	@Test
 	public void evaluateAssignmentConstraint() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode("par",  "int", "0", true, null);
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode("par",  "int", "0", true, null);
 
 		StaticStatement precondition =
 				new StaticStatement(false, null);
@@ -514,11 +521,12 @@ public class ConstraintTest {
 	@Test
 	public void testMentions() {
 		ChoiceNode choice = new ChoiceNode("choice", null, null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		parameter.addChoice(choice);
 
 		AbstractStatement mentioningStatement = 
-				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, EMathRelation.EQUAL, choice);
+		
 		AbstractStatement notMentioningStatement = new StaticStatement(false, null);
 
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, notMentioningStatement, null).mentions(parameter));
@@ -566,8 +574,8 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForParameterCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "type", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
 
 		AbstractStatement precondition = createStatementWithParameterCondition(parameter1, parameter2);
 		AbstractStatement postcondition = createStatementWithParameterCondition(parameter1, parameter2);
@@ -580,11 +588,10 @@ public class ConstraintTest {
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
 
-
 	@Test
 	public void testTupleWithNullPostconditionForChoiceCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "type", "0", false, null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "value11", null);
 		ChoiceNode choice12 = new ChoiceNode("choice12", "value12", null);
 		choice11.setParent(parameter1);
@@ -592,16 +599,16 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, EMathRelation.EQUAL, choice11);
+						parameter1, null, EMathRelation.EQUAL, choice11);
 
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 		choice2.setParent(parameter2);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, EMathRelation.EQUAL, choice2);
+						parameter2, null, EMathRelation.EQUAL, choice2);
 
 		MethodNode methodNode = new MethodNode("methodNode", null);
 		methodNode.addParameter(parameter1);
@@ -638,56 +645,133 @@ public class ConstraintTest {
 
 	private AbstractStatement createPreconditionWithValueCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter1, EMathRelation.EQUAL, "A");
+						parameter1, null, EMathRelation.EQUAL, "A"); // TODO MO-RE leftParameterLinkingContext 
 
 		return precondition;
 	}
 
 	private AbstractStatement createPostconditionWithValueCondition() {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter2, EMathRelation.EQUAL, "C");
+						parameter2, null, EMathRelation.EQUAL, "C");
 
 		return postcondition;
 	}
 
 	private AbstractStatement createPreconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, EMathRelation.EQUAL, choiceNode);
+						parameter1, null, EMathRelation.EQUAL, choiceNode);
 
 		return precondition;
 	}
 
 	private AbstractStatement createPostconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, EMathRelation.EQUAL, choiceNode);
+						parameter2, null, EMathRelation.EQUAL, choiceNode);
 
 		return postcondition;
 	}
 
 	private AbstractStatement createStatementWithParameterCondition(
-			MethodParameterNode parameter1, MethodParameterNode parameter2) {
+			BasicParameterNode parameter1, BasicParameterNode parameter2) {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithParameterCondition(
-						parameter1, EMathRelation.EQUAL, parameter2);
+						parameter1, null, EMathRelation.EQUAL, parameter2);
 
 		return precondition;
+	}
+
+	@Test
+	public void derandomizeNumbersTest() {
+
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
+
+		ChoiceNode c1 = new ChoiceNode("c1", "5:5", null);
+		c1.setRandomizedValue(true);
+		c1.setParent(parameter);
+
+		ChoiceNode c2 = new ChoiceNode("c2", "1:1", null);
+		c2.setRandomizedValue(true);
+		c2.setParent(parameter);
+
+		AbstractStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, c1);
+
+		AbstractStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, c2);
+
+		Constraint constraint = 
+				new Constraint(
+						"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintNode constraintNode  = 
+				new ConstraintNode("constraint", constraint, null);
+
+		constraintNode.derandomize();
+
+		assertFalse(c1.isRandomizedValue());
+		assertFalse(c2.isRandomizedValue());
+
+		String valueString1 = c1.getValueString();
+		assertEquals("5", valueString1);
+
+		String valueString2 = c2.getValueString();
+		assertEquals("1", valueString2);
+	}
+
+	@Test
+	public void derandomizeTextTest() {
+
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "String", "0", false, null);
+
+		ChoiceNode c1 = new ChoiceNode("c1", "[5-5]", null);
+		c1.setRandomizedValue(true);
+		c1.setParent(parameter);
+
+		ChoiceNode c2 = new ChoiceNode("c2", "[1-1]", null);
+		c2.setRandomizedValue(true);
+		c2.setParent(parameter);
+
+		AbstractStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, c1);
+
+		AbstractStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, c2);
+
+		Constraint constraint = 
+				new Constraint(
+						"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintNode constraintNode  = 
+				new ConstraintNode("constraint", constraint, null);
+
+		constraintNode.derandomize();
+
+		assertFalse(c1.isRandomizedValue());
+		assertFalse(c2.isRandomizedValue());
+
+		assertEquals("5", c1.getValueString());
+		assertEquals("1", c2.getValueString());
 	}
 
 }

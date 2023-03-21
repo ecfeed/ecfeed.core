@@ -11,122 +11,149 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
+public abstract class AbstractParameterNode extends AbstractNode {
 
-public abstract class AbstractParameterNode extends ChoicesParentNode {
+	private AbstractParameterNode fLinkToGlobalParameter;
 
-	private String fType;
-	private String fTypeComments;
+	public enum ParameterType {
+		BASIC,
+		COMPOSITE
+	}
 
-	private Optional<String> fSuggestedType;
-
-	public abstract List<MethodNode> getMethods();
-	public abstract Object accept(IParameterVisitor visitor) throws Exception;
-
-	public abstract Set<ConstraintNode> getMentioningConstraints();
-	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
-
-
-	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
+	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
+	}
 
-		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+	public void setLinkToGlobalParameter(AbstractParameterNode node) {
 
-		fSuggestedType = Optional.empty();
-		fType = type;
+		this.fLinkToGlobalParameter = node;
+	}
 
-		createDefaultProperties();
+	public AbstractParameterNode getLinkToGlobalParameter() {
+
+		return fLinkToGlobalParameter;
+	}
+
+	public boolean isLinked() {
+
+		return getLinkToGlobalParameter() != null;
 	}
 
 	@Override
-	public void setName(String name) {
+	public IParametersParentNode getParent() {
 
-		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
-
-		super.setName(name);
+		return (IParametersParentNode)(super.getParent());
 	}
 
 	@Override
-	public AbstractParameterNode getParameter() {
-		return this;
-	}
+	public int getMyIndex() {
 
-	public ParametersParentNode getParametersParent(){
-		return (ParametersParentNode)getParent();
-	}
+		IParametersParentNode parametersParent = getParametersParent();
 
-	@Override
-	public int getMyIndex(){
-		if(getParametersParent() == null){
+		if (parametersParent == null) {
 			return -1;
 		}
-		return getParametersParent().getParameters().indexOf(this);
+
+		List<AbstractParameterNode> parameters = parametersParent.getParameters();
+
+		return parameters.indexOf(this);
 	}
 
 	@Override
-	public int getMaxIndex(){
-		if(getParametersParent() != null){
-			return getParametersParent().getParameters().size();
+	public int getMaxIndex() {
+
+		IParametersParentNode parametersParent = getParametersParent();
+
+		if (parametersParent == null) {
+			return -1;
 		}
-		return -1;
+
+		List<AbstractParameterNode> parameters = parametersParent.getParameters();
+
+		return parameters.size();
 	}
 
-	@Override
-	public boolean isMatch(AbstractNode compared){
-		if(compared instanceof AbstractParameterNode == false){
-			return false;
+	public boolean isRootParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof RootNode) {
+				return true;
+			}
 		}
-		AbstractParameterNode comparedParameter = (AbstractParameterNode)compared;
-		if(comparedParameter.getType().equals(fType) == false){
-			return false;
+
+		return false;
+	}
+
+	public boolean isClassParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof MethodNode) {
+				return false;
+			}
+			
+			if (parent instanceof ClassNode) {
+				return true;
+			}
 		}
-		return super.isMatch(compared);
+
+		return false;
 	}
 
-	public boolean isCorrectableToBeRandomizedType() {
-		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
+	public boolean isMethodParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof MethodNode) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	public String getType() {
-		return fType; 
-	}
-
-	public void setType(String type) {
+	public boolean isGlobalParameter() {
 		
-		if (SimpleLanguageHelper.isSimpleType(type)) {
-			ExceptionHelper.reportRuntimeException("Attempt to set invalid parameter type: " + type);
+		RootNode rootNode = RootNodeHelper.findRootNode(this);
+		
+		if (rootNode == null) {
+			return false;
+		}
+		
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
+		
+		if (methodNode != null) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	public IParametersParentNode getParametersParent() {
+
+		IAbstractNode parent = getParent();
+
+		if (parent instanceof IParametersParentNode) {
+			return (IParametersParentNode) parent;
 		}
 
-		fType = type;
-		registerChange();
+		return null;
 	}
 
-	public String getTypeComments() {
-		return fTypeComments;
+	public AbstractParameterNode getLinkDestination() {
+
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return getLinkToGlobalParameter().getLinkDestination();
+		}
+
+		return this;
 	}
-
-	public void setTypeComments(String comments){
-		fTypeComments = comments;
-		registerChange();
-	}
-
-	public Optional<String> getSuggestedType() {
-		return fSuggestedType;
-	}
-
-	public void setSuggestedType(String typeHidden) {
-		fSuggestedType = Optional.ofNullable(typeHidden);
-	}
-
-	private void createDefaultProperties() {
-
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
-	}
-
 }

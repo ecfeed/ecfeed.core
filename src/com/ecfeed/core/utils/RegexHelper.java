@@ -60,7 +60,7 @@ public class RegexHelper {
 
 		String message = nodeName + " name " +
 				SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS +
-				" or: " + separator	+ " $ . Name should not start with digits.";
+				" or: " + separator	+ " $. Name should not start with digits.";
 
 		return message;
 	}

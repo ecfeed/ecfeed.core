@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
+public class TypeAdapterForFloat extends TypeAdapterForFloatingPoint<Float>{
 
 	@Override
 	public String getMyTypeName() {
@@ -32,6 +32,37 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 		result = extLanguageManager.formatNumber(result);
 
 		return result;
+	}
+
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		try {
+			Float.parseFloat(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
@@ -52,14 +83,14 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	}
 
 	@Override
-	public Float generateValue(String rangeTxt) {
+	public Float generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET);
 		}
-		
+
 		return (float) ThreadLocalRandom.current().nextDouble(
 				JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET),
 				JavaLanguageHelper.parseFloatValue(range[1], ERunMode.QUIET));
@@ -68,6 +99,20 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		return false;
 	}	
 
 }

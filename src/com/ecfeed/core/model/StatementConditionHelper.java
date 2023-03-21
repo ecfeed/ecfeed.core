@@ -21,13 +21,14 @@ public class StatementConditionHelper {
 	private static final String TYPE_INFO_PARAMETER = "parameter";
 	private static final String TYPE_INFO_LABEL = "label";
 
-	public static ChoiceNode getChoiceForMethodParameter(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	public static ChoiceNode getChoiceForMethodParameter(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		if (choices == null) {
 			return null;
 		}
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IParametersParentNode methodNode = (IParametersParentNode) methodParameterNode.getParent();
+		
 		if (methodNode == null) {
 			return null;
 		}
@@ -44,8 +45,8 @@ public class StatementConditionHelper {
 		return choices.get(index);
 	}
 
-	public static String createChoiceDescription(String parameterName) {
-		return parameterName + "[" + TYPE_INFO_CHOICE + "]";
+	public static String createChoiceDescription(String choiceName) {
+		return choiceName + "[" + TYPE_INFO_CHOICE + "]";
 	}
 
 	public static String createParameterDescription(String parameterName) {
@@ -104,7 +105,7 @@ public class StatementConditionHelper {
 		return removeTypeInfo(string, TYPE_INFO_CHOICE);
 	}
 
-	public static boolean getChoiceRandomized(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	public static boolean getChoiceRandomized(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 		ChoiceNode choiceNode = getChoiceForMethodParameter(choices, methodParameterNode);
 
 		if (choiceNode == null) {
@@ -114,7 +115,7 @@ public class StatementConditionHelper {
 		return choiceNode.isRandomizedValue();
 	}
 
-	public static boolean getChoiceRandomized(ChoiceNode choice, MethodParameterNode methodParameterNode) {
+	public static boolean getChoiceRandomized(ChoiceNode choice, BasicParameterNode methodParameterNode) {
 		return getChoiceRandomized(Arrays.asList(choice), methodParameterNode);
 	}
 

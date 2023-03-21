@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
 
 public class ClassNodeTest extends ClassNode {
@@ -33,7 +34,7 @@ public class ClassNodeTest extends ClassNode {
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
-		List<? extends AbstractNode> children = classNode.getChildren();
+		List<IAbstractNode> children = classNode.getChildren();
 		assertEquals(2, children.size());
 		assertTrue(children.contains(method1));
 		assertTrue(children.contains(method2));
@@ -55,18 +56,22 @@ public class ClassNodeTest extends ClassNode {
 
 		int inx = 0;
 		for(String type : method1Types){
-			method1.addParameter(new MethodParameterNode("parameter" +  inx++, type, "0", false, null));
+			method1.addParameter(new BasicParameterNode("parameter" +  inx++, type, "0", false, null));
 		}
 
 		for(String type : method2Types){
-			method2.addParameter(new MethodParameterNode("parameter" + inx++, type, "0", false, null));
+			method2.addParameter(new BasicParameterNode("parameter" + inx++, type, "0", false, null));
 		}
 
 		classNode.addMethod(method1);
-		classNode.addMethod(method2);
 
-		assertEquals(method1, classNode.findMethodWithTheSameSignature("method", method1Types));
-		assertEquals(method2, classNode.findMethodWithTheSameSignature("method", method2Types));
+		try {
+			classNode.addMethod(method2);
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "Cannot add method.", "Method with the same name already exists.");
+		}
+
+		assertEquals(method1, classNode.findMethodWithTheSameName("method"));
 	}
 
 	@Test
@@ -130,10 +135,10 @@ public class ClassNodeTest extends ClassNode {
 		m2.setName("m1");
 		assertTrue(c1.isMatch(c2));
 
-		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
 		c1.addParameter(parameter1);
 		assertFalse(c1.isMatch(c2));
-		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter1", "int", "0", false, null);
 		c2.addParameter(parameter2);
 		assertTrue(c1.isMatch(c2));
 		parameter1.setName("newName");

@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -21,43 +20,44 @@ import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public abstract class AbstractNode{
+public abstract class AbstractNode implements IAbstractNode {
+
 	private String fName;
-	private AbstractNode fParent;
+	private IAbstractNode fParent;
 	private String fDescription;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	private NodeProperties fProperties = new NodeProperties();
-	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
-
-	protected abstract String getNonQualifiedName();
+	protected final List<IAbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<>();
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
-        verifyName(name);
+		verifyName(name);
 
-        fName = name;
+		fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-    protected void verifyName(String nameInIntrLanguage) {
-    	
-    	if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
+	@Override
+	public void verifyName(String nameInIntrLanguage) {
+
+		if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
 			return;
 		}
-    	
-        String errorMessage = JavaLanguageHelper.verifySeparatorsInName(nameInIntrLanguage);
 
-        if (errorMessage != null) {
-            ExceptionHelper.reportRuntimeException(errorMessage);
-        }
-    }
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInName(nameInIntrLanguage);
 
-    @Override
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
+	}
+
+	@Override
 	public String toString() {
 
 		return getName();
 	}
 
+	@Override
 	public int getMyIndex() {
 
 		if(getParent() == null){
@@ -67,63 +67,76 @@ public abstract class AbstractNode{
 		return getParent().getChildren().indexOf(this);
 	}
 
-	public static List<String> getFullNames(Collection<AbstractNode> nodes) {
+	public static List<String> getFullNames(Collection<? extends IAbstractNode> nodes) {
 
 		List<String> result = new ArrayList<String>();
-		for(AbstractNode node : nodes){
+		for(IAbstractNode node : nodes){
 			result.add(node.getName());
 		}
 
 		return result;
 	}
 
+	@Override
 	public String getName() {
 		return fName;
 	}
 
+	@Override
 	public void setName(String name) {
 
 		setName(name, true);
 	}
 
+	@Override
+	public void setCompositeName(String name) {
+
+		setName(name, true);
+	}
+
+	@Override
 	public void setName(String name, boolean checkName) {
-		
+
 		if (checkName ) {
-            verifyName(name);
-        }
-		
+			verifyName(name);
+		}
+
 		fName = name;
 		registerChange();
 	}
 
+	@Override
 	public IModelChangeRegistrator getModelChangeRegistrator() {
 
 		return fModelChangeRegistrator;
 	}
 
-	public void setParent(AbstractNode newParent) {
+	@Override
+	public void setParent(IAbstractNode newParent) {
 		fParent = newParent;
 		registerChange();
 	}
 
+	@Override
 	public void setDescription(String desc) {
 
 		fDescription = desc;
 		registerChange();
 	}
 
+	@Override
 	public String getDescription() {
 
 		return fDescription;
 	}
 
-	public List<? extends AbstractNode> getChildren() {
+	@Override
+	public List<IAbstractNode> getChildren() {
 
 		return EMPTY_CHILDREN_ARRAY;
 	}
 
-	public abstract int getChildrenCount();
-	
+	@Override
 	public boolean hasChildren() {
 
 		if(getChildren() != null) {
@@ -133,53 +146,84 @@ public abstract class AbstractNode{
 		return false;
 	}
 
-	public List<AbstractNode> getAncestors() {
+	@Override
+	public List<IAbstractNode> getAncestors() {
 
-		List<AbstractNode> ancestors;
-		AbstractNode parent = getParent();
+		IAbstractNode parent = getParent();
 
-		if (parent != null) {
-			ancestors = parent.getAncestors();
-			ancestors.add(parent);
-		}
-		else {
-			ancestors = new ArrayList<>();
+		if (parent == null) {
+			return new ArrayList<>();
 		}
 
-		return ancestors;
+		List<IAbstractNode> result = new ArrayList<>();
+
+		List<? extends IAbstractNode> ancestors = parent.getAncestors();
+
+		for (IAbstractNode abstractNode : ancestors) {
+			result.add(abstractNode);
+		}
+
+		result.add(parent);
+		return result;
 	}
 
-	public AbstractNode getParent() {
+	@Override
+	public IAbstractNode getContainer() {
+		IAbstractNode container;
+		
+		container = MethodNodeHelper.findMethodNode(this);
+		
+		if (container != null) {
+			return container;
+		}
+		
+		container = ClassNodeHelper.findClassNode(this);
+		
+		if (container != null) {
+			return container;
+		}
+		
+		return RootNodeHelper.findRootNode(this);
+	}
+	
+	@Override
+	public IAbstractNode getParent() {
 
 		return fParent;
 	}
 
-	public AbstractNode getRoot() {
+	@Override
+	public IAbstractNode getRoot() {
 
-		if (getParent() == null) {
-			return this;
-		}
-
-		return getParent().getRoot();
+		return RootNodeHelper.findRootNode(this);
 	}
 
-	public AbstractNode getChild(String qualifiedName) {
+	@Override
+	public IAbstractNode getChild(String qualifiedName) {
 
 		String[] tokens = qualifiedName.split(":");
 		if(tokens.length == 0){
 			return null;
 		}
 
-		if(tokens.length == 1){
-			for(AbstractNode child : getChildren()){
-				if(child.getName().equals(tokens[0])){
+		if (tokens.length == 1) {
+
+			List<IAbstractNode> children = getChildren();
+
+			for (IAbstractNode child : children) {
+				if (child.getName().equals(tokens[0])) {
 					return child;
 				}
 			}
 		} else {
-			AbstractNode nextChild = getChild(tokens[0]);
-			if(nextChild == null) return null;
-			tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+
+			IAbstractNode nextChild = getChild(tokens[0]);
+
+			if(nextChild == null) { 
+				return null;
+			}
+
+			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
 			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
 			return nextChild.getChild(newName);
 		}
@@ -187,16 +231,17 @@ public abstract class AbstractNode{
 		return null;
 	}
 
-	public AbstractNode getSibling(String name) {
+	@Override
+	public IAbstractNode getSibling(String name) {
 
-		final AbstractNode parent = getParent();
+		final IAbstractNode parent = getParent();
 
 		if (parent == null)
 			return null;
 
-		final List<? extends AbstractNode> siblings = parent.getChildren();
+		final List<? extends IAbstractNode> siblings = parent.getChildren();
 
-		for (AbstractNode sibling : siblings) {
+		for (IAbstractNode sibling : siblings) {
 
 			if (sibling.getName().equals(name) && sibling != this) {
 				return sibling;
@@ -206,28 +251,31 @@ public abstract class AbstractNode{
 		return null;
 	}
 
+	@Override
 	public boolean hasSibling(String name) {
 
 		return getSibling(name) != null;
 	}
 
+	@Override
 	public int getSubtreeSize() {
 
 		int size = 1;
-		for(AbstractNode child : getChildren()){
+		for(IAbstractNode child : getChildren()){
 			size += child.getSubtreeSize();
 		}
 
 		return size;
 	}
 
-	public boolean isMyAncestor(AbstractNode candidateForAncestor) {
+	@Override
+	public boolean isMyAncestor(IAbstractNode candidateForAncestor) {
 
-		AbstractNode currentNode = this;
+		IAbstractNode currentNode = this;
 
 		for (;;) {
 
-			AbstractNode parentNode = currentNode.getParent();
+			IAbstractNode parentNode = currentNode.getParent();
 
 			if (parentNode == null) {
 				return false;
@@ -241,6 +289,7 @@ public abstract class AbstractNode{
 		}
 	}
 
+	@Override
 	public String getFullNamePath() {
 
 		List<String> path = createNodePathList();
@@ -252,13 +301,13 @@ public abstract class AbstractNode{
 
 		List<String> path = new ArrayList<String>();
 
-		AbstractNode currentNode = this;
+		IAbstractNode currentNode = this;
 
 		for (;;) {
 
 			path.add(currentNode.getName());
 
-			AbstractNode parentNode = currentNode.getParent();
+			IAbstractNode parentNode = currentNode.getParent();
 
 			if (parentNode == null) {
 				break;
@@ -293,20 +342,24 @@ public abstract class AbstractNode{
 		return result;
 	}
 
+	@Override
+	public boolean isMatch(IAbstractNode nodeToCompare) {
 
-	public boolean isMatch(AbstractNode node) {
+		String name = getName();
+		String nameToCompare = nodeToCompare.getName();
 
-		if (!getName().equals(node.getName())) {
+		if (!name.equals(nameToCompare)) {
 			return false;
 		}
 
-		if (!fProperties.isMatch(node.fProperties)) {
+		if (!fProperties.isMatch(nodeToCompare.getProperties())) {
 			return false;
 		}
 
 		return true;
 	}
 
+	@Override
 	public int getMaxIndex() {
 
 		if (getParent() != null) {
@@ -316,27 +369,26 @@ public abstract class AbstractNode{
 		return -1;
 	}
 
-	public abstract AbstractNode makeClone();
-	
-	public abstract Object accept(IModelVisitor visitor) throws Exception;
-
+	@Override
 	public void setProperties(NodeProperties nodeProperties) {
 
 		fProperties = nodeProperties.getCopy();
 		registerChange();
 	}
 
+	@Override
 	public NodeProperties getProperties() {
 
 		return fProperties; 
 	}
 
-
-	public int getMaxChildIndex(AbstractNode potentialChild) {
+	@Override
+	public int getMaxChildIndex(IAbstractNode potentialChild) {
 
 		return getChildren().size();
 	}
 
+	@Override
 	public void setPropertyValue(NodePropertyDefs.PropertyId propertyId, String value) {
 
 		NodeProperty nodeProperty = new NodeProperty(NodePropertyDefs.getPropertyType(propertyId), value);
@@ -345,6 +397,7 @@ public abstract class AbstractNode{
 		registerChange();
 	}
 
+	@Override
 	public void setPropertyDefaultValue(NodePropertyDefs.PropertyId propertyId) {
 
 		NodeProperty nodeProperty = 
@@ -357,6 +410,7 @@ public abstract class AbstractNode{
 		registerChange();
 	}	
 
+	@Override
 	public String getPropertyValue(NodePropertyDefs.PropertyId propertyId) {
 
 		String propertyName = NodePropertyDefs.getPropertyName(propertyId);
@@ -369,29 +423,34 @@ public abstract class AbstractNode{
 		return nodeProperty.getValue();
 	}
 
+	@Override
 	public boolean getPropertyValueBoolean(NodePropertyDefs.PropertyId propertyId) {
 
 		String str = getPropertyValue(propertyId);
 		return BooleanHelper.parseBoolean(str);
 	}	
 
+	@Override
 	public Set<String> getPropertyKeys() {
 
 		return fProperties.getKeys();
 	}
 
+	@Override
 	public int getPropertyCount() {
 
 		return fProperties.size();
 	}
 
+	@Override
 	public void removeProperty(NodePropertyDefs.PropertyId propertyId) {
 
 		fProperties.remove(NodePropertyDefs.getPropertyName(propertyId));
 		registerChange();
 	}
 
-	protected void registerChange() {
+	@Override
+	public void registerChange() {
 
 		if (fModelChangeRegistrator == null) {
 			return;
@@ -399,5 +458,4 @@ public abstract class AbstractNode{
 
 		fModelChangeRegistrator.registerChange();
 	}
-	
 }

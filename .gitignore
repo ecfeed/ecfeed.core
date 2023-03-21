@@ -30,6 +30,7 @@ hs_err_pid*
 **/.idea/usage.statistics.xml
 **/.idea/tasks.xml
 **/.idea/modules.xml
+**/.idea/.name
 
 **/gradle.xml
 
@@ -43,9 +44,10 @@ hs_err_pid*
 
 *.gradletasknamecache
 
-
  .gradle/*
 
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 
 
 

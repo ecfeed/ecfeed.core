@@ -22,7 +22,31 @@ public class ClassNodeHelper {
 
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
-	public static final String CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE = "contains method with identical signature";
+	public static final String CONTAINS_METHOD_WITH_IDENTICAL_NAME = "contains method with identical name";
+
+
+	public static BasicParameterNode addGlobalBasicParameterToClass(
+			ClassNode classNode, 
+			String name, 
+			String type,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode globalParameterNode = 
+				BasicParameterNode.createGlobalParameter(name, type, modelChangeRegistrator);
+		
+		classNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static MethodNode addMethodToClass(
+			ClassNode classNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+
+		MethodNode globalParameterNode = new MethodNode(name, modelChangeRegistrator);
+		classNode.addMethod(globalParameterNode);
+
+		return globalParameterNode;
+	}
 
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
@@ -67,39 +91,29 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String verifyNewMethodSignatureIsValidAndUnique(
+	public static String verifyNewMethodSignatureIsValid(
 			ClassNode classNode,
 			String methodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
+		String errorMessage = MethodNodeHelper.verifyMethodNameIsValid(methodNameInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null)
 			return errorMessage;
 
-		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager) != null) {
-
-			String newMethodSignature =
-					MethodNodeHelper.createSignature(
-							methodNameInExtLanguage,
-							parameterTypesInExtLanguage,
-							null,
-							null,
-							extLanguageManager);
-
-
-			String classSignature = createSignature(classNode, extLanguageManager);
-
-			errorMessage =
-					"Class: "
-							+ classSignature
-							+ " already " +
-							CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE +
-							": " + newMethodSignature + ".";
-
-			return errorMessage;
-		}
+		//		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, extLanguageManager) != null) {
+		//
+		//			String classSignature = createSignature(classNode, extLanguageManager);
+		//
+		//			errorMessage =
+		//					"Class: "
+		//							+ classSignature
+		//							+ " already " +
+		//							CONTAINS_METHOD_WITH_IDENTICAL_NAME +
+		//							": " + methodNameInExtLanguage + ".";
+		//
+		//			return errorMessage;
+		//		}
 
 		return null;
 	}
@@ -107,12 +121,11 @@ public class ClassNodeHelper {
 	public static String generateNewMethodName(
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
 		String errorMessage =
-				MethodNodeHelper.verifyMethodSignatureIsValid(
-						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
+				MethodNodeHelper.verifyMethodNameIsValid(
+						startMethodNameInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -128,7 +141,6 @@ public class ClassNodeHelper {
 			MethodNode methodNode = findMethodByExtLanguage(
 					classNode,
 					newMethodNameInExtLanguage,
-					parameterTypesInExtLanguage,
 					extLanguageManager);
 
 			if (methodNode == null) {
@@ -142,7 +154,7 @@ public class ClassNodeHelper {
 		return getQualifiedName(classNode, extLanguageManager);
 	}
 
-	public static String createMethodSignatureDuplicateMessage(
+	public static String createMethodNameDuplicateMessage(
 			ClassNode classNode,
 			MethodNode duplicateMethodNode,
 			boolean isParamNameAdded,
@@ -151,14 +163,14 @@ public class ClassNodeHelper {
 
 		String classSignature = createSignature(classNode, extLanguageManager);
 
-		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
+		//		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
 
 		String message =
 				"Class: "
 						+ classSignature
 						+ " already " +
-						CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE +
-						": " + methodSignature + ".";
+						CONTAINS_METHOD_WITH_IDENTICAL_NAME +
+						": " + duplicateMethodNode.getName() + ".";
 
 		return message;
 	}
@@ -166,18 +178,15 @@ public class ClassNodeHelper {
 	public static MethodNode findMethodByExtLanguage(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
-			List<String> parameterTypesInExternalLanguage,
 			IExtLanguageManager extLanguageManager) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
 		for (MethodNode methodNode : methods) {
 
-			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguageManager);
-			
-			List<String> currentParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+			String currentMethodName = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
-			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
+			if (currentMethodName.equals(methodNameInExternalLanguage)){
 				return methodNode;
 			}
 		}
@@ -194,4 +203,19 @@ public class ClassNodeHelper {
 		return false;
 	}
 
+	public static ClassNode findClassNode(IAbstractNode anyNode) {
+
+		IAbstractNode parent = anyNode;
+
+		while (parent != null) {
+
+			if (parent instanceof ClassNode) {
+				return (ClassNode) parent;
+			}
+
+			parent = parent.getParent();
+		}
+
+		return null;
+	}
 }

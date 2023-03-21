@@ -13,7 +13,7 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -26,17 +26,22 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 
 	@Override
-	public void initialize(List<List<E>> input,
-						   IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+	public void initialize(
+			List<List<E>> input,
+			IConstraintEvaluator<E> constraintEvaluator,
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 
-		if(input == null || constraintEvaluator == null){
-			GeneratorException.report("input or constraints of algorithm cannot be null");
+		if(input == null){
+			GeneratorExceptionHelper.reportException("Input of algorithm cannot be null.");
 		}
 
+		if(constraintEvaluator == null){
+			GeneratorExceptionHelper.reportException("Constraint evaluator cannot be null.");
+		}
+		
 		if (generatorProgressMonitor == null) {
-			GeneratorException.report("Progress monitor of algorithm must not be null.");
+			GeneratorExceptionHelper.reportException("Progress monitor of algorithm must not be null.");
 		}
 
 		fInput = input;
@@ -118,6 +123,11 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	}
 
 	protected EvaluationResult checkConstraints(List<E> test) {
+		
+		if (fConstraintEvaluator == null) {
+			return EvaluationResult.TRUE;
+		}
+		
 		return fConstraintEvaluator.evaluate(test);
 	}
 

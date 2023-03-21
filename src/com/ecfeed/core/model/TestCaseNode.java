@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 
@@ -23,12 +22,45 @@ public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
 	@Override
-	protected void verifyName(String nameInIntrLanguage) {
+	public void verifyName(String nameInIntrLanguage) {
+	}
+
+	@Override
+	public void setName(String newNameInIntrLanguage) {
+
+		if (newNameInIntrLanguage == null) {
+			ExceptionHelper.reportRuntimeException("Empty new test case name.");
+		}
+
+		if (newNameInIntrLanguage.equals(getName())) {
+			return;
+		}
+
+		IAbstractNode parent = getParent();
+
+		if (parent == null) {
+			super.setName(newNameInIntrLanguage);
+			return;
+		}
+
+		MethodNode methodNode = (MethodNode) parent;
+
+		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
+		oldTestSuiteNode.removeTestCase(this);
+		
+		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
+			methodNode.removeTestSuite(oldTestSuiteNode);
+		}
+
+		super.setName(newNameInIntrLanguage);
+		
+		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
+		newTestSuiteNode.addTestCase(this);
 	}
 
 	@Override
@@ -44,12 +76,12 @@ public class TestCaseNode extends AbstractNode {
 
 		return TestCaseNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava());
 	}
-	
+
 	@Override
 	public int getChildrenCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public TestCaseNode makeClone(){
 		List<ChoiceNode> testdata = new ArrayList<>();
@@ -61,15 +93,9 @@ public class TestCaseNode extends AbstractNode {
 		return copy;
 	}
 
-	public TestCaseNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
 
-		super(name, modelChangeRegistrator);
-		fTestData = testData;
-	}
-
-	public TestCaseNode(List<ChoiceNode> testData) {
-
-		super("", null);
+		super(testSuiteName, modelChangeRegistrator);
 		fTestData = testData;
 	}
 
@@ -77,25 +103,42 @@ public class TestCaseNode extends AbstractNode {
 
 		return (MethodNode)getParent();
 	}
-	
+
 	public TestSuiteNode getTestSuite() {
-		
+
 		Optional<TestSuiteNode> testSuite = getMethod().getTestSuites().stream().filter(e -> e.getTestCaseNodes().contains(this)).findAny(); 
-		
+
 		if (testSuite.isPresent()) {
 			return testSuite.get();
 		}
-		
+
 		ExceptionHelper.reportRuntimeException("The selected TestCaseNode does not belong to any test suite");
 		return null;
 	}
 
-	public MethodParameterNode getMethodParameter(ChoiceNode choice){
-		if(getTestData().contains(choice)){
-			int index = getTestData().indexOf(choice);
-			return getMethod().getMethodParameters().get(index);
+	public BasicParameterNode getBasicMethodParameter(ChoiceNode choice) {
+
+		if (!getTestData().contains(choice)) {
+			return null;
 		}
-		return null;
+
+		int index = getTestData().indexOf(choice);
+
+		List<BasicParameterNode> methodParameters;
+
+		if (getMethod().isDeployed()) {
+			methodParameters = getMethod().getDeployedMethodParameters();
+		} else {
+			methodParameters = getMethod().getParametersAsBasic();
+		}
+
+		BasicParameterNode abstractParameterNode = methodParameters.get(index);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Attempt to get a parameter which is not basic.");
+		}
+
+		return abstractParameterNode;
 	}
 
 	public List<ChoiceNode> getTestData(){
@@ -130,7 +173,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public TestCaseNode getCopy(MethodNode method){
 		TestCaseNode tcase = makeClone();
-		if(tcase.updateReferences(method)){
+		if(tcase.correctTestCase(method)){
 			tcase.setParent(method);
 			return tcase;
 		}
@@ -138,50 +181,74 @@ public class TestCaseNode extends AbstractNode {
 			return null;
 	}
 
-	public boolean updateReferences(MethodNode method){
-		List<MethodParameterNode> parameters = method.getMethodParameters();
-		if(parameters.size() != getTestData().size())
-			return false;
+	public boolean correctTestCase(MethodNode parentMethodNode) {
 
-		for(int i = 0; i < parameters.size(); i++){
-			MethodParameterNode parameter = parameters.get(i);
-			if(parameter.isExpected()){
-				String name = getTestData().get(i).getName();
-				String value = getTestData().get(i).getValueString();
-				ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
-				newChoice.setParent(parameter);
-				getTestData().set(i, newChoice);
-			} else{
-				ChoiceNode original = getTestData().get(i);
-				ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
-				if(newReference == null){
-					return false;
-				}
-				getTestData().set(i, newReference);
-			}
+		if (!parentMethodNode.isDeployed()) {
+			return true;
 		}
+
+		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
+
+		if (parameters.size() != getTestData().size()) {
+			return false;
+		}
+
+		for (int i = 0; i < parameters.size(); i++) {
+
+			BasicParameterNode parameter = parameters.get(i);
+
+			if (parameter.isExpected()) {
+				updateTestCaseWithCreatedChoice(i, parameter);
+			} 
+		}
+
 		return true;
 	}
 
+	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
+
+		String name = getTestData().get(i).getName();
+		String value = getTestData().get(i).getValueString();
+
+		ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
+
+		newChoice.setParent(parameter);
+		getTestData().set(i, newChoice);
+	}
+
 	@Override
-	public boolean isMatch(AbstractNode node){
-		if(node instanceof TestCaseNode == false){
+	public boolean isMatch(IAbstractNode testCaseNode){
+
+		if(testCaseNode instanceof TestCaseNode == false){
 			return false;
 		}
 
-		TestCaseNode compared = (TestCaseNode)node;
+		TestCaseNode testCaseNodeToCompare = (TestCaseNode)testCaseNode;
 
-		if(getTestData().size() != compared.getTestData().size()){
+		List<ChoiceNode> testData = getTestData();
+
+		List<ChoiceNode> testDataToCompare = testCaseNodeToCompare.getTestData();
+		if(testData.size() != testDataToCompare.size()){
 			return false;
 		}
 
-		for(int i = 0; i < getTestData().size(); i++){
-			if(getTestData().get(i).isMatch(compared.getTestData().get(i)) == false){
+		for (int i = 0; i < testData.size(); i++) {
+
+			ChoiceNode choiceNode = testData.get(i);
+			ChoiceNode choiceNodeToCompare = testDataToCompare.get(i);
+
+			if (choiceNode.isMatch(choiceNodeToCompare) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(testCaseNode);
+
+		if (!isMatch) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -191,7 +258,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public boolean isConsistent() {
 		for(ChoiceNode choice : getTestData()){
-			MethodParameterNode parameter = getMethodParameter(choice);
+			BasicParameterNode parameter = getBasicMethodParameter(choice);
 			if(parameter == null || (parameter.isExpected() == false && parameter.getChoice(choice.getQualifiedName()) == null)){
 				return false;
 			}
@@ -208,6 +275,25 @@ public class TestCaseNode extends AbstractNode {
 			return getMethod().getTestCases().size();
 		}
 		return -1;
+	}
+
+	public TestCase getTestCase() {
+		return new TestCase(fTestData);
+	}
+
+	public void updateChoiceReferences( // TODO MO-RE do we need this ?
+			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fTestData) {
+
+			if (choiceNode.equals(oldChoiceNode)) {
+				fTestData.set(index, newChoiceNode);
+			}
+
+			index++;
+		}
 	}
 
 }

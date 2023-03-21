@@ -56,23 +56,23 @@ public class RelationStatementTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", parameter1Type, null, false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", parameter1Type, null, false, null);
 		methodNode.addParameter(methodParameterNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", parameter2Type, null, false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", parameter2Type, null, false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		if (okExpected) {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
 			} catch (Exception e) {
 				fail();
 			}
 		} else {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
 				fail();
 			} catch (Exception e) {
 			}

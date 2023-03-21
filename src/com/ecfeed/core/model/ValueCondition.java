@@ -13,7 +13,15 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.RangeHelper;
+import com.ecfeed.core.utils.RelationMatcher;
+import com.ecfeed.core.utils.StringHelper;
 
 
 public class ValueCondition implements IStatementCondition {
@@ -64,7 +72,9 @@ public class ValueCondition implements IStatementCondition {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);		
 
-		int leftParameterIndex = fParentRelationStatement.getLeftParameter().getMyIndex();
+		BasicParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
+		int leftParameterIndex = leftParameter.getMyIndex();
+
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
 
 		EMathRelation relation = fParentRelationStatement.getRelation();
@@ -87,7 +97,12 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 
@@ -104,16 +119,22 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ValueCondition getCopy() {
+	public ValueCondition makeClone() {
 
-		return new ValueCondition(new String(fRightValue), fParentRelationStatement);
+		return new ValueCondition(fRightValue, fParentRelationStatement);
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public ValueCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		return true;
+		return new ValueCondition(fRightValue, statement);
 	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -160,7 +181,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode methodParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
 		return false;
 	}	
@@ -169,9 +190,63 @@ public class ValueCondition implements IStatementCondition {
 		return fRightValue;
 	}
 
+	public void setRightValue(String rightValue) {
+		fRightValue = rightValue;
+	}
+
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 		return new ArrayList<ChoiceNode>();
 	}
+
+	@Override
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public void derandomize() {
+	}
+
+	@Override
+	public void convert(ParameterConversionItem parameterConversionItem) {
+
+		String srcString = parameterConversionItem.getSrcPart().getStr();
+		String valueString = getRightValue();
+
+		if (StringHelper.isEqual(srcString, valueString)) {
+			String dstString = parameterConversionItem.getDstPart().getStr();
+			setRightValue(dstString);
+		}
+
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
+		return false;
+	}
+
+	@Override
+	public String getLabel(BasicParameterNode methodParameterNode) {
+		return null;
+	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		String deployedRightValue = getRightValue();
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		ValueCondition deployedValueCondition =
+	//				new ValueCondition(
+	//						deployedRightValue,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedValueCondition;
+	//
+	//	}
+
 }	
 

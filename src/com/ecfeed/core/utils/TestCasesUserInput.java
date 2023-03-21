@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class TestCasesUserInput {
 
+	private static final String CONSTRAINTS_ALL = "ALL";
+	private static final String CONSTRAINTS_NONE = "NONE";
+	
 	private String fDataSource;
 	private String fMethod;
 	private String fSuiteSize;
@@ -29,13 +32,14 @@ public class TestCasesUserInput {
 	// or special Strings ALL, NONE
 	private Object fConstraints;
 
+	private String fAmbiguousTestCases;
+
 	// takes special strings ALL, NONE
 	// or map of entries of type Map<String, List<String>> or
 	// each entry consists of method's parameter name and list of choices
 	private Object fChoices;
 
-	public TestCasesUserInput()
-	{
+	public TestCasesUserInput()	{
 		fProperties = new HashMap<>();
 	}
 
@@ -101,17 +105,29 @@ public class TestCasesUserInput {
 
 	public void setAllConstraints() {
 
-		setConstraints("ALL"); // TODO - magic string
+		setConstraints(CONSTRAINTS_ALL);
 	}
 
 	public void setNoConstraints() {
 
-		setConstraints("NONE"); // TODO - magic string
+		setConstraints(CONSTRAINTS_NONE);
 	}
 
 	public void setConstraints(List<String> constraintNames) {
 
 		fConstraints = constraintNames;
+	}
+
+	@JsonGetter("ambiguousTestCases")
+	public String getAmbiguousTestCasesFlag() {
+
+		return fAmbiguousTestCases;
+	}
+
+	@JsonSetter("ambiguousTestCases")
+	public void setAmbiguousTestCasesFlag(String ambiguousTestCases) {
+
+		fAmbiguousTestCases = ambiguousTestCases;
 	}
 
 	@JsonGetter("choices")
@@ -126,7 +142,6 @@ public class TestCasesUserInput {
 		fChoices = choices;
 	}
 
-	@JsonAnyGetter
 	public Map<String, String> getProperties() {
 		return fProperties;
 	}

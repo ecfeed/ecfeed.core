@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.api.GeneratorException;
 
 public class IterableTestSubinputTest {
 
@@ -35,7 +34,7 @@ public class IterableTestSubinputTest {
 
 		try {
 			testInputList = new IterableTestSubinput<Integer>(testInput, paramDimensions);
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -70,7 +69,7 @@ public class IterableTestSubinputTest {
 
 		try {
 			testInputList = new IterableTestSubinput<Integer>(testInput, paramDimensions);
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -118,7 +117,7 @@ public class IterableTestSubinputTest {
 		IterableTestSubinput<String> testInputList = null;
 		try {
 			testInputList = new IterableTestSubinput<String>(testInput, paramDimensions);
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -175,7 +174,7 @@ public class IterableTestSubinputTest {
 
 		try {
 			testInputList = new IterableTestSubinput<String>(testInput, paramDimensions);
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail();
 		}
 

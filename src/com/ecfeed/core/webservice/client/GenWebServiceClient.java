@@ -51,6 +51,10 @@ public class GenWebServiceClient implements IWebServiceClient {
 		return "testCaseService";
 	}
 
+	public static String getTestCasesJsonEndPoint() {
+		return "testCaseServiceJson";
+	}
+
 	public static String getGenServiceVersionEndPoint() {
 		return "genServiceVersion";
 	}
@@ -67,6 +71,8 @@ public class GenWebServiceClient implements IWebServiceClient {
 				.post(Entity.entity(requestJson, MediaType.APPLICATION_JSON));
 
 		int responseStatus = response.getStatus();
+
+//		String responseText = response.readEntity(String.class);
 
 		BufferedReader responseBufferedReader =
 				new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));

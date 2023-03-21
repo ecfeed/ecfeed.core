@@ -22,6 +22,38 @@ public class RootNodeHelper {
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
+	public static BasicParameterNode addGlobalBasicParameterToRoot(
+			RootNode rootNode, 
+			String name, 
+			String type,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+		
+		rootNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
+			RootNode rootNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+
+		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+		rootNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static ClassNode addClassNodeToRoot(
+			RootNode rootNode, String className, IModelChangeRegistrator modelChangeRegistrator) {
+
+		ClassNode classNode = new ClassNode("Class1", modelChangeRegistrator);
+		rootNode.addClass(classNode);
+
+		return classNode;
+	}
+
 	public static String classWithNameExists(
 			String classNameInExtLanguage,
 			RootNode rootNode,
@@ -88,4 +120,19 @@ public class RootNodeHelper {
 		return true;
 	}
 
+	public static RootNode findRootNode(IAbstractNode anyNode) {
+		
+		IAbstractNode parent = anyNode;
+		
+		while (parent != null) {
+			
+			if (parent instanceof RootNode) {
+				return (RootNode) parent;
+			}
+			
+			parent = parent.getParent();
+		}
+		
+		return null;
+	}
 }

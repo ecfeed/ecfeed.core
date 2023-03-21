@@ -10,11 +10,13 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.testutils.RandomModelGenerator;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class RootNodeHelperTest {
 

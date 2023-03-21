@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
+public class TypeAdapterForByte extends TypeAdapterForNonFloatingPoint<Byte>{
 
 	@Override
 	public String getMyTypeName() {
@@ -45,17 +45,47 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 	}
 
 	@Override
-	public Byte generateValue(String rangeTxt) {
+	public Byte generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
-		
+
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET);
 		}		
 
 		return (byte) ThreadLocalRandom.current().nextInt(
 				JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
+				1 + JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+		
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_FLOAT)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_LONG)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_INT)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_SHORT)) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

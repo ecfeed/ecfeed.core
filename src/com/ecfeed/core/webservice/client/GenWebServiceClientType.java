@@ -15,22 +15,21 @@ public enum GenWebServiceClientType {
         fTag = tag;
     }
 
-    @Override
-    public String toString() {
+    public String getDescription() {
         return fTag;
     }
 
     public static GenWebServiceClientType parse(String clientTypeStr) {
 
-        if (clientTypeStr.equals(REGULAR.toString())) {
+        if (clientTypeStr.equals(REGULAR.getDescription())) {
             return REGULAR;
         }
 
-        if (clientTypeStr.equals(LOCAL_TEST_RUNNER.toString())) {
+        if (clientTypeStr.equals(LOCAL_TEST_RUNNER.getDescription())) {
             return LOCAL_TEST_RUNNER;
         }
 
-        if (clientTypeStr.equals(LOCAL_TEST_RAP.toString())) {
+        if (clientTypeStr.equals(LOCAL_TEST_RAP.getDescription())) {
             return LOCAL_TEST_RAP;
         }
 

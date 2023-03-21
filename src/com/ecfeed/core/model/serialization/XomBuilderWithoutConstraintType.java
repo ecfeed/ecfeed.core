@@ -34,4 +34,5 @@ public abstract class XomBuilderWithoutConstraintType extends XomBuilder {
 				getWhiteCharConverter());
 	}
 
+    protected abstract String getCompositeParameterNodeName();
 }

@@ -10,32 +10,50 @@
 
 package com.ecfeed.core.serialization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.*;
-import com.ecfeed.core.generators.api.IGeneratorValue;
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.generators.GeneratorValue;
+import com.ecfeed.core.generators.RandomGenerator;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ModelComparator;
+import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 // TODO check all tests for java.lang.NullPointerException
 
@@ -86,11 +104,6 @@ public class XmlParserSerializerTest {
 	}
 
 	@Test
-	public void parseChoiceTestVersion0() {
-		parseChoiceTest(0);
-	}
-
-	@Test
 	public void parseChoiceTestVersion1() {
 		parseChoiceTest(1);
 	}	
@@ -102,10 +115,10 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode choicesParentParameter =
-					new MethodParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
-			MethodParameterNode expectedParameter =
-					new MethodParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
+			BasicParameterNode choicesParentParameter =
+					new BasicParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			BasicParameterNode expectedParameter =
+					new BasicParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
 			expectedParameter.setDefaultValueString("d");
 			ChoiceNode choice1 = new ChoiceNode("choice", "p", null);
 			choice1.setParent(choicesParentParameter);
@@ -121,14 +134,14 @@ public class XmlParserSerializerTest {
 					"constraint",
 					ConstraintType.EXTENDED_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1), // TODO MO-RE leftParameterLinkingContext
 					null);
 
 			Constraint constraintBasicFilter = new Constraint(
 					"constraint",
 					ConstraintType.BASIC_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1),  // TODO MO-RE leftParameterLinkingContext
 					null);
 
 			Constraint constraintAssignment = new Constraint(
@@ -143,7 +156,7 @@ public class XmlParserSerializerTest {
 							"constraint",
 							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null),
-							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
+							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, null, EMathRelation.EQUAL, "label"), // TODO MO-RE leftParameterLinkingContext
 							null);
 
 			Constraint expectedConstraint =
@@ -153,6 +166,7 @@ public class XmlParserSerializerTest {
 							new StaticStatement(true, null),
 							new ExpectedValueStatement(
 									expectedParameter,
+									null, // TODO MO-RE
 									new ChoiceNode("expected", "n", null),
 									new JavaPrimitiveTypePredicate()),
 							null
@@ -218,7 +232,7 @@ public class XmlParserSerializerTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -231,7 +245,7 @@ public class XmlParserSerializerTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",
@@ -253,7 +267,9 @@ public class XmlParserSerializerTest {
 		// assignment with parameter condition
 
 		AbstractStatement assignmentWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(
+						methodParameterNode2, methodParameterNode1, null);
+		
 		statementArray.addStatement(assignmentWithParameterCondition);
 
 		// assignment with choice condition
@@ -317,7 +333,7 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			BasicParameterNode parameter = new BasicParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
@@ -369,8 +385,8 @@ public class XmlParserSerializerTest {
 	protected MethodNode createMethodNode(int numOfParameters,
 			int numOfExpParameters, int numOfConstraints, int numOfTestCases) {
 		MethodNode method = new MethodNode(randomName(), null);
-		List<MethodParameterNode> choicesParentParameters = createChoicesParentParameters(numOfParameters);
-		List<MethodParameterNode> expectedParameters = createExpectedParameters(numOfExpParameters);
+		List<BasicParameterNode> choicesParentParameters = createChoicesParentParameters(numOfParameters);
+		List<BasicParameterNode> expectedParameters = createExpectedParameters(numOfExpParameters);
 
 		for(int i = 0, j = 0; i < choicesParentParameters.size() || j < expectedParameters.size();){
 			if(rand.nextBoolean() && i < choicesParentParameters.size()){
@@ -384,7 +400,7 @@ public class XmlParserSerializerTest {
 		}
 
 		List<ConstraintNode> constraints = createConstraints(choicesParentParameters, expectedParameters, numOfConstraints);
-		List<TestCaseNode> testCases = createTestCases(method.getMethodParameters(), numOfTestCases);
+		List<TestCaseNode> testCases = createTestCases(getMethodParameters(method), numOfTestCases);
 
 		for(ConstraintNode constraint : constraints){
 			method.addConstraint(constraint);
@@ -396,33 +412,46 @@ public class XmlParserSerializerTest {
 		return method;
 	}
 
-	private List<MethodParameterNode> createChoicesParentParameters(int numOfParameters) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+	private List<BasicParameterNode> getMethodParameters(MethodNode method) {
+		
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		
+		List<AbstractParameterNode> methodParameters = method.getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+			result.add((BasicParameterNode) abstractParameterNode);
+		}
+		
+		return result;
+	}
+
+	private List<BasicParameterNode> createChoicesParentParameters(int numOfParameters) {
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 		for(int i = 0; i < numOfParameters; i++){
 			parameters.add(createChoicesParentParameter(CATEGORY_TYPES[rand.nextInt(CATEGORY_TYPES.length)], rand.nextInt(MAX_PARTITIONS) + 1));
 		}
 		return parameters;
 	}
 
-	private MethodParameterNode createChoicesParentParameter(String type, int numOfChoices) {
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", false, null);
+	private BasicParameterNode createChoicesParentParameter(String type, int numOfChoices) {
+		BasicParameterNode parameter = new BasicParameterNode(randomName(), type, "0", false, null);
 		for(int i = 0; i < numOfChoices; i++){
 			parameter.addChoice(createChoice(type, 1));
 		}
 		return parameter;
 	}
 
-	private List<MethodParameterNode> createExpectedParameters(int numOfExpParameters) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+	private List<BasicParameterNode> createExpectedParameters(int numOfExpParameters) {
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 		for(int i = 0; i < numOfExpParameters; i++){
 			parameters.add(createExpectedValueParameter(CATEGORY_TYPES[rand.nextInt(CATEGORY_TYPES.length)]));
 		}
 		return parameters;
 	}
 
-	private MethodParameterNode createExpectedValueParameter(String type) {
+	private BasicParameterNode createExpectedValueParameter(String type) {
 		String defaultValue = createRandomValue(type);
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode(randomName(), type, "0", true, null);
 		parameter.setDefaultValueString(defaultValue);
 		return parameter;
 	}
@@ -489,8 +518,8 @@ public class XmlParserSerializerTest {
 	}
 
 
-	private List<ConstraintNode> createConstraints(List<MethodParameterNode> choicesParentParameters,
-			List<MethodParameterNode> expectedParameters, int numOfConstraints) {
+	private List<ConstraintNode> createConstraints(List<BasicParameterNode> choicesParentParameters,
+			List<BasicParameterNode> expectedParameters, int numOfConstraints) {
 		List<ConstraintNode> constraints = new ArrayList<ConstraintNode>();
 		for(int i = 0; i < numOfConstraints; ++i){
 			constraints.add(new ConstraintNode(randomName(), createConstraint(choicesParentParameters, expectedParameters), null));
@@ -498,8 +527,8 @@ public class XmlParserSerializerTest {
 		return constraints;
 	}
 
-	private Constraint createConstraint(List<MethodParameterNode> choicesParentParameters,
-			List<MethodParameterNode> expectedParameters) {
+	private Constraint createConstraint(List<BasicParameterNode> choicesParentParameters,
+			List<BasicParameterNode> expectedParameters) {
 
 		AbstractStatement precondition = createChoicesParentStatement(choicesParentParameters);
 		AbstractStatement postcondition = null;
@@ -514,7 +543,7 @@ public class XmlParserSerializerTest {
 		return new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 	}
 
-	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {
+	private AbstractStatement createChoicesParentStatement(List<BasicParameterNode> parameters) {
 		AbstractStatement statement = null;
 		while(statement == null){
 			switch(rand.nextInt(3)){
@@ -533,8 +562,8 @@ public class XmlParserSerializerTest {
 		return statement;
 	}
 
-	private AbstractStatement createLabelStatement(List<MethodParameterNode> parameters) {
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+	private AbstractStatement createLabelStatement(List<BasicParameterNode> parameters) {
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		Set<String> labels = parameter.getLeafLabels();
 		String label;
 		if(labels.size() > 0){
@@ -545,16 +574,16 @@ public class XmlParserSerializerTest {
 			parameter.getChoices().get(0).addLabel(label);
 		}
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(parameter, null, relation, label); // TODO MO-RE leftParameterLinkingContext
 	}
 
-	private AbstractStatement createChoiceStatement(List<MethodParameterNode> parameters) {
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+	private AbstractStatement createChoiceStatement(List<BasicParameterNode> parameters) {
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		ChoiceNode choiceNode = 
 				new ArrayList<ChoiceNode>(parameter.getLeafChoices()).get(rand.nextInt(parameter.getChoices().size()));
 
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, choiceNode);
+		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, relation, choiceNode);  // TODO MO-RE leftParameterLinkingContext
 	}
 
 	private EMathRelation pickRelation() {
@@ -567,23 +596,24 @@ public class XmlParserSerializerTest {
 		return relation;
 	}
 
-	private AbstractStatement createExpectedStatement(List<MethodParameterNode> parameters) {
+	private AbstractStatement createExpectedStatement(List<BasicParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+		return new ExpectedValueStatement(
+				parameter, null, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
-	private List<MethodParameterNode> getChoicesParentParameters(List<? extends MethodParameterNode> parameters) {
-		List<MethodParameterNode> result = new ArrayList<MethodParameterNode>();
-		for(MethodParameterNode parameter : parameters){
-			if(parameter instanceof MethodParameterNode == false){
+	private List<BasicParameterNode> getChoicesParentParameters(List<? extends BasicParameterNode> parameters) {
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		for(BasicParameterNode parameter : parameters){
+			if(parameter instanceof BasicParameterNode == false){
 				result.add(parameter);
 			}
 		}
 		return result;
 	}
 
-	private AbstractStatement createStatementArray(int levels, List<MethodParameterNode> parameters) {
+	private AbstractStatement createStatementArray(int levels, List<BasicParameterNode> parameters) {
 
 		StatementArray array = 
 				new StatementArray(rand.nextBoolean()?StatementArrayOperator.AND:StatementArrayOperator.OR, null);
@@ -605,7 +635,8 @@ public class XmlParserSerializerTest {
 	}
 
 	private List<TestCaseNode> createTestCases(
-			List<MethodParameterNode> parameters, int numOfTestCases) {
+			List<BasicParameterNode> parameters, int numOfTestCases) {
+		
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 		try {
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();
@@ -623,16 +654,16 @@ public class XmlParserSerializerTest {
 			while((next = generator.next()) != null){
 				result.add(new TestCaseNode(randomName(), null, next));
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected generator exception: " + e.getMessage());
 		}
 		return result;
 	}
 
 	private List<List<ChoiceNode>> getGeneratorInput(
-			List<MethodParameterNode> parameters) {
+			List<BasicParameterNode> parameters) {
 		List<List<ChoiceNode>> result = new ArrayList<List<ChoiceNode>>();
-		for(MethodParameterNode parameter : parameters){
+		for(BasicParameterNode parameter : parameters){
 			result.add(parameter.getLeafChoices());
 		}
 		return result;
@@ -644,252 +675,11 @@ public class XmlParserSerializerTest {
 
 	private void compareModels(RootNode model1, RootNode model2) {
 
-		compareNames(model1.getName(), model2.getName());
-		compareSizes(model1.getClasses(), model2.getClasses());
-
-		for(int i = 0; i < model1.getClasses().size(); ++i){
-			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
+		try {
+			ModelComparator.compareModels(model1, model2);
+		} catch (Exception e) {
+			fail(e.getMessage());
 		}
 	}
 
-	private void compareClasses(ClassNode classNode1, ClassNode classNode2) {
-
-		compareNames(classNode1.getName(), classNode2.getName());
-		compareSizes(classNode1.getMethods(), classNode2.getMethods());
-
-		for(int i = 0; i < classNode1.getMethods().size(); ++i){
-			compareMethods(classNode1.getMethods().get(i), classNode2.getMethods().get(i));
-		}
-	}
-
-	private void compareMethods(MethodNode method1, MethodNode method2) {
-
-		compareNames(method1.getName(), method2.getName());
-		compareSizes(method1.getParameters(), method2.getParameters());
-		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes());
-		compareSizes(method1.getTestCases(), method2.getTestCases());
-
-		for(int i =0; i < method1.getParameters().size(); ++i){
-			compareParameters(method1.getMethodParameters().get(i), method2.getMethodParameters().get(i));
-		}
-		for(int i =0; i < method1.getConstraintNodes().size(); ++i){
-			compareConstraintNodes(method1.getConstraintNodes().get(i), method2.getConstraintNodes().get(i));
-		}
-		for(int i =0; i < method1.getTestCases().size(); ++i){
-			compareTestCases(method1.getTestCases().get(i), method2.getTestCases().get(i));
-		}
-	}
-
-	private void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
-		compareNames(parameter1.getName(), parameter2.getName());
-		compareNames(parameter1.getType(), parameter2.getType());
-		compareSizes(parameter1.getChoices(), parameter2.getChoices());
-		if(parameter1 instanceof MethodParameterNode || parameter2 instanceof MethodParameterNode){
-			if((parameter1 instanceof MethodParameterNode && parameter2 instanceof MethodParameterNode) == false){
-				fail("Either both parameters must be expected value or none");
-			}
-		}
-		for(int i = 0; i < parameter1.getChoices().size(); ++i){
-			compareChoices(parameter1.getChoices().get(i), parameter2.getChoices().get(i));
-		}
-	}
-
-	private void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
-
-		compareNames(choice1.getName(), choice2.getName());
-		compareValues(choice1.getValueString(),choice2.getValueString());
-		compareLabels(choice1.getLabels(), choice2.getLabels());
-		assertEquals(choice1.getChoices().size(), choice2.getChoices().size());
-		for(int i = 0; i < choice1.getChoices().size(); i++){
-			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
-		}
-	}
-
-	private void compareMethodParameters(MethodParameterNode methodParameterNode1, MethodParameterNode methodParameterNode2) {
-
-		compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
-
-		assertEquals(methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size());
-
-		for(int i = 0; i < methodParameterNode1.getChoices().size(); i++){
-			compareChoices(methodParameterNode1.getChoices().get(i), methodParameterNode2.getChoices().get(i));
-		}
-	}
-
-	private void compareStrings(String str1, String str2) {
-
-		if (StringHelper.isEqual(str1, str2)) {
-			return;
-		}
-
-		fail("String values differ");
-	}
-
-	private void compareLabels(Set<String> labels, Set<String> labels2) {
-		assertTrue(labels.size() == labels2.size());
-		for(String label : labels){
-			assertTrue(labels2.contains(label));
-		}
-	}
-
-	private void compareValues(Object value1, Object value2) {
-		boolean result = true;
-		if(value1 == null){
-			result = (value2 == null);
-		}
-		else{
-			result = value1.equals(value2);
-		}
-		if(!result){
-			fail("Value " + value1 + " differ from " + value2);
-		}
-	}
-
-	private void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
-
-		compareNames(constraint1.getName(), constraint2.getName());
-		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
-	}
-
-	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
-
-		if (constraint1.getType() != constraint2.getType()) {
-			fail("Constraint types different.");
-		}
-
-		compareStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
-		compareStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
-	}
-
-	private void compareStatements(AbstractStatement statement1, AbstractStatement statement2) {
-
-		if (statement1 instanceof StaticStatement && statement2 instanceof StaticStatement) {
-			compareStaticStatements((StaticStatement)statement1, (StaticStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof RelationStatement && statement2 instanceof RelationStatement) {
-			compareRelationStatements((RelationStatement)statement1, (RelationStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof StatementArray && statement2 instanceof StatementArray) {
-			compareStatementArrays((StatementArray)statement1, (StatementArray)statement2);
-			return;
-		}
-
-		if (statement1 instanceof ExpectedValueStatement && statement2 instanceof ExpectedValueStatement) {
-			compareExpectedValueStatements((ExpectedValueStatement)statement1, (ExpectedValueStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof AssignmentStatement && statement2 instanceof AssignmentStatement) {
-			compareAssignmentStatements((AssignmentStatement)statement1, (AssignmentStatement)statement2);
-			return;
-		}
-
-		fail("Unknown type of statement or compared statements are of didderent types");
-	}
-
-	private void compareExpectedValueStatements(
-			ExpectedValueStatement statement1,
-			ExpectedValueStatement statement2) {
-
-		compareParameters(statement1.getParameter(), statement2.getParameter());
-		assertEquals(statement1.getCondition().getValueString(), statement2.getCondition().getValueString());
-	}
-
-	private void compareAssignmentStatements(
-			AssignmentStatement statement1, AssignmentStatement statement2) {
-
-		if (statement1.isEqualTo(statement1)) {
-			fail("Assignment statements do not match");
-		}
-	}
-
-	private void compareRelationStatements(RelationStatement statement1, RelationStatement statement2) {
-		compareParameters(statement1.getLeftParameter(), statement2.getLeftParameter());
-		if((statement1.getRelation() != statement2.getRelation())){
-			fail("Compared statements have different relations: " +
-					statement1.getRelation() + " and " + statement2.getRelation());
-		}
-		compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
-	}
-
-	private void compareConditions(Object condition1, Object condition2) {
-
-		if (condition1 instanceof String && condition2 instanceof String) {
-			if(condition1.equals(condition2) == false){
-				fail("Compared labels are different: " + condition1 + "!=" + condition2);
-				return;
-			}
-		}
-
-		if (condition1 instanceof ChoiceNode && condition2 instanceof ChoiceNode) {
-			compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
-			return;
-		}
-
-		if (condition1 instanceof MethodParameterNode && condition2 instanceof MethodParameterNode) {
-			compareMethodParameters((MethodParameterNode)condition1, (MethodParameterNode)condition2);
-			return;
-
-		}
-
-		if (condition1 instanceof java.lang.String && condition2 instanceof java.lang.String) {
-			compareStrings((String)condition1, (String) condition2);
-			return;
-		}
-
-		String type1 = condition1.getClass().getTypeName();
-		String type2 = condition2.getClass().getTypeName();
-
-		fail("Unknown or not same types of compared conditions of types: " + type1 + ", " + type2 + ".");
-	}
-
-	private void compareStatementArrays(StatementArray array1, StatementArray array2) {
-		if(array1.getOperator() != array2.getOperator()){
-			fail("Operator of compared statement arrays differ");
-		}
-		compareSizes(array1.getChildren(), array2.getChildren());
-		for(int i = 0; i < array1.getChildren().size(); ++i){
-			compareStatements(array1.getChildren().get(i), array2.getChildren().get(i));
-		}
-	}
-
-	private void compareStaticStatements(StaticStatement statement1, StaticStatement statement2) {
-		if(statement1.getValue() != statement2.getValue()){
-			fail("Static statements different");
-		}
-	}
-
-	private void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
-		compareNames(testCase1.getName(), testCase2.getName());
-		compareSizes(testCase1.getTestData(), testCase2.getTestData());
-		for(int i = 0; i < testCase1.getTestData().size(); i++){
-			ChoiceNode testValue1 = testCase1.getTestData().get(i);
-			ChoiceNode testValue2 = testCase2.getTestData().get(i);
-
-			if(testValue1.getParameter() instanceof MethodParameterNode){
-				compareValues(testValue1.getValueString(), testValue2.getValueString());
-			}
-			else{
-				compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
-			}
-		}
-	}
-
-	private void compareSizes(Collection<? extends Object> collection1, Collection<? extends Object> collection2) {
-		if(collection1.size() != collection2.size()){
-			fail("Different sizes of collections");
-		}
-	}
-
-	private void compareNames(String name, String name2) {
-		if(name.equals(name2) == false){
-			fail("Different names: " + name + ", " + name2);
-		}
-	}
 }
-
-// TODO create model in version before assignments, parse, serialize and all expected output constraints should be converted

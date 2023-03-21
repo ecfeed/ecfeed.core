@@ -20,9 +20,8 @@ import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.algorithms.AbstractNWiseAlgorithm;
+import com.ecfeed.core.generators.algorithms.NWiseAwesomeAlgorithmBase;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 
 public class NWiseGeneratorTest {
@@ -44,33 +43,33 @@ public class NWiseGeneratorTest {
 
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
-			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
-			assertEquals(2, ((AbstractNWiseAlgorithm<String>) algorithm).getN());
+			assertTrue(algorithm instanceof NWiseAwesomeAlgorithmBase);
+			assertEquals(2, ((NWiseAwesomeAlgorithmBase<String>) algorithm).getN());
 
 			try {
 				GeneratorValue generatorArgumentN2 = new GeneratorValue(generator.getDefinitionN(), "5");
 				arguments.add(generatorArgumentN2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
 			try {
 				GeneratorValue generatorArgumentN2 = new GeneratorValue(generator.getDefinitionN(), "-1");
 				arguments.add(generatorArgumentN2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
 			try {
 				GeneratorValue generatorArgumentN2 = new GeneratorValue(generator.getDefinitionN(), "2");
 				arguments.add(generatorArgumentN2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-			} catch (GeneratorException e) {
-				fail("Unexpected GeneratorException");
+			} catch (Exception e) {
+				fail("Unexpected Exception");
 			}
 
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 	
@@ -91,33 +90,33 @@ public class NWiseGeneratorTest {
 
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
-			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
+			assertTrue(algorithm instanceof NWiseAwesomeAlgorithmBase);
 			assertEquals(100,
-					((AbstractNWiseAlgorithm<String>) algorithm).getCoverage());
+					((NWiseAwesomeAlgorithmBase<String>) algorithm).getCoverage());
 
 			try {
 				GeneratorValue generatorArgumentCoverage2 = new GeneratorValue(generator.getDefinitionCoverage(), "101");
 				arguments.add(generatorArgumentCoverage2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
 			try {
 				GeneratorValue generatorArgumentCoverage2 = new GeneratorValue(generator.getDefinitionCoverage(), "-1");
 				arguments.add(generatorArgumentCoverage2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
 			try {
 				GeneratorValue generatorArgumentCoverage2 = new GeneratorValue(generator.getDefinitionCoverage(), "50");
 				arguments.add(generatorArgumentCoverage2);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
-			} catch (GeneratorException e) {
-				fail("Unexpected GeneratorException");
+			} catch (Exception e) {
+				fail("Unexpected Exception");
 			}
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 }

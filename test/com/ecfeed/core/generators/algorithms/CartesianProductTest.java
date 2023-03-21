@@ -10,24 +10,23 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
-import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
-import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import com.google.common.collect.Sets;
 
 public class CartesianProductTest {
@@ -51,7 +50,7 @@ public class CartesianProductTest {
 					for (List<String> element : referenceSet) {
 						assertTrue(algorithmResult.contains(element));
 					}
-				} catch (GeneratorException e) {
+				} catch (Exception e) {
 					fail("Unexpected generator exception: " + e.getMessage());
 				}
 			}
@@ -73,7 +72,7 @@ public class CartesianProductTest {
 							.algorithmResult(ALGORITHM);
 					assertEquals(0, algorithmResult.size());
 
-				} catch (GeneratorException e) {
+				} catch (Exception e) {
 					fail("Unexpected generator exception: " + e.getMessage());
 				}
 			}
@@ -100,7 +99,7 @@ public class CartesianProductTest {
 					}
 				}
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected generator exception: " + e.getMessage());
 		}
 	}

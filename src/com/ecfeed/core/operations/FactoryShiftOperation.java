@@ -12,17 +12,19 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationShift;
+import com.ecfeed.core.operations.nodes.OnParameterParameterOfMethodOperationShift;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -30,12 +32,12 @@ public class FactoryShiftOperation {
 	
 	private static class MoveUpDownOperationProvider implements IModelVisitor{
 
-		private List<? extends AbstractNode> fShifted;
+		private List<? extends IAbstractNode> fShifted;
 		private boolean fUp;
 		private IExtLanguageManager fExtLanguageManager;
 
 		public MoveUpDownOperationProvider(
-				List<? extends AbstractNode> shifted, 
+				List<? extends IAbstractNode> shifted, 
 				boolean up,
 				IExtLanguageManager extLanguageManager) {
 			fShifted = shifted;
@@ -48,16 +50,23 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fUp, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode) abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof MethodNode){
@@ -69,8 +78,11 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			if(fShifted.get(0) instanceof MethodParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+			if(fShifted.get(0) instanceof BasicParameterNode){
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+			}
+			if(fShifted.get(0) instanceof CompositeParameterNode){
+				return new OnCompositeParameterOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
@@ -86,20 +98,21 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
+		public Object visit(BasicParameterNode node) throws Exception {
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if(abstractNode instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
-			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+		public Object visit(CompositeParameterNode node) throws Exception {
+			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
 			return null;
 		}
 		
@@ -129,15 +142,16 @@ public class FactoryShiftOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
+
 	}
 
 	private static class ShiftToIndexOperationProvider implements IModelVisitor{
 
-		private List<? extends AbstractNode> fShifted;
+		private List<? extends IAbstractNode> fShifted;
 		private int fShift;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, IExtLanguageManager extLanguageManager){
+		public ShiftToIndexOperationProvider(List<? extends IAbstractNode> shifted, int index, IExtLanguageManager extLanguageManager){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
 			fExtLanguageManager = extLanguageManager;
@@ -148,7 +162,10 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -160,7 +177,10 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fShift, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if(abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -169,8 +189,8 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			if(fShifted.get(0) instanceof MethodParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
+			if(fShifted.get(0) instanceof BasicParameterNode){
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fShift, fExtLanguageManager);
@@ -183,23 +203,30 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+		public Object visit(BasicParameterNode node) throws Exception {
+
+			if (node.isGlobalParameter()) {
+				if(fShifted.get(0) instanceof ChoiceNode){
+					return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+				}
+				ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+				return null;
+
+			} else {
+				if(fShifted.get(0) instanceof ChoiceNode){
+					return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+				}
+				ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+				return null;
 			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
-			return null;
 		}
 
 		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
-			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+		public Object visit(CompositeParameterNode node) throws Exception {
+			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
 			return null;
 		}
-
+		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -226,26 +253,27 @@ public class FactoryShiftOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
+
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, 
+			List<? extends IAbstractNode> shifted, 
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
 		
-		AbstractNode parent = getParent(shifted);
+		IAbstractNode parent = getParent(shifted);
 		
 		return getShiftOperation(
 				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguageManager));
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
-		AbstractNode parent = getParent(shifted);
+			List<? extends IAbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
+		IAbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
-	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) {
+	private static GenericShiftOperation getShiftOperation(IAbstractNode parent, List<? extends IAbstractNode> shifted, IModelVisitor provider) {
 		if(parent == null || haveTheSameType(shifted) == false){
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
@@ -258,7 +286,7 @@ public class FactoryShiftOperation {
 		}
 	}
 
-	private static int calculateShift(List<? extends AbstractNode> shifted, int newIndex) {
+	private static int calculateShift(List<? extends IAbstractNode> shifted, int newIndex) {
 		int shift = newIndex - minIndexNode(shifted).getMyIndex();
 		if(minIndexNode(shifted).getMyIndex() < newIndex){
 			shift -= 1;
@@ -266,20 +294,20 @@ public class FactoryShiftOperation {
 		return shift;
 	}
 
-	private static AbstractNode minIndexNode(List<? extends AbstractNode> nodes){
-		AbstractNode minIndexNode = nodes.get(0);
-		for(AbstractNode node : nodes){
+	private static IAbstractNode minIndexNode(List<? extends IAbstractNode> nodes){
+		IAbstractNode minIndexNode = nodes.get(0);
+		for(IAbstractNode node : nodes){
 			minIndexNode = node.getMyIndex() < minIndexNode.getMyIndex() ? node : minIndexNode;
 		}
 		return minIndexNode;
 	}
 
-	private static boolean haveTheSameType(List<? extends AbstractNode> shifted) {
+	private static boolean haveTheSameType(List<? extends IAbstractNode> shifted) {
 		if(shifted.size() == 0){
 			return false;
 		}
 		Class<?> _class = shifted.get(0).getClass();
-		for(AbstractNode node : shifted){
+		for(IAbstractNode node : shifted){
 			if(node.getClass().equals(_class) == false){
 				return false;
 			}
@@ -287,16 +315,17 @@ public class FactoryShiftOperation {
 		return true;
 	}
 
-	private static AbstractNode getParent(List<? extends AbstractNode> nodes) {
+	private static IAbstractNode getParent(List<? extends IAbstractNode> nodes) {
+		
 		if(nodes.size() == 0){
 			return null;
 		}
-		AbstractNode parent = nodes.get(0).getParent();
+		IAbstractNode parent = nodes.get(0).getParent();
 		if(parent == null){
 			return null;
 		}
 
-		for(AbstractNode node : nodes){
+		for(IAbstractNode node : nodes){
 			if(node.getParent() != parent){
 				return null;
 			}

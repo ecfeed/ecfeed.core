@@ -57,9 +57,9 @@ public class SimpleLanguageModelVerifier {
 		return message;
 	}
 
-	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
+	private static String checkParameterTypesForSimpleView(IAbstractNode abstractNode) {
 
-		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
+		List<IAbstractNode> childNodes = abstractNode.getChildren();
 
 		if (childNodes == null) {
 			return null;
@@ -72,7 +72,7 @@ public class SimpleLanguageModelVerifier {
 
 		String message = "";
 
-		for (AbstractNode childNode : childNodes) {
+		for (IAbstractNode childNode : childNodes) {
 
 			message = checkParameterTypesForSimpleView(childNode);
 
@@ -109,7 +109,7 @@ public class SimpleLanguageModelVerifier {
 	//			
 	//			if (currentSimpleName.equals(nextSimpleName)) {
 	//
-	//				// TODO - this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
+	//				// this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
 	//				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + 
 	//				currentPair.getSecond() + " and " + nextPair.getSecond()
 	//				+ " would have the same name in the simple view mode.";
@@ -126,7 +126,7 @@ public class SimpleLanguageModelVerifier {
 	//
 	//		List<Pair<String, String>> parameters = new ArrayList<>();
 	//
-	//		for (AbstractParameterNode element : rootNode.getParameters()) {
+	//		for (BasicParameterNode element : rootNode.getParameters()) {
 	//
 	//			String simpleName = AbstractNodeHelper.getName(element, new ExtLanguageManagerForSimple());
 	//			String javaName = element.getType() + " " + element.getName();
@@ -229,7 +229,7 @@ public class SimpleLanguageModelVerifier {
 	//
 	//		List<Pair<String, String>> parameters = new ArrayList<>();
 	//
-	//		for (AbstractParameterNode element : classNode.getParameters()) {
+	//		for (BasicParameterNode element : classNode.getParameters()) {
 	//
 	//
 	//			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());
@@ -338,7 +338,7 @@ public class SimpleLanguageModelVerifier {
 		}
 	}
 
-	private static String checkNodeNames(AbstractNode abstractNode) {
+	private static String checkNodeNames(IAbstractNode abstractNode) {
 
 		String name = abstractNode.getNonQualifiedName();
 		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
@@ -350,10 +350,9 @@ public class SimpleLanguageModelVerifier {
 			return decoratedMessage;
 		}
 
-		@SuppressWarnings("unchecked")
-		List<AbstractNode> children = (List<AbstractNode>) abstractNode.getChildren();
+		List<IAbstractNode> children = abstractNode.getChildren();
 
-		for (AbstractNode child : children) {
+		for (IAbstractNode child : children) {
 
 			errorMessage = checkNodeNames(child);
 
@@ -365,7 +364,7 @@ public class SimpleLanguageModelVerifier {
 		return null;
 	}
 
-	public static String createMessageWithNodeName(AbstractNode abstractNode, String errorMessage) {
+	public static String createMessageWithNodeName(IAbstractNode abstractNode, String errorMessage) {
 
 		String fullPath = ModelHelper.getFullPath(abstractNode, new ExtLanguageManagerForJava());
 

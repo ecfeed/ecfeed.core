@@ -48,7 +48,7 @@ public class StreamHelper {
 		try {
 			outputStream = new FileOutputStream(pathWithFileName);
 		} catch (FileNotFoundException e) {
-			ExceptionHelper.reportServerException("Can not create output stream." + e.getMessage());
+			ExceptionHelper.reportRuntimeException("Can not create output stream." + e.getMessage());
 		}
 		return outputStream;
 	}
@@ -75,21 +75,45 @@ public class StreamHelper {
 		}
 	}
 
-	public static void writeAndFlushLine(String strg, OutputStream outputStream) throws IOException {
-
-		outputStream.write(strg.getBytes());
-		outputStream.write("\n".getBytes());
-		outputStream.flush();
-	}
-
-	public static void writeStringToStream(String str, OutputStream outputStream) { // TODO - similar code in export streaming response body
+	public static void writeAndFlushLine(String strg, OutputStream outputStream) {
 
 		try {
-			outputStream.write(str.getBytes());
-			outputStream.flush();
+			writeStringToStream(strg, outputStream);
+			writeStringToStream("\n", outputStream);
+			flushStream(outputStream);
 		} catch (IOException e) {
-			ExceptionHelper.reportServerException("", e);
+			ExceptionHelper.reportRuntimeException("", e);
 		}
+	}
+
+	public static void writeAndFlushNewLine(OutputStream outputStream) {
+
+		try {
+			writeStringToStream("\n", outputStream);
+			flushStream(outputStream);
+		} catch (IOException e) {
+			ExceptionHelper.reportRuntimeException("", e);
+		}
+	}
+
+	public static void writeAndFlushString(String str, OutputStream outputStream) {
+
+		try {
+			writeStringToStream(str, outputStream);
+			flushStream(outputStream);
+		} catch (IOException e) {
+			ExceptionHelper.reportRuntimeException("", e);
+		}
+	}
+
+	private static void writeStringToStream(String strg, OutputStream outputStream) throws IOException {
+
+		outputStream.write(strg.getBytes());
+	}
+
+	private static void flushStream(OutputStream outputStream) throws IOException {
+
+		outputStream.flush();
 	}
 
 }

@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -18,12 +19,55 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class TestCaseNodeTest {
+	
+	@Test
+	public void setNameForSingleTestCaseAndTestSuite() {
+		
+		MethodNode methodNode = new MethodNode("Method");
+		
+		ChoiceNode p1 = new ChoiceNode("name", "value", null);
+
+		List<ChoiceNode> td1 = new ArrayList<ChoiceNode>();
+		td1.add(p1);
+		
+		String testSuiteName = "TestSuite";
+		TestCaseNode tc1 = new TestCaseNode(testSuiteName, null, td1);
+		
+		methodNode.addTestCase(tc1);
+		
+		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(1, methodNode.getTestSuites().size());
+		
+		String newTestSuiteName = "NewTestSuite";
+		
+		tc1.setName(newTestSuiteName);
+		
+		List<TestCaseNode> resultTestCaseNodes = methodNode.getTestCases();
+		assertEquals(1, resultTestCaseNodes.size());
+		
+		TestCaseNode resultTestCaseNode1 = resultTestCaseNodes.get(0);
+		assertEquals(newTestSuiteName, resultTestCaseNode1.getName());
+		
+		
+		List<TestSuiteNode> resultTestSuiteNodes = methodNode.getTestSuites();
+		assertEquals(1, resultTestSuiteNodes.size());
+		
+		TestSuiteNode resultTestSuiteNode = resultTestSuiteNodes.get(0);
+		assertEquals(newTestSuiteName, resultTestSuiteNode.getName());
+
+
+		
+		
+		
+		
+		
+		
+		TestCaseNode resultTestCaseNode2 = resultTestSuiteNode.getTestCaseNodes().get(0);
+		assertEquals(newTestSuiteName, resultTestCaseNode2.getName());
+	}		
 
 	@Test
 	public void compare(){

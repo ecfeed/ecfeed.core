@@ -10,20 +10,29 @@
 
 package com.ecfeed.core.serialization;
 
-import com.ecfeed.core.model.*;
+import static org.junit.Assert.fail;
+
+import java.io.ByteArrayInputStream;
+import java.util.List;
+
+import org.junit.Test;
+
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.IStatementCondition;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHelper;
-import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ModelParserTest {
 

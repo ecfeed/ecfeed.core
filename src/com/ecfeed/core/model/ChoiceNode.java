@@ -15,24 +15,36 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ChoiceNode extends ChoicesParentNode {
+public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
+	private static final String NO_PARENT = "No parent.";
 	public static final String ABSTRACT_CHOICE_MARKER = "[ABSTRACT]";
+	public static final String ASSIGNMENT_NAME = "@assignment";
 
-	private ChoicesParentNode fParent;
 	private String fValueString;
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
+	private ChoicesListHolder fChoicesListHolder;
 
-	private ChoiceNode fOrigChoiceNode = null;
+	private ChoiceNode fOrigChoiceNode = null; // used in Sat Solver
 
 	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
+		
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
+	}
+	
+	public ChoiceNode(String name, String value) {
+		this(name, value, null);
 	}
 
 	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
@@ -40,28 +52,24 @@ public class ChoiceNode extends ChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
+		
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 
 	@Override
-	public AbstractParameterNode getParameter() {
-		if(fParent != null){
-			return fParent.getParameter();
-		}
-		return null;
+	public BasicParameterNode getParameter() {
+		
+		BasicParameterNode basicParameterNode = ChoiceNodeHelper.getBasicParameter(this);
+		return basicParameterNode;
 	}
 
 	@Override
-	public ChoicesParentNode getParent(){
-		return fParent;
+	public List<IAbstractNode> getChildren(){
+		return new ArrayList<>(getChoices());
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		return getChoices();
-	}
-
-	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
@@ -72,6 +80,43 @@ public class ChoiceNode extends ChoicesParentNode {
 			return getQualifiedName() + ABSTRACT_CHOICE_MARKER; 
 		}
 		return getQualifiedName() + " [" + getValueString() + "]";
+	}
+
+	public void derandomize() {
+
+		if (!isRandomizedValue()) {
+			return;
+		}
+
+		setValueString(getDerandomizedValue());
+		setRandomizedValue(false);
+	}
+
+	public String getDerandomizedValue() {
+
+		if (!isRandomizedValue()) {
+			return getValueString();
+		}
+
+		BasicParameterNode parameter = getParameter();
+
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Method parameter unknown.");
+		}
+		String typeName = parameter.getType();
+
+		if (!JavaLanguageHelper.isJavaType(typeName)) {
+			return getValueString();
+		}
+
+		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+
+		String valueString = getValueString();
+
+		String derandomizedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
+
+		return derandomizedValueString;
 	}
 
 	public String toStringWithParenthesis() {
@@ -104,10 +149,12 @@ public class ChoiceNode extends ChoicesParentNode {
 	@Override
 	public ChoiceNode makeClone(){
 		ChoiceNode copy = makeCloneUnlink();
+
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
 			copy.setOrigChoiceNode(this);
+
 		return copy;
 	}
 
@@ -115,7 +162,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
-		copy.setParent(fParent);
+		copy.setParent(getParent());
 
 		for(ChoiceNode choice : getChoices()){
 			copy.addChoice(choice.makeClone());
@@ -128,21 +175,41 @@ public class ChoiceNode extends ChoicesParentNode {
 		return copy;
 	}
 
-	public ChoiceNode getQualifiedCopy(MethodParameterNode parameter) {
+	public ChoiceNode getQualifiedCopy(BasicParameterNode parameter) {
 		return ChoiceNodeHelper.createSubstitutePath(this, parameter);
 	}
 
 	public String getQualifiedName() {
 
-		if (parentChoice() != null) {
-			return parentChoice().getQualifiedName() + ":" + getName();
+		return getQualifiedName(":");
+	}
+
+	public String getQualifiedName(String separatorForChoiceNames) {
+
+		if (getParentChoice() != null) {
+			return getParentChoice().getQualifiedName(separatorForChoiceNames) + separatorForChoiceNames + getName();
 		}
 
 		return getName();
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
-		return fParent.getParameter().isCorrectableToBeRandomizedType() && !isAbstract();
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent == null) {
+			ExceptionHelper.reportRuntimeException(NO_PARENT);
+			return false;
+		}
+		
+		if (!(parent instanceof IChoicesParentNode)) {
+			ExceptionHelper.reportRuntimeException(NO_PARENT);
+			return false;
+		}
+		
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
+		
+		return choicesParentNode.getParameter().isCorrectableToBeRandomizedType() && !isAbstract();
 	}
 
 	public void setRandomizedValue(boolean choice) {
@@ -150,16 +217,20 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public boolean isRandomizedValue() {
+
+		if (isAbstract()) {
+			return false;
+		}
+
 		return fIsRandomizedValue;
 	}
 
 	public String getRandomizedValueStr() {
-		return fIsRandomizedValue ? "YES" : "NO";
+		return isRandomizedValue() ? "YES" : "NO";
 	}
 
-	public void setParent(ChoicesParentNode parent){
+	public void setParent(IChoicesParentNode parent){
 		super.setParent(parent);
-		fParent = parent;
 	}
 
 	public String getValueString() {
@@ -178,16 +249,26 @@ public class ChoiceNode extends ChoicesParentNode {
 		return fLabels.remove(label);
 	}
 
+	public void renameLabel(String oldValue, String newValue) {
+		
+		if (fLabels.contains(oldValue)) {
+			fLabels.remove(oldValue);
+			fLabels.add(newValue);
+		}
+	}
+	
 	public Set<String> getLabels(){
 		return fLabels;
 	}
 
 	@Override
 	public Set<String> getLeafLabels() {
-		if(isAbstract() == false){
+		
+		if (isAbstract() == false) {
 			return getAllLabels();
 		}
-		return super.getLeafLabels();
+		
+		return ChoiceNodeHelper.getLeafLabels(getLeafChoices());
 	}
 
 	public Set<String> getAllLabels(){
@@ -197,8 +278,8 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public Set<String> getInheritedLabels() {
-		if(parentChoice() != null){
-			return parentChoice().getAllLabels();
+		if(getParentChoice() != null){
+			return getParentChoice().getAllLabels();
 		}
 		return new LinkedHashSet<String>();
 	}
@@ -236,8 +317,8 @@ public class ChoiceNode extends ChoicesParentNode {
 			return true;
 		}
 
-		if (parentChoice() != null) {
-			return parentChoice().isMatchIncludingParents(choice); 
+		if (getParentChoice() != null) {
+			return getParentChoice().isMatchIncludingParents(choice); 
 		}
 
 		return false;
@@ -245,8 +326,8 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	private boolean isParameterAndNameMatch(ChoiceNode choice) {
 
-		AbstractParameterNode param = getParameter();
-		AbstractParameterNode otherParam = choice.getParameter();
+		BasicParameterNode param = getParameter();
+		BasicParameterNode otherParam = choice.getParameter();
 
 		if (param != otherParam) {
 			return false;
@@ -263,39 +344,46 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public int level(){
-		if(parentChoice() == null){
+		if(getParentChoice() == null){
 			return 0;
 		}
-		return parentChoice().level() + 1;
+		return getParentChoice().level() + 1;
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
-		if(node instanceof ChoiceNode == false){
+	public boolean isMatch(IAbstractNode choiceNode){
+
+		if(choiceNode instanceof ChoiceNode == false){
 			return false;
 		}
 
-		ChoiceNode compared = (ChoiceNode)node;
+		ChoiceNode choiceNodeToCompare = (ChoiceNode)choiceNode;
 
-		if(getLabels().equals(compared.getLabels()) == false){
+		if (getLabels().equals(choiceNodeToCompare.getLabels()) == false){
 			return false;
 		}
 
-		if(getValueString().equals(compared.getValueString()) == false){
+		if(getValueString().equals(choiceNodeToCompare.getValueString()) == false){
 			return false;
 		}
 
-		if(getChoices().size() != compared.getChoices().size()){
+		if(getChoices().size() != choiceNodeToCompare.getChoices().size()){
 			return false;
 		}
 
 		for(int i = 0; i < getChoices().size(); i++){
-			if(getChoices().get(i).isMatch(compared.getChoices().get(i)) == false){
+			if(getChoices().get(i).isMatch(choiceNodeToCompare.getChoices().get(i)) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(choiceNode);
+
+		if (!isMatch) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -308,12 +396,183 @@ public class ChoiceNode extends ChoicesParentNode {
 		return visitor.visit(this);
 	}
 
-	private ChoiceNode parentChoice(){
-		AbstractParameterNode parameter = getParameter();
-		if(fParent != null && fParent != parameter){
-			return (ChoiceNode)fParent;
+	public ChoiceNode getParentChoice() {
+
+		IAbstractNode parent = getParent();
+		
+		if (parent == null) {
+			return null;
 		}
+		
+		if (parent instanceof ChoiceNode) {
+			return (ChoiceNode)parent;
+		}
+		
 		return null;
+	}
+
+//	public MethodNode getMethodNode() {
+//
+//		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
+//
+//		if (methodParameterNode == null) {
+//			return null;
+//		}
+//
+//		MethodNode methodNode = methodParameterNode.getMethod();
+//
+//		return methodNode;
+//	}
+	
+	@Override
+	public int getChildrenCount() {
+		
+		return getChoiceCount();
+	}
+
+	@Override
+	public boolean hasChoices() {
+		
+		if (getChoiceCount() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public void addChoice(ChoiceNode choiceToAdd) {
+		
+		fChoicesListHolder.addChoice(choiceToAdd, this);
+	}
+
+	@Override
+	public void addChoice(ChoiceNode choiceToAdd, int index) {
+		
+		fChoicesListHolder.addChoice(choiceToAdd, index, this);
+		registerChange();
+	}
+
+	@Override
+	public void addChoices(List<ChoiceNode> choicesToAdd) {
+
+		fChoicesListHolder.addChoices(choicesToAdd, this);
+		registerChange();
+	}
+
+	@Override
+	public int getChoiceCount() {
+
+		return getChoices().size();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices() {
+
+		return fChoicesListHolder.getChoices();
+	}
+
+	@Override
+	public ChoiceNode getChoice(String qualifiedName) {
+
+		return (ChoiceNode)getChild(qualifiedName);
+	}
+
+	@Override
+	public int getChoiceIndex(String choiceNameToFind) {
+
+		return fChoicesListHolder.getChoiceIndex(choiceNameToFind);
+	}
+
+	@Override
+	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
+
+		return fChoicesListHolder.choiceExists(choiceNameToFind);
+	}
+
+	@Override
+	public List<ChoiceNode> getLeafChoices() {
+
+		return ChoiceNodeHelper.getLeafChoices(getChoices());
+	}
+
+	@Override
+	public List<ChoiceNode> getLeafChoicesWithCopies() {
+
+		return ChoiceNodeHelper.getLeafChoices(getChoices());
+	}
+
+	@Override
+	public Set<String> getAllChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getAllChoices());
+	}
+
+	@Override
+	public Set<String> getLeafChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getLeafChoices());
+	}
+
+	@Override
+	public Set<ChoiceNode> getAllChoices() {
+
+		return ChoiceNodeHelper.getAllChoices(getChoices());
+	}
+
+	@Override
+	public Set<String> getChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getChoices());
+	}
+
+	@Override
+	public Set<ChoiceNode> getLabeledChoices(String label) {
+
+		return ChoiceNodeHelper.getLabeledChoices(label, getChoices());
+	}
+
+	@Override
+	public Set<String> getLeafChoiceValues() {
+
+		return ChoiceNodeHelper.getLeafChoiceValues(getLeafChoices());
+	}
+
+	@Override
+	public boolean removeChoice(ChoiceNode choice) {
+
+		boolean result = fChoicesListHolder.removeChoice(choice);
+		registerChange();
+		return result;
+	}
+
+	@Override
+	public void replaceChoices(List<ChoiceNode> newChoices) {
+		
+		fChoicesListHolder.replaceChoices(newChoices, this);
+		registerChange();
+	}
+
+	@Override
+	public void clearChoices() {
+
+		fChoicesListHolder.clearChoices();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoicesWithCopies() {
+		return new ArrayList<>();
+	}
+
+	public boolean isPartOfGlobalParameter() {
+		
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
+		
+		if (methodNode == null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

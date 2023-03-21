@@ -24,12 +24,12 @@ public interface IGenerator<E> {
 	 */
 	public List<IParameterDefinition> getParameterDefinitions();
 
-	public IParameterDefinition getParameterDefinition(String parameterName) throws GeneratorException;
+	public IParameterDefinition getParameterDefinition(String parameterName);
 
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-		    List<IGeneratorValue> arguments,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
+		    List<IGeneratorValue> generatorParameters,
+			IEcfProgressMonitor generatorProgressMonitor);
 	
 //	public void addConstraint(IConstraint<E> constraint);
 //
@@ -42,7 +42,7 @@ public interface IGenerator<E> {
 	 * all data according to the used algorithm or provided parameter has been generated. 
 	 * Blocking method.
 	 */
-	public List<E> next() throws GeneratorException;
+	public List<E> next();
 	
 	/*
 	 * Resets generator to its initial state.

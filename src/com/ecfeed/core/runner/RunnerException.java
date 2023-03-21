@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.runner;
 
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class RunnerException extends Exception {
 
@@ -21,7 +21,7 @@ public class RunnerException extends Exception {
 	}
 	
 	public static void report(String message) throws RunnerException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new RunnerException(message);
 	}	
 }

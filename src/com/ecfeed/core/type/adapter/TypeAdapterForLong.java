@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.*;
 
-public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
+public class TypeAdapterForLong extends TypeAdapterForNonFloatingPoint<Long>{
 
 	@Override
 	public String getMyTypeName() {
@@ -36,17 +36,17 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 	}
 
 	@Override
-	public Long generateValue(String rangeTxt) {
+	public Long generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET);
 		}		
-		
+
 		return ThreadLocalRandom.current().nextLong(
 				JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
+				1 + JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override
@@ -54,4 +54,45 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_LONG;
 	}
 
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		try {
+			Long.parseLong(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
 }

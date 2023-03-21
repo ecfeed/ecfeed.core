@@ -23,6 +23,19 @@ import org.junit.Test;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class ChoiceNodeTest{
+
+	@Test 
+	public void getParentTest() {
+		
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		
+		choice1.addChoice(choice11);
+		ChoiceNode parentChoice = choice11.getParentChoice();
+		
+		assertEquals(parentChoice, choice1);
+	}
+	
 	@Test
 	public void testValue() {
 		ChoiceNode choice = new ChoiceNode("name", "value", null);
@@ -35,7 +48,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testGetParameter(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -59,7 +72,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testLevel(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -379,6 +392,66 @@ public class ChoiceNodeTest{
 		assertFalse(p1.isMatch(p2));
 		p21.setName("p11");
 		assertTrue(p1.isMatch(p2));
+	}
+
+	@Test
+	public void derandomizeNumberTest(){
+
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
+						"par1", 
+						"int",
+						"0",
+						false,
+						null);
+
+		for (int counter = 0; counter < 6; counter++) {
+
+			ChoiceNode c1 = new ChoiceNode("c1", "1:5", null);
+
+			c1.setParent(methodParameterNode);
+			c1.setRandomizedValue(true);
+
+			c1.derandomize();
+
+			assertFalse(c1.isRandomizedValue());
+			String value = c1.getValueString();
+
+			Integer result = Integer.parseInt(value);
+
+			assertTrue(result <= 5);
+			assertTrue(result >= 1);
+		}
+	}
+
+	@Test
+	public void derandomizeTextTest(){
+
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
+						"par1", 
+						"String",
+						"0",
+						false,
+						null);
+
+		for (int counter = 0; counter < 6; counter++) {
+
+			ChoiceNode c1 = new ChoiceNode("c1", "[1-5]", null);
+
+			c1.setParent(methodParameterNode);
+			c1.setRandomizedValue(true);
+
+			c1.derandomize();
+
+			assertFalse(c1.isRandomizedValue());
+			String value = c1.getValueString();
+
+			Integer result = Integer.parseInt(value);
+
+			assertTrue(result <= 5);
+			assertTrue(result >= 1);
+		}
 	}
 
 }

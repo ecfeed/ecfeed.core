@@ -18,22 +18,22 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public abstract class GeneratorHelper {
 
     public static List<List<ChoiceNode>> generateTestCasesForMethod(
             MethodNode methodNode,
-            AbstractAlgorithm<ChoiceNode> algorithm) throws GeneratorException {
+            AbstractAlgorithm<ChoiceNode> algorithm) {
 
         List<List<ChoiceNode>> choicesForParameters =
                 GeneratorHelper.getPossibleChoicesForMethodParameters(methodNode);
 
-        Collection<Constraint> constraints = methodNode.getAllConstraints();
+        Collection<Constraint> constraints = methodNode.getConstraints();
         IConstraintEvaluator<ChoiceNode> constraintEvaluator = new SatSolverConstraintEvaluator(constraints, methodNode);
-        algorithm.initialize(choicesForParameters, constraintEvaluator, null);
+        algorithm.initialize(choicesForParameters, constraintEvaluator, new SimpleProgressMonitor());
 
         List<List<ChoiceNode>> testCases = new ArrayList<List<ChoiceNode>>();
         List<ChoiceNode> testCase = null;
@@ -63,13 +63,14 @@ public abstract class GeneratorHelper {
 
     private static List<List<ChoiceNode>> getPossibleChoicesForMethodParameters(MethodNode methodNode) {
 
-        List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+        List<AbstractParameterNode> parameters = methodNode.getParameters();
+        
         List<List<ChoiceNode>> algorithmInput = new ArrayList<List<ChoiceNode>>();
 
         for (int index = 0; index < parameters.size(); index++) {
 
-            MethodParameterNode methodParameterNode =
-                    (MethodParameterNode)methodNode.getParameter(index);
+            BasicParameterNode methodParameterNode =
+                    (BasicParameterNode)methodNode.getParameter(index);
 
             List<ChoiceNode> choices = getChoicesForParameter(methodParameterNode);
 
@@ -79,7 +80,7 @@ public abstract class GeneratorHelper {
         return algorithmInput;
     }
 
-    private static List<ChoiceNode> getChoicesForParameter( MethodParameterNode methodParameterNode) {
+    private static List<ChoiceNode> getChoicesForParameter( BasicParameterNode methodParameterNode) {
 
         List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 
@@ -119,7 +120,7 @@ public abstract class GeneratorHelper {
         return null;
     }
 
-    private static ChoiceNode expectedValueChoice(MethodParameterNode methodParameterNode) {
+    private static ChoiceNode expectedValueChoice(BasicParameterNode methodParameterNode) {
 
         ChoiceNode choiceNode =
                 new ChoiceNode(

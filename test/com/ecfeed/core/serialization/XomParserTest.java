@@ -11,39 +11,40 @@
 package com.ecfeed.core.serialization;
 
 import static com.ecfeed.core.testutils.TestUtilConstants.SUPPORTED_TYPES;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.ecfeed.core.utils.ListOfStrings;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Serializer;
-
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.serialization.IModelParserForClass;
+import com.ecfeed.core.model.serialization.IModelParserForMethod;
+import com.ecfeed.core.model.serialization.ModelParserForChoice;
+import com.ecfeed.core.model.serialization.ModelParserForClass;
+import com.ecfeed.core.model.serialization.ModelParserForConstraint;
+import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
+import com.ecfeed.core.model.serialization.ModelParserForTestCase;
+import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.model.serialization.SerializationConstants;
-import com.ecfeed.core.model.serialization.SerializationHelperVersion0;
 import com.ecfeed.core.model.serialization.SerializationHelperVersion1;
 import com.ecfeed.core.model.serialization.XomAnalyser;
 import com.ecfeed.core.model.serialization.XomAnalyserFactory;
@@ -52,6 +53,12 @@ import com.ecfeed.core.model.serialization.XomBuilderFactory;
 import com.ecfeed.core.model.serialization.XomStatementBuilder;
 import com.ecfeed.core.testutils.ModelStringifier;
 import com.ecfeed.core.testutils.RandomModelGenerator;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
+
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Serializer;
 
 public class XomParserTest {
 
@@ -63,7 +70,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseRootTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseRootTest(version);
 		}
 	}
@@ -86,23 +93,28 @@ public class XomParserTest {
 
 	@Test
 	public void parseClassTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		System.out.println("parseClassTest:");
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseClassTest(version);
 		}
 	}
 
 	private void parseClassTest(int version){
 		try {
+			System.out.println("parseClassTest, version: " + version);
 			ClassNode classNode = fModelGenerator.generateClass(3);
-			classNode.setRunOnAndroid(true);
 
 			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 			Element element = (Element)classNode.accept(builder);
 			TRACE(element);
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 			RootNode tmpRoot = new RootNode("tmp", null);
-			Optional<ClassNode> parsedClass = analyser.parseClass(element, tmpRoot, new ListOfStrings());
+			
+			IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
+			
+			Optional<ClassNode> parsedClass = 
+					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
+			
 			assertElementsEqual(classNode, parsedClass.get());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -111,7 +123,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseMethodTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseMethodTest(version);
 		}
 	}
@@ -125,10 +137,11 @@ public class XomParserTest {
 				Element element = (Element)methodNode.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				Optional<MethodNode> parsedMethodNode = analyser.parseMethod(element, tmpClassNode, new ListOfStrings());
+				
+				IModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
+				
+				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				assertElementsEqual(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
@@ -139,7 +152,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseParameterTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseParameterTest(version);
 		}
 	}
@@ -149,15 +162,15 @@ public class XomParserTest {
 			try{
 				for(boolean expected : new Boolean[]{true, false}){
 					MethodNode methodNode = new MethodNode("method", null);
-					MethodParameterNode methodParameterNode = fModelGenerator.generateParameter(type, expected, 3, 3, 3);
+					BasicParameterNode methodParameterNode = fModelGenerator.generateParameter(type, expected, 3, 3, 3);
 					methodNode.addParameter(methodParameterNode);
 
 					XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 					Element element = (Element)methodParameterNode.accept(builder);
 					TRACE(element);
 
-					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					Optional<MethodParameterNode> parsedMethodParameterNode = analyser.parseMethodParameter(element, methodNode, new ListOfStrings());
+					Optional<BasicParameterNode> parsedMethodParameterNode = 
+							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, methodNode, new ListOfStrings());
 					assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
@@ -169,7 +182,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseTestCaseTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseTestCaseTest(version);
 		}
 	}
@@ -184,8 +197,8 @@ public class XomParserTest {
 					Element element = (Element)testCaseNode.accept(builder);
 					TRACE(element);
 
-					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					Optional<TestCaseNode> tc1 = analyser.parseTestCase(element, m, new ListOfStrings());
+					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					assertElementsEqual(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
@@ -196,7 +209,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseConstraintTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseConstraintTest(version);
 		}
 	}
@@ -212,8 +225,7 @@ public class XomParserTest {
 					Element element = (Element)c.accept(builder);
 					TRACE(element);
 
-					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					Optional<ConstraintNode> c1 = analyser.parseConstraint(element, m, new ListOfStrings());
+					Optional<ConstraintNode> c1 = new ModelParserForConstraint().parseConstraint(element, m, new ListOfStrings());
 					assertElementsEqual(c, c1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
@@ -225,7 +237,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseChoiceTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseChoiceTest(version);
 		}
 	}
@@ -239,8 +251,7 @@ public class XomParserTest {
 				Element element = (Element)p.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				Optional<ChoiceNode> p1 = analyser.parseChoice(element, null, new ListOfStrings());
+				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
 				assertElementsEqual(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -251,7 +262,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseStaticStatementTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseStaticStatementTest(version);
 		}
 	}
@@ -270,9 +281,8 @@ public class XomParserTest {
 			TRACE(trueElement);
 			TRACE(falseElement);
 
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StaticStatement parsedTrue = analyser.parseStaticStatement(trueElement, null, new ListOfStrings());
-			StaticStatement parsedFalse = analyser.parseStaticStatement(falseElement, null, new ListOfStrings());
+			StaticStatement parsedTrue = new ModelParserForConstraint().parseStaticStatement(trueElement, null, new ListOfStrings());
+			StaticStatement parsedFalse = new ModelParserForConstraint().parseStaticStatement(falseElement, null, new ListOfStrings());
 
 			assertStatementsEqual(trueStatement, parsedTrue);
 			assertStatementsEqual(falseStatement, parsedFalse);
@@ -284,7 +294,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseChoiceStatementTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseChoiceStatementTest(version);
 		}
 	}
@@ -302,15 +312,14 @@ public class XomParserTest {
 
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 				AbstractStatement parsedS = null;
 				switch(element.getLocalName()){
 				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseLabelStatement(element, m, new ListOfStrings());
+					parsedS = new ModelParserForConstraint().parseLabelStatement(element, m, new ListOfStrings());
 					break;
 				case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseChoiceStatement(element, m, new ListOfStrings());
+					parsedS = new ModelParserForConstraint().parseChoiceStatement(element, m, new ListOfStrings());
 					break;
 				}
 
@@ -324,25 +333,17 @@ public class XomParserTest {
 	@Test
 	public void parseExpectedValueStatementTest() {
 
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseExpectedValueStatementTest(version);
 		}
 	}	
 
 	private String getStatementParameterAttributeName(int version) {
 
-		if (version == 0) {
-			return SerializationHelperVersion0.getStatementParameterAttributeName();
-		}
-
 		return SerializationHelperVersion1.getStatementParameterAttributeName();
 	}
 
 	private String getStatementChoiceAttributeName(int version) {
-
-		if (version == 0) {
-			return SerializationHelperVersion0.getStatementChoiceAttributeName();
-		}
 
 		return SerializationHelperVersion1.getStatementChoiceAttributeName();
 	}
@@ -362,8 +363,7 @@ public class XomParserTest {
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				ExpectedValueStatement parsedS = analyser.parseExpectedValueStatement(element, m, new ListOfStrings());
+				ExpectedValueStatement parsedS = new ModelParserForConstraint().parseExpectedValueStatement(element, m, new ListOfStrings());
 				assertStatementsEqual(s, parsedS);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -373,7 +373,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseStatementArrayTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseStatementArrayTest(version);
 		}
 	}	
@@ -391,8 +391,7 @@ public class XomParserTest {
 			Element element = (Element)s.accept(builder);
 			TRACE(element);
 
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StatementArray parsedS = analyser.parseStatementArray(element, m, new ListOfStrings());
+			StatementArray parsedS = new ModelParserForConstraint().parseStatementArray(element, m, new ListOfStrings());
 			assertStatementsEqual(s, parsedS);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -403,7 +402,7 @@ public class XomParserTest {
 	@Test
 	public void assertTypeTest() {
 
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			assertTypeTest(version);
 		}
 	}
@@ -421,21 +420,24 @@ public class XomParserTest {
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 			RootNode rootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
 
+			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
+			
 			try {
-				analyser.parseClass(classElement, rootNode, new ListOfStrings());
+				modelParserForClass.parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
-			    ListOfStrings errorList = new ListOfStrings();
-				analyser.parseClass(rootElement, rootNode, errorList);
+				ListOfStrings errorList = new ListOfStrings();
+				modelParserForClass.parseClass(rootElement, rootNode, errorList);
+				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
 			}
 
 			try {
-			    ListOfStrings errorList = new ListOfStrings();
+				ListOfStrings errorList = new ListOfStrings();
 				analyser.parseRoot(classElement, null, errorList);
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
@@ -453,10 +455,24 @@ public class XomParserTest {
 
 	}
 
-	private void assertElementsEqual(AbstractNode n, AbstractNode n1) {
-		if(n.isMatch(n1) == false){
-			fail("Parsed element differs from original\n" + fStringifier.stringify(n, 0) + "\n" + fStringifier.stringify(n1, 0));
+	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
+		
+		if (n.isMatch(n1)) {
+			return;
 		}
+		
+		String str1 = fStringifier.stringify(n, 0);
+		String str2 = fStringifier.stringify(n1, 0);
+		
+		int index = StringHelper.findFirstDifference(str1, str2);
+		
+		String substr1 = str1.substring(index, index + 20);
+		String substr2 = str2.substring(index, index + 20);
+		
+		System.out.println(substr1);
+		System.out.println(substr2);
+		
+		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
 	}
 
 	private void TRACE(Element element){

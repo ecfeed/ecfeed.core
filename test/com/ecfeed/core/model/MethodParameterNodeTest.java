@@ -10,35 +10,32 @@
 
 package com.ecfeed.core.model;
 
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class MethodParameterNodeTest {
 
 	@Test
 	public void createParameterTest() {
 
-		MethodParameterNode methodParameterNode;
-
 		try {
-			new MethodParameterNode("par%1", "int", "0", false, null);
+			new BasicParameterNode("par%1", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			new MethodParameterNode("!", "int", "0", false, null);
+			new BasicParameterNode("!", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			new MethodParameterNode("a b", "int", "0", false, null);
+			new BasicParameterNode("a b", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}
 	}
-
 
 }

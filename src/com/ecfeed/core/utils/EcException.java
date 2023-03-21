@@ -11,7 +11,7 @@
 package com.ecfeed.core.utils;
 
 
-public class EcException extends Exception {
+public class EcException extends RuntimeException {
 
 	private static final long serialVersionUID = -2866617803127770757L;
 
@@ -24,12 +24,12 @@ public class EcException extends Exception {
 	}	
 
 	public static void report(String message) throws EcException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new EcException(message);
 	}	
 
 	public static void report(String message, Throwable throwable) throws EcException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new EcException(message, throwable);
 	}	
 }

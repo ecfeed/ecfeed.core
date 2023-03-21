@@ -11,44 +11,61 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
+public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
-public class MethodNode extends ParametersParentNode {
-
-	private List<TestCaseNode> fTestCases;
-	private List<TestSuiteNode> fTestSuites;
-	private List<ConstraintNode> fConstraints;
+	ParametersHolder fParametersHolder;
+	ParametersHolder fDeployedParametersHolder;
+	private List<TestCaseNode> fTestCaseNodes;
+	private List<TestSuiteNode> fTestSuiteNodes;
+	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
-	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
+	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		fTestCases = new ArrayList<>();
-		fTestSuites = new ArrayList<>();
-		fConstraints = new ArrayList<>();
+		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fDeployedParametersHolder = null;
+		fTestCaseNodes = new ArrayList<>();
+		fTestSuiteNodes = new ArrayList<>();
+		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 
 		setDefaultPropertyValues();
+	}
+
+	public MethodNode(String name){
+		this(name, null);
 	}
 
 	public void setName(String name) {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		ClassNode classNode = getClassNode();
+
+		if (classNode != null) {
+
+			MethodNode otherMethodNode = classNode.findMethodWithTheSameName(name);
+
+			if (otherMethodNode != null) {
+				ExceptionHelper.reportRuntimeException("Method with the same name already exists.");
+			}
+		}
 
 		super.setName(name);
 	}
@@ -63,53 +80,39 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}
 
-	public static interface ConstraintsItr {
-
+	@Override
+	public ConstraintNodeListHolder.ConstraintsItr getIterator() {
+		return fConstraintNodeListHolder.getIterator();
 	}
 
-	private static class ConstraintsItrImpl implements ConstraintsItr {
+	@Override
+	public boolean hasNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
-		Iterator<ConstraintNode> fIterator;
-
-		ConstraintsItrImpl(Iterator<ConstraintNode> iterator) {
-			fIterator = iterator;
-		}
-
+		return fConstraintNodeListHolder.hasNextConstraint(contIterator);
 	}
 
-	public ConstraintsItr getIterator() {
-		return new ConstraintsItrImpl(fConstraints.iterator());
+	@Override
+	public ConstraintNode getNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
+
+		return fConstraintNodeListHolder.getNextConstraint(contIterator);
 	}
 
-	public boolean hasNextConstraint(ConstraintsItr contIterator) {
+	@Override
+	public void removeConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
-		return ((ConstraintsItrImpl)contIterator).fIterator.hasNext();
-	}
-
-	public ConstraintNode getNextConstraint(ConstraintsItr contIterator) {
-
-		return ((ConstraintsItrImpl)contIterator).fIterator.next();
-	}
-
-	public void removeConstraint(ConstraintsItr contIterator) {
-
-		((ConstraintsItrImpl)contIterator).fIterator.remove();
-		registerChange();
+		fConstraintNodeListHolder.removeConstraint(contIterator);
 	}	
+
+	public void removeAllDeployedParameters() {
+
+		if (fDeployedParametersHolder != null) {
+			fDeployedParametersHolder.removeAllParameters();
+		}
+	}
 
 	public List<String> getParameterTypes() {
 
-		List<String> parameterTypes = new ArrayList<String>();
-
-		List<AbstractParameterNode> parameters = getParameters();
-
-		for (AbstractParameterNode abstractParameterNode : parameters) {
-
-			String parameterType = abstractParameterNode.getType();
-			parameterTypes.add(parameterType);
-		}
-
-		return parameterTypes;
+		return ParametersParentNodeHelper.getParameterTypes(getParameters());
 	}
 
 	@Override
@@ -119,46 +122,61 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
-		children.addAll(fConstraints);
-		children.addAll(fTestCases);
-		children.addAll(fTestSuites);
+	public List<IAbstractNode> getChildren(){
+
+		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
+		children.addAll(fParametersHolder.getParameters());
+		children.addAll(fConstraintNodeListHolder.getConstraintNodes());
+		children.addAll(fTestCaseNodes);
+		children.addAll(fTestSuiteNodes);
 
 		return children;
 	}
 
 	@Override
 	public boolean hasChildren(){
-		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);
+		return (getParameters().size() != 0 || fConstraintNodeListHolder.getConstraintListSize() != 0 || fTestCaseNodes.size() != 0);
 	}
 
 	@Override
-	public MethodNode makeClone(){
-		MethodNode copy = new MethodNode(getName(), getModelChangeRegistrator());
+	public MethodNode makeClone() {
 
-		copy.setProperties(getProperties());
+		MethodNode clonedMethodNode = new MethodNode(getName(), getModelChangeRegistrator());
 
-		for(MethodParameterNode parameter : getMethodParameters()){
-			copy.addParameter(parameter.makeClone());
-		}
-		
-		for(TestCaseNode testcase : fTestCases){
-			TestCaseNode tcase = testcase.getCopy(copy);
-			if(tcase != null)
-				copy.addTestCase(tcase);
-		}
+		clonedMethodNode.setProperties(getProperties());
 
-		for(ConstraintNode constraint : fConstraints){
-			constraint = constraint.getCopy(copy);
-			if(constraint != null)
-				copy.addConstraint(constraint);
+		for (AbstractParameterNode parameter : getParameters()) {
+
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+
+			clonedMethodNode.addParameter(basicParameterNode.makeClone());
 		}
 
-		copy.setParent(getParent());
+		for (TestCaseNode testcase : fTestCaseNodes) {
+
+			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
+
+			if (tcase != null) {
+				clonedMethodNode.addTestCase(tcase);
+			}
+		}
+
+		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
+
+		//		for(ConstraintNode constraint : fConstraintNodes){
+		//			constraint = constraint.getCopy(copy);
+		//			if(constraint != null)
+		//				copy.addConstraint(constraint);
+		//		}
+
+		clonedMethodNode.setParent(getParent());
 		//		if(!copy.isMatch(this))
 		//			assert copy.isMatch(this);
-		return copy;
+		return clonedMethodNode;
 	}
 
 	public int getMyMethodIndex() {
@@ -169,7 +187,7 @@ public class MethodNode extends ParametersParentNode {
 
 		int index = -1;
 
-		for (AbstractNode abstractNode : getParent().getChildren()) {
+		for (IAbstractNode abstractNode : getParent().getChildren()) {
 
 			if (abstractNode instanceof MethodNode) {
 				index++;
@@ -183,14 +201,14 @@ public class MethodNode extends ParametersParentNode {
 		return -1;
 	}
 
-	public MethodNode getSibling(List<String> argTypes){
+	public MethodNode getSibling(){
 
 		ClassNode classNode = getClassNode();
 
 		if (classNode == null) 
 			return null;
 
-		MethodNode sibling = classNode.findMethodWithTheSameSignature(getName(), argTypes);
+		MethodNode sibling = classNode.findMethodWithTheSameName(getName());
 
 		if (sibling == null || sibling == this) {
 			return null;
@@ -199,66 +217,156 @@ public class MethodNode extends ParametersParentNode {
 		return sibling;
 	}
 
-	public boolean checkDuplicate(int index, String newType){
-		List<String> argTypes = getParameterTypes();
-		argTypes.set(index, newType);
-		return getSibling(argTypes) != null;
-	}
-
 	public void addConstraint(ConstraintNode constraint) {
-		addConstraint(constraint, fConstraints.size());
+
+		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
+	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
-		constraint.setParent(this);
-		fConstraints.add(index, constraint);
-		registerChange();
+
+		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite) {
-		addTestSuite(testSuite, fTestSuites.size());
+	@Override
+	public boolean removeConstraint(ConstraintNode constraint) {
+
+		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index) {
-		fTestSuites.add(index, testCase);
-		registerChange();
-	}
-	
-	public void addTestCase(TestCaseNode testCase){
-		addTestCase(testCase, fTestCases.size());
+	public TestSuiteNode provideValidTestSuiteNode(String newName) {
+
+		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+
+		if (newTestSuiteNode == null) {
+			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
+			addTestSuite(newTestSuiteNode);
+		}
+		return newTestSuiteNode;
 	}
 
-	public void addTestCase(TestCaseNode testCase, int index) {
-		fTestCases.add(index, testCase);
+	private void addTestSuite(TestSuiteNode testSuite) {
+		addTestSuite(testSuite, fTestSuiteNodes.size());
+	}
+
+	private void addTestSuite(TestSuiteNode testCase, int index) {
 		testCase.setParent(this);
+		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
-	
+
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
+
+			if (indexOfNewTestCase.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
+			} else {
+				addTestSuite(testSuiteNode);
+			}
+		}
+
+		testSuiteNode.addTestCase(testCaseNode);
+
+		fTestCaseNodes.add(index, testCaseNode);
+		testCaseNode.setParent(this);
+
+		registerChange();
+	}
+
+	public void addTestCase(TestCaseNode testCaseNode) {
+
+		addTestCase(testCaseNode, fTestCaseNodes.size(), Optional.empty());
+	}
+
+	public void removeTestCase(TestCaseNode testCaseNode) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			ExceptionHelper.reportRuntimeException("Non existing test suite.");
+		}
+
+		testSuiteNode.removeTestCase(testCaseNode);
+
+		if (testSuiteNode.getTestCaseNodes().size() == 0) {
+			removeTestSuite(testSuiteNode);
+		}
+
+		testCaseNode.setParent(null);
+
+		fTestCaseNodes.remove(testCaseNode);
+
+		registerChange();
+	}
+
+	public TestSuiteNode findTestSuite(String testSuiteName) {
+
+		if (testSuiteName == null) {
+			ExceptionHelper.reportRuntimeException("Empty test suite name.");
+		}
+
+		for (TestSuiteNode testSuiteNode : fTestSuiteNodes) {
+			if (testSuiteName.equals(testSuiteNode.getName())) {
+				return testSuiteNode; 
+			}
+		}
+
+		return null;
+	}
+
+	public int findTestSuiteIndex(String testSuiteName) {
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			return -1;
+		}
+
+		return testSuiteNode.getMyIndex();
+	}
+
+
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
 	}
 
-	public boolean getRunOnAndroid() {
-		ClassNode classNode = getClassNode();
-		return classNode.getRunOnAndroid();
-	}
-
-	public MethodParameterNode findMethodParameter(String name){
-		return (MethodParameterNode)findParameter(name);
-	}
+	//	@Override
+	//	public BasicParameterNode findMethodParameter(String name){
+	//		return (BasicParameterNode)findParameter(name);
+	//	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
+
 		ArrayList<String> names = new ArrayList<String>();
-		for(MethodParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected() == expected){
+
+		for (AbstractParameterNode parameter : getParameters()) {
+
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+
+			if (basicParameterNode.isExpected() == expected) {
 				names.add(parameter.getName());
 			}
 		}
 		return names;
 	}
 
-	public MethodParameterNode getMethodParameter(int index) {
-		return (MethodParameterNode)(getParameters().get(index));
+	public AbstractParameterNode getMethodParameter(int index) {
+
+		List<AbstractParameterNode> parameters = getParameters();
+
+		return parameters.get(index);
 	}
 
 	public int getMethodParameterCount()
@@ -266,34 +374,39 @@ public class MethodNode extends ParametersParentNode {
 		return getParameters().size();
 	}
 
-	public List<ConstraintNode> getConstraintNodes(){
-		return fConstraints;
+	@Override
+	public List<ConstraintNode> getConstraintNodes() {
+		return fConstraintNodeListHolder.getConstraintNodes();
 	}
 
-	public List<Constraint> getAllConstraints(){
-		List<Constraint> constraints = new ArrayList<Constraint>();
-		for(ConstraintNode node : fConstraints){
-			constraints.add(node.getConstraint());
-		}
-		return constraints;
+	@Override
+	public List<Constraint> getConstraints() {
+
+		return fConstraintNodeListHolder.getConstraints();
 	}
 
+	@Override
+	public void setConstraints(List<ConstraintNode> constraints) {
+
+		fConstraintNodeListHolder.setConstraints(constraints);
+	}
+
+	@Override
 	public List<Constraint> getConstraints(String name) {
-		List<Constraint> constraints = new ArrayList<Constraint>();
-		for(ConstraintNode node : fConstraints){
-			if(node.getName().equals(name)){
-				constraints.add(node.getConstraint());
-			}
-		}
-		return constraints;
+
+		return fConstraintNodeListHolder.getConstraints(name);
 	}
 
-	public Set<String> getConstraintsNames() {
-		Set<String> names = new HashSet<String>();
-		for(ConstraintNode constraint : fConstraints){
-			names.add(constraint.getName());
-		}
-		return names;
+	@Override
+	public List<ConstraintNode> getConstraintNodes(String name) {
+
+		return fConstraintNodeListHolder.getConstraintNodes(name);
+	}
+
+	@Override
+	public Set<String> getNamesOfConstraints() {
+
+		return fConstraintNodeListHolder.getConstraintsNames();
 	}
 
 	public List<List<ChoiceNode>> getTestDomain() {
@@ -303,67 +416,53 @@ public class MethodNode extends ParametersParentNode {
 		int parameterCount = getParametersCount();
 
 		for (int parameterIndex = 0; parameterIndex < parameterCount; parameterIndex++) {
-			testDomain.add(getTestDomainProcessAbstractParameterNode(parameterIndex));
+			testDomain.add(getTestDomainForParameterIndex(parameterIndex));
 		}
 
 		return testDomain;
 	}
 
-	private List<ChoiceNode> getTestDomainProcessAbstractParameterNode(int parameterIndex) {
+	private List<ChoiceNode> getTestDomainForParameterIndex(int parameterIndex) {
 
-		AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
+		BasicParameterNode basicParameterNode = (BasicParameterNode) getParameter(parameterIndex);
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
-			return getTestDomainProcessMethodParameterNode(abstractParameterNode);
-		} else {
-			return abstractParameterNode.getLeafChoicesWithCopies();
-		}
-
+		return getTestDomainForParameterNode(basicParameterNode);
 	}
 
-	private List<ChoiceNode> getTestDomainProcessMethodParameterNode(AbstractParameterNode abstractParameterNode) {
-		MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
-		List<ChoiceNode> choicesForParameter;
+	private static List<ChoiceNode> getTestDomainForParameterNode(BasicParameterNode basicParameterNode) {
 
-		if (methodParameterNode.isExpected()) {
-			ChoiceNode choiceNode = getTestDomainCreateExpectedChoiceNode(methodParameterNode);
+		List<ChoiceNode> choicesForParameter = new ArrayList<>();
 
-			choicesForParameter = new ArrayList<>();
+		if (basicParameterNode.isExpected()) {
+			ChoiceNode choiceNode = ChoiceNodeHelper.createChoiceNodeWithDefaultValue(basicParameterNode);
+
 			choicesForParameter.add(choiceNode);
-		} else {
-			choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
+
+			return choicesForParameter;
 		}
 
-		return choicesForParameter;
+		return basicParameterNode.getLeafChoicesWithCopies();
 	}
 
-	private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
-		String defaultValue = methodParameterNode.getDefaultValue();
-
-		ChoiceNode choiceNode = new ChoiceNode("@expected", defaultValue, methodParameterNode.getModelChangeRegistrator());
-		choiceNode.setParent(methodParameterNode);
-
-		return choiceNode;
-	}
-
+	@Override
 	public List<TestCaseNode> getTestCases() {
-		
-		return fTestCases;
+
+		return fTestCaseNodes;
 	}
-	
+
 	public List<TestSuiteNode> getTestSuites() {
-		
-		return fTestSuites;
+
+		return fTestSuiteNodes;
 	}
-	
+
 	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
-		
-		for (TestSuiteNode testSuite : fTestSuites) {
+
+		for (TestSuiteNode testSuite : fTestSuiteNodes) {
 			if (testSuite.getSuiteName().equalsIgnoreCase(testSuiteName)) {
 				return Optional.of(testSuite);
 			}
 		}
-		
+
 		return Optional.empty();
 	}
 
@@ -375,23 +474,23 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public boolean hasTestSuites() {
-		if (fTestSuites.isEmpty()) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean hasTestCases() {
-		if (fTestCases.isEmpty()) {
+		if (fTestSuiteNodes.isEmpty()) {
 			return false;
 		}
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuite) {
+	public boolean hasTestCases() {
+		if (fTestCaseNodes.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
 		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 		for(TestCaseNode testCase : getTestCases()){
-			if(testSuite.equals(testCase.getName())){
+			if(testSuiteName.equals(testCase.getName())){
 				testCases.add(testCase);
 			}
 		}
@@ -409,60 +508,28 @@ public class MethodNode extends ParametersParentNode {
 		return names;
 	}
 
-	public boolean removeTestSuite(TestSuiteNode testSuite) {
-		testSuite.setParent(null);
-		
-		for (TestCaseNode testCase : testSuite.getTestCaseNodes()) {
-			testCase.setParent(null);
-			fTestCases.remove(testCase);
-			registerChange();
-		}
-		
-		boolean result = fTestSuites.remove(testSuite);
-		registerChange();
-		return result;
-	}
-	
-	public boolean removeTestCase(TestCaseNode testCase) {
-		testCase.setParent(null);
-		boolean result = fTestCases.remove(testCase);
-		registerChange();
-		return result;
-	}
+	void removeTestSuite(TestSuiteNode testSuite) {
 
-	public void removeTestCases(){
-		fTestCases.clear();
+		//		String testSuiteName = testSuite.getName();
+		//		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
+
+		fTestSuiteNodes.remove(testSuite);
 		registerChange();
 	}
 
-	public boolean removeConstraint(ConstraintNode constraint) {
+	@Override
+	public boolean isChoiceMentionedInConstraints(ChoiceNode choice) {
 
-		constraint.setParent(null);
-		boolean result = fConstraints.remove(constraint);
-		registerChange();
-
-		return result;
-	}
-
-	public void removeTestSuite(String suiteName) {
-		Iterator<TestCaseNode> iterator = getTestCases().iterator();
-		while(iterator.hasNext()){
-			TestCaseNode testCase = iterator.next();
-			if(testCase.getName().equals(suiteName)){
-				iterator.remove();
-			}
-		}
-
-		registerChange();
+		return fConstraintNodeListHolder.isChoiceMentioned(choice);
 	}
 
 	public boolean isChoiceMentioned(ChoiceNode choice){
-		for(ConstraintNode constraint : fConstraints){
-			if(constraint.mentions(choice)){
-				return true;
-			}
+
+		if (isChoiceMentionedInConstraints(choice)) {
+			return true;
 		}
-		for(TestCaseNode testCase: fTestCases){
+
+		for(TestCaseNode testCase: fTestCaseNodes){
 			if(testCase.mentions(choice)){
 				return true;
 			}
@@ -470,51 +537,31 @@ public class MethodNode extends ParametersParentNode {
 		return false;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(Collection<MethodParameterNode> parameters) {
+	@Override
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-
-		for(MethodParameterNode parameter : parameters){
-			result.addAll(getMentioningConstraints(parameter));
-		}
-
-		return result;
+		return fConstraintNodeListHolder.getMentioningConstraints(parameter);
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(MethodParameterNode parameter) {
+	@Override
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, String label) {
 
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-
-		for(ConstraintNode constraint : fConstraints){
-			if(constraint.mentions(parameter)){
-				result.add(constraint);
-			}
-		}
-
-		return result;
+		return fConstraintNodeListHolder.getMentioningConstraints(parameter, label);
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(MethodParameterNode parameter, String label) {
+	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
 
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-
-		for(ConstraintNode constraint : fConstraints){
-			if(constraint.mentions(parameter, label)){
-				result.add(constraint);
-			}
-		}
-
-		return result;
+		return fConstraintNodeListHolder.getMentioningConstraints(choice);
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice){
+	public Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
 
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
+		Set<ConstraintNode> result = new HashSet<>();
 
-		for(ConstraintNode constraint : fConstraints){
-			if(constraint.mentions(choice)){
-				result.add(constraint);
-			}
+		for (BasicParameterNode basicParameterNode : parameters) {
+			Set<ConstraintNode> constraintsForOneParameter = getMentioningConstraints(basicParameterNode);
+
+			result.addAll(constraintsForOneParameter);
 		}
 
 		return result;
@@ -522,7 +569,7 @@ public class MethodNode extends ParametersParentNode {
 
 	public List<TestCaseNode> getMentioningTestCases(ChoiceNode choice){
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
-		for(TestCaseNode testCase : fTestCases){
+		for(TestCaseNode testCase : fTestCaseNodes){
 			if(testCase.getTestData().contains(choice)){
 				result.add(testCase);
 			}
@@ -530,46 +577,54 @@ public class MethodNode extends ParametersParentNode {
 		return result;
 	}
 
-	public boolean isParameterMentioned(MethodParameterNode parameter){
-		for(ConstraintNode constraint : fConstraints){
-			if(constraint.mentions(parameter)){
-				return true;
-			}
+	@Override
+	public boolean isParameterMentionedInConstraints(BasicParameterNode parameter) {
+
+		return fConstraintNodeListHolder.isParameterMentioned(parameter);
+	}
+
+	public boolean isParameterMentioned(BasicParameterNode parameter) {
+
+		if (isParameterMentionedInConstraints(parameter)) {
+			return true;
 		}
-		if(fTestCases.isEmpty()){
+
+		if (fTestCaseNodes.isEmpty()) {
 			return false;
 		}
+
 		return true;
 	}
 
 	public void removeAllTestCases() {
 
-		fTestCases.clear();
-		registerChange();
-	}
-
-	public void replaceTestCases(List<TestCaseNode> testCases){
-		fTestCases.clear();
-		fTestCases.addAll(testCases);
-		registerChange();
-	}
-
-	public void replaceConstraints(List<ConstraintNode> constraints){
-		fConstraints.clear();
-		fConstraints.addAll(constraints);
-		registerChange();
-	}
-
-	public void removeAllConstraints() {
-
-		fConstraints.clear();
+		fTestCaseNodes.clear();
 		registerChange();
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild) {
+	public void replaceTestCases(List<TestCaseNode> testCases){
+		fTestCaseNodes.clear();
+		fTestCaseNodes.addAll(testCases);
+		registerChange();
+	}
 
-		if (potentialChild instanceof AbstractParameterNode) { 
+	@Override
+	public void replaceConstraints(List<ConstraintNode> constraints){
+
+		fConstraintNodeListHolder.replaceConstraints(constraints);
+	}
+
+	@Override
+	public void removeAllConstraints() {
+
+		fConstraintNodeListHolder.removeAllConstraints();
+	}
+
+	@Override
+	public int getMaxChildIndex(IAbstractNode potentialChild) {
+
+		if (potentialChild instanceof BasicParameterNode) {
 			return getParameters().size();
 		}
 
@@ -590,101 +645,238 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
-		if(node instanceof MethodNode == false){
+	public boolean isMatch(IAbstractNode other){
+
+		if(other instanceof MethodNode == false){
 			return false;
 		}
 
-		MethodNode comparedMethod = (MethodNode)node;
+		MethodNode otherMethodNode = (MethodNode)other;
 
-		int testCasesCount = getTestCases().size();
+		if (!fParametersHolder.isMatch(otherMethodNode.fParametersHolder)) {
+			return false;
+		}
+
+		List<TestCaseNode> testCases = getTestCases();
+
+		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
-		if(testCasesCount != comparedMethod.getTestCases().size() ||
-				constraintsCount != comparedMethod.getConstraintNodes().size()){
+		List<TestCaseNode//	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
+		//		return Arrays.asList(new MethodNode[]{this});
+		//	}
+		> testCasesToCompare = otherMethodNode.getTestCases();
+
+		if(testCasesCount != testCasesToCompare.size() ||
+				constraintsCount != otherMethodNode.getConstraintNodes().size()){
 			return false;
 		}
 
-		for(int i = 0; i < testCasesCount; i++){
-			if(getTestCases().get(i).isMatch(comparedMethod.getTestCases().get(i)) == false){
+		for (int i = 0; i < testCasesCount; i++){
+
+			TestCaseNode testCase = testCases.get(i);
+			TestCaseNode testCaseToCompare = testCasesToCompare.get(i);
+
+			if (testCase.isMatch(testCaseToCompare) == false){
 				return false;
 			}
 		}
 
 		for(int i = 0; i < constraintsCount; i++){
-			if(getConstraintNodes().get(i).isMatch(comparedMethod.getConstraintNodes().get(i)) == false){
+			if(getConstraintNodes().get(i).isMatch(otherMethodNode.getConstraintNodes().get(i)) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(other);
+
+		if (!isMatch) {
+			return false;
+		}
+
+		return true;
 	}
 
-	@Override
-	public List<MethodNode> getMethods(AbstractParameterNode parameter) {
-		return Arrays.asList(new MethodNode[]{this});
-	}
+	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter) {
 
-	public List<MethodParameterNode> getLinkers(GlobalParameterNode globalParameter){
-		List<MethodParameterNode> result = new ArrayList<MethodParameterNode>();
-		for(MethodParameterNode localParameter : getMethodParameters()){
-			if(localParameter.isLinked() && localParameter.getLink() == globalParameter){
-				result.add(localParameter);
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+
+		for (AbstractParameterNode localParameter : getParameters()) {
+
+			if (!(localParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) localParameter;
+
+			if (basicParameterNode.isLinked() && basicParameterNode.getLinkToGlobalParameter() == globalParameter) {
+				result.add(basicParameterNode);
 			}
 		}
 		return result;
 	}
 
-	public final List<MethodParameterNode> getMethodParameters() {
-		List<MethodParameterNode> result = new ArrayList<>();
-		for(AbstractParameterNode parameter : getParameters()){
-			result.add((MethodParameterNode)parameter);
-		}
-		return result;
+	public final boolean isDeployed() {
+
+		return fDeployedParametersHolder != null && fDeployedParametersHolder.getParametersCount() > 0;
 	}
 
-	public List<MethodParameterNode> getMethodParameters(boolean expected) {
-		List<MethodParameterNode> result = new ArrayList<>();
-		for(MethodParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected()){
-				result.add(parameter);
-			}
+	public final List<BasicParameterNode> getDeployedMethodParameters() {
+
+		if (isDeployed()) {
+			return fDeployedParametersHolder.getParametersAsBasic();
 		}
-		return result;
+
+		return new ArrayList<>();
 	}
 
-	public MethodParameterNode getMethodParameter(ChoiceNode choice){
-		AbstractParameterNode parameter = choice.getParameter();
-		for(MethodParameterNode methodParameter : getMethodParameters()){
-			if(methodParameter == parameter || methodParameter.getLink() == parameter){
-				return methodParameter;
+	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
+
+		BasicParameterNode parameter = choice.getParameter();
+
+		for (AbstractParameterNode methodParameter : getParameters()) {
+
+			if (!(methodParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode methodBasicParameterNode = (BasicParameterNode) methodParameter;
+
+			if (methodBasicParameterNode == parameter 
+					|| methodBasicParameterNode.getLinkToGlobalParameter() == parameter) {
+
+				return methodBasicParameterNode;
 			}
 		}
+
 		return null;
 	}
 
-	public List<GlobalParameterNode> getAvailableGlobalParameters() {
+	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
+
 		if(getClassNode() != null){
-			return getClassNode().getAvailableGlobalParameters();
+			return getClassNode().getAllGlobalParametersAvailableForLinking();
 		}
 		return new ArrayList<>();
 	}
 
-	public void removeConstraintsWithParameter(MethodParameterNode methodParameter) {
+	@Override
+	public void removeMentioningConstraints(BasicParameterNode methodParameter) {
 
-		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
-
-		for(ConstraintNode constraint : fConstraints){
-			if (constraint.mentionsParameter(methodParameter)) {
-				constraintsToDelete.add(constraint);
-			}
-		}
-
-		for (ConstraintNode constraint : constraintsToDelete) {
-			fConstraints.remove(constraint);
-		}
-
-		registerChange();
+		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 
+	@Override
+	public int getChildrenCount() {
+
+		int parametetersSize = fParametersHolder.getParametersCount(); 
+		int testCasesSize = fTestCaseNodes.size();
+		int constraintsSize = fConstraintNodeListHolder.getConstraintListSize();
+
+		return parametetersSize + testCasesSize + constraintsSize;
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter) {
+
+		fParametersHolder.addParameter(parameter, this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+
+	@Override
+	public void addParameters(List<AbstractParameterNode> parameters) {
+
+		fParametersHolder.addParameters(parameters, this);
+	}
+
+	public void setDeployedParameters(List<BasicParameterNode> parameters) {
+
+		if (fDeployedParametersHolder == null) {
+			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
+		} 
+
+		fDeployedParametersHolder.setBasicParameters(parameters, this);
+	}
+
+	@Override
+	public boolean removeParameter(AbstractParameterNode parameter) {
+
+		return fParametersHolder.removeParameter(parameter);
+	}
+
+	@Override
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
+
+		fParametersHolder.replaceParameters(parameters);
+	}
+
+	@Override
+	public int getParametersCount() {
+
+		return fParametersHolder.getParametersCount();
+	}
+
+	@Override
+	public List<AbstractParameterNode> getParameters() {
+
+		return fParametersHolder.getParameters();
+	}
+
+	@Override
+	public AbstractParameterNode getParameter(int parameterIndex) {
+
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	@Override
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
+
+		return fParametersHolder.findParameter(parameterNameToFind);
+	}
+
+	@Override
+	public int getParameterIndex(String parameterName) {
+
+		return fParametersHolder.getParameterIndex(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(String parameterName) {
+
+		return fParametersHolder.parameterExists(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
+
+		return fParametersHolder.parameterExists(abstractParameterNode);
+	}
+
+	@Override
+	public List<String> getParametersNames() {
+
+		return fParametersHolder.getParametersNames();
+	}
+
+	@Override
+	public String generateNewParameterName(String startParameterName) {
+
+		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+
+	public List<BasicParameterNode> getParametersAsBasic() {
+
+		return fParametersHolder.getParametersAsBasic();
+	}
+
+	public void setTestCases(List<TestCaseNode> testCases) {
+
+		fTestCaseNodes.clear();
+		fTestCaseNodes.addAll(testCases);
+	}
 }

@@ -14,6 +14,7 @@ import com.ecfeed.core.implementation.ModelClassLoader;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class FixedChoiceValueFactory {
@@ -28,16 +29,19 @@ public class FixedChoiceValueFactory {
 		fIsExport = isExport; // TODO - rename
 	}
 
-	public Object createValue(ChoiceNode choice){
+	public Object createValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		if(choice.getParameter() != null) {
-			return createValue(choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType());
+			String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+			
+			return createValue(
+					choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType(), context);
 		}
 		
 		return null;
 	}
 
-	public Object createValue(String valueString, boolean isRandomized, String typeName) {
+	public Object createValue(String valueString, boolean isRandomized, String typeName, String context) {
 
 		if (typeName == null || valueString == null) {
 			return null;
@@ -49,7 +53,7 @@ public class FixedChoiceValueFactory {
 
 			TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
 			ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
-			convertedValueString = typeAdapter.generateValueAsString(valueString);  
+			convertedValueString = typeAdapter.generateValueAsString(valueString, context);  
 		}
 
 		if (JavaLanguageHelper.isJavaType(typeName)) {

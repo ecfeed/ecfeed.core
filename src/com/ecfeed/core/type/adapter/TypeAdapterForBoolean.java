@@ -10,23 +10,15 @@
 
 package com.ecfeed.core.type.adapter;
 
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
+import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
-
-	private final String[] TYPES_CONVERTABLE_TO_BOOLEAN = new String[]{
-			JavaLanguageHelper.TYPE_NAME_STRING,
-			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-			SimpleLanguageHelper.TYPE_NAME_TEXT,
-			SimpleLanguageHelper.TYPE_NAME_LOGICAL
-	};
 
 	@Override
 	public String getMyTypeName() {
@@ -39,10 +31,16 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	@Override
-	public boolean isCompatible(String type){
-		return Arrays.asList(TYPES_CONVERTABLE_TO_BOOLEAN).contains(type);
+	public boolean isConvertibleTo(String otherType) {
+
+		if (otherType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
 	}
 
+	@Override
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {
@@ -50,6 +48,57 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		}
 
 		return convertForQuietMode(value, getDefaultValue());
+	}
+
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		if (StringHelper.isEqual(value, "true")) {
+			return true;
+		}
+
+		if (StringHelper.isEqual(value, "false")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
+
+		if (isRandomized) {
+			return false;
+		}
+
+		if (StringHelper.isEqual(Boolean.toString(true), value)) {
+			return true;
+		}
+
+		if (StringHelper.isEqual(Boolean.toString(false), value)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private String convertForExceptionMode(String value) {
@@ -108,13 +157,13 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	@Override
-	public Boolean generateValue(String range) {
+	public Boolean generateValue(String range, String context) {
 		return ThreadLocalRandom.current().nextBoolean();
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 }

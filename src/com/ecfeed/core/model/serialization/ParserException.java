@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class ParserException extends Exception {
 
@@ -28,7 +28,7 @@ public class ParserException extends Exception {
 	}
 	
 	public static void report(String message) throws ParserException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new ParserException(message);
 	}
 	

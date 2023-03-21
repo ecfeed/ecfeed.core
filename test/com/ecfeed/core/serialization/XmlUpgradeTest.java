@@ -42,6 +42,21 @@ public class XmlUpgradeTest {
 		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond(), serializedModelInVersion4);
 	}
 
+	@Test
+	public void upgradeNonUniqueMethodsFromVersion4To5Test() {
+
+		Pair<String, String> pairOfXmls = createXmlsnWithNonUniqueMethodsInVersion4AndUniqueInVersion5();
+		
+		String expectedXml = pairOfXmls.getSecond();
+		String[] expectedResultLines = expectedXml.split("\n");
+		
+		String sourceXmlInVersion4 = pairOfXmls.getFirst();
+		String resultInVersion5 = convertXmlFromVersion4ToVersion5(sourceXmlInVersion4);
+		String[] resultLines = resultInVersion5.split(System.getProperty("line.separator"));
+		
+		assertNull(TestHelper.isEqualByLines(expectedResultLines, resultLines));
+	}
+
 	private void upgradeFromVersion3To4(
 			String sourceInVersion3,
 			String expectedResultInVersion4FromText,
@@ -67,7 +82,7 @@ public class XmlUpgradeTest {
 
 		// convert model to version 4
 
-		RootNode convertedModel = ModelConverter.convertFrom3To4(parsedModel);
+		ModelConverter.convertFrom3To4(parsedModel);
 
 		// write model to xml
 
@@ -85,49 +100,87 @@ public class XmlUpgradeTest {
 		// System.out.println(result);
 
 		// compare with model from text
-		assertEqualsByLines(expectedResultInVersion4FromText, result);
+		String[] expectedResultLines1 = expectedResultInVersion4FromText.split("\n");
+		String[] resultLines1 = result.split(System.getProperty("line.separator"));
+
+		assertNull(TestHelper.isEqualByLines(expectedResultLines1, resultLines1));
 
 		// compare with model created in version4
 
 		if (expectedResultInVersion4FromModel != null) {
-			assertEqualsByLines(expectedResultInVersion4FromModel, result);
+			String[] expectedResultLines2 = expectedResultInVersion4FromModel.split("\n");
+			String[] resultLines2 = result.split(System.getProperty("line.separator"));
+
+			assertNull(TestHelper.isEqualByLines(expectedResultLines2, resultLines2));
 		}
 	}
+	
+//	private void upgradeFromVersion4To5WithCheck(
+//			String sourceInVersion4,
+//			String expectedResultInVersion5) {
+//
+//		String resultInVersion5 = convertXmlFromVersion4ToVersion5(sourceInVersion4);
+//
+//		// compare with model from text
+//		String[] expectedResultLines1 = expectedResultInVersion5.split("\n");
+//		String[] resultLines1 = resultInVersion5.split(System.getProperty("line.separator"));
+//
+//		assertNull(TestHelper.isEqualByLines(expectedResultLines1, resultLines1));
+//	}
 
-	private void assertEqualsByLines(String expectedResult, String result) {
-
-		final String lineSeparator = System.getProperty("line.separator");
-
-		String[] expectedResultLines = expectedResult.split(lineSeparator);
-		String[] resultLines = result.split(lineSeparator);
-
-		if (expectedResultLines.length != resultLines.length) {
-			fail("Content does not match");
-			return;
-		}
-
-		for (int lineIndex = 0; lineIndex < resultLines.length; lineIndex++) {
-
-			String expectedLine = expectedResultLines[lineIndex];
-			expectedLine = expectedLine.replace("\r", "");
-
-			String resultLine = resultLines[lineIndex];
-			resultLine = resultLine.replace("\r", "");
-
-			if (!StringHelper.isEqual(expectedLine, resultLine)) {
-				fail("Line: " + (lineIndex + 1) + " differs.");
-			}
-		}
+	private String convertXmlFromVersion4ToVersion5(String sourceXmlInVersion4) {
+		
+		RootNode parsedModel = parseXmlInVersion4ToModellInVersion5(sourceXmlInVersion4);
+		String resultXmlInVersion5 = serializeModelInVersion5ToXml(parsedModel);
+		
+		return resultXmlInVersion5;
 	}
 
+	private String serializeModelInVersion5ToXml(RootNode parsedModel) {
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+
+		ModelSerializer serializer = new ModelSerializer(ostream, 5);
+
+		try {
+			serializer.serialize(parsedModel);
+		} catch (Exception e) {
+			fail();
+		}
+
+		String result = ostream.toString();
+		return result;
+	}
+
+	private RootNode parseXmlInVersion4ToModellInVersion5(String sourceInVersion4) {
+		
+		ByteArrayInputStream istream = new ByteArrayInputStream(sourceInVersion4.getBytes());
+
+		ModelParser parser = new ModelParser();
+
+		RootNode parsedModel = null;
+		ListOfStrings errorList = new ListOfStrings();
+		try {
+			// Note. Parsing already has to convert non unique method names 
+			// because method with non unique name cannot be added to class.
+			
+			parsedModel = parser.parseModel(istream, null, errorList);
+		} catch (ParserException e) {
+			fail();
+		}
+
+		if (!errorList.isEmpty()) {
+			fail();
+		}
+		
+		ModelConverter.convertFrom4To5(parsedModel);
+		return parsedModel;
+	}
+	
 	private Pair<String, String> createXmlsWithStandardConstraintInVersion3And4() {
 
 		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='3'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -172,9 +225,6 @@ public class XmlUpgradeTest {
 		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='4'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -222,9 +272,6 @@ public class XmlUpgradeTest {
 		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='3'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -269,9 +316,6 @@ public class XmlUpgradeTest {
 		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='4'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -314,6 +358,85 @@ public class XmlUpgradeTest {
 		return new Pair<>(sourceTxtInVersion3, expectedResultTextInVersion4);
 	}
 
+	private Pair<String, String> createXmlsnWithNonUniqueMethodsInVersion4AndUniqueInVersion5() {
+
+		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+				"<Model name='root' version='4'>\n" +
+				"    <Class name='classNode'>\n" +
+				
+				"        <Method name='method'>\n" +
+				"            <Properties>\n" +
+				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
+				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
+				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
+				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
+				"            </Properties>\n" +
+				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
+				"                <Properties>\n" +
+				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+				"                </Properties>\n" +
+				"                <Comments>\n" +
+				"                    <TypeComments/>\n" +
+				"                </Comments>\n" +
+				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
+				"            </Parameter>\n" +
+				"        </Method>\n" +
+				
+				"        <Method name='method'>\n" +
+				"            <Properties>\n" +
+				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
+				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
+				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
+				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
+				"            </Properties>\n" +
+				"        </Method>\n" +
+				
+				"    </Class>\n" +
+				"</Model>";
+
+
+		sourceTxtInVersion3 = sourceTxtInVersion3.replace("'", "\"");
+
+
+		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+				"<Model name='root' version='5'>\n" +
+				"    <Class name='classNode'>\n" +
+				
+				"        <Method name='method'>\n" +
+				"            <Properties>\n" +
+				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
+				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
+				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
+				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
+				"            </Properties>\n" +
+				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
+				"                <Properties>\n" +
+				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+				"                </Properties>\n" +
+				"                <Comments>\n" +
+				"                    <TypeComments/>\n" +
+				"                </Comments>\n" +
+				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
+				"            </Parameter>\n" +
+				"        </Method>\n" +
+
+				"        <Method name='method1'>\n" +
+				"            <Properties>\n" +
+				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
+				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
+				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
+				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
+				"            </Properties>\n" +
+				"        </Method>\n" +
+				
+				"    </Class>\n" +
+				"</Model>";
+
+		expectedResultTextInVersion4 = expectedResultTextInVersion4.replace("'", "\"");
+
+		return new Pair<>(sourceTxtInVersion3, expectedResultTextInVersion4);
+	}
+	
 	private String generateAssignmentConstraintExampleInVersion4() {
 
 		RootNode root = new RootNode("root", null, 4);
@@ -326,7 +449,7 @@ public class XmlUpgradeTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -340,7 +463,7 @@ public class XmlUpgradeTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",
@@ -355,7 +478,7 @@ public class XmlUpgradeTest {
 		// constraint
 
 		AbstractStatement precondition =
-				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);  // TODO MO-RE leftParameterLinkingContext
 
 		AbstractStatement postcondition =
 				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");
@@ -383,4 +506,5 @@ public class XmlUpgradeTest {
 
 		return ostream.toString();
 	}
+	
 }

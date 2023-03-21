@@ -1,76 +1,56 @@
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChoiceToSolverIdMappings {
 
-    private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
-    private ParamsWithChInts fChoiceToSolverIdLessThMappings;
-    private ParamsWithChInts fChoiceToSolverIdEqualMappings;
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fLessEqMappings = new HashMap<>();
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fLessThMappings = new HashMap<>();
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fEqualMappings = new HashMap<>();
 
-    final int fLogLevel = 0;
+    Map<ChoiceNode, Integer> getEqMapping(BasicParameterNode parameter) {
 
-    public ChoiceToSolverIdMappings() {
-
-        fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-        Sat4jLogger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
-
-        fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        Sat4jLogger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
-
-        fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-        Sat4jLogger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
+        return fEqualMappings.get(parameter);
     }
 
-    Map<ChoiceNode, Integer> getEqMapping(MethodParameterNode methodParameterNode) {
+    public boolean eQContainsKey(BasicParameterNode parameter) {
 
-        return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
+        return fEqualMappings.containsKey(parameter);
     }
 
-    public boolean eQContainsKey(MethodParameterNode methodParameterNode) {
+    // TODO - name
+    public void eqPut(BasicParameterNode parameter, HashMap<ChoiceNode, Integer> choiceID) {
 
-        return fChoiceToSolverIdEqualMappings.containsKey(methodParameterNode);
+        fEqualMappings.put(parameter, choiceID);
     }
 
-    public void eqPut(
-            MethodParameterNode methodParameterNode,
-            HashMap<ChoiceNode, Integer> choiceID // TODO - name
-    ) {
+    public Map<ChoiceNode, Integer> eqGet(BasicParameterNode parameter) {
 
-        fChoiceToSolverIdEqualMappings.put(methodParameterNode, choiceID);
+        return fEqualMappings.get(parameter);
     }
 
-    public Map<ChoiceNode, Integer> eqGet(MethodParameterNode methodParameterNode) {
+    public void ltPut(BasicParameterNode parameter, HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
 
-        return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
+        fLessThMappings.put(parameter, choiceNodeIntegerMap);
     }
 
-    public void ltPut(
-            MethodParameterNode methodParameterNode,
-            HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
+    public Map<ChoiceNode, Integer> ltGet(BasicParameterNode parameter) {
 
-        fChoiceToSolverIdLessThMappings.put(methodParameterNode, choiceNodeIntegerMap);
+        return fLessThMappings.get(parameter);
     }
 
-    public Map<ChoiceNode, Integer> ltGet(MethodParameterNode methodParameterNode) {
+    public void lePut(BasicParameterNode parameter, HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
 
-        return fChoiceToSolverIdLessThMappings.get(methodParameterNode);
+        fLessEqMappings.put(parameter, choiceNodeIntegerMap);
     }
 
-    public void lePut(
-            MethodParameterNode methodParameterNode,
-            HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
+    public Map<ChoiceNode, Integer> leGet(BasicParameterNode parameter) {
 
-        fChoiceToSolverIdLessEqMappings.put(methodParameterNode, choiceNodeIntegerMap);
-    }
-
-    public Map<ChoiceNode, Integer> leGet(MethodParameterNode methodParameterNode) {
-
-        return fChoiceToSolverIdLessEqMappings.get(methodParameterNode);
+        return fLessEqMappings.get(parameter);
     }
 
 }

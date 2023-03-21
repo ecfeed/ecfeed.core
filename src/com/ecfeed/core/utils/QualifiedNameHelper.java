@@ -30,6 +30,7 @@ public class QualifiedNameHelper {
 		if (trimmedPackageWithClass.startsWith(".") || !trimmedPackageWithClass.contains(".")) {
 			return false;
 		}
+		
 		return true;
 	}	
 

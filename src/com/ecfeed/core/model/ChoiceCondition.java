@@ -13,7 +13,18 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ObjectHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartHelper;
+import com.ecfeed.core.utils.RangeHelper;
+import com.ecfeed.core.utils.RelationMatcher;
 
 public class ChoiceCondition implements IStatementCondition {
 
@@ -48,26 +59,68 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition getCopy() {
-		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
+	public ChoiceCondition makeClone() {
+		// choices are not cloned
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		MethodParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
-
-		String choiceName = fRightChoice.getQualifiedName();
-		ChoiceNode choiceNode = methodParameterNode.getChoice(choiceName);
-
-		if (choiceNode == null) {
-			return false;
-		}
-		fRightChoice = choiceNode;
-
-		return true;
+		return new ChoiceCondition(updateChoiceReference(mapper), statement);
 	}
+
+	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
+		ChoiceNode node;
+
+		if (isSourceLinked()) {
+			node = fRightChoice;
+		} else {
+			node = mapper.getMappedNodeDeployment(fRightChoice);
+		}
+
+		node.setOrigChoiceNode(null);
+
+		return node;
+	}
+
+	boolean isSourceLinked() {
+		// If the source node is linked, there is no complementary deployment node.
+		// The copy is not created, and it is safe to use the original node (linked) instead.
+		// Also, there is no way to check whether it is a linked node "from the inside".
+		IAbstractNode node = fRightChoice.getParameter();
+
+		node = node.getParent();
+		while (node instanceof CompositeParameterNode) {
+			node = node.getParent();
+		}
+
+		return !(node instanceof MethodNode);
+	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fParentRelationStatement.getLeftParameter());
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
+	//						compositeName, methodNode);
+	//
+	//		//		String parameterName = fParentRelationStatement.getLeftParameter().getName();
+	//		//		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
+	//
+	//		String choiceName = fRightChoice.getQualifiedName();
+	//
+	//		ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
+	//
+	//		if (choiceNode == null) {
+	//			return false;
+	//		}
+	//
+	//		fRightChoice = choiceNode;
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -100,22 +153,44 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		return StatementConditionHelper.createChoiceDescription(ChoiceNodeHelper.getName(fRightChoice, extLanguageManager));
+		String choiceSignature = ChoiceNodeHelper.createShortSignature(fRightChoice);
+
+		return StatementConditionHelper.createChoiceDescription(choiceSignature);
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode methodParameterNode) {
+	public boolean mentions(AbstractParameterNode methodParameterNode) {
 
 		return false;
 	}	
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 		choices.add(fRightChoice);
 
 		return choices;
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
+
+		BasicParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+
+		if (!(methodParameterNode.equals(methodParameterNode2))) {
+			return new ArrayList<ChoiceNode>();
+		}
+
+		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
+		choices.add(fRightChoice);
+
+		return choices;
+	}
+
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
 	}
 
 	public ChoiceNode getRightChoice() {
@@ -230,6 +305,11 @@ public class ChoiceCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
+	public void derandomize() {
+		fRightChoice.derandomize();
+	}
+
 	private boolean isChoiceAmbiguous(
 			ChoiceNode leftChoiceNode,
 			EMathRelation relation,
@@ -249,20 +329,92 @@ public class ChoiceCondition implements IStatementCondition {
 				return false;
 			}
 
+			if (extLanguageManager == null) {
+				extLanguageManager = new ExtLanguageManagerForJava();
+			}
+
 			String leftSignature = ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager);
 			String rightSignature = ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager);
-			
-			ConditionHelper.addValuesMessageToStack(
-					leftSignature, 
-					relation, 
-					rightSignature,
-					messageStack);
+
+			if (messageStack != null) {
+				ConditionHelper.addValuesMessageToStack(
+						leftSignature, 
+						relation, 
+						rightSignature,
+						messageStack);
+			}
 
 			return true;
 		}
 
 		return false;
 	}
+
+	@Override
+	public void convert(ParameterConversionItem parameterConversionItem) {
+
+		ChoiceNode srcChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getSrcPart());
+
+		if (srcChoiceNode == null) {
+			return;
+		}
+
+		ChoiceNode dstChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getDstPart());
+
+		if (dstChoiceNode == null) {
+			return;
+		}
+
+		if (!srcChoiceNode.equals(fRightChoice)) {
+			return;
+		}
+
+		fRightChoice = dstChoiceNode;
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
+
+		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public String getLabel(BasicParameterNode methodParameterNode) {
+		return null;
+	}
+
+	public void conditionallyConvertChoice(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		if (fRightChoice == oldChoiceNode) {
+			fRightChoice = newChoiceNode;
+		}
+	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		ChoiceNode sourceChoiceNode = getRightChoice();
+	//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+	//
+	//		RelationStatement sourceParentRelationStatement = fParentRelationStatement;
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(sourceParentRelationStatement);
+	//
+	//		if (deployedParentRelationStatement == null) {
+	//			ExceptionHelper.reportRuntimeException("Empyt parent relation statement.");
+	//		}
+	//
+	//		IStatementCondition deployeChoiceCondition =
+	//				new ChoiceCondition(
+	//						deployedChoiceNode,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployeChoiceCondition;
+	//	}
 
 }
 

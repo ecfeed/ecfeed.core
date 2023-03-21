@@ -17,7 +17,7 @@ public class XomAnalyserFactory {
 	public static XomAnalyser createXomAnalyser(int version) {
 
 		if (version == 0) {
-			return new XomAnalyserVersion0();
+			ExceptionHelper.reportRuntimeException("Version not supported");
 		}
 
 		if (version == 1) {
@@ -34,6 +34,10 @@ public class XomAnalyserFactory {
 
 		if (version == 4) {
 			return new XomAnalyserVersion4();
+		}
+
+		if (version == 5) {
+			return new XomAnalyserVersion5();
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid xom analyser version.");
