@@ -13,6 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -240,9 +244,18 @@ public class ParameterCondition implements IStatementCondition {
 		//				AbstractParameterSignatureHelper.getQualifiedName(
 		//						fRightParameterNode, fRightParameterLinkingContext);
 
+		String signatureNew = 
+		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				fRightParameterLinkingContext,
+				ExtendedName.PATH_TO_TOP_CONTAINTER,
+				TypeOfLink.SHORTENED,
+				fRightParameterNode,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				Decorations.NO,
+				TypeIncluded.NO,
+				extLanguageManager);
 		String name =
-				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
-						fRightParameterLinkingContext, fRightParameterNode, extLanguageManager);
+				signatureNew;
 
 
 		return StatementConditionHelper.createParameterDescription(name);

@@ -18,6 +18,10 @@ import java.util.Map;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
@@ -200,9 +204,18 @@ public class ParametersMapper {
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
 			IExtLanguageManager extLanguageManager) {
 
+		String signatureNew = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						parameterNodeWhichHasLink,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						basicParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 		String qualifiedName = 
-				AbstractParameterSignatureHelper.createCompressedSignatureWithLinkNewStandard(
-						parameterNodeWhichHasLink, basicParameterNode, extLanguageManager);
+				signatureNew;
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 

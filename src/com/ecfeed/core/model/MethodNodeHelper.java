@@ -64,7 +64,7 @@ public class MethodNodeHelper {
 	}
 
 	public static String createSignatureNewStandard(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-		
+
 		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
 
 		String signature = new String(nameInExtLanguage) + "(";
@@ -79,9 +79,9 @@ public class MethodNodeHelper {
 		signature += ")";
 
 		return signature;
-		
+
 	}
-	
+
 	public static String createSignatureNewStandard(
 			MethodNode methodNode,
 			boolean paramNamesAdded,
@@ -102,7 +102,7 @@ public class MethodNodeHelper {
 		return signature;
 
 	}
-	
+
 	private static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
 			boolean paramNamesAdded,
@@ -133,13 +133,13 @@ public class MethodNodeHelper {
 
 		return result;
 	}
-	
+
 	private static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
 			IExtLanguageManager extLanguageManager) {
 
 		String signature = "";
-		
+
 		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
 		int parametersSize = parameters.size();
@@ -152,7 +152,7 @@ public class MethodNodeHelper {
 							parameter, 
 							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
 							extLanguageManager);
-							
+
 
 			signature += signatureOfOneParameter;
 
@@ -163,7 +163,7 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-	
+
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
 		return createSignature( 
@@ -382,27 +382,27 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
-
-		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-
-		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-
-			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-				continue;
-			}
-
-			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-			if (basicParameterNode.isExpected()) {
-				expectedFlags.add(true);
-			} else {
-				expectedFlags.add(false);
-			}
-		}
-
-		return expectedFlags;
-	}
+	//	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
+	//
+	//		List<Boolean> expectedFlags = new ArrayList<Boolean>();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+	//
+	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+	//				continue;
+	//			}
+	//
+	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+	//
+	//			if (basicParameterNode.isExpected()) {
+	//				expectedFlags.add(true);
+	//			} else {
+	//				expectedFlags.add(false);
+	//			}
+	//		}
+	//
+	//		return expectedFlags;
+	//	}
 
 	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
 	//
