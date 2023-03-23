@@ -21,7 +21,7 @@ public abstract class MethodDeployer {
 
 	public static String POSTFIX = "deployed";
 
-	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper mapper) {
+	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper nodeMapper) {
 
 		if (sourceMethodNode == null) {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
@@ -29,8 +29,8 @@ public abstract class MethodDeployer {
 
 		MethodNode targetMethodNode = new MethodNode(sourceMethodNode.getName() + "_" +  POSTFIX);
 
-		deployParameters(sourceMethodNode, targetMethodNode, mapper);
-		deployConstraints(sourceMethodNode, targetMethodNode, mapper);
+		deployParameters(sourceMethodNode, targetMethodNode, nodeMapper);
+		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
 		return targetMethodNode;
 	}
@@ -53,11 +53,17 @@ public abstract class MethodDeployer {
 		return false;
 	}
 
-	public static void copyDeployedParameters(
-			MethodNode deployedMethodNode, MethodNode methodNode, NodeMapper nodeMapper) {
+	public static void copyDeployedParametersWithConversionToOriginals(
+			MethodNode deployedMethodNode, 
+			MethodNode methodNode, 
+			NodeMapper nodeMapper) {
 
 		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethodNode.getParametersWithLinkingContexts();
-		methodNode.setDeployedParametersWithContexts(deployedParametersWithContexts);
+
+		List<ParameterWithLinkingContext> originalParametersWithContexts =
+				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
+
+		methodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
 
 		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
 		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
@@ -67,6 +73,29 @@ public abstract class MethodDeployer {
 		//				convertDeployedParametersWithContextsToOriginal(deployedParametersWithContexts, nodeMapper);
 		//		
 		//		methodNode.setOriginalParametersWithContexts(originalParametersWithContexts);
+	}
+
+	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginals(
+			List<ParameterWithLinkingContext> deployedParametersWithContexts,
+			NodeMapper nodeMapper) {
+
+		List<ParameterWithLinkingContext> result = new ArrayList<>();
+
+		for (ParameterWithLinkingContext deployedParameterWithContext : deployedParametersWithContexts) {
+
+			AbstractParameterNode deployedParameter = deployedParameterWithContext.getParameter();
+			AbstractParameterNode deployedLinkingContext = deployedParameterWithContext.getLinkingContext();
+
+			AbstractParameterNode originalParameter = nodeMapper.getSourceNode(deployedParameter);
+			AbstractParameterNode originalLinkingContext = nodeMapper.getSourceNode(deployedLinkingContext);
+
+			ParameterWithLinkingContext original = 
+					new ParameterWithLinkingContext(originalParameter, originalLinkingContext);
+
+			result.add(original);
+		}
+
+		return result;
 	}
 
 	//	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginal(
@@ -169,19 +198,19 @@ public abstract class MethodDeployer {
 	}	
 
 	private static void deployConstraints(
-			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
+			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper nodeMapper) {
 
 		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
-		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(nodeMapper)));
 
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
 
-		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, mapper));
+		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, nodeMapper));
 	}
 
 	private static void deployConstraintsForCompositeParameterRecursively(
-			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper mapper) {
+			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
 
 		if (parameter instanceof BasicParameterNode) {
 			return;
@@ -191,12 +220,12 @@ public abstract class MethodDeployer {
 
 		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
 
-		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, mapper);
+		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, nodeMapper);
 
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, mapper);
+				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
 			}
 		}
 	}
@@ -215,13 +244,13 @@ public abstract class MethodDeployer {
 		}
 	}
 
-	public static List<TestCase> revertToOriginalTestCases(List<TestCase> deployedTestCases, NodeMapper mapper) {
+	public static List<TestCase> revertToOriginalTestCases(List<TestCase> deployedTestCases, NodeMapper nodeMapper) {
 
 		List<TestCase> result = new ArrayList<>();
 
 		for (TestCase deployedTestCase : deployedTestCases) {
 
-			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, mapper);
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, nodeMapper);
 
 			result.add(revertedTestCaseNode);
 		}
@@ -229,7 +258,7 @@ public abstract class MethodDeployer {
 		return result;
 	}
 
-	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase, NodeMapper mapper) {
+	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase, NodeMapper nodeMapper) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
 
@@ -237,7 +266,7 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = mapper.getSourceNode(deployedChoiceNode);
+			ChoiceNode originalChoiceNode = nodeMapper.getSourceNode(deployedChoiceNode);
 
 			revertedChoices.add(originalChoiceNode);
 		}
