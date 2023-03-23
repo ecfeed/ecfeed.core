@@ -220,7 +220,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return sibling;
 	}
 
-	public void addConstraint(ConstraintNode constraint) {
+	public void addConstraint(ConstraintNode constraint) { // TODO MO-RE rename to addConstraintNode
 
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
