@@ -243,26 +243,26 @@ public class MethodDeployerTest {
 		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethod.getParametersWithLinkingContexts();
 
 		// param1
-		
+
 		ParameterWithLinkingContext parameterWithLinkingContext1 = deployedParametersWithContexts.get(0);
 		assertEquals("RP1", parameterWithLinkingContext1.getParameter().getName());
 		String linkingContext = parameterWithLinkingContext1.getLinkingContext().getName();
 		assertEquals("P1", linkingContext);
-		
+
 		String testedSignature1 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext1, nodeMapper);
 		assertEquals("P1->RP1", testedSignature1);
-		
+
 		// param2
-		
+
 		ParameterWithLinkingContext parameterWithLinkingContext2 = deployedParametersWithContexts.get(1);
 		assertEquals("RP1", parameterWithLinkingContext2.getParameter().getName());
 		linkingContext = parameterWithLinkingContext2.getLinkingContext().getName();
 		assertEquals("P2", linkingContext);
-		
+
 		String testedSignature2 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext2, nodeMapper);
 		assertEquals("S1:P2->RP1", testedSignature2);
 	}
-	
+
 	//	@Test
 	public void deployTwoBasicLinkedParametersWithTheSameNames() {
 
@@ -884,6 +884,127 @@ public class MethodDeployerTest {
 	//		compositeParameterNode2.addParameter(basicParameter3);
 	//
 	//		return methodNode;
+	//	}
+
+	// TODO MO-RE create a test with multiple linking to the same global parameter, model xmlExpectedValue2 is from SatSolverConstraintEvaluatorTest  	
+	//	@Test
+	//	public void TestExpectedValue2() {
+	//		assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
+	//	}
+	//
+	//	private int countGeneratedTestCases(String xmlModel) {
+	//
+	//		IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
+	//
+	//		NodeMapper mapper = new NodeMapper();
+	//
+	//		MethodNode method1 = getMethod(xmlModel);
+	//		String descr1 = (method1.getParametersWithLinkingContexts()).toString();
+	//		
+	//		MethodNode method2 = MethodDeployer.deploy(method1, mapper);
+	//		String descr2 = (method2.getParametersWithLinkingContexts()).toString();
+	//		
+	//		assertEquals(descr1, descr2);
+	//
+	//		// checking parameter 1 in map
+	//
+	//		BasicParameterNode sourceParameter1 = (BasicParameterNode) method1.getParameter(0);
+	//		int hashSource1 = sourceParameter1.hashCode();
+	//		int hashSourceLink1 = sourceParameter1.getLinkToGlobalParameter().hashCode();
+	//
+	//		BasicParameterNode deployedParameter1 = mapper.getDeployedNode(sourceParameter1);
+	//		int hashDeployed1 = deployedParameter1.hashCode();
+	//		int hashDeployedLink1 = deployedParameter1.getLinkToGlobalParameter().hashCode();
+	//
+	//		IParametersParentNode sourceParameter1Parent = sourceParameter1.getParent();
+	//		assertEquals(method1, sourceParameter1Parent);
+	//		
+	//		IParametersParentNode deployedParameter1Parent = deployedParameter1.getParent();
+	//		assertEquals(method2, deployedParameter1Parent);
+	//		
+	//		assertEquals(sourceParameter1.getName(), deployedParameter1.getName());
+	//		assertNotEquals(hashSource1, hashDeployed1);
+	//		assertEquals(hashSourceLink1, hashDeployedLink1);
+	//
+	//		// checking parameter 2 in map
+	//
+	//		BasicParameterNode sourceParameter2 = (BasicParameterNode) method1.getParameter(1);
+	//		int hashSource2 = sourceParameter2.hashCode();
+	//		int hashSourceLink2 = sourceParameter2.getLinkToGlobalParameter().hashCode();
+	//
+	//		BasicParameterNode deployedParameter2 = mapper.getDeployedNode(sourceParameter2);
+	//		int hashDeployed2 = deployedParameter2.hashCode();
+	//		int hashDeployedLink2 = deployedParameter2.getLinkToGlobalParameter().hashCode();
+	//
+	//		IParametersParentNode sourceParameter2Parent = sourceParameter2.getParent();
+	//		assertEquals(method1, sourceParameter2Parent);
+	//		IParametersParentNode deployedParameter2Parent = deployedParameter2.getParent();
+	//		assertEquals(method2, deployedParameter2Parent);
+	//		
+	//		assertEquals(sourceParameter2.getName(), deployedParameter2.getName());
+	//		assertNotEquals(hashSource2, hashDeployed2);
+	//		assertEquals(hashSourceLink2, hashDeployedLink2);
+	//
+	//		Constraint deployedConstraint = method2.getConstraintNodes().get(0).getConstraint();
+	//		RelationStatement deployedPrecondition = (RelationStatement) deployedConstraint.getPrecondition();
+	//		BasicParameterNode basicPar1 = deployedPrecondition.getLeftParameter();
+	//		IParametersParentNode parent1 = basicPar1.getParent();
+	//		assertEquals(method2, parent1);
+	//
+	//		int count1 = countGeneratedTestCases(method1, algorithm);
+	//		int count2 = countGeneratedTestCases(method2, algorithm);
+	//		assertEquals(count2, count1);
+	//
+	//		return count1;
+	//	}
+
+	// TODO MO-RE 
+	//	@Test
+	//	public void AAATestDeployWithExpectedValue() {
+	//
+	//		MethodNode sourceMethod = new MethodNode("method");
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				MethodNodeHelper.addNewBasicParameter(sourceMethod, "p1", "String", "A", null);
+	//		basicParameterNode.setExpected(true);
+	//
+	//		RelationStatement precondition =
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						basicParameterNode, null, EMathRelation.EQUAL, "X");
+	//
+	//		AssignmentStatement postcondition = 
+	//				AssignmentStatement.createAssignmentWithValueCondition(basicParameterNode, "B");
+	//
+	//		Constraint constraint = new Constraint("Constraint", ConstraintType.ASSIGNMENT, precondition, postcondition,null);
+	//		sourceMethod.addConstraint(new ConstraintNode("Constraint", constraint, null));
+	//
+	//		String sourceSignature = MethodNodeHelper.createSignatureNewStandard(sourceMethod, new ExtLanguageManagerForJava());
+	//		System.out.println(sourceSignature);
+	//
+	//		NodeMapper nodeMapper = new NodeMapper();
+	//		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
+	//
+	//		String destinationSignature = MethodNodeHelper.createSignatureNewStandard(deployedMethod, new ExtLanguageManagerForJava());
+	//		System.out.println(destinationSignature);
+	//
+	//		Constraint constraint1 = deployedMethod.getConstraintNodes().get(0).getConstraint();
+	//
+	//		// check parameter parent from precondition
+	//
+	//		RelationStatement relationStatement1 = (RelationStatement) constraint1.getPrecondition();
+	//		BasicParameterNode basicPar1 = relationStatement1.getLeftParameter();
+	//		IParametersParentNode parent1 = basicPar1.getParent();
+	//
+	//		assertEquals(deployedMethod, parent1);
+	//
+	//		// check parameter parent from postcondition
+	//
+	//		AbstractStatement postcondition2 = constraint1.getPostcondition();
+	//		AssignmentStatement assignmentStatement2 = (AssignmentStatement) postcondition2;
+	//		BasicParameterNode basicPar2 = assignmentStatement2.getLeftParameter();
+	//		IParametersParentNode parent2 = basicPar2.getParent();
+	//
+	//		assertEquals(deployedMethod, parent2);
 	//	}
 
 }
