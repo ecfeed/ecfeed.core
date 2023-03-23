@@ -112,15 +112,61 @@ public abstract class MethodDeployer {
 			MethodNode targetMethodNode, 
 			NodeMapper nodeMapper) {
 
-		BasicParameterNode basicParameterNode = parameterWithLinkingContext.getParameterAsBasic();
-
-		BasicParameterNode copy = basicParameterNode.createCopyForDeployment(nodeMapper);
-
-		//		String signatureOfParameterWithContex = ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext);
-		//		copy.setNameWithoutChecks(signatureOfParameterWithContex);
-
-		targetMethodNode.addParameter(copy, parameterWithLinkingContext.getLinkingContext());
+		// deployBasicParameterOldVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
+		deployBasicParameterNewVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
 	}
+
+	//	private static void deployBasicParameterOldVersion(
+	//			ParameterWithLinkingContext parameterWithLinkingContext,
+	//			MethodNode targetMethodNode, NodeMapper nodeMapper) {
+	//		
+	//		BasicParameterNode basicParameterNode = parameterWithLinkingContext.getParameterAsBasic();
+	//
+	//		BasicParameterNode copy = basicParameterNode.createCopyForDeployment(nodeMapper);
+	//
+	//		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+	//		
+	//		targetMethodNode.addParameter(copy, linkingContext);
+	//	}
+
+	private static void deployBasicParameterNewVersion(
+			ParameterWithLinkingContext parameterWithLinkingContext,
+			MethodNode deployedMethodNode, 
+			NodeMapper nodeMapper) {
+
+		BasicParameterNode sourceParameter = parameterWithLinkingContext.getParameterAsBasic();
+		AbstractParameterNode sourceLinkingContext =  parameterWithLinkingContext.getLinkingContext();
+
+		if (sourceLinkingContext == null) {
+
+			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, null);
+			return;
+		}
+
+		if (sourceLinkingContext instanceof CompositeParameterNode) {
+
+			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, sourceLinkingContext);
+			return;
+		}
+
+		if (sourceLinkingContext instanceof BasicParameterNode) {
+
+			BasicParameterNode deployedParameter = 
+					((BasicParameterNode)sourceLinkingContext).createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, null);
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid configuration of parameter with context.");
+	}	
 
 	private static void deployConstraints(
 			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
@@ -203,8 +249,18 @@ public abstract class MethodDeployer {
 			ParameterWithLinkingContext deployedParameterWithLinkingContext,
 			NodeMapper nodeMapper) {
 
-		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());		
+		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());
+		AbstractParameterNode linkOfParameter = parameter.getLinkToGlobalParameter();
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
+
+		if (context == null && linkOfParameter != null) {
+
+			String signature = 
+					AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
+							linkOfParameter, parameter);
+
+			return signature;
+		}
 
 		String signature = AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
 		return signature;
