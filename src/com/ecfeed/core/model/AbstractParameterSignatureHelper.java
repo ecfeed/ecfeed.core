@@ -68,33 +68,6 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-	//	public static String createSignatureWithLinkNewStandard(
-	//			AbstractParameterNode parameterWhichHasLink, // may be parameter or linking context
-	//			ExtendedName extendedNameTypeOfParameter,
-	//			TypeOfLink typeOfLink,
-	//			AbstractParameterNode link,
-	//			ExtendedName extendedNameTypeOfLink,
-	//			Decorations decorations,
-	//			TypeIncluded typeIncluded,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		String signature = 
-	//				createSignatureOfParameterNameNewStandard(
-	//						parameterWhichHasLink, 
-	//						extendedNameTypeOfParameter,
-	//						typeOfLink,
-	//						link,
-	//						extendedNameTypeOfLink,
-	//						extLanguageManager);
-	//
-	//		if (typeIncluded == TypeIncluded.YES) {
-	//			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-	//			signature += getExtendedType(parameterWhichHasLink);
-	//		}
-	//
-	//		return signature;
-	//	}
-
 	public static String createSignatureWithLinkNewStandard(
 			AbstractParameterNode parameterWhichHasLink, // may be parameter with link or linking context
 			ExtendedName extendedNameTypeOfParameter,
@@ -269,7 +242,7 @@ public abstract class AbstractParameterSignatureHelper {
 		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 		return type;
 	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
 	// OBSOLETE
