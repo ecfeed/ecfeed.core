@@ -12,15 +12,35 @@ package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterWithLinkingContextHelper {
 
-	public static String createSignature(ParameterWithLinkingContext parameterWithLinkingContext) {
+	public static String createSignature(
+			ParameterWithLinkingContext parameterWithLinkingContext,
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
 		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
 
-		return AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		// return AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+
+		return signature;
 	}
 
 }

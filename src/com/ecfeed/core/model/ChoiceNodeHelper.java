@@ -49,32 +49,6 @@ public class ChoiceNodeHelper {
 		return getParameterRecursive(choiceNode);
 	}
 
-	public static ParameterWithLinkingContext getParameterWithLinkingContext(ChoiceNode choice) {
-
-		BasicParameterNode parameter = choice.getParameter();
-
-		if (parameter == null) {
-			return null;
-		}
-
-		int index = parameter.getMyIndex();
-
-		if (index == -1) {
-			return null;
-		}
-
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(parameter);
-
-		if (methodNode == null) {
-			return null;
-		}
-
-		ParameterWithLinkingContext parameterWithLinkingContext = 
-				methodNode.getParameterWithLinkingContexts(index);
-
-		return parameterWithLinkingContext;
-	}
-
 	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {
 
 		IAbstractNode parent = choiceNode.getParent();

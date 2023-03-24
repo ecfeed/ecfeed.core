@@ -58,7 +58,7 @@ public class OnCompositeOperationAdd extends GenericOperationAddParameter {
 		List<String> parameterTypesInExtLanguage = 
 				ParametersParentNodeHelper.getParameterTypes(fIParametersParentNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterSignatureHelper.getType(fParameterNode, extLanguageManager);
+		String newParameterType = AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(fParameterNode, extLanguageManager);
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 

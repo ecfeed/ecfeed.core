@@ -96,7 +96,7 @@ public abstract class AbstractParameterSignatureHelper {
 	//	}
 
 	public static String createSignatureWithLinkNewStandard(
-			AbstractParameterNode parameterWhichHasLink, // may be parameter or linking context
+			AbstractParameterNode parameterWhichHasLink, // may be parameter with link or linking context
 			ExtendedName extendedNameTypeOfParameter,
 			TypeOfLink typeOfLink,
 			AbstractParameterNode link,
@@ -129,7 +129,7 @@ public abstract class AbstractParameterSignatureHelper {
 				signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
 			}
 
-			String type = getType(parameterWhichHasLink, extLanguageManager);
+			String type = createSignatureOfParameterTypeNewStandard(parameterWhichHasLink, extLanguageManager);
 			signature += type;
 		}
 
@@ -252,6 +252,24 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
+	public static String createSignatureOfParameterTypeNewStandard(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+		String type = basicParameterNode.getType();
+
+		if (type == null) {
+			return null;
+		}
+
+		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
+		return type;
+	}
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
 	// OBSOLETE
@@ -476,25 +494,6 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-
-		if (abstractParameterNode instanceof CompositeParameterNode) {
-			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-		String type = basicParameterNode.getType();
-
-		if (type == null) {
-			return null;
-		}
-
-		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-		return type;
-	}
-
-	// OBSOLETE
 	public static String createSignatureOfOneParameterByIntrLanguage(
 			String parameterTypeInIntrLanguage,
 			String parameterNameInIntrLanguage,
@@ -544,7 +543,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		String signature = 
 				createSignature(
-						getType(parameter, extLanguageManager),
+						createSignatureOfParameterTypeNewStandard(parameter, extLanguageManager),
 						signatureOfName,
 						false,
 						extLanguageManager);
