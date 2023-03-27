@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.SignatureHelper;
 
-public class MethodDeploymentConsistencyUpdater {
+public class MethodDeploymentConsistencyUpdater { // TODO MO-RE do we need this class now ?? 
 
 	public static void makeModelConsistent(RootNode root) {
 
