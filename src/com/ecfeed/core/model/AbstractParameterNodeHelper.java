@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
@@ -218,4 +219,20 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
+	public static void compareParameterTypes(
+			AbstractParameterNode abstractParameter1,
+			AbstractParameterNode abstractParameter2) {
+		
+		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
+			
+			ExceptionHelper.reportRuntimeException("Types of nodes do not match: basic parameter vs composite parameter.");
+		}
+
+		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
+			
+			ExceptionHelper.reportRuntimeException("Types of nodes do not match: composite parameter vs basic parameter.");
+		}
+		
+	}
+	
 }

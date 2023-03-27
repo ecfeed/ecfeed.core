@@ -34,10 +34,10 @@ public class GlobalParameterNodeHelperTest {
 		assertEquals("global 1", qualifiedName);
 
 
-		String type = AbstractParameterSignatureHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
+		String type = AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String", type);
 
-		qualifiedName = AbstractParameterSignatureHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text", qualifiedName);
 	}
 

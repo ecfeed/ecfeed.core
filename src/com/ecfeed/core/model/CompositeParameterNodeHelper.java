@@ -3,6 +3,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
@@ -16,7 +17,7 @@ public class CompositeParameterNodeHelper {
 
 		BasicParameterNode parameterNode = 
 				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
-		
+
 		compositeParameterNode.addParameter(parameterNode);
 
 		return parameterNode;
@@ -256,6 +257,40 @@ public class CompositeParameterNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static void compareParameters(
+			CompositeParameterNode compositeParameterNode1,
+			CompositeParameterNode compositeParameterNode2) {
+		
+		if (!compositeParameterNode1.getName().equals(compositeParameterNode2.getName())) {
+			ExceptionHelper.reportRuntimeException("Composite parameter names do not match.");
+		}
+
+		if (compositeParameterNode1.getParametersCount() != compositeParameterNode2.getParametersCount()) {
+			ExceptionHelper.reportRuntimeException("Count of parameters does not match.");
+		}
+		
+		List<AbstractParameterNode> parameters1 = compositeParameterNode1.getParameters();
+		List<AbstractParameterNode> parameters2 = compositeParameterNode2.getParameters();
+		
+		for (int index = 0; index < parameters1.size(); index++) {
+			
+			AbstractParameterNode parameter1 = parameters1.get(index);
+			AbstractParameterNode parameter2 = parameters2.get(index);
+			
+			AbstractParameterNodeHelper.compareParameterTypes(parameter1, parameter2);
+			
+			if (parameter1 instanceof BasicParameterNode) {
+				BasicParameterNodeHelper.compareParameters(
+						(BasicParameterNode)parameter1, (BasicParameterNode)parameter2);
+			}
+				
+			if (parameter1 instanceof CompositeParameterNode) {
+				CompositeParameterNodeHelper.compareParameters(
+						(CompositeParameterNode)parameter1, (CompositeParameterNode)parameter2);
+			}
+		}
 	}
 
 }

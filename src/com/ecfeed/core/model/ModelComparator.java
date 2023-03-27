@@ -10,12 +10,16 @@
 
 package com.ecfeed.core.model;
 
+
+import java.io.ByteArrayOutputStream;
+
+import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ModelComparator {
 
-	public static void compareModels(RootNode model1, RootNode model2) {
+	public static void assertModelsEqual(RootNode model1, RootNode model2) {
 
 		ModelCompareHelper.compareNames(model1.getName(), model2.getName());
 		ModelCompareHelper.compareSizes(model1.getClasses(), model2.getClasses());
@@ -23,6 +27,43 @@ public class ModelComparator {
 		for(int i = 0; i < model1.getClasses().size(); ++i){
 			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
 		}
+
+		compareSerializedModelsAsLastResort(model1, model2);
+	}
+
+	private static void compareSerializedModelsAsLastResort(RootNode model1, RootNode model2) {
+
+		String xml1 = serializeModel(model1);
+		String xml2 = serializeModel(model2);
+		
+		String[] lines1 = xml1.split("\n");
+		String[] lines2 = xml2.split("\n");
+		
+		if (xml1.equals(xml2)) {
+			return;
+		}
+
+		String errorMessage = StringHelper.isEqualByLines(lines1, lines2);
+		
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException("Model comparison failed with message: " + errorMessage);
+		}
+		
+		ExceptionHelper.reportRuntimeException("Comparison of serialized models failed.");
+	}
+
+	private static String serializeModel(RootNode model1) {
+
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+		ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		try {
+			serializer.serialize(model1);
+		} catch (Exception e) {
+			ExceptionHelper.reportRuntimeException("Failed to serialize model.", e);
+		}
+
+		return ostream.toString();
 	}
 
 	private static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
@@ -65,16 +106,29 @@ public class ModelComparator {
 			AbstractParameterNode abstractParameter1, 
 			AbstractParameterNode abstractParameter2) {
 
+		AbstractParameterNodeHelper.compareParameterTypes(abstractParameter1, abstractParameter2);
+
 		ModelCompareHelper.compareNames(abstractParameter1.getName(), abstractParameter2.getName());
 
-		if (!(abstractParameter1 instanceof BasicParameterNode) || !(abstractParameter2 instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Comparing only basic parameters so far.");
+		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
+
+			BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
+			BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+
+			BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
 		}
 
-		BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
-		BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
 
-		BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			CompositeParameterNode basicParameterNode1 = (CompositeParameterNode) abstractParameter1;
+			CompositeParameterNode basicParameterNode2 = (CompositeParameterNode) abstractParameter2;
+
+			CompositeParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
 	}
 
 	public static void compareMethodParameters(BasicParameterNode methodParameterNode1, BasicParameterNode methodParameterNode2) {

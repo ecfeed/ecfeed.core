@@ -16,9 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,10 +25,10 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.TestHelper;
 
 public class MethodDeployerTest {
@@ -347,7 +345,7 @@ public class MethodDeployerTest {
 		// check the first parameter
 
 		ParameterWithLinkingContext deployedPar1 = deployedParameters.get(0);
-		String signature1 = ParameterWithLinkingContextHelper.createSignature(deployedPar1);
+		String signature1 = ParameterWithLinkingContextHelper.createSignature(deployedPar1, new ExtLanguageManagerForJava());
 		assertEquals("S1->GP1", signature1);
 
 		AbstractParameterNode originalGlobalParameter1 = nodeMapper.getSourceNode(deployedPar1.getParameter());
@@ -365,7 +363,7 @@ public class MethodDeployerTest {
 		// check the second parameter
 
 		ParameterWithLinkingContext deployedPar2 = deployedParameters.get(1);
-		String signature2 = ParameterWithLinkingContextHelper.createSignature(deployedPar2);
+		String signature2 = ParameterWithLinkingContextHelper.createSignature(deployedPar2, new ExtLanguageManagerForJava());
 		assertEquals("S2->GP1", signature2);
 
 		AbstractParameterNode originalGlobalParameter2 = nodeMapper.getSourceNode(deployedPar2.getParameter());

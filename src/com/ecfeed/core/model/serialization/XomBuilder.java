@@ -10,16 +10,69 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.*;
+import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_DEPLOYED_PARAMETERS_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_NAME_ATTRIBUTE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTIES_BLOCK_TAG_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_TYPE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_VALUE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_TAG_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SUITE_NAME_ATTRIBUTE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
+
+import java.util.List;
+
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IModelVisitor;
+import com.ecfeed.core.model.MethodDeploymentConsistencyUpdater;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.LogHelperCore;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
-
-import java.util.Objects;
-
-import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
 public abstract class XomBuilder implements IModelVisitor {
 
@@ -280,44 +333,56 @@ public abstract class XomBuilder implements IModelVisitor {
 		return null;
 	}
 
-	public Element createDeployedParameter(BasicParameterNode parameterNode) {
-		Element targetParamElement;
-
-//		if (parameterNode.isGlobalParameter()) {
-//			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
-//		} else {
-			targetParamElement = createTargetDeployedParameterElement(parameterNode);
-//		}
-
+	public Element createDeployedParameter(ParameterWithLinkingContext parameterWithLinkingContext) {
+		
+		Element targetParamElement = createTargetDeployedParameterElement(parameterWithLinkingContext);
 		return targetParamElement;
+		
+//		Element targetParamElement;
+//
+////		if (parameterNode.isGlobalParameter()) {
+////			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
+////		} else {
+//			targetParamElement = createTargetDeployedParameterElement(parameterWithLinkingContext);
+////		}
+//
+//		return targetParamElement;
 	}
 
-	private Element createTargetDeployedParameterElement(BasicParameterNode node) {
-		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
+	private Element createTargetDeployedParameterElement(ParameterWithLinkingContext parameterWithLinkingContext) {
+		
+		BasicParameterNode parameter = (BasicParameterNode) parameterWithLinkingContext.getParameter();
+		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+		
+		Element targetBasicParameterElement = 
+				createAbstractElement(getBasicParameterNodeName(), parameter, linkingContext);
 
 		encodeAndAddAttribute(
-				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, node.getRealType()),
+				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, parameter.getRealType()),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
 				targetBasicParameterElement,
-				new Attribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, Boolean.toString(node.isExpected())),
+				new Attribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, Boolean.toString(parameter.isExpected())),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
 				targetBasicParameterElement,
-				new Attribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, node.getDefaultValueForSerialization()),
+				new Attribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, parameter.getDefaultValueForSerialization()),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
 				targetBasicParameterElement,
-				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
+				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(parameter.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLinkToGlobalParameter() != null) {
+		if (parameter.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, AbstractParameterSignatureHelper.getQualifiedName(node.getLinkToGlobalParameter())),
+					new Attribute(
+							PARAMETER_LINK_ATTRIBUTE_NAME, 
+							AbstractParameterSignatureHelper.getQualifiedName(
+									parameter.getLinkToGlobalParameter())), 
 					fWhiteCharConverter);
 		}
 
@@ -461,10 +526,13 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetMethodDeployedParametersElement(MethodNode methodNode) {
+		
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_NAME);
 
-		for (BasicParameterNode parameter : Objects.requireNonNull(methodNode.getDeployedParameters())) {
-			targetMethodDeployedParameters.appendChild(createDeployedParameter(parameter));
+		List<ParameterWithLinkingContext> deployedParameters = methodNode.getDeployedParametersWithLinkingContexs();
+		
+		for (ParameterWithLinkingContext parameterWithContext : deployedParameters) {
+			targetMethodDeployedParameters.appendChild(createDeployedParameter(parameterWithContext));
 		}
 
 		return targetMethodDeployedParameters;
@@ -563,6 +631,30 @@ public abstract class XomBuilder implements IModelVisitor {
 		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, node.getName());
 		encodeAndAddAttribute(targetAbstractElement, nameAttr, fWhiteCharConverter);
 		appendComments(targetAbstractElement, node);
+
+		return targetAbstractElement;
+	}
+	
+	private Element createAbstractElement(
+			String nodeTag, AbstractParameterNode parameter, AbstractParameterNode linkingContext) {
+
+		Element targetAbstractElement = new Element(nodeTag);
+		
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						linkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
+
+		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, signature);
+		
+		encodeAndAddAttribute(targetAbstractElement, nameAttr, fWhiteCharConverter);
+		appendComments(targetAbstractElement, parameter);
 
 		return targetAbstractElement;
 	}

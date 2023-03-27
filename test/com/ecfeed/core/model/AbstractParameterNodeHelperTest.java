@@ -10,12 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 public class AbstractParameterNodeHelperTest {
 
 	// TODO MO-RE
