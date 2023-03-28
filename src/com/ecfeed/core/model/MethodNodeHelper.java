@@ -18,9 +18,11 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodNodeHelper {
 
@@ -692,6 +694,39 @@ public class MethodNodeHelper {
 				new ParameterWithLinkingContext(currentAbstractParameterNode, linkingContext);
 
 		inOutResult.add(parameterWithLinkingContext);
+	}
+
+	public static AbstractParameterNode findParameterByPath(String path, MethodNode methodNode) {
+
+		String[] pathElements = path.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		int pathSize = pathElements.length;
+
+		IParametersParentNode currentParametersParent = methodNode;
+
+		for (int pathIndex = 0; pathIndex < pathSize; pathIndex++) {
+
+			String pathElement = pathElements[pathIndex];
+
+			AbstractParameterNode foundParameter = currentParametersParent.findParameter(pathElement);
+
+			if (foundParameter == null) {
+				return null;
+			}
+
+			if (pathIndex == pathSize - 1) {
+				return foundParameter;
+			}
+
+			if (!(foundParameter instanceof CompositeParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Current parameter is not a composite.");
+			}
+
+			currentParametersParent = (IParametersParentNode) foundParameter;
+		}
+
+		ExceptionHelper.reportRuntimeException("Parameter not found");
+		return null;
 	}
 
 }
