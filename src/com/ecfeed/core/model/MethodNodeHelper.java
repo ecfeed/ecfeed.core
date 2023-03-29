@@ -338,8 +338,14 @@ public class MethodNodeHelper {
 
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
+				//signatureOfOneParameter = 
+						//AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
+				
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
+						AbstractParameterSignatureHelper.createSignatureNewStandard(
+								compositeParameterNode, 
+								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
+								extLanguageManager);
 			}
 
 			signature += signatureOfOneParameter;

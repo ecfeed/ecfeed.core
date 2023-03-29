@@ -256,7 +256,8 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 
-	public static String createSignatureOfParameterTypeNewStandard(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfParameterTypeNewStandard( // former createSignatureOfType
+			AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		if (abstractParameterNode instanceof CompositeParameterNode) {
 			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
