@@ -40,7 +40,7 @@ public abstract class MethodDeployer {
 			MethodNode deployedMethodNode) {
 
 		List<ParameterWithLinkingContext> oldDeployedParameters = 
-				methodNode.getDeployedParametersWithLinkingContexs();
+				methodNode.getDeployedParametersWithLinkingContexts();
 
 		List<ParameterWithLinkingContext> newDeployedParameters = 
 				deployedMethodNode.getParametersWithLinkingContexts();

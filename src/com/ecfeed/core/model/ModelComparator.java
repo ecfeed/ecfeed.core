@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -96,11 +97,7 @@ public class ModelComparator {
 			compareParameters(method1.getParameters().get(i), method2.getParameters().get(i));
 		}
 
-		for(int i =0; i < method1.getParameters().size(); ++i){
-			compareParametersWithLinkingContexts(
-					method1.getDeployedParametersWithLinkingContexs().get(i), 
-					method2.getDeployedParametersWithLinkingContexs().get(i));
-		}
+		compareDeployedParameters(method1, method2);
 
 		for(int i =0; i < method1.getConstraintNodes().size(); ++i){
 			compareConstraintNodes(method1.getConstraintNodes().get(i), method2.getConstraintNodes().get(i));
@@ -108,6 +105,26 @@ public class ModelComparator {
 
 		for(int i =0; i < method1.getTestCases().size(); ++i){
 			compareTestCases(method1.getTestCases().get(i), method2.getTestCases().get(i));
+		}
+	}
+
+	private static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
+
+		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
+		
+		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
+			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
+		}
+		
+		int size = deployedParametersWithContexts1.size();
+		
+		for (int i = 0; i < size; ++i) {
+			
+			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
+			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
+			
+			compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
 		}
 	}
 

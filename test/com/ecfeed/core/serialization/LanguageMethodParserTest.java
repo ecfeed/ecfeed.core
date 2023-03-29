@@ -118,7 +118,7 @@ public class LanguageMethodParserTest {
 	}	
 	
 	@Test
-	public void shouldParseMethodWithOneParameter() {
+	public void AAshouldParseMethodWithOneParameter() {
 		
 		String methodXml = 
 				"<Method name='test'>\n" + 

@@ -159,7 +159,11 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
+		Element deployedParametersElement = createDeployedParametersElement(methodNode);
+		
+		if (deployedParametersElement != null) {
+			targetMethodElement.appendChild(deployedParametersElement);
+		}
 
 		//		if (methodNode.isDeployed()) {
 		//			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
@@ -331,9 +335,12 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetDeployedParameterElement(ParameterWithLinkingContext parameterWithLinkingContext) {
-
+		
 		BasicParameterNode parameter = (BasicParameterNode) parameterWithLinkingContext.getParameter();
-		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+		
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Unexpected empty parameter.");
+		}
 
 		Element targetBasicParameterElement = createElementForDeployedParameter(getBasicParameterNodeName(), parameter);
 
@@ -344,13 +351,17 @@ public abstract class XomBuilder implements IModelVisitor {
 				new Attribute(SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, pathOfParameter),
 				fWhiteCharConverter);
 
-		String pathOfContext = createPath(linkingContext);
+		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+		
+		if (linkingContext != null) {
+			
+			String pathOfContext = createPath(linkingContext);
 
-		encodeAndAddAttribute(
-				targetBasicParameterElement, 
-				new Attribute(SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, pathOfContext),
-				fWhiteCharConverter);
-
+			encodeAndAddAttribute(
+					targetBasicParameterElement, 
+					new Attribute(SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, pathOfContext),
+					fWhiteCharConverter);
+		}
 
 		//		encodeAndAddAttribute(
 		//				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, parameter.getRealType()),
@@ -385,18 +396,18 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private String createPath(AbstractParameterNode parameter) {
-		
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(parameter);
-		
+
 		if (methodNode != null) {
 			String path = AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(parameter, new ExtLanguageManagerForJava());
 			return path;
 		}
-		
+
 		String path = AbstractParameterSignatureHelper.createPathToRootNewStandard(parameter, new ExtLanguageManagerForJava());
 		return path;
 	}
-	
+
 	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
 		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
@@ -537,11 +548,15 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetMethodElement;
 	}
 
-	private Element createTargetMethodDeployedParametersElement(MethodNode methodNode) {
+	private Element createDeployedParametersElement(MethodNode methodNode) {
 
+		List<ParameterWithLinkingContext> deployedParameters = methodNode.getDeployedParametersWithLinkingContexts();
+		
+		if (deployedParameters.size() == 0) {
+			return null;
+		}
+		
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_TAG);
-
-		List<ParameterWithLinkingContext> deployedParameters = methodNode.getDeployedParametersWithLinkingContexs();
 
 		for (ParameterWithLinkingContext parameterWithContext : deployedParameters) {
 
@@ -665,10 +680,10 @@ public abstract class XomBuilder implements IModelVisitor {
 		//						TypeIncluded.NO,
 		//						new ExtLanguageManagerForJava());
 
-		
-//		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, parameter.getName());
-//
-//		encodeAndAddAttribute(targetAbstractElement, nameAttr, fWhiteCharConverter);
+
+		//		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, parameter.getName());
+		//
+		//		encodeAndAddAttribute(targetAbstractElement, nameAttr, fWhiteCharConverter);
 		appendComments(targetAbstractElement, parameter);
 
 		return targetAbstractElement;

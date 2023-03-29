@@ -733,7 +733,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return new ArrayList<>();
 	}
 
-	public final List<ParameterWithLinkingContext> getDeployedParametersWithLinkingContexs() {
+	public final List<ParameterWithLinkingContext> getDeployedParametersWithLinkingContexts() {
 
 		if (isDeployed()) {
 			return fDeployedParametersHolder.getParametersWithLinkingContexts();

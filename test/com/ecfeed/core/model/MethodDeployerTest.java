@@ -859,7 +859,7 @@ public class MethodDeployerTest {
 		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
 
 		List<ParameterWithLinkingContext> originalDeployedParameters = 
-				methodNode.getDeployedParametersWithLinkingContexs();
+				methodNode.getDeployedParametersWithLinkingContexts();
 		
 		ParameterWithLinkingContext parameterWithContext21 = originalDeployedParameters.get(0);
 		assertNull(parameterWithContext21.getLinkingContext());

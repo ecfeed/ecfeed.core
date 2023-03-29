@@ -173,7 +173,7 @@ public class ModelSerializerTest {
 			ClassNode parsedClass = parsedModel.getClasses().get(0);
 			MethodNode parsedMethodNode = parsedClass.getMethods().get(0);
 			List<ParameterWithLinkingContext> parsedDeployedParams = 
-					parsedMethodNode.getDeployedParametersWithLinkingContexs();
+					parsedMethodNode.getDeployedParametersWithLinkingContexts();
 
 			ParameterWithLinkingContext parsedDeployedParam1 = parsedDeployedParams.get(0);
 			IParametersParentNode parsedParent1 = parsedDeployedParam1.getParameter().getParent();
