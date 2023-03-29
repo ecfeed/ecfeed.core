@@ -18,6 +18,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
@@ -233,6 +234,44 @@ public abstract class AbstractParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Types of nodes do not match: composite parameter vs basic parameter.");
 		}
 		
+	}
+
+	public static AbstractParameterNode findParameterByAbsolutePath(String path, RootNode rootNode) {
+		
+		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+			ExceptionHelper.reportRuntimeException("Invalid path. Path with root marker expected.");
+		}
+		
+		String pathWithoutRootMarker = path.substring(1);
+		String[] pathElements = pathWithoutRootMarker.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		int pathSize = pathElements.length;
+
+		IParametersParentNode currentParametersParent = rootNode;
+
+		for (int pathIndex = 1; pathIndex < pathSize; pathIndex++) {
+
+			String pathElement = pathElements[pathIndex];
+
+			AbstractParameterNode foundParameter = currentParametersParent.findParameter(pathElement);
+
+			if (foundParameter == null) {
+				return null;
+			}
+
+			if (pathIndex == pathSize - 1) {
+				return foundParameter;
+			}
+
+			if (!(foundParameter instanceof CompositeParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Current parameter is not a composite.");
+			}
+
+			currentParametersParent = (IParametersParentNode) foundParameter;
+		}
+
+		ExceptionHelper.reportRuntimeException("Parameter not found");
+		return null;
 	}
 	
 }
