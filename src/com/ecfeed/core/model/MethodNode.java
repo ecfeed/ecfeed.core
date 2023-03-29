@@ -823,7 +823,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fParametersHolder.addParameters(parameters, this);
 	}
 
-	public void setDeployedParameters(List<BasicParameterNode> parameters) {
+	public void setDeployedParameters(List<BasicParameterNode> parameters) { // TODO MO-RE remove ? - deployed parameter should have linking contexts even if null 
 
 		if (fDeployedParametersHolder == null) {
 			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
