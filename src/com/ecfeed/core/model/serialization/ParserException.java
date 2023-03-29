@@ -23,7 +23,7 @@ public class ParserException extends Exception {
 		super(message);
 	}
 	
-	public static void create() throws ParserException {
+	public static void create() throws ParserException { // TODO MO-RE rename to throw
 		throw new ParserException("");
 	}
 	
