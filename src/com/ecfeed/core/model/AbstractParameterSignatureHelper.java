@@ -109,8 +109,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-
-	public static String createSignatureToTopContainerNewStandard(
+	public static String createPathToTopContainerNewStandard( // former getQualifiedName
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
@@ -122,6 +121,20 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return qualifiedName;
 	}
+
+	public static String createPathToRootNewStandard(
+			AbstractParameterNode abstractParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String qualifiedName = createSignatureToRootNewStandard(abstractParameterNode);
+
+		if (extLanguageManager != null) {
+			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		}
+
+		return qualifiedName;
+	}
+
 
 	private static String createSignatureOfParameterNameNewStandard(
 			AbstractParameterNode parameterWhichHasLink,
@@ -194,13 +207,13 @@ public abstract class AbstractParameterSignatureHelper {
 
 		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER) {
 
-			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+			String signature = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 			return signature;
 		}
 
 		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM) {
 
-			String signature = createSignatureToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+			String signature = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 			signature = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, signature);
 
 			return signature;
@@ -209,8 +222,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return "";
 	}
 
-	private static String createSignatureToTopContainerNewStandard(
-			AbstractParameterNode abstractParameterNode) { 
+	private static String createSignatureToTopContainerNewStandard(AbstractParameterNode abstractParameterNode) { 
 
 		LinkedList<String> segments = new LinkedList<>();
 
@@ -224,6 +236,25 @@ public abstract class AbstractParameterSignatureHelper {
 		String signature = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 		return signature;
 	}
+
+	private static String createSignatureToRootNewStandard(
+			AbstractParameterNode abstractParameterNode) { 
+
+		LinkedList<String> segments = new LinkedList<>();
+
+		IAbstractNode parent = abstractParameterNode;
+
+		do {
+			segments.addFirst(parent.getName());
+			parent = parent.getParent();
+		} while (parent != null);
+
+		String signature = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		String signatureWithRootMarker = SignatureHelper.SIGNATURE_ROOT_MARKER + signature;
+
+		return signatureWithRootMarker;
+	}
+
 
 	public static String createSignatureOfParameterTypeNewStandard(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
@@ -249,6 +280,8 @@ public abstract class AbstractParameterSignatureHelper {
 	public static String createSignatureOfParameterWithLink( 
 			AbstractParameterNode parameter,
 			AbstractParameterNode link) {
+
+		printObsoleteInfo();
 
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
@@ -288,6 +321,8 @@ public abstract class AbstractParameterSignatureHelper {
 	private static String createSignatureOfSingleParameterName(
 			AbstractParameterNode abstractParameterNode) {
 
+		printObsoleteInfo();
+
 		String signature = getQualifiedName(abstractParameterNode, new ExtLanguageManagerForJava());
 
 		return signature;
@@ -308,6 +343,8 @@ public abstract class AbstractParameterSignatureHelper {
 	public static String createSignatureOfParameterWithContext(
 			AbstractParameterNode parameter,
 			AbstractParameterNode context) {
+
+		printObsoleteInfo();
 
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
@@ -338,6 +375,8 @@ public abstract class AbstractParameterSignatureHelper {
 			SignatureHelper.SignatureType signatureType,
 			IExtLanguageManager extLanguageManager) {
 
+		printObsoleteInfo();
+
 		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
 
 		if (signatureType == SignatureHelper.SignatureType.WITHOUT_TYPE) {
@@ -357,6 +396,8 @@ public abstract class AbstractParameterSignatureHelper {
 
 	// OBSOLETE
 	public static String createSignatureOfType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		String type = globalParameterNode.getType();
 		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
@@ -381,6 +422,8 @@ public abstract class AbstractParameterSignatureHelper {
 	// OBSOLETE
 	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead 
 
+		printObsoleteInfo();
+
 		LinkedList<String> segments = new LinkedList<>();
 
 		IAbstractNode parent = abstractParameterNode;
@@ -398,6 +441,8 @@ public abstract class AbstractParameterSignatureHelper {
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
 			return getQualifiedName(abstractParameterNode, extLanguageManager);
@@ -433,6 +478,8 @@ public abstract class AbstractParameterSignatureHelper {
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext) {
 
+		printObsoleteInfo();
+
 		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
 		return qualifiedName;
 	}
@@ -441,6 +488,8 @@ public abstract class AbstractParameterSignatureHelper {
 	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
 
 		//		return getCompositeName(abstractParameterNode, null);
+
+		printObsoleteInfo();
 
 		AbstractParameterNode currentParameterNode = abstractParameterNode;
 		String compositeName = "";
@@ -472,6 +521,8 @@ public abstract class AbstractParameterSignatureHelper {
 			String parameterNameInIntrLanguage,
 			Boolean expectedFlag,
 			IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		String signature = "";
 
@@ -509,6 +560,8 @@ public abstract class AbstractParameterSignatureHelper {
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
+		printObsoleteInfo();
+
 		String signatureOfName = createSignatureNewStandard(
 				parameter,
 				ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
@@ -530,6 +583,8 @@ public abstract class AbstractParameterSignatureHelper {
 			String parameterName,
 			Boolean expectedFlag,
 			IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		String signature = "";
 
@@ -557,6 +612,8 @@ public abstract class AbstractParameterSignatureHelper {
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
+		printObsoleteInfo();
+
 		String type = createSignatureOfType(parameter, extLanguageManager);
 
 		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
@@ -568,6 +625,8 @@ public abstract class AbstractParameterSignatureHelper {
 	public static String createReverseSignatureWithOptionalLink(
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		String type = CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
 
@@ -581,6 +640,8 @@ public abstract class AbstractParameterSignatureHelper {
 	public static String createSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
+
+		printObsoleteInfo();
 
 		//		String signature = 
 		//				createSignature(
@@ -608,6 +669,8 @@ public abstract class AbstractParameterSignatureHelper {
 	// OBSOLETE
 	private static String createReverseSignatureOfAbstractParameter(AbstractParameterNode parameter, String type) {
 
+		printObsoleteInfo();
+
 		String signature = 
 				AbstractParameterSignatureHelper.createSignatureOfParameterWithLink(
 						parameter, parameter.getLinkToGlobalParameter());
@@ -623,6 +686,8 @@ public abstract class AbstractParameterSignatureHelper {
 			String type, 
 			String name, 
 			Boolean expected) {
+
+		printObsoleteInfo();
 
 		String signature = "";
 
@@ -660,6 +725,8 @@ public abstract class AbstractParameterSignatureHelper {
 	// OBSOLETE
 	public static String createParameterSignature(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
+		printObsoleteInfo();
+
 		String name = abstractParameterNode.getName();
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
@@ -683,6 +750,10 @@ public abstract class AbstractParameterSignatureHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		return getQualifiedName(abstractParameterNode, extLanguageManager);
+	}
+
+	private static void printObsoleteInfo() {
+		System.out.println("OBSOLETE FUNCTION");
 	}
 
 }

@@ -17,82 +17,170 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter {
+public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter { // TODO MO-RE do we need interface ?
 
-	public Optional<BasicParameterNode> parseMethodDeployedParameter(Element element, MethodNode method, ListOfStrings errors) {
-		Optional<BasicParameterNode> parameter = parseMethodBasicParameter(element, method, errors);
+	@Override
+	public Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(
+			Element parameterElement, 
+			MethodNode methodNode,
+			ListOfStrings errorList) {
 
-		try {
+		AbstractParameterNode parameter = parseDeployedNode(
+				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, methodNode, errorList);
 
-			if (!parameter.isPresent()) {
+		AbstractParameterNode linkingContext = parseDeployedNode(
+				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, methodNode, errorList);
 
-				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
-			}
-
-			if (parameter.get().isLinked() && parameter.get().getLinkToGlobalParameter() != null) {
-
-				AbstractParameterNode candidate = parameter.get().getLinkToGlobalParameter();
-				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
-			} else {
-
-				String candidateName = AbstractParameterSignatureHelper.getQualifiedName(parameter.get());
-
-				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(candidateName))
-						.findAny();
-
-				if (candidate.isPresent()) {
-
-					parameter.get().setDeploymentParameter(candidate.get());
-				} else {
-
-					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
-					return Optional.empty();
-				}
-			}
-
-		} catch(Exception e) {
-
-			ExceptionHelper.reportRuntimeException("The deployed parameter could not be parsed.");
+		if (parameter == null && linkingContext == null) {
 			return Optional.empty();
 		}
 
-		return parameter;
+		ParameterWithLinkingContext parameterWithLinkingContext = new ParameterWithLinkingContext(parameter, linkingContext);
+
+		return Optional.of(parameterWithLinkingContext);
 	}
 
-	public Optional<BasicParameterNode> parseMethodBasicParameter(Element element, MethodNode method, ListOfStrings errors) {
+	private AbstractParameterNode parseDeployedNode(
+			Element parameterElement,
+			String attributeName,
+			MethodNode methodNode,
+			ListOfStrings errorList) {
+
+		String path = "";
+
+		path = parameterElement.getAttributeValue(attributeName);
+
+		if (path == null) {
+			return null;
+		}
+
+		AbstractParameterNode foundParameter = findParameterByPath(methodNode, path);
+
+		if (foundParameter == null) {
+			errorList.add("Original parameter not found by path: " + path);
+			return null;
+		}
+
+		//		if (!(foundParameter instanceof BasicParameterNode)) {
+		//			ExceptionHelper.reportRuntimeException("Found original parameter is not basic parameter.");
+		//		}
+
+		return foundParameter;
+	}
+
+	private AbstractParameterNode findParameterByPath(MethodNode methodNode, String path) {
+
+		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+
+			AbstractParameterNode abstractParameterNode = MethodNodeHelper.findParameterByPath(path, methodNode);
+			return abstractParameterNode;
+		}
+
+		IAbstractNode topNode = AbstractNodeHelper.findTopNode(methodNode);
+
+		if (!(topNode instanceof RootNode)) {
+			ExceptionHelper.reportRuntimeException("Root node not found.");
+		}
+
+		return AbstractParameterNodeHelper.findParameterByAbsolutePath(path, (RootNode) topNode);
+	}
+
+	//	public Optional<BasicParameterNode> parseMethodDeployedParameter(
+	//			Element element, MethodNode method, ListOfStrings errors) {
+	//		
+	//		Optional<BasicParameterNode> parameter = 
+	//				parseMethodBasicParameter(element, method, errors);
+	//
+	//		try {
+	//			if (!parameter.isPresent()) {
+	//
+	//				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
+	//			}
+	//
+	//			if (parameter.get().isLinked() && parameter.get().getLinkToGlobalParameter() != null) {
+	//
+	//				AbstractParameterNode candidate = parameter.get().getLinkToGlobalParameter();
+	//				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
+	//			} else {
+	//
+	//				String candidateName = AbstractParameterSignatureHelper.getQualifiedName(parameter.get());
+	//
+	//				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
+	//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(candidateName))
+	//						.findAny();
+	//
+	//				if (candidate.isPresent()) {
+	//
+	//					parameter.get().setDeploymentParameter(candidate.get()); //XXY
+	//				} else {
+	//
+	//					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
+	//					return Optional.empty();
+	//				}
+	//			}
+	//
+	//		} catch(Exception e) {
+	//
+	//			ExceptionHelper.reportRuntimeException("The deployed parameter could not be parsed.");
+	//			return Optional.empty();
+	//		}
+	//
+	//		return parameter;
+	//	}
+	//
+	public Optional<BasicParameterNode> parseMethodBasicParameter(
+			Element element, MethodNode method, ListOfStrings errors) {
+
 		String defaultValue = null;
 		String name, type;
 		boolean expected = false;
 
 		try {
-			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+			ModelParserHelper.assertNameEqualsExpectedName(
+					element.getQualifiedName(), 
+					SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+
 			name = ModelParserHelper.getElementName(element, errors);
 			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
 
 			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-				expected = Boolean.parseBoolean(ModelParserHelper.getAttributeValue(element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
+				expected = 
+						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
+								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
 			}
 
 			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
-				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
+				defaultValue = 
+						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
 			}
 
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
 
-		BasicParameterNode parameter = new BasicParameterNode("tmp", type, defaultValue, expected, method.getModelChangeRegistrator());
-		parameter.setNameWithoutChecks(name);
+		String lastSegment = getLastSegment(name);
+
+		BasicParameterNode parameter = 
+				new BasicParameterNode(
+						lastSegment, type, defaultValue, expected, method.getModelChangeRegistrator());
+
+		//parameter.setNameWithoutChecks(name);
 
 		ModelParserHelper.parseParameterProperties(element, parameter);
 
@@ -117,4 +205,17 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 		return Optional.of(parameter);
 	}
+
+	private String getLastSegment(String name) { // TODO MO-RE move to 
+
+		int index = name.lastIndexOf(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		if (index == -1) {
+			return name;
+		}
+
+		String lastSegment = name.substring(index+1);
+		return lastSegment;
+	}
+
 }

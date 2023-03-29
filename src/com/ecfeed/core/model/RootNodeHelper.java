@@ -36,6 +36,19 @@ public class RootNodeHelper {
 		return globalParameterNode;
 	}
 
+	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
+			RootNode rootNode, 
+			String name, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		CompositeParameterNode compositeParameterNode = 
+				new CompositeParameterNode(name, modelChangeRegistrator);
+		
+		rootNode.addParameter(compositeParameterNode);
+
+		return compositeParameterNode;
+	}
+	
 	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
 			RootNode rootNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
