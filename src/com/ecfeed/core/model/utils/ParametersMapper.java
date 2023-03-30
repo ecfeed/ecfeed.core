@@ -17,10 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParametersMapper {
 
@@ -34,13 +39,18 @@ public class ParametersMapper {
 
 	public void calculateParametersData(
 			IParametersParentNode parametersParentNode,
-			ParameterType parameterType) {
+			ParameterType parameterType,
+			IExtLanguageManager extLanguageManager) {
 
 		fParametersDescriptions = new HashMap<>();
 		CompositeParameterNode linkingParameterNode = null;
 
 		calculateParametersDataRecursive(
-				parametersParentNode, parameterType, linkingParameterNode, fParametersDescriptions);
+				parametersParentNode, 
+				parameterType, 
+				linkingParameterNode, 
+				fParametersDescriptions, 
+				extLanguageManager);
 	}
 
 	public List<String> getParameterNames() {
@@ -98,21 +108,21 @@ public class ParametersMapper {
 	public List<BasicParameterDescription> getListOfParameterDescriptions() {
 
 		List<BasicParameterDescription> result = new ArrayList<>();
-		
+
 		for (Map.Entry<String, BasicParameterWithLinkingContext> entry : fParametersDescriptions.entrySet()) {
-			
+
 			String qualifiedName = entry.getKey();
 			BasicParameterWithLinkingContext basicParameterWithLinkingContext = entry.getValue();
-			
+
 			BasicParameterDescription basicParameterDescription = 
 					new BasicParameterDescription(
 							qualifiedName, 
 							basicParameterWithLinkingContext.getBasicParameterNode(), 
 							basicParameterWithLinkingContext.getLinkingParameterNode());
-			
+
 			result.add(basicParameterDescription);
 		}		
-		
+
 		return result;
 	}
 
@@ -120,7 +130,8 @@ public class ParametersMapper {
 			IParametersParentNode parametersParentNode,
 			ParameterType parameterType, 
 			CompositeParameterNode linkingParameterNode,
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
 		List<AbstractParameterNode> childParameters = parametersParentNode.getParameters();
 
@@ -134,7 +145,8 @@ public class ParametersMapper {
 						basicParameterNode, 
 						parameterType, 
 						linkingParameterNode, 
-						inOutParametersDescriptions);
+						inOutParametersDescriptions,
+						extLanguageManager);
 
 				continue;
 			}
@@ -147,7 +159,8 @@ public class ParametersMapper {
 						currentCompositeParameterNode, 
 						parameterType, 
 						linkingParameterNode,
-						inOutParametersDescriptions);
+						inOutParametersDescriptions, 
+						extLanguageManager);
 
 				continue;
 			}
@@ -158,7 +171,8 @@ public class ParametersMapper {
 			CompositeParameterNode currentCompositeParameterNode,
 			ParameterType parameterType, 
 			CompositeParameterNode linkingParameterNode,
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode newlinkingParameterNode = 
 				currentCompositeParameterNode.getLinkToGlobalParameter();
@@ -169,7 +183,8 @@ public class ParametersMapper {
 					currentCompositeParameterNode,
 					parameterType, 
 					linkingParameterNode,
-					inOutParametersDescriptions);
+					inOutParametersDescriptions, 
+					extLanguageManager);
 
 			return;
 		}
@@ -178,17 +193,32 @@ public class ParametersMapper {
 				(IParametersParentNode)newlinkingParameterNode,
 				parameterType, 
 				currentCompositeParameterNode,
-				inOutParametersDescriptions);
+				inOutParametersDescriptions, 
+				extLanguageManager);
 	}
 
 	private void addBasicParameter(
 			BasicParameterNode basicParameterNode,
 			ParameterType parameterType,
-			CompositeParameterNode linkingParameterNode, 
-			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions) {
+			CompositeParameterNode parameterNodeWhichHasLink, 
+			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
+			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = 
-				AbstractParameterNodeHelper.getQualifiedName(basicParameterNode, linkingParameterNode);
+		ExtendedName extendedNameOfParameter = 
+				(parameterNodeWhichHasLink == null ? 
+						ExtendedName.PATH_TO_TOP_CONTAINTER : 
+							ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM); 
+		
+		String signatureNew = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						parameterNodeWhichHasLink,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						basicParameterNode,
+						extendedNameOfParameter,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 
 		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 
@@ -196,8 +226,8 @@ public class ParametersMapper {
 
 			if (shouldAddParameter(basicParameterNode, parameterType)) {
 				BasicParameterWithLinkingContext parametersData = 
-						new BasicParameterWithLinkingContext(basicParameterNode, linkingParameterNode);
-				inOutParametersDescriptions.put(qualifiedName, parametersData);
+						new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
+				inOutParametersDescriptions.put(signatureNew, parametersData);
 			}
 
 			return;
@@ -205,13 +235,12 @@ public class ParametersMapper {
 
 		if (shouldAddParameter(link, parameterType)) {
 			BasicParameterWithLinkingContext parametersData = 
-					new BasicParameterWithLinkingContext(basicParameterNode, linkingParameterNode);
-			inOutParametersDescriptions.put(qualifiedName, parametersData);
+					new BasicParameterWithLinkingContext(basicParameterNode, parameterNodeWhichHasLink);
+			inOutParametersDescriptions.put(signatureNew, parametersData);
 		}
 
 		return;
 	}
-
 
 	private static boolean shouldAddParameter(
 			BasicParameterNode basicParameterNode,

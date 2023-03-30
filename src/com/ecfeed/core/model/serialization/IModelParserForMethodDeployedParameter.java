@@ -10,14 +10,15 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ListOfStrings;
-import nu.xom.Element;
-
 import java.util.Optional;
+
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.utils.ListOfStrings;
+
+import nu.xom.Element;
 
 public interface IModelParserForMethodDeployedParameter {
 
-	Optional<BasicParameterNode> parseMethodDeployedParameter(Element parameterElement, MethodNode method, ListOfStrings errorList);
+	Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(Element parameterElement, MethodNode method, ListOfStrings errorList);
 }

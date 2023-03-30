@@ -133,7 +133,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		super.setName(name);
 	}
 
-	public void setNameUnsafe(String name) {
+	public void setNameWithoutChecks(String name) {
 
 		super.setName(name);
 	}
@@ -170,17 +170,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return parameter;
 	}
 
-	public BasicParameterNode createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = makeClone(mapper);
+	public BasicParameterNode createCopyForDeployment(NodeMapper mapper) {
+		
+		BasicParameterNode copy = makeClone(mapper);
 
-		parameter.setDeploymentParameter(this);
-		parameter.setParent(null);
+		copy.setDeploymentParameter(this);
+		copy.setParent(null);
 
-		mapper.addMappings(this, parameter);
+		mapper.addMappings(this, copy);
 
-		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
+		//copy.setNameWithoutChecks(AbstractParameterNodeHelper.getName(this));
 
-		return parameter;
+		return copy;
 	}
 
 	public BasicParameterNode getDeploymentParameter() {

@@ -97,7 +97,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 			if (parent instanceof MethodNode) {
 				return false;
 			}
-			
+
 			if (parent instanceof ClassNode) {
 				return true;
 			}
@@ -121,19 +121,19 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	}
 
 	public boolean isGlobalParameter() {
-		
+
 		RootNode rootNode = RootNodeHelper.findRootNode(this);
-		
+
 		if (rootNode == null) {
 			return false;
 		}
-		
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
-		
+
 		if (methodNode != null) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -156,4 +156,5 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 		return this;
 	}
+
 }

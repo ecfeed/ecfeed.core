@@ -12,13 +12,16 @@ package com.ecfeed.core.model;
 
 import java.util.Set;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodParameterNodeHelper {
 
-	public static ChoiceNode addChoiceToMethodParameter(
+	public static ChoiceNode addNewChoiceToMethodParameter(
 			BasicParameterNode methodParameterNode, 
 			String choiceNodeName, 
 			String valueString) {
@@ -34,26 +37,33 @@ public class MethodParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
-	public static String createSignature(
+	// OBSOLETE
+	public static String createSignature( // TODO MO-RE remove - use method from AbstractParameterSignatureHelper
 			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		IAbstractNode parent = methodParameterNode.getParent();
-		
+
 		String parentCompositeParameterSignature = "";
-		
+
 		if (parent instanceof CompositeParameterNode) {
-			
+
 			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
-			
+
 			parentCompositeParameterSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 		}
 
-		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
-		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
+		String type = AbstractParameterSignatureHelper.createSignatureOfType(methodParameterNode, extLanguageManager);
+
+		//		String name = AbstractParameterSignatureHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
+		String name = 
+				AbstractParameterSignatureHelper.createSignatureNewStandard(
+						methodParameterNode,
+						ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
+						extLanguageManager);
 
 		String signature = 
-				AbstractParameterNodeHelper.createSignature(
+				AbstractParameterSignatureHelper.createSignature(
 						type,
 						parentCompositeParameterSignature + name,
 						methodParameterNode.isExpected(),
@@ -62,13 +72,13 @@ public class MethodParameterNodeHelper {
 		final AbstractParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + AbstractParameterNodeHelper.getQualifiedName(link, extLanguageManager);
+			signature += "[LINKED]->" + AbstractParameterSignatureHelper.getQualifiedName(link, extLanguageManager);
 		}
 
 		return signature;
 	}
 
-	
+
 
 	public static String getType(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
@@ -91,11 +101,11 @@ public class MethodParameterNodeHelper {
 		}
 
 		if (abstractLink instanceof BasicParameterNode) {
-		
+
 			BasicParameterNode basicParameterLink = (BasicParameterNode) abstractLink;
 			return findChoiceIntr(basicParameterLink, choiceQualifiedName);
 		} else {
-			
+
 			return null;
 		}
 	}
@@ -114,7 +124,10 @@ public class MethodParameterNodeHelper {
 		return null;
 	}
 
+	// OBSOLETE
 	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
-		return AbstractParameterNodeHelper.createReverseSignature(methodParameterNode, extLanguageManage);
+
+		// TODO MO-RE REMOVE transfer function
+		return AbstractParameterSignatureHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
 	}
 }

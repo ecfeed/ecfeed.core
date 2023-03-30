@@ -54,7 +54,7 @@ public class XmlUpgradeTest {
 		String resultInVersion5 = convertXmlFromVersion4ToVersion5(sourceXmlInVersion4);
 		String[] resultLines = resultInVersion5.split(System.getProperty("line.separator"));
 		
-		assertNull(TestHelper.isEqualByLines(expectedResultLines, resultLines));
+		assertNull(StringHelper.isEqualByLines(expectedResultLines, resultLines));
 	}
 
 	private void upgradeFromVersion3To4(
@@ -103,7 +103,7 @@ public class XmlUpgradeTest {
 		String[] expectedResultLines1 = expectedResultInVersion4FromText.split("\n");
 		String[] resultLines1 = result.split(System.getProperty("line.separator"));
 
-		assertNull(TestHelper.isEqualByLines(expectedResultLines1, resultLines1));
+		assertNull(StringHelper.isEqualByLines(expectedResultLines1, resultLines1));
 
 		// compare with model created in version4
 
@@ -111,7 +111,7 @@ public class XmlUpgradeTest {
 			String[] expectedResultLines2 = expectedResultInVersion4FromModel.split("\n");
 			String[] resultLines2 = result.split(System.getProperty("line.separator"));
 
-			assertNull(TestHelper.isEqualByLines(expectedResultLines2, resultLines2));
+			assertNull(StringHelper.isEqualByLines(expectedResultLines2, resultLines2));
 		}
 	}
 	

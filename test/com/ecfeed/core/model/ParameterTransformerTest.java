@@ -71,14 +71,14 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -91,7 +91,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -102,7 +102,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		// add constraint
 
@@ -203,14 +203,14 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -225,7 +225,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -237,7 +237,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		methodChoiceNode1.addLabel(methodLabel1);
 
@@ -339,14 +339,14 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -359,7 +359,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -371,7 +371,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		methodChoiceNode1.addLabel(methodLabel1);
 
@@ -474,7 +474,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNode = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
@@ -484,7 +484,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -497,7 +497,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -508,7 +508,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		// add constraint
 
@@ -609,7 +609,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeOfRoot = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
@@ -617,7 +617,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -629,7 +629,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -640,7 +640,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		// add constraint
 
@@ -740,14 +740,14 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
 
 		// add global parameter and choice for class
 
@@ -760,7 +760,7 @@ public class ParameterTransformerTest {
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -772,10 +772,10 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		ChoiceNode methodChoiceNode2 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName2, "0");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName2, "0");
 
 		// add constraint
 
@@ -894,7 +894,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter and choice to method
 
@@ -902,10 +902,10 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod11 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
 		ChoiceNode choiceNodeOfMethod12 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
 
 		ChoiceNode choiceNodeOfMethod121 =	
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod12, "MC121", choiceValueString);
@@ -1016,7 +1016,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter and choice to method
 
@@ -1024,7 +1024,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod1 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC1", choiceValueString);
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC1", choiceValueString);
 
 		ChoiceNode choiceNodeOfMethod11 = 
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod1, "MC11", choiceValueString);
@@ -1149,7 +1149,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter and choice to method
 
@@ -1157,7 +1157,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod11 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
 		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
@@ -1221,7 +1221,7 @@ public class ParameterTransformerTest {
 		final String parameterType = "String";
 
 		BasicParameterNode globalParameterNodeOfRoot1 = 
-				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, "RP1", parameterType, null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", parameterType, null);
 
 		final String choiceValueString = "1";
 
@@ -1240,7 +1240,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter and choice to method
 
@@ -1382,7 +1382,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter and choice to method
 
@@ -1390,7 +1390,7 @@ public class ParameterTransformerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", stringParameterType);
 
 		ChoiceNode choiceNodeOfMethod = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
+				MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode, "MC1", "");
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
@@ -1419,7 +1419,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// add parameter
 

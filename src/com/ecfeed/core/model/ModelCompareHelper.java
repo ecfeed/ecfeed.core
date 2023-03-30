@@ -15,10 +15,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class ModelCompareHelper {
-
-	public static void compareModels(RootNode model1, RootNode model2) {
-	}
+public class ModelCompareHelper { // TODO MO-RE use ModelComparator
 
 	public static void compareSizes(Collection<? extends Object> collection1, Collection<? extends Object> collection2) {
 		if(collection1.size() != collection2.size()){

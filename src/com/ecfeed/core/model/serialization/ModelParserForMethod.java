@@ -10,19 +10,20 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.StringHelper;
-import nu.xom.Element;
+import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
+
+import nu.xom.Element;
 
 public class ModelParserForMethod implements IModelParserForMethod {
 
@@ -78,14 +79,14 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					.ifPresent(targetMethodNode::addConstraint);
 		}
 
-		List<BasicParameterNode> parametersDeployed = new ArrayList<>();
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_NAME)) {
+		List<ParameterWithLinkingContext> parametersWithContexts = new ArrayList<>();
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_TAG)) {
 			for (Element childNested : ModelParserHelper.getIterableChildren(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(childNested, targetMethodNode, errorList)
-						.ifPresent(parametersDeployed::add);
+						.ifPresent(parametersWithContexts::add);
 			}
 		}
-		targetMethodNode.setDeployedParameters(parametersDeployed);
+		targetMethodNode.setDeployedParametersWithContexts(parametersWithContexts);
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
 			fModelParserForTestCase.parseTestCase(child, targetMethodNode, errorList)

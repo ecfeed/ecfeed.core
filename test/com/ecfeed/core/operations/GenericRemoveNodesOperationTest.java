@@ -175,7 +175,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -187,7 +187,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	//	@Test
@@ -235,11 +235,11 @@ public class GenericRemoveNodesOperationTest {
 	//		
 	//		// class node 
 	//
-	//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null); // XYX rename
+	//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null); 
 	//		
 	//		// method node
 	//
-	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null); // XYX rename
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 	//		
 	//		// linked basic parameter 
 	//
@@ -267,7 +267,7 @@ public class GenericRemoveNodesOperationTest {
 	//		deployedParameters.add(basicParameterNode2);
 	//		methodNode.setDeployedParameters(deployedParameters);
 	//
-	//		// initial checks XYX TODO
+	//		// initial checks 
 	//		
 	//		// list of nodes to delete
 	//
@@ -285,7 +285,7 @@ public class GenericRemoveNodesOperationTest {
 	//		assertEquals(1, methodNode.getConstraintNodes().size());
 	//
 	//		assertEquals(0, methodNode.getTestCases().size());
-	//		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+	//		assertEquals(0, methodNode.getDeployedParameters().size());
 	//
 	//		// reverse
 	//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -297,7 +297,7 @@ public class GenericRemoveNodesOperationTest {
 	//		assertEquals(2, resultConstraintNodes.size());
 	//
 	//		assertEquals(1, methodNode.getTestCases().size());
-	//		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+	//		assertEquals(2, methodNode.getDeployedParameters().size());
 	//	}
 
 	@Test
@@ -378,7 +378,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// list of nodes to delete
 
@@ -397,7 +397,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -411,7 +411,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -789,7 +789,7 @@ public class GenericRemoveNodesOperationTest {
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// local parameter linked to global
 
@@ -907,7 +907,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, compositeParameterNode2.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 
@@ -920,7 +920,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1009,7 +1009,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNode.getMethods().size());
 
 		assertEquals(2, methodNode.getParameters().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(1, methodNode.getTestCases().size());
 
@@ -1031,7 +1031,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 
@@ -1046,7 +1046,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNode.getMethods().size());
 
 		assertEquals(2, methodNode.getParameters().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(1, methodNode.getTestCases().size());
 	}
@@ -1324,7 +1324,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse operation
 
@@ -1337,7 +1337,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1418,7 +1418,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse operation
 
@@ -1431,7 +1431,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1540,14 +1540,14 @@ public class GenericRemoveNodesOperationTest {
 		genericRemoveNodesOperation.execute();
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1610,7 +1610,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(0, methodNode.getTestCases().size());
 		assertEquals(0, methodNode.getTestSuites().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -1618,7 +1618,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getTestCases().size());
 		assertEquals(1, methodNode.getTestSuites().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	private ConstraintNode createConstraintNodeWithValueCondition(

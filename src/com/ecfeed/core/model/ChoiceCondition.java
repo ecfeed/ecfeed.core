@@ -76,7 +76,7 @@ public class ChoiceCondition implements IStatementCondition {
 		if (isSourceLinked()) {
 			node = fRightChoice;
 		} else {
-			node = mapper.getMappedNodeDeployment(fRightChoice);
+			node = mapper.getDeployedNode(fRightChoice);
 		}
 
 		node.setOrigChoiceNode(null);

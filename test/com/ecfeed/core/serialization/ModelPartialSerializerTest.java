@@ -61,7 +61,7 @@ public class ModelPartialSerializerTest {
 		modelPartialSerializer.serializeModelPartForGenerator(methodNode, domain, null, false, false);
 
 		String resultXml = outputStream.toString();
-		String expectedResultXml = prepareResultXml1();
+		String expectedResultXml = prepareExpectedResultXml1();
 
 		assertTrue(XmlComparator.areXmlsEqual(expectedResultXml, resultXml));
 	}
@@ -96,7 +96,7 @@ public class ModelPartialSerializerTest {
 		return xml;
 	}
 
-	private String prepareResultXml1() {
+	private String prepareExpectedResultXml1() {
 
 		StringBuilder sb = new StringBuilder(); 
 

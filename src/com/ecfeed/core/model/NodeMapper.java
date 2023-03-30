@@ -15,26 +15,28 @@ import java.util.Map;
 
 public class NodeMapper {
 
-	private final Map<AbstractNode, AbstractNode> fNodeMappingsSource = new HashMap<>();
-	private final Map<AbstractNode, AbstractNode> fNodeMappingsDeployment = new HashMap<>();
+	private final Map<AbstractNode, AbstractNode> fSourceToDeployedMap = new HashMap<>();
+	private final Map<AbstractNode, AbstractNode> fDeployedToSourceMap = new HashMap<>();
 
-	public void addMappings(AbstractNode source, AbstractNode deployment) {
+	public void addMappings(AbstractNode sourceNode, AbstractNode deployedNode) {
 
-		fNodeMappingsSource.put(source, deployment);
-		fNodeMappingsDeployment.put(deployment, source);
+		fSourceToDeployedMap.put(sourceNode, deployedNode);
+		fDeployedToSourceMap.put(deployedNode, sourceNode);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractNode> T getMappedNodeSource(T deployment) {
-		AbstractNode source = fNodeMappingsDeployment.get(deployment);
+	public <T extends AbstractNode> T getSourceNode(T deployedNode) {
 
-		return source != null ? (T) source : deployment;
+		AbstractNode sourceNode = fDeployedToSourceMap.get(deployedNode);
+
+		return sourceNode != null ? (T) sourceNode : deployedNode;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractNode> T getMappedNodeDeployment(T source) {
-		AbstractNode deployment = fNodeMappingsSource.get(source);
+	public <T extends AbstractNode> T getDeployedNode(T sourceNode) {
 
-		return deployment != null ? (T) deployment : source;
+		AbstractNode deployedNode = fSourceToDeployedMap.get(sourceNode);
+
+		return deployedNode != null ? (T) deployedNode : sourceNode;
 	}
 }

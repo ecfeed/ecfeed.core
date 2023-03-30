@@ -65,7 +65,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public String toString() {
 
-		return getName();
+		return getName() + " : " + "Structure";
 	}
 
 	@Override
@@ -151,11 +151,28 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		fParametersHolder.addParameter(parameter, this);
 	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, this);
+	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext,
+			int index) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
 	}
 
 	@Override
@@ -173,7 +190,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override

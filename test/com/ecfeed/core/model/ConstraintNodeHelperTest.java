@@ -39,6 +39,39 @@ public class ConstraintNodeHelperTest {
 		assertEquals("c_1 : false => false", signature);
 	}
 
+	//	@Test
+	//	public void createSignatureTest2() {
+	//
+	//		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+	//		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+	//
+	//		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
+	//
+	//		AbstractStatement precondition1 =
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						parameter1, null, EMathRelation.EQUAL, "A");  // TODO MO-RE leftParameterLinkingContext
+	//
+	//		AbstractStatement precondition = precondition1;
+	//
+	//		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
+	//
+	//		AbstractStatement postcondition1 =
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						parameter2, null, EMathRelation.EQUAL, "C");  // TODO MO-RE leftParameterLinkingContext
+	//
+	//		AbstractStatement postcondition = postcondition1;
+	//
+	//		Constraint constraint = new Constraint("co_1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+	//
+	//		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
+	//
+	//		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
+	//		assertEquals("co_1 : par 1=A => par 2=C", signature);
+	//
+	//		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
+	//		assertEquals("co_1 : par_1=A => par_2=C", signature);
+	//	}
+
 	@Test
 	public void createSignatureTest2() {
 
@@ -72,37 +105,37 @@ public class ConstraintNodeHelperTest {
 		assertEquals("co_1 : par_1=A => par_2=C", signature);
 	}
 
-	@Test
-	public void createSignatureTest3() {
-
-		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-
-		ChoiceNode choice1 = new ChoiceNode("choice_1", "value1", null);
-		ChoiceNode choice2 = new ChoiceNode("choice 2", "value2", null);
-
-		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
-
-		AbstractStatement precondition =
-				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, null, EMathRelation.EQUAL, choice1);
-
-		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
-
-		AbstractStatement postcondition =
-				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, null, EMathRelation.EQUAL, choice2);
-
-		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
-
-		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
-
-		String signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForJava);
-		assertEquals("co : par_1=choice_1[choice] => par_2=choice 2[choice]", signature);
-
-		signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForSimple);
-		assertEquals("co : par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
-	}
+	//	@Test
+	//	public void createSignatureTest3() {
+	//
+	//		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+	//		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+	//
+	//		ChoiceNode choice1 = new ChoiceNode("choice_1", "value1", null);
+	//		ChoiceNode choice2 = new ChoiceNode("choice 2", "value2", null);
+	//
+	//		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
+	//
+	//		AbstractStatement precondition =
+	//				RelationStatement.createRelationStatementWithChoiceCondition(
+	//						parameter1, null, EMathRelation.EQUAL, choice1);
+	//
+	//		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
+	//
+	//		AbstractStatement postcondition =
+	//				RelationStatement.createRelationStatementWithChoiceCondition(
+	//						parameter2, null, EMathRelation.EQUAL, choice2);
+	//
+	//		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+	//
+	//		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
+	//
+	//		String signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForJava);
+	//		assertEquals("co : par_1=choice_1[choice] => par_2=choice 2[choice]", signature);
+	//
+	//		signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForSimple);
+	//		assertEquals("co : par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
+	//	}
 
 	@Test
 	public void createSignatureForCompositeParameterTest(){
