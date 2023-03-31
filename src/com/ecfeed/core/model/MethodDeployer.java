@@ -284,33 +284,20 @@ public abstract class MethodDeployer {
 			NodeMapper nodeMapper) {
 
 		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());
-		AbstractParameterNode linkOfParameter = parameter.getLinkToGlobalParameter();
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
 
-		if (context == null && linkOfParameter != null) {
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
 
-			String signature = 
-					AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
-							linkOfParameter, parameter);
-
-			return signature;
-		}
-
-		//		String signature1 = 
-		//				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
-		//						parameter, context);
-
-		String signature2 = AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				context,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.NORMAL,
-				parameter,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				Decorations.NO,
-				TypeIncluded.NO,
-				new ExtLanguageManagerForJava());
-
-		return signature2;
+		return signature;
 	}
 
 }
