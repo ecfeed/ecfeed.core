@@ -22,9 +22,12 @@ import org.junit.Test;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 
 public class TestCasesExportHelperTest {
 
@@ -100,7 +103,7 @@ public class TestCasesExportHelperTest {
     }
 
     @Test
-    public void shouldParseNameByParamName() {
+    public void AAshouldParseNameByParamName() {
         performTest("MIN_VALUE", "MAX_VALUE", "$par_0.name", "par_0", new ExtLanguageManagerForJava());
         performTest("MIN_VALUE", "MAX_VALUE", "$par 0.name", "par 0", new ExtLanguageManagerForSimple());
     }
@@ -214,40 +217,49 @@ public class TestCasesExportHelperTest {
         performTest(sequenceIndex, "", "",  template, expectedResult, extLanguageManager);
     }
 
-    private void performTest(
-            int sequenceIndex,
-            String par0Value,
-            String par1Value,
-            String template,
-            String expectedResult,
-            IExtLanguageManager extLanguageManager) {
+	private void performTest(
+			int sequenceIndex,
+			String par0Value,
+			String par1Value,
+			String template,
+			String expectedResult,
+			IExtLanguageManager extLanguageManager) {
 
-        ClassNode theClass = new ClassNode("package_1.Test_1", null);
+		ClassNode theClass = new ClassNode("package_1.Test_1", null);
 
-        MethodNode methodNode = new MethodNode("testMethod_1", null);
-        theClass.addMethod(methodNode);
+		MethodNode methodNode = new MethodNode("testMethod_1", null);
+		theClass.addMethod(methodNode);
 
-        BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
-        ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
-        parameter0.addChoice(choiceNode00);
-        methodNode.addParameter(parameter0);
+		BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
+		ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
+		parameter0.addChoice(choiceNode00);
+		methodNode.addParameter(parameter0);
 
-        BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "MIN_VALUE", false, null);
-        ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
-        parameter1.addChoice(choiceNode11);
-        methodNode.addParameter(parameter1);
+		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "MIN_VALUE", false, null);
+		ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
+		parameter1.addChoice(choiceNode11);
+		methodNode.addParameter(parameter1);
 
-        List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
-        choices.add(choiceNode00);
-        choices.add(choiceNode11);
+		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
+		choices.add(choiceNode00);
+		choices.add(choiceNode11);
 
-        TestCaseNode testCase = new TestCaseNode("default", null, choices);
-        testCase.setParent(methodNode);
+		TestCaseNode testCase = new TestCaseNode("default", null, choices);
+		testCase.setParent(methodNode);
 
-        String result = TestCasesExportHelper.generateTestCaseString(sequenceIndex, testCase, methodNode, template, extLanguageManager);
-        result = TestCasesExportHelper.evaluateMinWidthOperators(result);
-        assertEquals(expectedResult, result);
-    }
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
 
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+		List<ParameterWithLinkingContext> deloyedParameterWithLinkingContexts = 
+				methodNode.getDeployedParametersWithLinkingContexts();
+		
+		String result = 
+				TestCasesExportHelper.generateTestCaseString(
+						sequenceIndex, testCase, methodNode, deloyedParameterWithLinkingContexts,template, extLanguageManager);
+
+		result = TestCasesExportHelper.evaluateMinWidthOperators(result);
+		assertEquals(expectedResult, result);
+	}
 
 }
