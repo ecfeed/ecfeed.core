@@ -64,8 +64,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(rootBasic);
         methodComposite.setLinkToGlobalParameter(rootComposite);
@@ -78,9 +78,9 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(3, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), rootBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), rootCompositeBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(2).get(0)), rootCompositeCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), rootBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), rootCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(2).get(0)), rootCompositeCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(null);
         methodComposite.setLinkToGlobalParameter(null);
@@ -93,8 +93,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
     }
 
     @Test
@@ -113,8 +113,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(classBasic);
         methodComposite.setLinkToGlobalParameter(classComposite);
@@ -127,9 +127,9 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(3, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), classBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), classCompositeBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(2).get(0)), classCompositeCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), classBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), classCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(2).get(0)), classCompositeCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(null);
         methodComposite.setLinkToGlobalParameter(null);
@@ -142,8 +142,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
     }
 
     private void getModel() {
@@ -194,7 +194,7 @@ public class AbstractParameterLinkTest {
         classCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         classCompositeCompositeBasic.addChoice(classCompositeCompositeBasicChoice);
 
-        methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+        methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
         methodBasic = new BasicParameterNode("MethodBasic", "int", "0", false, null);
         methodNode.addParameter(methodBasic);

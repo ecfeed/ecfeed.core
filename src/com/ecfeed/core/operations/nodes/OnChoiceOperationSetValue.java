@@ -18,7 +18,6 @@ import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -32,16 +31,13 @@ public class OnChoiceOperationSetValue extends AbstractModelOperation {
 	private String fOriginalDefaultValue;
 	private ChoiceNode fOwnChoiceNode;
 
-	private ITypeAdapterProvider fAdapterProvider;
-
-	public OnChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, IExtLanguageManager extLanguageManager){
+	public OnChoiceOperationSetValue(ChoiceNode target, String newValue, IExtLanguageManager extLanguageManager){
 		
 		super(OperationNames.SET_PARTITION_VALUE, extLanguageManager);
 		
 		fOwnChoiceNode = target;
 		fNewValue = newValue;
 		fOriginalValue = fOwnChoiceNode.getValueString();
-		fAdapterProvider = adapterProvider;
 	}
 
 	@Override
@@ -83,7 +79,7 @@ public class OnChoiceOperationSetValue extends AbstractModelOperation {
 			return null;
 		}
 
-		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(type); 
 
 		try {
 			return typeAdapter.adapt(
@@ -144,7 +140,7 @@ public class OnChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new OnChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getExtLanguageManager());
+			return new OnChoiceOperationSetValue(fOwnChoiceNode, fNewValue, getExtLanguageManager());
 		}
 	}
 

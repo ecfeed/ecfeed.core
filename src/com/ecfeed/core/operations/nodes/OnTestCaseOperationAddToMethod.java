@@ -10,22 +10,21 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodNode;
-
 import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -35,12 +34,10 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 	private TestCaseNode fTestCaseNode;
 	private int fIndex;
 	private Optional<Integer> fIndexOfTestSuite;
-	private ITypeAdapterProvider fTypeAdapterProvider;
 
 	public OnTestCaseOperationAddToMethod(
 			MethodNode methodNode, 
 			TestCaseNode testCaseNode, 
-			ITypeAdapterProvider typeAdapterProvider, 
 			int index,
 			Optional<Integer> indexOfTestSuite,
 			IExtLanguageManager extLanguageManager) {
@@ -50,16 +47,14 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 		fTestCaseNode = testCaseNode;
 		fIndex = index;
 		fIndexOfTestSuite = indexOfTestSuite;
-		fTypeAdapterProvider = typeAdapterProvider;
 	}
 
 	public OnTestCaseOperationAddToMethod(
 			MethodNode target, 
 			TestCaseNode testCase, 
-			ITypeAdapterProvider typeAdapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
-		this(target, testCase, typeAdapterProvider, -1, Optional.empty(), extLanguageManager);
+		this(target, testCase, -1, Optional.empty(), extLanguageManager);
 	}
 
 	@Override
@@ -90,7 +85,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 
 				String type = parameter.getType();
 
-				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(type);
 
 				String newValue = 
 						adapter.adapt(

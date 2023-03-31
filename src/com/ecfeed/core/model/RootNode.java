@@ -13,9 +13,11 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.utils.ParametersLister;
+
 public class RootNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersHolder fParametersHolder;
+	ParametersLister fParametersHolder;
 	private List<ClassNode> fClasses;
 	private int fModelVersion;
 
@@ -30,7 +32,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 		super(name, modelChangeRegistrator);
 		
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 
 		fClasses = new ArrayList<ClassNode>();
 		fModelVersion = modelVersion;
@@ -175,11 +177,28 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, this);
+	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext,
+			int index) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 		
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
 	}
 	
 	@Override
@@ -197,7 +216,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 		
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
@@ -296,4 +315,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		return globalParameterNodes;
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+	
 }

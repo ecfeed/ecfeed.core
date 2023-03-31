@@ -30,7 +30,6 @@ import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
 import com.ecfeed.core.operations.nodes.OnMethodOperationAddToClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
@@ -41,12 +40,10 @@ public class FactoryAddChildOperation implements IModelVisitor {
 	private int fIndex;
 	private boolean fValidate;
 	IExtLanguageManager fExtLanguageManager;
-	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
 			IAbstractNode child, 
 			int index, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
@@ -54,16 +51,14 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		fIndex = index;
 		fValidate = validate;
 		fExtLanguageManager = extLanguageManager;
-		fAdapterProvider = adapterProvider;
 	}
 
 	public FactoryAddChildOperation(
 			IAbstractNode child, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		this(child, -1, adapterProvider, validate, extLanguageManager);
+		this(child, -1, validate, extLanguageManager);
 	}
 
 	@Override
@@ -117,12 +112,12 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		}
 
 		if (fChild instanceof TestSuiteNode) {
-			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fExtLanguageManager);
 		}
 
 		if (fChild instanceof TestCaseNode) {
 			return new OnTestCaseOperationAddToMethod(
-					node, (TestCaseNode)fChild, fAdapterProvider, fIndex, Optional.empty(), fExtLanguageManager);
+					node, (TestCaseNode)fChild, fIndex, Optional.empty(), fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -135,7 +130,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		if (node.isGlobalParameter()) {
 
 			if(fChild instanceof ChoiceNode){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fIndex, fValidate, fExtLanguageManager);
 			}
 
 			reportOperationNotSupportedException();
@@ -145,7 +140,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		} else {
 
 			if(fChild instanceof ChoiceNode){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fIndex, fValidate, fExtLanguageManager);
 			}
 
 			reportOperationNotSupportedException();
@@ -189,7 +184,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 	public Object visit(ChoiceNode node) throws Exception {
 
 		if(fChild instanceof ChoiceNode){
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fIndex, fValidate, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();

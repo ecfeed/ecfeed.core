@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -109,8 +108,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			return getValueString();
 		}
 
-		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(typeName);
 
 		String valueString = getValueString();
 
@@ -573,6 +571,11 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
 	}
 
 }

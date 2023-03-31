@@ -10,12 +10,18 @@
 
 package com.ecfeed.core.model;
 
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ModelComparator {
 
-	public static void compareModels(RootNode model1, RootNode model2) {
+	public static void assertModelsEqual(RootNode model1, RootNode model2) {
 
 		ModelCompareHelper.compareNames(model1.getName(), model2.getName());
 		ModelCompareHelper.compareSizes(model1.getClasses(), model2.getClasses());
@@ -23,6 +29,43 @@ public class ModelComparator {
 		for(int i = 0; i < model1.getClasses().size(); ++i){
 			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
 		}
+
+		compareSerializedModelsAsLastResort(model1, model2);
+	}
+
+	private static void compareSerializedModelsAsLastResort(RootNode model1, RootNode model2) {
+
+		String xml1 = serializeModel(model1);
+		String xml2 = serializeModel(model2);
+
+		String[] lines1 = xml1.split("\n");
+		String[] lines2 = xml2.split("\n");
+
+		if (xml1.equals(xml2)) {
+			return;
+		}
+
+		String errorMessage = StringHelper.isEqualByLines(lines1, lines2);
+
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException("Model comparison failed with message: " + errorMessage);
+		}
+
+		ExceptionHelper.reportRuntimeException("Comparison of serialized models failed.");
+	}
+
+	private static String serializeModel(RootNode model1) {
+
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+		ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		try {
+			serializer.serialize(model1);
+		} catch (Exception e) {
+			ExceptionHelper.reportRuntimeException("Failed to serialize model.", e);
+		}
+
+		return ostream.toString();
 	}
 
 	private static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
@@ -53,11 +96,35 @@ public class ModelComparator {
 		for(int i =0; i < method1.getParameters().size(); ++i){
 			compareParameters(method1.getParameters().get(i), method2.getParameters().get(i));
 		}
+
+		compareDeployedParameters(method1, method2);
+
 		for(int i =0; i < method1.getConstraintNodes().size(); ++i){
 			compareConstraintNodes(method1.getConstraintNodes().get(i), method2.getConstraintNodes().get(i));
 		}
+
 		for(int i =0; i < method1.getTestCases().size(); ++i){
 			compareTestCases(method1.getTestCases().get(i), method2.getTestCases().get(i));
+		}
+	}
+
+	private static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
+
+		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
+		
+		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
+			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
+		}
+		
+		int size = deployedParametersWithContexts1.size();
+		
+		for (int i = 0; i < size; ++i) {
+			
+			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
+			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
+			
+			compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
 		}
 	}
 
@@ -65,16 +132,41 @@ public class ModelComparator {
 			AbstractParameterNode abstractParameter1, 
 			AbstractParameterNode abstractParameter2) {
 
-		ModelCompareHelper.compareNames(abstractParameter1.getName(), abstractParameter2.getName());
-
-		if (!(abstractParameter1 instanceof BasicParameterNode) || !(abstractParameter2 instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Comparing only basic parameters so far.");
+		if (abstractParameter1 == null && abstractParameter2 == null) {
+			return;
 		}
 
-		BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
-		BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+		AbstractParameterNodeHelper.compareParameterTypes(abstractParameter1, abstractParameter2);
 
-		BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+		ModelCompareHelper.compareNames(abstractParameter1.getName(), abstractParameter2.getName());
+
+		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
+
+			BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
+			BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+
+			BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
+		}
+
+		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
+
+			CompositeParameterNode basicParameterNode1 = (CompositeParameterNode) abstractParameter1;
+			CompositeParameterNode basicParameterNode2 = (CompositeParameterNode) abstractParameter2;
+
+			CompositeParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
+	}
+
+	public static void compareParametersWithLinkingContexts(
+			ParameterWithLinkingContext parameterWithContext1, 
+			ParameterWithLinkingContext parameterWithContext2) {
+
+		compareParameters(parameterWithContext1.getParameter(), parameterWithContext2.getParameter());
+		compareParameters(parameterWithContext1.getLinkingContext(), parameterWithContext2.getLinkingContext());
 	}
 
 	public static void compareMethodParameters(BasicParameterNode methodParameterNode1, BasicParameterNode methodParameterNode2) {

@@ -174,18 +174,18 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return methodParameterNode;
 	}
 
-	public static CompositeParameterNode addCompositeParameterToMethod( // TODO MO-RE remove ?
-			MethodNode methodNode, String compositeParameterName) {
+//	public static CompositeParameterNode addNewCompositeParameterToMethod( // TODO MO-RE remove ?
+//			MethodNode methodNode, String compositeParameterName) {
+//
+//		CompositeParameterNode compositeMethodParameterNode2 = 
+//				new CompositeParameterNode(compositeParameterName, null);
+//
+//		methodNode.addParameter(compositeMethodParameterNode2);
+//
+//		return compositeMethodParameterNode2;
+//	}
 
-		CompositeParameterNode compositeMethodParameterNode2 = 
-				new CompositeParameterNode(compositeParameterName, null);
-
-		methodNode.addParameter(compositeMethodParameterNode2);
-
-		return compositeMethodParameterNode2;
-	}
-
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameterToParent(
 			IParametersParentNode parentNode, 
 			String compositeParameterName) {
 
@@ -197,7 +197,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return compositeMethodParameterNode2;
 	}
 	
-	public static BasicParameterNode addLinkedParameterToMethod(
+	public static BasicParameterNode addLinkedParameterToMethod( // TODO MO-RE create usage of this function in method node helper: addNewLinkedParameter() 
 			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);

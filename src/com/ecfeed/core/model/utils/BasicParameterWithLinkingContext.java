@@ -16,12 +16,12 @@ import com.ecfeed.core.model.CompositeParameterNode;
 public class BasicParameterWithLinkingContext {
 
 	private BasicParameterNode fBasicParameterNode;
-	private CompositeParameterNode fLinkingCompositeParameterNode;
+	private CompositeParameterNode fLinkingContext;
 
-	BasicParameterWithLinkingContext(BasicParameterNode basicParameterNode, CompositeParameterNode linkingCompositeParameterNode) {
+	BasicParameterWithLinkingContext(BasicParameterNode basicParameterNode, CompositeParameterNode linkingContext) {
 
 		fBasicParameterNode = basicParameterNode;
-		fLinkingCompositeParameterNode = linkingCompositeParameterNode;
+		fLinkingContext = linkingContext;
 	}
 
 	BasicParameterNode getBasicParameterNode() {
@@ -29,7 +29,7 @@ public class BasicParameterWithLinkingContext {
 	}
 
 	CompositeParameterNode getLinkingParameterNode() {
-		return fLinkingCompositeParameterNode;
+		return fLinkingContext;
 	}
 
 }

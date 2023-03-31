@@ -29,9 +29,10 @@ import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.ParametersAndConstraintsParentNodeHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
-import com.ecfeed.core.model.utils.ParametersContainer.ParameterType;
+import com.ecfeed.core.model.utils.ParametersMapper.ParameterType;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
-public class ParametersContainerTest {
+public class ParametersMapperTest {
 
 	@Test
 	public void localParametersBasic() {
@@ -40,18 +41,18 @@ public class ParametersContainerTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// parameter 1 of method 
 
 		BasicParameterNode methodParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
 
 		// 	Root
 		// 		Class
@@ -61,8 +62,8 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		ParametersMapper parametersContainer = new ParametersMapper();
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -86,25 +87,25 @@ public class ParametersContainerTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// parameter 1 of method 
 
 		BasicParameterNode methodParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
 
 		// parameter 2 of method
 
 		BasicParameterNode methodParameterNode2 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP2", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode2, "MC2", "MC2");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode2, "MC2", "MC2");
 
 		// composite parameter 1
 
@@ -117,7 +118,7 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P11", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(basicParameterNode1OfComposite1, "C1", "C1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode1OfComposite1, "C1", "C1");
 
 		// parameter 2 of composite 1
 
@@ -125,7 +126,7 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P12", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(basicParameterNode2Ofcomposite1, "C2", "C2");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode2Ofcomposite1, "C2", "C2");
 
 		// parameter 0 of composite 1
 
@@ -133,7 +134,7 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P10", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(basicParameterNode0OfComposite1, "C0", "C0");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode0OfComposite1, "C0", "C0");
 
 		// composite 2
 
@@ -146,7 +147,7 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode2, "P21", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(basicParameterNode1OfComposite2, "C1", "C1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode1OfComposite2, "C1", "C1");
 
 		// 	Root
 		// 		Class
@@ -168,8 +169,8 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		ParametersMapper parametersContainer = new ParametersMapper();
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -205,7 +206,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of composite 1
 
-		parametersContainer.calculateParametersData(compositeParameterNode1, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(compositeParameterNode1, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 		parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(4, parameterNames.size());
@@ -236,7 +237,7 @@ public class ParametersContainerTest {
 
 		// parameters container from level of composite 2
 
-		parametersContainer.calculateParametersData(compositeParameterNode2, ParameterType.STANDARD);
+		parametersContainer.calculateParametersData(compositeParameterNode2, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 		parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(1, parameterNames.size());
@@ -271,22 +272,22 @@ public class ParametersContainerTest {
 		BasicParameterNode rootParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(rootNode, "RP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "RC1", "RC1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(rootParameterNode1, "RC1", "RC1");
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
 
 		// class parameter node 
 
 		BasicParameterNode classParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(classNode, "CP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(classParameterNode1, "CC1", "CC1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(classParameterNode1, "CC1", "CC1");
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// parameter 1 of method 
 
@@ -312,8 +313,8 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		ParametersMapper parametersContainer = new ParametersMapper();
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -347,7 +348,7 @@ public class ParametersContainerTest {
 		RootNode rootNode = new RootNode("Root", null);
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(rootNode, "GS1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(rootNode, "GS1");
 
 		// parameter 1 of composite with choice
 
@@ -355,20 +356,20 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						globalCompositeParameterNode1, "GP1", "String");
 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "GC1", "GC1");
+		MethodParameterNodeHelper.addNewChoiceToMethodParameter(rootParameterNode1, "GC1", "GC1");
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// local composite
 
 		CompositeParameterNode localCompositeParameterNode = 
-				ParametersAndConstraintsParentNodeHelper.addCompositeParameter(methodNode, "S1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S1");
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -382,8 +383,8 @@ public class ParametersContainerTest {
 
 		// parameters container from level of method node
 
-		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+		ParametersMapper parametersContainer = new ParametersMapper();
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD, new ExtLanguageManagerForJava());
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 

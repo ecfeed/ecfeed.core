@@ -32,7 +32,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -668,7 +667,6 @@ public class GenericAddChildrenOperationTest {
 						parent, 
 						children, 
 						index, 
-						new TypeAdapterProviderForJava(), 
 						true,
 						new ExtLanguageManagerForJava());
 

@@ -16,23 +16,22 @@ import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class GenericOperationAddChoice extends CompositeOperation {
 	
 	public GenericOperationAddChoice(
 			IChoicesParentNode target, 
 			ChoiceNode choice, 
-			ITypeAdapterProvider adapterProvider, 
 			int index, 
 			boolean validate, 
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_PARTITION, true, target, target, extLanguageManager);
-		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, extLanguageManager));
+		addOperation(new AddChoiceOperation(target, choice, index, extLanguageManager));
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
@@ -44,27 +43,24 @@ public class GenericOperationAddChoice extends CompositeOperation {
 	public GenericOperationAddChoice(
 			IChoicesParentNode target, 
 			ChoiceNode choice, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		this(target, choice, adapterProvider, -1, validate, extLanguageManager);
+		this(target, choice, -1, validate, extLanguageManager);
 	}
 
 	private class AddChoiceOperation extends AbstractModelOperation {
 		private IChoicesParentNode fChoicesParentNode;
 		private ChoiceNode fChoice;
 		private int fIndex;
-		private ITypeAdapterProvider fAdapterProvider;
 
 		public AddChoiceOperation(
-				IChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguageManager) {
+				IChoicesParentNode target, ChoiceNode choice, int index, IExtLanguageManager extLanguageManager) {
 
 			super(OperationNames.ADD_PARTITION, extLanguageManager);
 			fChoicesParentNode = target;
 			fChoice = choice;
 			fIndex = index;
-			fAdapterProvider = adapterProvider;
 		}
 
 		public final String CHOICE_NAME_DUPLICATE_PROBLEM(String parentName, String choiceName) {
@@ -107,7 +103,7 @@ public class GenericOperationAddChoice extends CompositeOperation {
 
 			return 
 					new GenericOperationRemoveChoice(
-							fChoicesParentNode, fChoice, fAdapterProvider, false, getExtLanguageManager());
+							fChoicesParentNode, fChoice, false, getExtLanguageManager());
 		}
 
 		public final String PARTITION_VALUE_PROBLEM(String value){
@@ -121,7 +117,7 @@ public class GenericOperationAddChoice extends CompositeOperation {
 			if (choice.isAbstract() == false) {
 
 				String type = fChoicesParentNode.getParameter().getType();
-				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(type);
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(type);
 				String newValue = 
 						adapter.adapt(
 								choice.getValueString(), 

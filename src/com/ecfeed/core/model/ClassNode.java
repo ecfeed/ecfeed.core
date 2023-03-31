@@ -15,12 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersHolder fParametersHolder;
+	ParametersLister fParametersHolder;
 	private List<MethodNode> fMethods;
 
 	public ClassNode(String qualifiedName) {
@@ -33,7 +34,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fMethods = new ArrayList<MethodNode>();
 	}
 
@@ -248,9 +249,26 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, this);
+	}
+	
+	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
+	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext,
+			int index) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
 	@Override
@@ -268,7 +286,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
@@ -404,7 +422,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		for (BasicParameterNode parameter : globalParameters) {
 
-			String currentQualifiedName = AbstractParameterNodeHelper.getQualifiedName(parameter);
+			String currentQualifiedName = AbstractParameterSignatureHelper.getQualifiedName(parameter);
 
 			if(currentQualifiedName.equals(qualifiedName)){
 				return parameter;
@@ -413,4 +431,10 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		return null;
 	}
+	
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+
 }

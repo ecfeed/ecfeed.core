@@ -19,8 +19,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationSetType;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
@@ -55,8 +53,6 @@ public class MethodParameterOperationSetTypeTest {
 
 		methodNode2.addParameter(methodParameterNode2);
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-
 		// set param of method2 to Number
 
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
@@ -67,7 +63,6 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode2, 
 							"byte",
 							null, 
-							typeAdapterProvider,
 							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
@@ -83,7 +78,6 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode1, 
 							"String", 
 							null, 
-							typeAdapterProvider,
 							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
@@ -99,7 +93,6 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode1, 
 							"boolean", 
 							null, 
-							typeAdapterProvider,
 							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
@@ -115,7 +108,6 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode2, 
 							"boolean", 
 							null, 
-							typeAdapterProvider,
 							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
@@ -293,7 +285,6 @@ public class MethodParameterOperationSetTypeTest {
 
 		methodNode2.addParameter(methodParameterNode2);
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		// set param of method2 to int
@@ -301,7 +292,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			OnBasicParameterOperationSetType methodParameterOperationSetType =
 					new OnBasicParameterOperationSetType(
-							methodParameterNode2, "int", null, typeAdapterProvider, extLanguageManagerForJava);
+							methodParameterNode2, "int", null, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			
 		} catch (Exception e) {
@@ -313,7 +304,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			OnBasicParameterOperationSetType methodParameterOperationSetType =
 					new OnBasicParameterOperationSetType(
-							methodParameterNode1, "String", null, typeAdapterProvider, extLanguageManagerForJava);
+							methodParameterNode1, "String", null, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -324,7 +315,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			OnBasicParameterOperationSetType methodParameterOperationSetType =
 					new OnBasicParameterOperationSetType(
-							methodParameterNode1, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
+							methodParameterNode1, "boolean", null, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -335,7 +326,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			OnBasicParameterOperationSetType methodParameterOperationSetType =
 					new OnBasicParameterOperationSetType(
-							methodParameterNode2, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
+							methodParameterNode2, "boolean", null, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			
 		} catch (Exception e) {

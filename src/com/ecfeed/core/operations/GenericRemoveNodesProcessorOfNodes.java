@@ -23,7 +23,6 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
@@ -35,7 +34,6 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 	public GenericRemoveNodesProcessorOfNodes(
 			Collection<? extends IAbstractNode> nodesToRemove,
-			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 

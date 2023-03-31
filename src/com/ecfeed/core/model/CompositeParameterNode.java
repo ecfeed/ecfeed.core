@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -22,7 +23,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
 
-	private ParametersHolder fParametersHolder; 
+	private ParametersLister fParametersHolder; 
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	public CompositeParameterNode(
@@ -43,7 +44,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		setLinkToGlobalParameter(link);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
@@ -57,14 +58,14 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public String getNonQualifiedName() {
-		
+
 		return getName();
 	}
 
 	@Override
 	public String toString() {
 
-		return getName();
+		return getName() + " : " + "Structure";
 	}
 
 	@Override
@@ -150,11 +151,28 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		fParametersHolder.addParameter(parameter, this);
 	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, this);
+	}
+	
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext,
+			int index) {
+		
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
 	}
 
 	@Override
@@ -172,7 +190,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
@@ -180,7 +198,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParametersCount();
 	}
-	
+
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
@@ -192,13 +210,13 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParameter(parameterIndex);
 	}
-	
+
 	@Override
 	public AbstractParameterNode findParameter(String parameterName) {
-		
+
 		return fParametersHolder.findParameter(parameterName);
 	}
-	
+
 	@Override
 	public int getParameterIndex(String parameterName) {
 
@@ -376,4 +394,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return (CompositeParameterNode) super.getLinkDestination();
 	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+
+		if (isLinked()) {
+			return new ArrayList<>();
+		}
+
+		return getChildren();
+	}
+
 }

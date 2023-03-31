@@ -17,7 +17,6 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnTestCaseOperationRemove extends AbstractModelOperation {
@@ -51,7 +50,6 @@ public class OnTestCaseOperationRemove extends AbstractModelOperation {
 		return new OnTestCaseOperationAddToMethod(
 				fMethodNode, 
 				fTestCase, 
-				new TypeAdapterProviderForJava(), 
 				fIndex, 
 				Optional.of(fTestSuiteIndex),
 				getExtLanguageManager());

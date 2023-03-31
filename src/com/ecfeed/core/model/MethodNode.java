@@ -17,14 +17,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
-	ParametersHolder fParametersHolder;
-	ParametersHolder fDeployedParametersHolder;
+	ParametersLister fParametersHolder;
+	ParametersLister fDeployedParametersHolder;
+	//ParametersLister fOriginalParametersHolder; // TODO MO-RE remove
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
@@ -39,7 +42,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 		fDeployedParametersHolder = null;
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
@@ -217,7 +220,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return sibling;
 	}
 
-	public void addConstraint(ConstraintNode constraint) {
+	public void addConstraint(ConstraintNode constraint) { // TODO MO-RE rename to addConstraintNode
 
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
@@ -721,10 +724,19 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fDeployedParametersHolder != null && fDeployedParametersHolder.getParametersCount() > 0;
 	}
 
-	public final List<BasicParameterNode> getDeployedMethodParameters() {
+	public final List<BasicParameterNode> getDeployedParameters() { // TODO MO-RE remove this and replace with getDeployedParametersWithLinkingContexs
 
 		if (isDeployed()) {
 			return fDeployedParametersHolder.getParametersAsBasic();
+		}
+
+		return new ArrayList<>();
+	}
+
+	public final List<ParameterWithLinkingContext> getDeployedParametersWithLinkingContexts() {
+
+		if (isDeployed()) {
+			return fDeployedParametersHolder.getParametersWithLinkingContexts();
 		}
 
 		return new ArrayList<>();
@@ -783,9 +795,26 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext) {
+
+		fParametersHolder.addParameter(parameter, linkingContext, this);
+	}
+
+	@Override
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext,
+			int index) {
+
+		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+	}
+
+	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this);
 	}
 
 	@Override
@@ -794,14 +823,28 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fParametersHolder.addParameters(parameters, this);
 	}
 
-	public void setDeployedParameters(List<BasicParameterNode> parameters) {
+	public void setDeployedParameters(List<BasicParameterNode> parameters) { // TODO MO-RE remove ? - deployed parameter should have linking contexts even if null 
 
 		if (fDeployedParametersHolder == null) {
-			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
+			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
 		} 
 
 		fDeployedParametersHolder.setBasicParameters(parameters, this);
 	}
+
+	public void setDeployedParametersWithContexts(List<ParameterWithLinkingContext> deployedParametersWithContexts) {
+
+		if (fDeployedParametersHolder == null) {
+			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
+		} 
+
+		fDeployedParametersHolder.setParametersWithLinkingContexts(deployedParametersWithContexts);
+	}
+
+	//	public void setOriginalParametersWithContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
+	//		
+	//		fOriginalParametersHolder.setParametersWithLinkingContexts(parametersWithContexts);
+	//	}
 
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
@@ -812,7 +855,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters);
+		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
@@ -869,6 +912,17 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
+	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
+
+		return fParametersHolder.getParametersWithLinkingContexts();
+	}
+
+	public ParameterWithLinkingContext getParameterWithLinkingContexts(int index) {
+
+		return fParametersHolder.getParameterWithLinkingContexts(index);
+	}
+
+
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();
@@ -879,4 +933,10 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);
 	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+
 }

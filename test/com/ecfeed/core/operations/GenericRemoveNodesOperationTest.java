@@ -36,7 +36,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -176,7 +175,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -188,8 +187,118 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
+
+	//	@Test
+	//	public void basicLinkedParameterRemoveFromMethod() {
+	//
+	//		RootNode rootNode = new RootNode("Root", null);
+	//
+	//		final String parameterType = "int";
+	//
+	//		BasicParameterNode globalParameterNodeOfRoot1 = 
+	//				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, "RP1", parameterType, null);
+	//
+	//		final String choiceValueString = "AB";
+	//
+	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//				globalParameterNodeOfRoot1, "RC11", choiceValueString, false, null);
+	//
+	//
+	//		ClassNode classNode = new ClassNode("Class", null);
+	//		rootNode.addClass(classNode);
+	//
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+	//
+	//		BasicParameterNode localParameterNode = 
+	//				ParametersAndConstraintsParentNodeHelper.addLinkedParameterToMethod(methodNode, "MP1", parameterType, globalParameterNodeOfRoot1);
+	//
+	//		List<IAbstractNode> listOfNodesToDelete = new ArrayList<>();
+	//		listOfNodesToDelete.add(localParameterNode);
+	//		
+	//		GenericRemoveNodesProcessorOfNodes genericRemoveNodesProcessorOfNodes =
+	//				new GenericRemoveNodesProcessorOfNodes(
+	//						listOfNodesToDelete, new TypeAdapterProviderForJava(), true, new ExtLanguageManagerForJava());
+	//
+	//		NodesByType processedNodesToDelete = genericRemoveNodesProcessorOfNodes.getProcessedNodes();
+	//		
+	//		System.out.println(processedNodesToDelete);
+	//		
+	//		RootNode rootNode = new RootNode("Root", null);
+	//		
+	//		// global basic parameter with choice
+	//
+	//		BasicParameterNode globalBasicParameterNode = RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, "GParam1", "String", null);
+	//
+	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(globalBasicParameterNode, "Choice1", "1", null);
+	//		
+	//		// class node 
+	//
+	//		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null); 
+	//		
+	//		// method node
+	//
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+	//		
+	//		// linked basic parameter 
+	//
+	//		BasicParameterNode localBasicParameterNode = 
+	//				MethodNodeHelper.addNewBasicParameter(methodNode, "LocalBasicParam1", "String", "", null);
+	//		localBasicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
+	//		
+	//		// constraints
+	//
+	//		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+	//		methodNode.addConstraint(constraintNode1);
+	//
+	//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+	//		methodNode.addConstraint(constraintNode2);
+	//
+	//		// test case
+	//
+	//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
+	//		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase);
+	//
+	//		// copy parameters to deployed parameters
+	//
+	//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+	//		deployedParameters.add(basicParameterNode1);
+	//		deployedParameters.add(basicParameterNode2);
+	//		methodNode.setDeployedParameters(deployedParameters);
+	//
+	//		// initial checks 
+	//		
+	//		// list of nodes to delete
+	//
+	//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+	//		nodesToDelete.add(globalParameterNodeOfRoot1);
+	//
+	//		// remove
+	//
+	//		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+	//				createRemovingNodesOperation(nodesToDelete, rootNode);
+	//		genericRemoveNodesOperation.execute();
+	//
+	//		assertEquals(1, globalParameterNodeOfRoot1.getChoices().size());
+	//		
+	//		assertEquals(1, methodNode.getConstraintNodes().size());
+	//
+	//		assertEquals(0, methodNode.getTestCases().size());
+	//		assertEquals(0, methodNode.getDeployedParameters().size());
+	//
+	//		// reverse
+	//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+	//		reverseOperation.execute();
+	//
+	//		assertEquals(2, methodNode.getParameters().size());
+	//
+	//		List<ConstraintNode> resultConstraintNodes = methodNode.getConstraintNodes();
+	//		assertEquals(2, resultConstraintNodes.size());
+	//
+	//		assertEquals(1, methodNode.getTestCases().size());
+	//		assertEquals(2, methodNode.getDeployedParameters().size());
+	//	}
 
 	@Test
 	public void basicParameterRemoveFromLocalComposite() {
@@ -269,7 +378,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// list of nodes to delete
 
@@ -288,7 +397,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -302,7 +411,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(2, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -680,7 +789,7 @@ public class GenericRemoveNodesOperationTest {
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
 
 		// local parameter linked to global
 
@@ -798,7 +907,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, compositeParameterNode2.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 
@@ -811,7 +920,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -900,7 +1009,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNode.getMethods().size());
 
 		assertEquals(2, methodNode.getParameters().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(1, methodNode.getTestCases().size());
 
@@ -922,7 +1031,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
+		assertEquals(0, methodNode.getDeployedParameters().size());
 
 		// reverse
 
@@ -937,7 +1046,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNode.getMethods().size());
 
 		assertEquals(2, methodNode.getParameters().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 		assertEquals(2, methodNode.getConstraintNodes().size());
 		assertEquals(1, methodNode.getTestCases().size());
 	}
@@ -1215,7 +1324,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse operation
 
@@ -1228,7 +1337,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1309,7 +1418,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse operation
 
@@ -1322,7 +1431,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getConstraintNodes().size());
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1431,14 +1540,14 @@ public class GenericRemoveNodesOperationTest {
 		genericRemoveNodesOperation.execute();
 
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
 
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	@Test
@@ -1501,7 +1610,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(0, methodNode.getTestCases().size());
 		assertEquals(0, methodNode.getTestSuites().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -1509,7 +1618,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getTestCases().size());
 		assertEquals(1, methodNode.getTestSuites().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
 	private ConstraintNode createConstraintNodeWithValueCondition(
@@ -1558,14 +1667,13 @@ public class GenericRemoveNodesOperationTest {
 
 		GenericRemoveNodesProcessorOfNodes genericRemoveNodesProcessorOfNodes =
 				new GenericRemoveNodesProcessorOfNodes(
-						nodesToDelete, new TypeAdapterProviderForJava(), true, new ExtLanguageManagerForJava());
+						nodesToDelete, true, new ExtLanguageManagerForJava());
 
 		NodesByType processedNodesToDelete = genericRemoveNodesProcessorOfNodes.getProcessedNodes();
 
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				new GenericRemoveNodesOperation(
 						processedNodesToDelete,
-						new TypeAdapterProviderForJava(), 
 						true, 
 						nodeToBeSelectedAfterOperation, 
 						nodeToBeSelectedAfterOperation, 

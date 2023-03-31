@@ -8,30 +8,77 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model;
+package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ParametersHolder {
+public class ParametersLister {
 
-	private List<AbstractParameterNode> fParameters;
+	private List<ParameterWithLinkingContext> fParametersWithContexts;
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
-	public ParametersHolder(IModelChangeRegistrator modelChangeRegistrator) {
+	public ParametersLister(IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
-		fParameters = new ArrayList<AbstractParameterNode>();
+		fParametersWithContexts = new ArrayList<ParameterWithLinkingContext>();
 	}
 
-	public void addParameter(AbstractParameterNode parameter, IAbstractNode parent) {
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			IAbstractNode parent) {
 
-		addParameter(parameter, fParameters.size(), parent);
+		addParameter(parameter, null, fParametersWithContexts.size(), parent);
+	}
+
+	public void addParameter(
+			AbstractParameterNode parameter, 
+			AbstractParameterNode linkingContext, 
+			IAbstractNode parent) {
+
+		addParameter(parameter, linkingContext, fParametersWithContexts.size(), parent);
+	}
+
+	public void addParameter(
+			AbstractParameterNode parameter,
+			AbstractParameterNode linkingContext,			
+			int index, 
+			IAbstractNode parent) {
+
+		if (parameterWithContextExists(parameter, linkingContext)) {
+			reportErrorParameterExists(parameter, linkingContext);
+		}
+
+		fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, linkingContext));
+		parameter.setParent(parent);
+
+		registerChange();
+	}
+
+	private void reportErrorParameterExists(
+			AbstractParameterNode parameter,
+			AbstractParameterNode linkingContext) {
+
+		if (linkingContext == null) {
+			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
+		}
+
+		ExceptionHelper.reportRuntimeException(
+				"Parameter: " + parameter.getName() 
+				+ " with linking context" + linkingContext.getName() 
+				+ " already exists.");
+
 	}
 
 	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
@@ -43,50 +90,90 @@ public class ParametersHolder {
 
 	public void setBasicParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
 
-		fParameters.clear();
-		fParameters.addAll(parameters);
+		fParametersWithContexts.clear();
+
+		for (BasicParameterNode basicParameterNode : parameters) {
+
+			fParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode, null));
+		}
 	}
 
-	public void addParameter(AbstractParameterNode parameter, int index, IAbstractNode parent) {
+	public void setParametersWithLinkingContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
 
-		if (parameterExists(parameter)) {
-			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
+		fParametersWithContexts.clear();
+		fParametersWithContexts.addAll(parametersWithContexts);
+	}
+
+
+	private boolean parameterWithContextExists(
+			AbstractParameterNode parameter,
+			AbstractParameterNode linkingContext) {
+
+		ParameterWithLinkingContext parameterWithLinkingContextToFind = 
+				new ParameterWithLinkingContext(parameter, linkingContext);
+
+		for (ParameterWithLinkingContext currentParameterWithLinkingContext : fParametersWithContexts) {
+
+			if (parameterWithLinkingContextToFind.isMatch(currentParameterWithLinkingContext)) {
+				return true;
+			}
 		}
 
-		fParameters.add(index, parameter);
-		parameter.setParent(parent);
-
-		registerChange();
+		return false;
 	}
 
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParameters;
+		List<AbstractParameterNode> result = new ArrayList<>();
+
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			result.add(parameterWithLinkingContext.getParameter());
+		}
+
+		return result;
+	}
+
+	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
+
+		List<ParameterWithLinkingContext> copy = new ArrayList<>(fParametersWithContexts);
+
+		return copy;
+	}
+
+	public ParameterWithLinkingContext getParameterWithLinkingContexts(int index) {
+
+		ParameterWithLinkingContext copy = 
+				new ParameterWithLinkingContext(fParametersWithContexts.get(index));
+
+		return copy;
 	}
 
 	public List<BasicParameterNode> getParametersAsBasic() {
-		
+
 		List<BasicParameterNode> result = new ArrayList<>();
-		
-		for (AbstractParameterNode abstractParameterNode : fParameters) {
-		
+
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			AbstractParameterNode abstractParameterNode = parameterWithLinkingContext.getParameter();
+
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				ExceptionHelper.reportRuntimeException("Attempt to get not basic parameter.");
 			}
-			
+
 			result.add((BasicParameterNode) abstractParameterNode);
 		}
-		
+
 		return result;
 	}
 
 	public int getParametersCount(){
 
-		return fParameters.size();
+		return fParametersWithContexts.size();
 	}	
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-	
+
 		if (parameterNameToFind.contains(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
 			return findParameterQualified(parameterNameToFind);
 		} else {
@@ -111,7 +198,7 @@ public class ParametersHolder {
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
 				return parameter;
 			}
 
@@ -125,14 +212,19 @@ public class ParametersHolder {
 
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		return fParameters.get(parameterIndex);
+		ParameterWithLinkingContext parameterWithLinkingContext = fParametersWithContexts.get(parameterIndex);
+
+		return parameterWithLinkingContext.getParameter();
 	}	
 
 	public int getParameterIndex(String parameterName) {
 
 		int index = 0;
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
+
 			if (parameter.getName().equals(parameterName)) {
 				return index;
 			}
@@ -163,10 +255,12 @@ public class ParametersHolder {
 
 		List<String> types = new ArrayList<String>();
 
-		for (AbstractParameterNode parameter : fParameters) {
-			
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
+
 			if (parameter instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
 				types.add(basicParameterNode.getType());
 			}
@@ -179,7 +273,10 @@ public class ParametersHolder {
 
 		List<String> names = new ArrayList<String>();
 
-		for(AbstractParameterNode parameter : fParameters){
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+
+			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
+
 			names.add(parameter.getName());
 		}
 
@@ -190,21 +287,21 @@ public class ParametersHolder {
 
 		parameter.setParent(null);
 
-		boolean result = fParameters.remove(parameter);
+		boolean result = fParametersWithContexts.removeIf(e -> e.getParameter().equals(parameter));
 		registerChange();
 
 		return result;
 	}
-	
+
 	public void removeAllParameters() {
-		
-		fParameters.clear();
+
+		fParametersWithContexts.clear();
 	}
 
-	public void replaceParameters(List<AbstractParameterNode> parameters) {
+	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
-		fParameters.clear();
-		fParameters.addAll(parameters);
+		fParametersWithContexts.clear();
+		addParameters(parameters, parent);
 
 		registerChange();
 	}
@@ -227,13 +324,13 @@ public class ParametersHolder {
 		}
 	}
 
-	public boolean isMatch(ParametersHolder otherParametersHolder) {
-		
+	public boolean isMatch(ParametersLister otherParametersHolder) {
+
 		List<AbstractParameterNode> parameters = getParameters();
 		List<AbstractParameterNode> otherParameters = otherParametersHolder.getParameters();
-		
+
 		int parametersSize = parameters.size();
-		
+
 		if (parametersSize != otherParameters.size()) {
 			return false;
 		}
@@ -242,12 +339,12 @@ public class ParametersHolder {
 
 			AbstractParameterNode abstractParameterNode = parameters.get(i);
 			AbstractParameterNode otherParameter = otherParameters.get(i);
-			
+
 			if (!abstractParameterNode.isMatch(otherParameter)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 

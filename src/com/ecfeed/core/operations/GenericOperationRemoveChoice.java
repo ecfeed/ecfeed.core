@@ -14,12 +14,11 @@ import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IBasicParameterVisitor;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -34,7 +33,6 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		private ChoiceNode fChoice;
 		private String fOriginalDefaultValue;
 		private int fOriginalIndex;
-		private ITypeAdapterProvider fAdapterProvider;
 
 		private class ReverseOperation extends AbstractModelOperation{
 			
@@ -73,7 +71,7 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider, getExtLanguageManager());
+				return new RemoveChoiceOperation(fTarget, fChoice, getExtLanguageManager());
 			}
 
 			private void reverseAdaptParameter() {
@@ -137,11 +135,9 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		public RemoveChoiceOperation(
 				IChoicesParentNode target, 
 				ChoiceNode choice, 
-				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager){
 			
 			super(OperationNames.REMOVE_PARTITION, extLanguageManager);
-			fAdapterProvider = adapterProvider;
 			fTarget = target;
 			fChoice = choice;
 			fOriginalIndex = fChoice.getMyIndex();
@@ -167,7 +163,7 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 
 		private void adaptParentChoice(ChoiceNode parentChoiceNode) {
 			if(parentChoiceNode.isAbstract() == false){
-				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(parentChoiceNode.getParameter().getType());
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(parentChoiceNode.getParameter().getType());
 				String newValue = 
 						adapter.adapt(
 								parentChoiceNode.getValueString(), 
@@ -208,13 +204,12 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 	public GenericOperationRemoveChoice(
 			IChoicesParentNode target, 
 			ChoiceNode choice, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARTITION, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, extLanguageManager));
+		addOperation(new RemoveChoiceOperation(target, choice, extLanguageManager));
 
 		if (validate) {
 			

@@ -19,6 +19,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -83,21 +84,24 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
-	public String createPreview(Collection<TestCaseNode> selectedTestCases, MethodNode methodNode) {
+	public String createPreview(
+			Collection<TestCaseNode> selectedTestCases, 
+			MethodNode methodNode,
+			List<ParameterWithLinkingContext> deployedParameters) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
+					fMethodNode, deployedParameters, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
-		appendPreviewOfTestCases(selectedTestCases, methodNode, stringBuilder);
+		appendPreviewOfTestCases(selectedTestCases, methodNode, deployedParameters, stringBuilder);
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
+						fMethodNode, deployedParameters, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -110,6 +114,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
 			MethodNode methodNode,
+			List<ParameterWithLinkingContext> deployedParameters,
 			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
@@ -122,6 +127,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 							sequenceIndex++,
 							testCase,
 							methodNode,
+							deployedParameters,
 							fTemplateText.getTestCaseTemplateText(), 
 							fExtLanguageManager));
 

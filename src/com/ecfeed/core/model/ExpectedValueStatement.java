@@ -181,8 +181,8 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameterNode); 
-		ChoiceNode choice = mapper.getMappedNodeDeployment(fChoiceNode);
+		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameterNode); 
+		ChoiceNode choice = mapper.getDeployedNode(fChoiceNode);
 
 		return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 	}

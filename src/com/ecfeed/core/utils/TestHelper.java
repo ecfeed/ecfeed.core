@@ -123,30 +123,5 @@ public class TestHelper {
 		return getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 	}
 	
-	public static String isEqualByLines(String[] expectedResultLines, String[] resultLines) {
-
-
-		int minLines = Math.min(expectedResultLines.length, resultLines.length);
-
-		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
-
-			String expectedLine = expectedResultLines[lineIndex];
-			expectedLine = expectedLine.replace("\r", "");
-
-			String resultLine = resultLines[lineIndex];
-			resultLine = resultLine.replace("\r", "");
-
-			if (!StringHelper.isEqual(expectedLine, resultLine)) {
-				return ("Line: " + (lineIndex + 1) + " differs.");
-			}
-		}
-		
-		if (expectedResultLines.length != resultLines.length) {
-			return "Count of lines does not match";
-		}
-		
-		return null;
-	}	
-
 }
 
