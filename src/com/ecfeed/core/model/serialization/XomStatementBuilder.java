@@ -31,7 +31,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.STATEME
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_STATIC_VALUE_ATTRIBUTE_NAME;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceCondition;
@@ -92,22 +92,22 @@ public class XomStatementBuilder implements IStatementVisitor {
 		Attribute operatorAttribute = null;
 
 		switch(statement.getOperator()) {
-		
+
 		case AND:
 			operatorAttribute = 
-				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
+			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
 			break;
-			
+
 		case OR:
 			operatorAttribute = 
-				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
+			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
 			break;
-			
+
 		case ASSIGN:
 			operatorAttribute = 
 			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE);
-		break;
-			
+			break;
+
 		}
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, operatorAttribute, fWhiteCharConverter);
@@ -141,7 +141,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		BasicParameterNode parameter = statement.getLeftParameter();
 
-		String parameterName = AbstractParameterNodeHelper.getQualifiedName(parameter);
+		String parameterName = AbstractParameterSignatureHelper.getQualifiedName(parameter);
 
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
@@ -154,7 +154,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, relationAttribute, fWhiteCharConverter);
-		
+
 		BasicParameterNode parameterRight = getRightParameter(condition);
 
 		String parameterContext = getParameterContext(parameter);
@@ -170,7 +170,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 			Attribute linkingContext = new Attribute(STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, rightParameterContext);
 			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
 		}
-		
+
 		return targetStatementElement;
 	}
 
@@ -191,12 +191,12 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
 
-			parameterLoop:
+			// parameterLoop: //TODO MO-RE check unused label
 			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
 				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
 					if (candidateComposite.isLinked()) {
 						if (candidateParameter == parameter) {
-							return AbstractParameterNodeHelper.getQualifiedName(candidateComposite);
+							return AbstractParameterSignatureHelper.getQualifiedName(candidateComposite);
 						}
 					}
 				}
@@ -238,7 +238,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		BasicParameterNode rightMethodParameterNode = condition.getRightParameterNode();
 
-		String relativeName = AbstractParameterNodeHelper.getQualifiedName(rightMethodParameterNode);
+		String relativeName = AbstractParameterSignatureHelper.getQualifiedName(rightMethodParameterNode);
 
 		Element targetParameterElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
 

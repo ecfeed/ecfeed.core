@@ -13,6 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -171,7 +175,7 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fRightParameterNode);
+		BasicParameterNode parameter = mapper.getDeployedNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}
@@ -228,7 +232,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String name = AbstractParameterSignatureHelper.getCompositeName(fRightParameterNode);
 		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
 		return parameterDescription;
 	}
@@ -236,10 +240,24 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String name = 
-				AbstractParameterNodeHelper.getQualifiedName(
-						fRightParameterNode, fRightParameterLinkingContext);
-		
+		//		String name = 
+		//				AbstractParameterSignatureHelper.getQualifiedName(
+		//						fRightParameterNode, fRightParameterLinkingContext);
+
+		String signatureNew = 
+		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				fRightParameterLinkingContext,
+				ExtendedName.PATH_TO_TOP_CONTAINTER,
+				TypeOfLink.SHORTENED,
+				fRightParameterNode,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				Decorations.NO,
+				TypeIncluded.NO,
+				extLanguageManager);
+		String name =
+				signatureNew;
+
+
 		return StatementConditionHelper.createParameterDescription(name);
 	}
 

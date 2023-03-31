@@ -88,7 +88,7 @@ public class OnParameterOperationRemoveFromComposite extends CompositeOperation 
 				fMethodNode.removeAllTestCases();
 
 				fOriginalDeployedParameters.clear();
-				fOriginalDeployedParameters.addAll(fMethodNode.getDeployedMethodParameters());
+				fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
 				fMethodNode.removeAllDeployedParameters();
 			}
 

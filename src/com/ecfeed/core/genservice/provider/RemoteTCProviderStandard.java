@@ -303,7 +303,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
         int parametersCount = 0;
         
         if (getMethodNode().isDeployed()) {
-        	parametersCount = getMethodNode().getDeployedMethodParameters().size();
+        	parametersCount = getMethodNode().getDeployedParameters().size();
         } else {
         	parametersCount = getMethodNode().getChildrenCount();
         }
@@ -317,7 +317,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
         	BasicParameterNode basicParameterNode;
             
             if (getMethodNode().isDeployed()) {
-            	basicParameterNode = getMethodNode().getDeployedMethodParameters().get(paramIndex);
+            	basicParameterNode = getMethodNode().getDeployedParameters().get(paramIndex);
             } else {
             	AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
             	

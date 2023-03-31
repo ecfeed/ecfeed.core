@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.Collection;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.LogHelperCore;
 
@@ -22,18 +21,16 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
 			Collection<? extends IAbstractNode> children, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 		
-		this(target, children, -1, adapterProvider, validate, extLanguageManager);
+		this(target, children, -1, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
 			Collection<? extends IAbstractNode> children, 
 			int index, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
@@ -46,11 +43,11 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 					operation = 
 							(IModelOperation)target.accept(
 									new FactoryAddChildOperation(
-											child, index++, adapterProvider, validate, getExtLanguageManager()));
+											child, index++, validate, getExtLanguageManager()));
 				} else {
 					operation = 
 							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(child, adapterProvider, validate, getExtLanguageManager()));
+									new FactoryAddChildOperation(child, validate, getExtLanguageManager()));
 				}
 				if (operation != null) {
 					addOperation(operation);

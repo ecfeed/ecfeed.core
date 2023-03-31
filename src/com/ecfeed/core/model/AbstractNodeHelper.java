@@ -138,4 +138,21 @@ public abstract class AbstractNodeHelper  {
 
 		return null;
 	}
+	
+	public static IAbstractNode findTopNode(IAbstractNode anyNode) {
+		
+		IAbstractNode currentNode = anyNode;
+		
+		for(;;) {
+			
+			IAbstractNode parent = currentNode.getParent();
+			
+			if (parent == null) {
+				return currentNode;
+			}
+			
+			currentNode = parent;
+		}
+	}
+	
 }

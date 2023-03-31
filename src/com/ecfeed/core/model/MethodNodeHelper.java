@@ -13,10 +13,16 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodNodeHelper {
 
@@ -59,9 +65,110 @@ public class MethodNodeHelper {
 		return true;
 	}
 
+	public static String createSignatureNewStandard(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signature = new String(nameInExtLanguage) + "(";
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode,
+						extLanguageManager);
+
+		signature += signaturesOfParameters;
+
+		signature += ")";
+
+		return signature;
+
+	}
+
+	public static String createSignatureNewStandard(
+			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode,
+						paramNamesAdded,
+						expectedDecorationsAdded, 
+						extLanguageManager);
+
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
+
+		return signature;
+
+	}
+
+	private static String createSignaturesOfParametersNewStandard(
+			MethodNode methodNode,
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		ExtendedName extendedName = (paramNamesAdded == true ? ExtendedName.NAME_ONLY : ExtendedName.EMPTY);
+		Decorations parameterDecorations = (expectedDecorationsAdded == true ? Decorations.YES : Decorations.NO);
+
+		List<String> signaturesOfSingleParameters = new ArrayList<>();
+
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+
+		for (AbstractParameterNode parameter : parameters) {
+
+			String signatureOfOneParameter = 
+					AbstractParameterSignatureHelper.createSignatureNewStandard(
+							parameter,
+							extendedName,
+							parameterDecorations,
+							TypeIncluded.YES,
+							extLanguageManager);
+
+			signaturesOfSingleParameters.add(signatureOfOneParameter);
+		}
+
+		String result = String.join(", ", signaturesOfSingleParameters);
+
+		return result;
+	}
+
+	private static String createSignaturesOfParametersNewStandard(
+			MethodNode methodNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String signature = "";
+
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+
+		int parametersSize = parameters.size();
+		for (int paramIndex = 0; paramIndex < parametersSize; paramIndex++) {
+
+			AbstractParameterNode parameter = parameters.get(paramIndex);
+
+			String signatureOfOneParameter = 
+					AbstractParameterSignatureHelper.createSignatureNewStandard(
+							parameter, 
+							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
+							extLanguageManager);
+
+
+			signature += signatureOfOneParameter;
+
+			if (paramIndex < parametersSize - 1) {
+				signature += ", ";
+			}
+		}
+
+		return signature;
+	}
+
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		return createSignature(
+		return createSignature( 
 				methodNode,
 				isParamNameAdded,
 				false, extLanguageManager);
@@ -83,35 +190,46 @@ public class MethodNodeHelper {
 
 	public static String createSignature(
 			MethodNode methodNode,
-			boolean isParamNameAdded,
-			boolean isExpectedDecorationAdded, 
-			IExtLanguageManager extLanguageOfTheResult) {
+			boolean paramNamesAdded,
+			boolean expectedDecorationsAdded, 
+			IExtLanguageManager extLanguageManager) {
+
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(methodNode.getName());
+
+		String signaturesOfParameters = 
+				createSignaturesOfParametersNewStandard(
+						methodNode, 
+						paramNamesAdded,
+						expectedDecorationsAdded, 
+						extLanguageManager);
 
 
-		final List<Boolean> expectedParametersFlags =
-				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
-
-		List<String> parametersNames = new ArrayList<>();
-
-		if (isParamNameAdded == true) {
-			parametersNames = methodNode.getParametersNames();
-		} else {
-			parametersNames = null;
-		}
-
-		List<String> parameterTypes = methodNode.getParameterTypes();
-
-		String methodName = methodNode.getName();
-
-		String signature =
-				createSignatureByIntrLanguage(
-						methodName,
-						parameterTypes,
-						parametersNames,
-						expectedParametersFlags,
-						extLanguageOfTheResult);
+		String signature = nameInExtLanguage + "(" + signaturesOfParameters + ")";
 
 		return signature;
+
+		//		final List<Boolean> expectedParametersFlags =
+		//				(expectedDecorationsAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
+		//
+		//		List<String> parametersNames = new ArrayList<>();
+		//
+		//		if (paramNamesAdded == true) {
+		//			parametersNames = methodNode.getParametersNames();
+		//		} else {
+		//			parametersNames = null;
+		//		}
+		//
+		//		List<String> parameterTypes = methodNode.getParameterTypes();
+		//
+		//		String methodName = methodNode.getName();
+		//
+		//		String signature =
+		//				createSignatureByIntrLanguage(
+		//						methodName,
+		//						parameterTypes,
+		//						parametersNames,
+		//						expectedParametersFlags,
+		//						extLanguageOfTheResult);
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -179,7 +297,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter =
-					AbstractParameterNodeHelper.createSignature(
+					AbstractParameterSignatureHelper.createSignature(
 							parameterType, parameterName, expectedFlag, extLanguageManager);
 
 			signature += signatureOfOneParameter;
@@ -211,7 +329,7 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+						AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
 								basicParameterNode.getType(),
 								basicParameterNode.getName(),
 								basicParameterNode.isExpected(), 
@@ -220,8 +338,14 @@ public class MethodNodeHelper {
 
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
+				//signatureOfOneParameter = 
+						//AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
+				
 				signatureOfOneParameter = 
-						AbstractParameterNodeHelper.createSignature(compositeParameterNode, extLanguageManager);
+						AbstractParameterSignatureHelper.createSignatureNewStandard(
+								compositeParameterNode, 
+								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
+								extLanguageManager);
 			}
 
 			signature += signatureOfOneParameter;
@@ -250,7 +374,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter = 
-					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
 							parameterType,
 							parameterName,
 							expectedFlag, 
@@ -266,27 +390,27 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
-
-		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-
-		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-
-			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-				continue;
-			}
-
-			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-			if (basicParameterNode.isExpected()) {
-				expectedFlags.add(true);
-			} else {
-				expectedFlags.add(false);
-			}
-		}
-
-		return expectedFlags;
-	}
+	//	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
+	//
+	//		List<Boolean> expectedFlags = new ArrayList<Boolean>();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+	//
+	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+	//				continue;
+	//			}
+	//
+	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+	//
+	//			if (basicParameterNode.isExpected()) {
+	//				expectedFlags.add(true);
+	//			} else {
+	//				expectedFlags.add(false);
+	//			}
+	//		}
+	//
+	//		return expectedFlags;
+	//	}
 
 	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
 	//
@@ -463,5 +587,152 @@ public class MethodNodeHelper {
 		return testCaseNode;
 	}
 
+	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts( // TODO MO-RE unit tests
+			MethodNode methodSource) {
+
+		List<ParameterWithLinkingContext> result = new ArrayList<>();
+
+		List<AbstractParameterNode> parameters = methodSource.getParameters();
+
+		for (AbstractParameterNode currentParameterNode : parameters) {
+
+			AbstractParameterNode currentLinkingContext = currentParameterNode;
+
+			accumulateBasicParametersAndContextsRecursive(
+					currentParameterNode, 
+					currentLinkingContext, 
+					result);
+		}
+
+		return result;
+	}
+
+	private static void accumulateBasicParametersAndContextsRecursive(
+			AbstractParameterNode currentAbstractParameterNode, 
+			AbstractParameterNode currentLinkingContext,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		if (currentAbstractParameterNode instanceof BasicParameterNode) {
+
+			if (currentAbstractParameterNode.isLinked()) {
+				accumulateBasicLinkedParameter(currentAbstractParameterNode, inOutResult);
+				return;
+			}
+
+			accumulateBasicParameter(currentAbstractParameterNode, null, inOutResult);
+			return;
+		}
+
+		CompositeParameterNode currentCompositeParameterNode = 
+				(CompositeParameterNode) currentAbstractParameterNode;
+
+		if (currentCompositeParameterNode.isGlobalParameter()) {
+			accumulateBasicParametersInGlobalCompositesRecursive(
+					currentCompositeParameterNode, currentLinkingContext, inOutResult);
+			return;
+		} 
+
+		// accumulating parameters in local composites
+
+		AbstractParameterNode linkToGlobalParameter = currentCompositeParameterNode.getLinkToGlobalParameter();
+
+		if (linkToGlobalParameter != null) {
+
+			// jump to global composites 
+
+			accumulateBasicParametersAndContextsRecursive(
+					linkToGlobalParameter, currentLinkingContext, inOutResult);
+
+			return;
+		}
+
+		List<AbstractParameterNode> parameters = currentCompositeParameterNode.getParameters();
+
+		for (AbstractParameterNode childAbstractParameterNode : parameters) {
+
+			AbstractParameterNode newLinkingContext = childAbstractParameterNode;
+
+			accumulateBasicParametersAndContextsRecursive(
+					childAbstractParameterNode, newLinkingContext, inOutResult);
+		}
+	}
+
+	private static void accumulateBasicParametersInGlobalCompositesRecursive(
+			CompositeParameterNode currentCompositeParameterNode, 
+			AbstractParameterNode currentLinkingContext,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		List<AbstractParameterNode> childParameters = currentCompositeParameterNode.getParameters();
+
+		for (AbstractParameterNode childParameter : childParameters) {
+
+			if (childParameter instanceof BasicParameterNode) {
+				accumulateBasicParameter(childParameter, currentLinkingContext, inOutResult);
+				continue;
+			}
+
+			CompositeParameterNode childCompositeParameterNode = (CompositeParameterNode) childParameter;
+
+			accumulateBasicParametersInGlobalCompositesRecursive(
+					childCompositeParameterNode, 
+					currentLinkingContext, 
+					inOutResult);
+		}
+	}
+
+	private static void accumulateBasicLinkedParameter(
+			AbstractParameterNode currentAbstractParameterNode,
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		AbstractParameterNode newContext = currentAbstractParameterNode;
+		AbstractParameterNode newParameter = newContext.getLinkToGlobalParameter();
+
+		accumulateBasicParameter(newParameter, newContext, inOutResult);
+
+	}
+
+	private static void accumulateBasicParameter(
+			AbstractParameterNode currentAbstractParameterNode,
+			AbstractParameterNode linkingContext, 
+			List<ParameterWithLinkingContext> inOutResult) {
+
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				new ParameterWithLinkingContext(currentAbstractParameterNode, linkingContext);
+
+		inOutResult.add(parameterWithLinkingContext);
+	}
+
+	public static AbstractParameterNode findParameterByPath(String path, MethodNode methodNode) {
+
+		String[] pathElements = path.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		int pathSize = pathElements.length;
+
+		IParametersParentNode currentParametersParent = methodNode;
+
+		for (int pathIndex = 0; pathIndex < pathSize; pathIndex++) {
+
+			String pathElement = pathElements[pathIndex];
+
+			AbstractParameterNode foundParameter = currentParametersParent.findParameter(pathElement);
+
+			if (foundParameter == null) {
+				return null;
+			}
+
+			if (pathIndex == pathSize - 1) {
+				return foundParameter;
+			}
+
+			if (!(foundParameter instanceof CompositeParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Current parameter is not a composite.");
+			}
+
+			currentParametersParent = (IParametersParentNode) foundParameter;
+		}
+
+		ExceptionHelper.reportRuntimeException("Parameter not found");
+		return null;
+	}
 
 }

@@ -10,9 +10,11 @@
 package com.ecfeed.core.export;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 
 
 public interface IExportTemplate {
@@ -28,5 +30,5 @@ public interface IExportTemplate {
 	String getHeaderTemplate();
 	String getTestCaseTemplate();
 
-	String createPreview(Collection<TestCaseNode> testCases, MethodNode methodNode);
+	String createPreview(Collection<TestCaseNode> testCases, MethodNode methodNode, List<ParameterWithLinkingContext> deployedParameters);
 }

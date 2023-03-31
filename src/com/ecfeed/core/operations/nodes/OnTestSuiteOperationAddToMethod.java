@@ -17,7 +17,6 @@ import com.ecfeed.core.model.TestCase;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
@@ -26,28 +25,25 @@ public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
 			MethodNode methodNode, 
 			String testSuiteName, 
 			List<TestCase> testCases, 
-			ITypeAdapterProvider typeAdapterProvider,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
-		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
+		createTestSuites(testCases, testSuiteName, methodNode);
 	}
 
 	public OnTestSuiteOperationAddToMethod(
 			MethodNode methodNode, 
 			List<TestCaseNode> testCases, 
-			ITypeAdapterProvider typeAdapterProvider,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
-		createAndAddTestCaseOperations(testCases, methodNode, typeAdapterProvider);
+		createAndAddTestCaseOperations(testCases, methodNode);
 	}
 
 	private void createTestSuites(
 			List<TestCase> testCases, 
 			String testSuiteName, 
-			MethodNode methodNode, 
-			ITypeAdapterProvider typeAdapterProvider) {
+			MethodNode methodNode) {
 
 		for (TestCase testCase : testCases) {
 
@@ -61,12 +57,11 @@ public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
 					new OnTestCaseOperationAddToMethod(
 							methodNode, 
 							testCaseNode, 
-							typeAdapterProvider,
 							getExtLanguageManager()));
 		}
 	}
 
-	private void createAndAddTestCaseOperations(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+	private void createAndAddTestCaseOperations(List<TestCaseNode> testCases, MethodNode methodNode) {
 
 		for (TestCaseNode testCase : testCases) {
 
@@ -74,7 +69,6 @@ public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
 					new OnTestCaseOperationAddToMethod(
 							methodNode, 
 							testCase, 
-							typeAdapterProvider,
 							getExtLanguageManager()));
 		}
 	}

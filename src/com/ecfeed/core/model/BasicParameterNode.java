@@ -110,20 +110,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		addChoices(source.getChoices());
 	}
 
-//	private BasicParameterNode(BasicParameterNode source) {
-//
-//		this(
-//				source.getName(),
-//				source.getType(),
-//				source.getDefaultValue(),
-//				source.fExpected,
-//				source.getLinkToGlobalParameter(),
-//				source.getModelChangeRegistrator());
-//
-//		for(ChoiceNode choice : source.getChoices()){
-//			addChoice(choice.makeClone());
-//		}
-//	}
+	//	private BasicParameterNode(BasicParameterNode source) {
+	//
+	//		this(
+	//				source.getName(),
+	//				source.getType(),
+	//				source.getDefaultValue(),
+	//				source.fExpected,
+	//				source.getLinkToGlobalParameter(),
+	//				source.getModelChangeRegistrator());
+	//
+	//		for(ChoiceNode choice : source.getChoices()){
+	//			addChoice(choice.makeClone());
+	//		}
+	//	}
 
 	@Override
 	public void setName(String name) {
@@ -133,7 +133,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		super.setName(name);
 	}
 
-	public void setNameUnsafe(String name) {
+	public void setNameWithoutChecks(String name) {
 
 		super.setName(name);
 	}
@@ -170,17 +170,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return parameter;
 	}
 
-	public BasicParameterNode createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = makeClone(mapper);
+	public BasicParameterNode createCopyForDeployment(NodeMapper mapper) {
+		
+		BasicParameterNode copy = makeClone(mapper);
 
-		parameter.setDeploymentParameter(this);
-		parameter.setParent(null);
+		copy.setDeploymentParameter(this);
+		copy.setParent(null);
 
-		mapper.addMappings(this, parameter);
+		mapper.addMappings(this, copy);
 
-		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
+		//copy.setNameWithoutChecks(AbstractParameterNodeHelper.getName(this));
 
-		return parameter;
+		return copy;
 	}
 
 	public BasicParameterNode getDeploymentParameter() {
@@ -690,5 +691,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public BasicParameterNode getLinkDestination() {
 
 		return (BasicParameterNode) super.getLinkDestination();
+	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+
+		if (isLinked()) {
+			return new ArrayList<>();
+		}
+
+		return getChildren();
 	}
 }

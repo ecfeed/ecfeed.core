@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
 
@@ -21,7 +20,6 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 
 	public GenericRemoveNodesOperation(
 			NodesByType processedNodesToDelete,
-			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IAbstractNode nodeToSelect,
 			IAbstractNode nodeToSelectAfterReverseOperation,
@@ -35,7 +33,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 
 		List<IModelOperation> operations =  
 				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
-						processedNodesToDelete,	extLanguageManager, typeAdapterProvider, validate);
+						processedNodesToDelete,	extLanguageManager, validate);
 
 		addChildOperations(operations);
 	}

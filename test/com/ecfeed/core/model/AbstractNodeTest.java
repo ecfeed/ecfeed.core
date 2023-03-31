@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -56,6 +57,12 @@ public class AbstractNodeTest{
 		@Override
 		public int getMaxChildIndex(IAbstractNode potentialChild) {
 			return 0;
+		}
+
+		@Override
+		public List<IAbstractNode> getDirectChildren() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

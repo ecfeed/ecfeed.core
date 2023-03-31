@@ -17,14 +17,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -306,8 +305,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(leftParameterType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(leftParameterType);
 
 		IStatementCondition statementCondition = relationStatement.getCondition();
 

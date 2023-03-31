@@ -17,16 +17,16 @@ public class BasicParameterDescription {
 
 	private String fQualifiedName;
 	private BasicParameterNode fBasicParameterNode;
-	private CompositeParameterNode fLinkingCompositeParameterNode;
+	private CompositeParameterNode fLinkingContext;
 
 	public BasicParameterDescription(
 			String qualifiedName,
 			BasicParameterNode basicParameterNode, 
-			CompositeParameterNode linkingCompositeParameterNode) {
+			CompositeParameterNode linkingContext) {
 
 		fQualifiedName = qualifiedName;
 		fBasicParameterNode = basicParameterNode;
-		fLinkingCompositeParameterNode = linkingCompositeParameterNode;
+		fLinkingContext = linkingContext;
 	}
 
 	public String getQualifiedName() {
@@ -38,7 +38,7 @@ public class BasicParameterDescription {
 	}
 
 	public CompositeParameterNode getLinkingParameterNode() {
-		return fLinkingCompositeParameterNode;
+		return fLinkingContext;
 	}
 
 }

@@ -8,17 +8,10 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model.serialization;
+package com.ecfeed.core.utils;
 
-import java.util.Optional;
-
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.utils.ListOfStrings;
-
-import nu.xom.Element;
-
-public interface IModelParserForMethodDeployedParameter {
-
-	Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(Element parameterElement, MethodNode method, ListOfStrings errorList);
+public class NodesByTypeHelperTest {
+	
+	// TODO MO-RE test
+		
 }

@@ -18,26 +18,182 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelConverter;
 import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 
 public class ModelSerializerTest {
+
+	@Test 
+	public void shouldSerializeDeployedLinkedParametersWithConflictingNamesAndMultipleLinks() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		CompositeParameterNode globalCompositeParameterNode1 = 
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
+
+		// BasicParameterNode globalBasicParameterNode1 = 
+		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
+				globalCompositeParameterNode1, "GP", "int", "o", null);
+
+		CompositeParameterNode globalCompositeParameterNode2 = 
+				CompositeParameterNodeHelper.addNewCompositeParameterNodeToCompositeParameter(
+						globalCompositeParameterNode1, "GS2", null);
+
+		// BasicParameterNode globalBasicParameterNode2 =
+		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
+				globalCompositeParameterNode2, "GP", "int", "o", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+
+		CompositeParameterNode localCompositeParameterNode1 = 
+				MethodNodeHelper.addCompositeParameter(methodNode, "LS1", null);
+
+		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
+
+
+		CompositeParameterNode localCompositeParameterNode2 = 
+				MethodNodeHelper.addCompositeParameter(methodNode, "LS2", null);
+
+		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
+
+		// root
+		//   GS1
+		//     GP
+		//	   GS2 
+		//       GP
+		//   class
+		//   method
+		//    LS1->GS
+		//    LS2->GS
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+
+		// List<ParameterWithLinkingContext> deployedParamsWithContexts = 
+		//		methodNode.getDeployedParametersWithLinkingContexs();
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			//String xml = ostream.toString();
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
+
+	@Test
+	public void shouldSerializeDeployedLocalParametersWithConflictingNames() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+
+		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", null);
+
+		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LS", null);
+
+		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
+				compositeParameterNode, "LP", "int", "0", null);
+
+		// root
+		//   class
+		//   method
+		//    LP : int
+		//    LS
+		//      LP : int
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+
+			String xml = ostream.toString();
+			System.out.println(xml);
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			// check original parameter
+
+			//			ClassNode orgClass = rootNode.getClasses().get(0);
+			//			MethodNode orgMethodNode = orgClass.getMethods().get(0);
+			//			List<ParameterWithLinkingContext> orgDeployedParams = 
+			//					orgMethodNode.getDeployedParametersWithLinkingContexs();
+			//			ParameterWithLinkingContext orgDeployedParam2 = orgDeployedParams.get(1);
+
+			// check parsed deployed parameter 1
+
+			ClassNode parsedClass = parsedModel.getClasses().get(0);
+			MethodNode parsedMethodNode = parsedClass.getMethods().get(0);
+			List<ParameterWithLinkingContext> parsedDeployedParams = 
+					parsedMethodNode.getDeployedParametersWithLinkingContexts();
+
+			ParameterWithLinkingContext parsedDeployedParam1 = parsedDeployedParams.get(0);
+			IParametersParentNode parsedParent1 = parsedDeployedParam1.getParameter().getParent();
+			assertEquals(parsedMethodNode, parsedParent1);
+
+			// check parsed deployed parameter 2
+
+			ParameterWithLinkingContext parsedDeployedParam2 = parsedDeployedParams.get(1);
+			IParametersParentNode parsedParent2 = parsedDeployedParam2.getParameter().getParent();
+			assertEquals("LS", parsedParent2.getName());
+
+			IParametersParentNode parsedParent3 = (IParametersParentNode) parsedParent2.getParent();
+			assertEquals(parsedMethodNode, parsedParent3);
+
+			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 
 	@Test
 	public void modelSerializerTest() {
@@ -82,12 +238,12 @@ public class ModelSerializerTest {
 	}
 
 	private void classSerializerTest(boolean runOnAndroid, String androidBaseRunner, int version){
-		
+
 		RootNode model = new RootNode("model", null, version);
-		
+
 		ClassNode classNode = new ClassNode("com.example.TestClass", null);
 		model.addClass(classNode);
-		
+
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
 		classNode.addParameter(new BasicParameterNode("parameter1", "int", null, false, null));
@@ -99,7 +255,7 @@ public class ModelSerializerTest {
 		try {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-			
+
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 

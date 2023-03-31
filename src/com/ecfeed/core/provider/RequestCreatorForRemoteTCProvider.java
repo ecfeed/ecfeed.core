@@ -118,7 +118,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 		List<BasicParameterNode> parameters;
 		
 		if (methodNode.isDeployed()) {
-			parameters = methodNode.getDeployedMethodParameters();
+			parameters = methodNode.getDeployedParameters();
 		} else {
 			parameters = methodNode.getParametersAsBasic();
 		}

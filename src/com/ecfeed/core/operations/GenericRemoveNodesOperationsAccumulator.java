@@ -31,8 +31,6 @@ import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
@@ -42,7 +40,6 @@ public class GenericRemoveNodesOperationsAccumulator {
 	public static List<IModelOperation> convertNodesToOperations(
 			NodesByType outAffectedNodesByType,
 			IExtLanguageManager extLanguageManager,
-			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate) {
 
 		List<IModelOperation> result = new ArrayList<>();
@@ -132,8 +129,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
 
 			IModelOperation modelOperation = 
-					new GenericOperationRemoveChoice(
-							choicesParentNode, choiceNode, new TypeAdapterProviderForJava(), validate, extLanguageManager);
+					new GenericOperationRemoveChoice(choicesParentNode, choiceNode, validate, extLanguageManager);
 
 			result.add(modelOperation);
 		}

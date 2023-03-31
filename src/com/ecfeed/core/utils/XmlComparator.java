@@ -24,7 +24,7 @@ public class XmlComparator {
 			String tag2 = getTag(xml2, position2);
 
 			if (!StringHelper.isEqual(tag1, tag2)) {
-				return false;
+				return false; // TODO MO-RE report exception with tags which differ
 			}
 
 			if (tag1 == null || tag2 == null) {

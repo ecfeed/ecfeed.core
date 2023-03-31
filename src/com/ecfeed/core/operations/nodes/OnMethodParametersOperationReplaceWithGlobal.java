@@ -19,12 +19,11 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOperation{
@@ -32,13 +31,12 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 	public OnMethodParametersOperationReplaceWithGlobal(
 			IParametersParentNode parent, 
 			List<BasicParameterNode> originals, 
-			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 		
 		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
 		
 		for(BasicParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguageManager));
+			addOperation(new ReplaceParameterWithLink(parameter, parent, extLanguageManager));
 		}
 	}
 	
@@ -47,7 +45,6 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 		public ReplaceParameterWithLink(
 				BasicParameterNode target, 
 				IParametersParentNode parent, 
-				ITypeAdapterProvider adapterProvider,
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = (MethodNode) target.getParent();
@@ -71,7 +68,7 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 				TestCaseNode copy = tc.makeClone();
 				addOperation(
 						new OnTestCaseOperationAddToMethod(
-								method, copy, adapterProvider, tc.getMyIndex(), Optional.empty(), extLanguageManager));
+								method, copy, tc.getMyIndex(), Optional.empty(), extLanguageManager));
 			}
 		}
 
