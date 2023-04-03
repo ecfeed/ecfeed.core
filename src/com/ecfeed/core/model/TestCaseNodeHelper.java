@@ -83,7 +83,7 @@ public class TestCaseNodeHelper {
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
-			result += ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, extLanguageManager);
+			result += createSignatureOfChoice(choice, extLanguageManager);
 
 			if (index < testData.size() - 1) {
 				result += ", ";
@@ -93,10 +93,27 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
+	public static String createSignatureOfChoice(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		BasicParameterNode basicParameterNode = choiceNode.getParameter();	
+
+		if (basicParameterNode.isExpected()) {
+			String valueString = ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
+			return valueString;
+			
+		} else {
+			String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+			return choiceQualifiedName;
+		}
+	}
+	
 	private static String getShortTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
 
+		
+		
+		
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
