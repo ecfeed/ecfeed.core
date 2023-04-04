@@ -211,10 +211,10 @@ public abstract class MethodDeployer {
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
 
-		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, nodeMapper));
+		parameters.forEach(e -> deployConstraintsRecursively(e, targetMethod, prefix, nodeMapper));
 	}
 
-	private static void deployConstraintsForCompositeParameterRecursively(
+	private static void deployConstraintsRecursively(
 			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
 
 		if (parameter instanceof BasicParameterNode) {
@@ -230,7 +230,7 @@ public abstract class MethodDeployer {
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
+				deployConstraintsRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
 			}
 		}
 	}

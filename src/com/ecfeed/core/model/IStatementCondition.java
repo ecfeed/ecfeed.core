@@ -21,6 +21,7 @@ public interface IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager);
 	public Object getCondition();
 	public RelationStatement getParentRelationStatement();
+	public void setParentRelationStatement(RelationStatement relationStatement);
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
 	//public boolean updateReferences(IParametersParentNode methodNode);
@@ -36,6 +37,6 @@ public interface IStatementCondition {
 	public String getLabel(BasicParameterNode methodParameterNode);
 	public IStatementCondition makeClone();
 	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper);
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 }
 
