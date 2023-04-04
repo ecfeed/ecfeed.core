@@ -13,13 +13,8 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
@@ -287,15 +282,8 @@ public abstract class MethodDeployer {
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
 
 		String signature = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-						context,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.NORMAL,
-						parameter,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						Decorations.NO,
-						TypeIncluded.NO,
-						new ExtLanguageManagerForJava());
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						parameter, context);
 
 		return signature;
 	}

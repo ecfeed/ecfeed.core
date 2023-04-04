@@ -190,7 +190,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				ExtendedName.PATH_TO_TOP_CONTAINTER,
 				TypeOfLink.SHORTENED,
 				leftParameter,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
 				Decorations.NO,
 				TypeIncluded.NO,
 				new ExtLanguageManagerForJava());
@@ -224,7 +224,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				ExtendedName.PATH_TO_TOP_CONTAINTER,
 				TypeOfLink.SHORTENED,
 				leftBasicParameterNode,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
 				Decorations.NO,
 				TypeIncluded.NO,
 				extLanguageManager);

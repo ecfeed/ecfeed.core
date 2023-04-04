@@ -255,7 +255,7 @@ public class ParameterCondition implements IStatementCondition {
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.SHORTENED,
 						fRightParameterNode,
-						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
 						Decorations.NO,
 						TypeIncluded.NO,
 						extLanguageManager);

@@ -17,6 +17,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.view.CurrentExtLanguageHelper;
 
 public abstract class AbstractParameterSignatureHelper {
 
@@ -29,7 +30,7 @@ public abstract class AbstractParameterSignatureHelper {
 		EMPTY,
 		NAME_ONLY,
 		PATH_TO_TOP_CONTAINTER,
-		PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
+		PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
 	}
 
 	public enum TypeOfLink {
@@ -108,6 +109,40 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return signature;
 	}
+	
+	public static String createSignatureOfParameterWithContextOrLinkNewStandard(
+			AbstractParameterNode parameter,
+			AbstractParameterNode context) {
+		
+		if (context == null) {
+			
+			String signatureOfParameterWithLink = 
+					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+							parameter,
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							TypeOfLink.NORMAL,
+							parameter.getLinkToGlobalParameter(),
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							Decorations.NO,
+							TypeIncluded.NO,
+							CurrentExtLanguageHelper.getCurrentExtLanguageManager());
+			
+			return signatureOfParameterWithLink;
+		}
+			
+		String signatureOfParameterWithContext = 
+					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+							context,
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							TypeOfLink.NORMAL,
+							parameter,
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							Decorations.NO,
+							TypeIncluded.NO,
+							CurrentExtLanguageHelper.getCurrentExtLanguageManager());
+			
+		return signatureOfParameterWithContext;
+	}
 
 	public static String createPathToTopContainerNewStandard( // former getQualifiedName
 			AbstractParameterNode abstractParameterNode,
@@ -161,7 +196,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		if (parameterWhichHasLink == null) {
 
-			String signatureOfLinkOnly = 
+			String signatureOfLinkOnly =
 					createSignatureOfSingleParameterNameNewStandard(
 							link, 
 							extendedNameTypeOfLink,
@@ -211,7 +246,7 @@ public abstract class AbstractParameterSignatureHelper {
 			return signature;
 		}
 
-		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM) {
+		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM) {
 
 			String signature = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 			signature = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, signature);
