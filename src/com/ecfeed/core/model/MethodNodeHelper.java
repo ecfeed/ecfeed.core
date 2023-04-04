@@ -329,18 +329,16 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-								basicParameterNode.getType(),
-								basicParameterNode.getName(),
-								basicParameterNode.isExpected(), 
+						AbstractParameterSignatureHelper.createSignatureNewStandard(
+								basicParameterNode, 
+								ExtendedName.NAME_ONLY, 
+								Decorations.YES, 
+								TypeIncluded.YES, 
 								extLanguageManager);
 			} else {
 
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
-				//signatureOfOneParameter = 
-						//AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
-				
 				signatureOfOneParameter = 
 						AbstractParameterSignatureHelper.createSignatureNewStandard(
 								compositeParameterNode, 
