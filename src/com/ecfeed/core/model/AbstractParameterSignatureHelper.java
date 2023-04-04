@@ -108,14 +108,14 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return signature;
 	}
-	
+
 	public static String createSignatureOfParameterWithContextOrLinkNewStandard(
 			AbstractParameterNode parameter,
 			AbstractParameterNode context,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		if (context == null) {
-			
+
 			String signatureOfParameterWithLink = 
 					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 							parameter,
@@ -126,21 +126,21 @@ public abstract class AbstractParameterSignatureHelper {
 							Decorations.NO,
 							TypeIncluded.NO,
 							extLanguageManager);
-			
+
 			return signatureOfParameterWithLink;
 		}
-			
+
 		String signatureOfParameterWithContext = 
-					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-							context,
-							ExtendedName.PATH_TO_TOP_CONTAINTER,
-							TypeOfLink.NORMAL,
-							parameter,
-							ExtendedName.PATH_TO_TOP_CONTAINTER,
-							Decorations.NO,
-							TypeIncluded.NO,
-							extLanguageManager);
-			
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+
 		return signatureOfParameterWithContext;
 	}
 
