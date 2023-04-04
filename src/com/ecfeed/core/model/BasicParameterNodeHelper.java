@@ -409,31 +409,37 @@ public class BasicParameterNodeHelper {
 		return errorMessage;
 	}
 
+//	public static ChoiceNode addNewChoiceToBasicParameter(
+//			BasicParameterNode globalParameterNode,
+//			String choiceNodeName,
+//			String valueString,
+//			boolean isRandomizedValue,
+//			IModelChangeRegistrator modelChangeRegistrator) {
+//
+//		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+//		choiceNode.setRandomizedValue(isRandomizedValue);
+//
+//		globalParameterNode.addChoice(choiceNode);
+//
+//		return choiceNode;
+//	}
+
 	public static ChoiceNode addNewChoiceToBasicParameter(
-			BasicParameterNode globalParameterNode,
+			BasicParameterNode basicParameterNode,
 			String choiceNodeName,
 			String valueString,
 			boolean isRandomizedValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
 		choiceNode.setRandomizedValue(isRandomizedValue);
+		
+		if (setParent) {
+			choiceNode.setParent(basicParameterNode);
+		}
 
-		globalParameterNode.addChoice(choiceNode);
-
-		return choiceNode;
-	}
-
-	public static ChoiceNode addNewChoiceToBasicParameter(
-			BasicParameterNode globalParameterNode,
-			String choiceNodeName,
-			String valueString,
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
-		choiceNode.setRandomizedValue(false);
-
-		globalParameterNode.addChoice(choiceNode);
+		basicParameterNode.addChoice(choiceNode);
 
 		return choiceNode;
 	}

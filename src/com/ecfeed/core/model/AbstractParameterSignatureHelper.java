@@ -17,7 +17,6 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.view.CurrentExtLanguageHelper;
 
 public abstract class AbstractParameterSignatureHelper {
 
@@ -112,7 +111,8 @@ public abstract class AbstractParameterSignatureHelper {
 	
 	public static String createSignatureOfParameterWithContextOrLinkNewStandard(
 			AbstractParameterNode parameter,
-			AbstractParameterNode context) {
+			AbstractParameterNode context,
+			IExtLanguageManager extLanguageManager) {
 		
 		if (context == null) {
 			
@@ -125,7 +125,7 @@ public abstract class AbstractParameterSignatureHelper {
 							ExtendedName.PATH_TO_TOP_CONTAINTER,
 							Decorations.NO,
 							TypeIncluded.NO,
-							CurrentExtLanguageHelper.getCurrentExtLanguageManager());
+							extLanguageManager);
 			
 			return signatureOfParameterWithLink;
 		}
@@ -139,7 +139,7 @@ public abstract class AbstractParameterSignatureHelper {
 							ExtendedName.PATH_TO_TOP_CONTAINTER,
 							Decorations.NO,
 							TypeIncluded.NO,
-							CurrentExtLanguageHelper.getCurrentExtLanguageManager());
+							extLanguageManager);
 			
 		return signatureOfParameterWithContext;
 	}

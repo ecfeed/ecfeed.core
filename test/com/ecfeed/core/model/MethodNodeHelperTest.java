@@ -356,20 +356,17 @@ public class MethodNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		MethodNode methodNode = new MethodNode("method_1", null);
-		classNode.addMethod(methodNode);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method_1", true, null); 
 
-		BasicParameterNode param1 = new BasicParameterNode("param_1", "int", "0", false, null);
-		methodNode.addParameter(param1);
+		MethodNodeHelper.addNewBasicParameter(methodNode, "param_1", "int", "0", true, null);
 
-		BasicParameterNode param2 = new BasicParameterNode("param_2", "double", "0.0", true, null);
-		methodNode.addParameter(param2);
+		MethodNodeHelper.addNewBasicParameter(methodNode, "param_2", "double", "0", true, null);
 
 		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
-		assertEquals("param_1 : int, param_2[EXP] : double", signature);
+		assertEquals("param_1 : int, param_2 : double", signature);
 
 		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
-		assertEquals("param 1 : Number, param 2[EXP] : Number", signature);
+		assertEquals("param_1 : Number, param_2 : Number", signature);
 	}
 
 	@Test

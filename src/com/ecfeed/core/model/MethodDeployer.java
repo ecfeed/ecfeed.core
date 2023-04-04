@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
@@ -276,14 +277,15 @@ public abstract class MethodDeployer {
 
 	public static String createSignatureOfOriginalNodes(
 			ParameterWithLinkingContext deployedParameterWithLinkingContext,
-			NodeMapper nodeMapper) {
+			NodeMapper nodeMapper,
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
 
 		String signature = 
 				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
-						parameter, context);
+						parameter, context, extLanguageManager);
 
 		return signature;
 	}
