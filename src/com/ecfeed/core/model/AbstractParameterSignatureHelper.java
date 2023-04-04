@@ -278,47 +278,6 @@ public abstract class AbstractParameterSignatureHelper {
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
 	// OBSOLETE
-	public static String createSignatureOfParameterWithLink( 
-			AbstractParameterNode parameter,
-			AbstractParameterNode link) {
-
-		printObsoleteInfo();
-
-		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
-		}
-
-		if (link == null) {
-
-			String signatureOfParameter = 
-					createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-			return signatureOfParameter;
-		}
-
-		String signatureOfLink = 
-				createSignatureWithPathToTopParametersParent(
-						link, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		String signatureOfParameter = 
-				createSignatureWithPathToTopParametersParent(
-						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		return signatureOfParameter + LINK_SPECIFIER_TEXT  + signatureOfLink;
-	}
-
-	//	private static String createSignatureOfParameterName(
-	//			AbstractParameterNode abstractParameterNode,
-	//			AbstractParameterNode linkToParameterOrParentOfParameter,
-	//			ExtendedName extendedNameType,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		String name = createSignatureOfSingleParameterName(abstractParameterNode);
-	//		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
-	//		return name;
-	//	}
-
-	// OBSOLETE
 	private static String createSignatureOfSingleParameterName(
 			AbstractParameterNode abstractParameterNode) {
 
@@ -328,17 +287,6 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return signature;
 	}
-
-	//	// OBSOLETE
-	//	private static String getExtendedType(AbstractParameterNode abstractParameterNode) {
-	//
-	//		if (abstractParameterNode instanceof CompositeParameterNode) {
-	//			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-	//		}
-	//
-	//		String typeOfBasicParameter = ((BasicParameterNode)abstractParameterNode).getType();
-	//		return typeOfBasicParameter;
-	//	}
 
 	// OBSOLETE
 	public static String createSignatureOfParameterWithContext(
@@ -609,35 +557,6 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String createReverseSignatureWithOptionalLink(
-			BasicParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String type = createSignatureOfType(parameter, extLanguageManager);
-
-		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
-
-		return signature;
-	}
-
-	// OBSOLETE
-	public static String createReverseSignatureWithOptionalLink(
-			CompositeParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String type = CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-
-		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
-
-		return signature;
-
-	}
-
-	// OBSOLETE
 	public static String createSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -663,21 +582,6 @@ public abstract class AbstractParameterSignatureHelper {
 						signatureOfParameterName,
 						parameter.isExpected(),
 						extLanguageManager);
-
-		return signature;
-	}
-
-	// OBSOLETE
-	private static String createReverseSignatureOfAbstractParameter(AbstractParameterNode parameter, String type) {
-
-		printObsoleteInfo();
-
-		String signature = 
-				AbstractParameterSignatureHelper.createSignatureOfParameterWithLink(
-						parameter, parameter.getLinkToGlobalParameter());
-
-		signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-		signature += type;
 
 		return signature;
 	}
