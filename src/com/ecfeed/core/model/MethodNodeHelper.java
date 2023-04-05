@@ -329,18 +329,16 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-								basicParameterNode.getType(),
-								basicParameterNode.getName(),
-								basicParameterNode.isExpected(), 
+						AbstractParameterSignatureHelper.createSignatureNewStandard(
+								basicParameterNode, 
+								ExtendedName.NAME_ONLY, 
+								Decorations.YES, 
+								TypeIncluded.YES, 
 								extLanguageManager);
 			} else {
 
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
-				//signatureOfOneParameter = 
-						//AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
-				
 				signatureOfOneParameter = 
 						AbstractParameterSignatureHelper.createSignatureNewStandard(
 								compositeParameterNode, 
@@ -389,111 +387,6 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-
-	//	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
-	//
-	//		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-	//
-	//		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-	//
-	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-	//				continue;
-	//			}
-	//
-	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-	//
-	//			if (basicParameterNode.isExpected()) {
-	//				expectedFlags.add(true);
-	//			} else {
-	//				expectedFlags.add(false);
-	//			}
-	//		}
-	//
-	//		return expectedFlags;
-	//	}
-
-	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
-	//
-	//		List<TestSuiteNode> testSuites = method.getTestSuites();
-	//
-	//		List<String> testSuiteNames = new ArrayList<>();
-	//		testSuiteNames.addAll(method.getTestCaseNames());
-	//
-	//		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
-	//
-	//		TestSuiteNode testSuiteNode;
-	//		for (String testSuiteName : testSuiteNames) {
-	//
-	//			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
-	//
-	//			if (existingNode.isPresent()) {
-	//				testSuiteNode = existingNode.get();
-	//				testSuiteNode.getTestCaseNodes().clear();
-	//			} else {
-	//				testSuiteNode = new TestSuiteNode();
-	//				testSuiteNode.setSuiteName(testSuiteName);
-	//				testSuiteNode.setParent(method);
-	//				testSuites.add(testSuiteNode);
-	//			}
-	//
-	//			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
-	//			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-	//				testSuiteNode.setName(testSuiteName);
-	//				testSuiteNode.setDisplayLimitExceededFlag(true);
-	//			} else {
-	//				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
-	//				testSuiteNode.setName(testSuiteName);
-	//				testSuiteNode.setDisplayLimitExceededFlag(false);
-	//			}
-	//		}
-	//
-	//		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
-	//
-	//		return testSuites;
-	//	}
-
-	//	public static String findNotUsedJavaTypeForParameter(
-	//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-	//
-	//		ClassNode classNode = methodNode.getClassNode();
-	//
-	//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-	//
-	//		for (String type : typeListInExtLanguage) {
-	//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-	//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-	//				return type;
-	//			}
-	//		}
-	//
-	//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-	//
-	//		return userType;
-	//	}
-
-	//	private static boolean isNewTypeUsed(
-	//			String typeForLastParameter,
-	//			ClassNode classNode,
-	//			MethodNode methodNode,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-	////		parameterTypesInExternalLanguage.add(typeForLastParameter);
-	//
-	//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-	//
-	//		MethodNode foundMethodNode =
-	//				ClassNodeHelper.findMethodByExtLanguage(
-	//						classNode,
-	//						methodNameInExternalLanguage,
-	//						extLanguageManager);
-	//
-	//		if (foundMethodNode != null) {
-	//			return true;
-	//		}
-	//
-	//		return false;
-	//	}
 
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 
@@ -554,10 +447,14 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addCompositeParameter( // TODO MO-RE rename addNew ... because creating
-			MethodNode methodNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+	public static CompositeParameterNode addCompositeParameter(
+			MethodNode methodNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+
+		if (setParent) {
+			compositeParameterNode.setParent(methodNode);
+		}
 
 		methodNode.addParameter(compositeParameterNode);
 
@@ -569,21 +466,37 @@ public class MethodNodeHelper {
 			String name, 
 			String type,
 			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode basicParameterNode = 
 				new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
+
+		if (setParent) {
+			basicParameterNode.setParent(methodNode);
+		}
 
 		methodNode.addParameter(basicParameterNode);
 
 		return basicParameterNode;
 	}
 
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase) {
+	public static TestCaseNode addNewTestCase(MethodNode methodNode, String testCaseName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
 
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode(testCaseName, null, choicesOfTestCase);
+
+		if (setParent) {
+			testCaseNode.setParent(methodNode);
+		}
+
 		methodNode.addTestCase(testCaseNode);
 
+		return testCaseNode;
+	}
+
+	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
+
+		TestCaseNode testCaseNode = addNewTestCase(methodNode, "Test case", choicesOfTestCase, setParent);
 		return testCaseNode;
 	}
 

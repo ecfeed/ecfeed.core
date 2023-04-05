@@ -164,6 +164,7 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray makeClone() {
+
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement : fStatements) {
@@ -175,6 +176,7 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray createCopy(NodeMapper mapper) {
+
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {
@@ -396,7 +398,7 @@ public class StatementArray extends AbstractStatement {
 	public BasicParameterNode getLeftParameter() {
 		return null;
 	}
-	
+
 	@Override
 	public String getLeftOperandName() {
 		return fOperator.toString();

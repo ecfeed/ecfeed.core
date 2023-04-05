@@ -151,21 +151,21 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		fParametersHolder.addParameter(parameter, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext,
 			int index) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
@@ -403,6 +403,20 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof AbstractParameterNode) {
+			return true;
+		}
+
+		if (child instanceof MethodNode) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

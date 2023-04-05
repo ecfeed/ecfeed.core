@@ -112,6 +112,11 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
+	}
+
+	@Override
 	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
 		return false;

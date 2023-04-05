@@ -40,9 +40,14 @@ public class ClassNodeHelper {
 	}
 
 	public static MethodNode addNewMethodToClass(
-			ClassNode classNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+			ClassNode classNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
+		
+		if (setParent) {
+			methodNode.setParent(classNode);
+		}
+		
 		classNode.addMethod(methodNode);
 
 		return methodNode;

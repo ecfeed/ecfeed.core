@@ -29,7 +29,7 @@ public abstract class AbstractParameterSignatureHelper {
 		EMPTY,
 		NAME_ONLY,
 		PATH_TO_TOP_CONTAINTER,
-		PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
+		PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM // example: for LS1->GS1:GP1 this path of parameter (only) should be GP1, usage in compressed signature: LS1:GP1
 	}
 
 	public enum TypeOfLink {
@@ -109,6 +109,41 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
+	public static String createSignatureOfParameterWithContextOrLinkNewStandard(
+			AbstractParameterNode parameter,
+			AbstractParameterNode context,
+			IExtLanguageManager extLanguageManager) {
+
+		if (context == null) {
+
+			String signatureOfParameterWithLink = 
+					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+							parameter,
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							TypeOfLink.NORMAL,
+							parameter.getLinkToGlobalParameter(),
+							ExtendedName.PATH_TO_TOP_CONTAINTER,
+							Decorations.NO,
+							TypeIncluded.NO,
+							extLanguageManager);
+
+			return signatureOfParameterWithLink;
+		}
+
+		String signatureOfParameterWithContext = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						context,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						parameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+
+		return signatureOfParameterWithContext;
+	}
+
 	public static String createPathToTopContainerNewStandard( // former getQualifiedName
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
@@ -161,7 +196,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		if (parameterWhichHasLink == null) {
 
-			String signatureOfLinkOnly = 
+			String signatureOfLinkOnly =
 					createSignatureOfSingleParameterNameNewStandard(
 							link, 
 							extendedNameTypeOfLink,
@@ -211,7 +246,7 @@ public abstract class AbstractParameterSignatureHelper {
 			return signature;
 		}
 
-		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM) {
+		if (extendedNameType == ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM) {
 
 			String signature = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 			signature = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, signature);
@@ -278,47 +313,6 @@ public abstract class AbstractParameterSignatureHelper {
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
 	// OBSOLETE
-	public static String createSignatureOfParameterWithLink( 
-			AbstractParameterNode parameter,
-			AbstractParameterNode link) {
-
-		printObsoleteInfo();
-
-		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to create signature of empty parameter.");
-		}
-
-		if (link == null) {
-
-			String signatureOfParameter = 
-					createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-			return signatureOfParameter;
-		}
-
-		String signatureOfLink = 
-				createSignatureWithPathToTopParametersParent(
-						link, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		String signatureOfParameter = 
-				createSignatureWithPathToTopParametersParent(
-						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
-
-		return signatureOfParameter + LINK_SPECIFIER_TEXT  + signatureOfLink;
-	}
-
-	//	private static String createSignatureOfParameterName(
-	//			AbstractParameterNode abstractParameterNode,
-	//			AbstractParameterNode linkToParameterOrParentOfParameter,
-	//			ExtendedName extendedNameType,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		String name = createSignatureOfSingleParameterName(abstractParameterNode);
-	//		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
-	//		return name;
-	//	}
-
-	// OBSOLETE
 	private static String createSignatureOfSingleParameterName(
 			AbstractParameterNode abstractParameterNode) {
 
@@ -328,17 +322,6 @@ public abstract class AbstractParameterSignatureHelper {
 
 		return signature;
 	}
-
-	//	// OBSOLETE
-	//	private static String getExtendedType(AbstractParameterNode abstractParameterNode) {
-	//
-	//		if (abstractParameterNode instanceof CompositeParameterNode) {
-	//			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-	//		}
-	//
-	//		String typeOfBasicParameter = ((BasicParameterNode)abstractParameterNode).getType();
-	//		return typeOfBasicParameter;
-	//	}
 
 	// OBSOLETE
 	public static String createSignatureOfParameterWithContext(
@@ -609,35 +592,6 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String createReverseSignatureWithOptionalLink(
-			BasicParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String type = createSignatureOfType(parameter, extLanguageManager);
-
-		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
-
-		return signature;
-	}
-
-	// OBSOLETE
-	public static String createReverseSignatureWithOptionalLink(
-			CompositeParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String type = CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-
-		String signature = createReverseSignatureOfAbstractParameter(parameter, type);
-
-		return signature;
-
-	}
-
-	// OBSOLETE
 	public static String createSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -663,21 +617,6 @@ public abstract class AbstractParameterSignatureHelper {
 						signatureOfParameterName,
 						parameter.isExpected(),
 						extLanguageManager);
-
-		return signature;
-	}
-
-	// OBSOLETE
-	private static String createReverseSignatureOfAbstractParameter(AbstractParameterNode parameter, String type) {
-
-		printObsoleteInfo();
-
-		String signature = 
-				AbstractParameterSignatureHelper.createSignatureOfParameterWithLink(
-						parameter, parameter.getLinkToGlobalParameter());
-
-		signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-		signature += type;
 
 		return signature;
 	}

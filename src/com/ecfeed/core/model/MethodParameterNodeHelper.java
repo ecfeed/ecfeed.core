@@ -124,10 +124,4 @@ public class MethodParameterNodeHelper {
 		return null;
 	}
 
-	// OBSOLETE
-	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
-
-		// TODO MO-RE REMOVE transfer function
-		return AbstractParameterSignatureHelper.createReverseSignatureWithOptionalLink(methodParameterNode, extLanguageManage);
-	}
 }

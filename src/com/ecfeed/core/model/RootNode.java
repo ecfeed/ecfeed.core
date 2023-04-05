@@ -320,5 +320,19 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
 	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+		
+		if (child instanceof AbstractParameterNode) {
+			return true;
+		}
+		
+		if (child instanceof ClassNode) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 }

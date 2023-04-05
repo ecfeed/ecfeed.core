@@ -67,6 +67,11 @@ public class ParameterCondition implements IStatementCondition {
 		return fParentRelationStatement;
 	}
 
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
+	}
+
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
 
 		return isChoiceRandomizedString(choices, fParentRelationStatement.getLeftParameter());
@@ -245,15 +250,15 @@ public class ParameterCondition implements IStatementCondition {
 		//						fRightParameterNode, fRightParameterLinkingContext);
 
 		String signatureNew = 
-		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				fRightParameterLinkingContext,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.SHORTENED,
-				fRightParameterNode,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
-				Decorations.NO,
-				TypeIncluded.NO,
-				extLanguageManager);
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						fRightParameterLinkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						fRightParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 		String name =
 				signatureNew;
 

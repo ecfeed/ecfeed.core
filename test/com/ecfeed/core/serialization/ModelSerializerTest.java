@@ -72,16 +72,16 @@ public class ModelSerializerTest {
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS1", null);
+				MethodNodeHelper.addCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
 
 		CompositeParameterNode localCompositeParameterNode2 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS2", null);
+				MethodNodeHelper.addCompositeParameter(methodNode, "LS2", true, null);
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -127,11 +127,11 @@ public class ModelSerializerTest {
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
-		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", null);
+		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
-		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LS", null);
+		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LS", true, null);
 
 		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
 				compositeParameterNode, "LP", "int", "0", null);
