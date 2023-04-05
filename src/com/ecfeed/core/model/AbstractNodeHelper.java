@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -138,21 +140,42 @@ public abstract class AbstractNodeHelper  {
 
 		return null;
 	}
-	
+
 	public static IAbstractNode findTopNode(IAbstractNode anyNode) {
-		
+
 		IAbstractNode currentNode = anyNode;
-		
+
 		for(;;) {
-			
+
 			IAbstractNode parent = currentNode.getParent();
-			
+
 			if (parent == null) {
 				return currentNode;
 			}
-			
+
 			currentNode = parent;
 		}
+	}
+
+	public static boolean nodesAreOfTheSameType(List<IAbstractNode> nodes) {
+
+		Class<?> type = nodes.get(0).getClass();
+
+		for (IAbstractNode node : nodes) {
+
+			if (!node.getClass().equals(type)) { 
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static String getShortClassName(IAbstractNode abstractNode) {
+		
+		String fullClassName = abstractNode.getClass().getName();
+		String shortClassName = StringHelper.getLastToken(fullClassName, ".");
+		return shortClassName;
 	}
 	
 }

@@ -939,4 +939,14 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return getChildren();
 	}
 
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof AbstractParameterNode) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

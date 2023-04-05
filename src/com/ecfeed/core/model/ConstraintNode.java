@@ -140,7 +140,7 @@ public class ConstraintNode extends AbstractNode {
 	}
 
 	private boolean mentionsGlobalParameter(BasicParameterNode globalBasicParameterNode) {
-		
+
 		List<AbstractParameterNode> linkedParameters = 
 				AbstractParameterNodeHelper.getLinkedParameters(globalBasicParameterNode);
 
@@ -150,23 +150,23 @@ public class ConstraintNode extends AbstractNode {
 				return fConstraint.mentions((BasicParameterNode)linkedParameter);
 			}
 		}
-		
+
 		return false;
 	}
 
 	public boolean mentionsAnyOfParameters(
 			List<BasicParameterNode> basicParameterNodesToDelete) {
-		
+
 		for (BasicParameterNode basicParameterNode : basicParameterNodesToDelete) {
 			if (mentions(basicParameterNode)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
-	
+
 	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return fConstraint.mentions(parameter, label);
@@ -188,11 +188,11 @@ public class ConstraintNode extends AbstractNode {
 		ConstraintNode copy = makeClone();
 		return copy;
 
-//		if (copy.updateReferences(parent))
-//			return copy;
-//		else {
-//			return null;
-//		}
+		//		if (copy.updateReferences(parent))
+		//			return copy;
+		//		else {
+		//			return null;
+		//		}
 	}
 
 	@Override
@@ -424,5 +424,11 @@ public class ConstraintNode extends AbstractNode {
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
 	}
-	
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		return false;
+	}
+
 }

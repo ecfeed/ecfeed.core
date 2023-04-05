@@ -171,7 +171,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public BasicParameterNode createCopyForDeployment(NodeMapper mapper) {
-		
+
 		BasicParameterNode copy = makeClone(mapper);
 
 		copy.setDeploymentParameter(this);
@@ -701,5 +701,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof ChoiceNode) {
+			return true;
+		}
+
+		return false;
 	}
 }

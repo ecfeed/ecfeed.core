@@ -52,13 +52,13 @@ public class TestCaseNode extends AbstractNode {
 
 		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
 		oldTestSuiteNode.removeTestCase(this);
-		
+
 		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
 			methodNode.removeTestSuite(oldTestSuiteNode);
 		}
 
 		super.setName(newNameInIntrLanguage);
-		
+
 		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
 		newTestSuiteNode.addTestCase(this);
 	}
@@ -295,11 +295,16 @@ public class TestCaseNode extends AbstractNode {
 			index++;
 		}
 	}
-	
+
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
 	}
-	
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		return false;
+	}
 
 }
