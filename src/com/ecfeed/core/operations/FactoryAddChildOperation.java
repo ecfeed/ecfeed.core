@@ -22,7 +22,6 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
@@ -32,12 +31,12 @@ import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryAddChildOperation implements IModelVisitor {
 
 	private IAbstractNode fChild;
 	private int fIndex;
+	Optional<String> fUniqueChildName;
 	private boolean fValidate;
 	IExtLanguageManager fExtLanguageManager;
 
@@ -197,7 +196,6 @@ public class FactoryAddChildOperation implements IModelVisitor {
 
 		BasicParameterNode globalParameter =
 				((BasicParameterNode)abstractParameterNode).makeClone();
-				// new BasicParameterNode(abstractParameterNode);
 
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
 	}
@@ -206,21 +204,11 @@ public class FactoryAddChildOperation implements IModelVisitor {
 
 		ClassNode classNode = (ClassNode)fChild;
 
-		generateUniqueNameForClass(rootNode, classNode);
-
-		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, fExtLanguageManager);
-	}
-
-	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
-
-		String oldName = classNode.getName();
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
-
-		classNode.setName(newName);
+		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, true, fExtLanguageManager);
 	}
 
 	private void reportOperationNotSupportedException() throws Exception {
+
 		if (fValidate) {
 			return;
 		}

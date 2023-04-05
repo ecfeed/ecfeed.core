@@ -40,7 +40,7 @@ public class OnClassOperationRemove extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new OnClassOperationAddToRoot(fRootNode, fRemovedClass, fCurrentIndex, getExtLanguageManager());
+		return new OnClassOperationAddToRoot(fRootNode, fRemovedClass, fCurrentIndex, false, getExtLanguageManager());
 	}
 
 }
