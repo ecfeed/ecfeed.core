@@ -280,6 +280,19 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return name;
 	}
 
+	public static String generateNewCompositeParameterName(IParametersParentNode parametersParentNode) {
+
+		int i = 1;
+
+		String name = CommonConstants.DEFAULT_NEW_COMPOSITE_PARAMETER_NAME + i++;
+
+		while(parametersParentNode.findParameter(name) != null) {
+			name = CommonConstants.DEFAULT_NEW_COMPOSITE_PARAMETER_NAME + i++;
+		}
+
+		return name;
+	}
+	
 	public static BasicParameterNode findExpectedParameterNotUsedInAssignment(
 			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode, 
 			Constraint constraint) {
