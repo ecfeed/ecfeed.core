@@ -412,10 +412,6 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 			return true;
 		}
 
-		if (child instanceof MethodNode) {
-			return true;
-		}
-
 		return false;
 	}
 

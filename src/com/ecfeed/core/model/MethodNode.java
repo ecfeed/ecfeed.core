@@ -150,13 +150,9 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (!(parameter instanceof BasicParameterNode)) {
-				continue;
-			}
-
-			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
-
-			clonedMethodNode.addParameter(basicParameterNode.makeClone());
+			AbstractParameterNode clonedParameter = (AbstractParameterNode) parameter.makeClone();
+			
+			clonedMethodNode.addParameter(clonedParameter);
 		}
 
 		for (TestCaseNode testcase : fTestCaseNodes) {
