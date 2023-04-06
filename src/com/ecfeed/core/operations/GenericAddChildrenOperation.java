@@ -20,23 +20,23 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
-			Collection<? extends IAbstractNode> children, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		this(target, children, -1, validate, extLanguageManager);
+		this(target, childrenToAdd, -1, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
-			Collection<? extends IAbstractNode> children, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			int index, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
 
-		for (IAbstractNode child : children) {
+		for (IAbstractNode child : childrenToAdd) {
 
 			try {
 				IModelOperation operation = createAddOperation(child, -1, target, validate);

@@ -66,10 +66,11 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		if (fChild instanceof ClassNode) {
 
 			return createOperationAddClass(rootNode);
+		} 
+		
+		if (fChild instanceof AbstractParameterNode) {
 
-		} else if (fChild instanceof BasicParameterNode) {
-
-			return createOperationAddParameter(rootNode);
+			return createOperationAddParameterToRootNode(rootNode);
 		}
 
 		reportOperationNotSupportedException();
@@ -190,14 +191,15 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		return null;
 	}
 
-	private Object createOperationAddParameter(RootNode rootNode) {
+	private Object createOperationAddParameterToRootNode(RootNode rootNode) {
 
-		BasicParameterNode abstractParameterNode = (BasicParameterNode)fChild;
+		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
 
-		BasicParameterNode globalParameter =
-				((BasicParameterNode)abstractParameterNode).makeClone();
+		IAbstractNode globalParameter =
+				((AbstractParameterNode)abstractParameterNode).makeClone();
 
-		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
+		return new GenericOperationAddParameter(
+				rootNode, (AbstractParameterNode) globalParameter, fIndex, true, fExtLanguageManager);
 	}
 
 	private Object createOperationAddClass(RootNode rootNode) {
