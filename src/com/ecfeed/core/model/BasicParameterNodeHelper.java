@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -74,19 +75,19 @@ public class BasicParameterNodeHelper {
 
 			AbstractParameterNode linkingContext1 = item1.getLinkingContext();
 			AbstractParameterNode linkingContext2 = item2.getLinkingContext();
-			
+
 			if (linkingContext1 == null && linkingContext2 == null) {
 				return true;
 			}
-			
+
 			if (linkingContext1 != null && linkingContext2 == null) {
 				return false;
 			}
-			
+
 			if (linkingContext1 == null && linkingContext2 != null) {
 				return false;
 			}
-			
+
 			if (!linkingContext1.isMatch(linkingContext2)) {
 				return false;
 			}
@@ -409,20 +410,20 @@ public class BasicParameterNodeHelper {
 		return errorMessage;
 	}
 
-//	public static ChoiceNode addNewChoiceToBasicParameter(
-//			BasicParameterNode globalParameterNode,
-//			String choiceNodeName,
-//			String valueString,
-//			boolean isRandomizedValue,
-//			IModelChangeRegistrator modelChangeRegistrator) {
-//
-//		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
-//		choiceNode.setRandomizedValue(isRandomizedValue);
-//
-//		globalParameterNode.addChoice(choiceNode);
-//
-//		return choiceNode;
-//	}
+	//	public static ChoiceNode addNewChoiceToBasicParameter(
+	//			BasicParameterNode globalParameterNode,
+	//			String choiceNodeName,
+	//			String valueString,
+	//			boolean isRandomizedValue,
+	//			IModelChangeRegistrator modelChangeRegistrator) {
+	//
+	//		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+	//		choiceNode.setRandomizedValue(isRandomizedValue);
+	//
+	//		globalParameterNode.addChoice(choiceNode);
+	//
+	//		return choiceNode;
+	//	}
 
 	public static ChoiceNode addNewChoiceToBasicParameter(
 			BasicParameterNode basicParameterNode,
@@ -434,7 +435,7 @@ public class BasicParameterNodeHelper {
 
 		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
 		choiceNode.setRandomizedValue(isRandomizedValue);
-		
+
 		if (setParent) {
 			choiceNode.setParent(basicParameterNode);
 		}
@@ -501,5 +502,39 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
+
+	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
+//	public static ChoiceNode findFirstChoiceWithValue(BasicParameterNode basicParameterNode, String choiceValueString) {
+//
+//		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+//
+//		Iterator<ChoiceNode> it = choiceNodes.iterator();
+//
+//		while(it.hasNext()) {
+//			ChoiceNode choiceNode = it.next();
+//
+//			if (choiceNode.getValueString().equals(choiceValueString)) {
+//				return choiceNode;
+//			}
+//		}
+//
+//		return null;
+//	}
 
 }

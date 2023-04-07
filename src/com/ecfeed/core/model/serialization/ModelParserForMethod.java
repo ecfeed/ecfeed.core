@@ -11,15 +11,18 @@
 package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
-import static org.hamcrest.Matchers.startsWith;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHelper;
@@ -49,69 +52,177 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	}
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, ListOfStrings errorList) throws ParserException {
+			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) throws ParserException {
+
+		MethodNode targetMethodNode = parseAndInitializeMethod(methodElement, classNode, inOutErrorList);
+
+		if (targetMethodNode == null) {
+			return Optional.empty();
+		}
+
+		parseMethodProperties(methodElement, targetMethodNode);
+
+		parseParameters(methodElement, targetMethodNode, inOutErrorList);
+
+		parseConstraints(methodElement, targetMethodNode, inOutErrorList);
+
+		parseDeployedParameters(methodElement, targetMethodNode, inOutErrorList);
+
+		parseTestCases(methodElement, targetMethodNode, inOutErrorList);
+
+		parseComments(methodElement, targetMethodNode);
+
+		return Optional.of(targetMethodNode);
+	}
+
+	private void parseComments(Element methodElement, MethodNode targetMethodNode) {
+
+		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
+	}
+
+	private MethodNode parseAndInitializeMethod(
+			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) {
 
 		String name;
 
 		try {
-			ModelParserHelper.assertNameEqualsExpectedName(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
-			name = ModelParserHelper.getElementName(methodElement, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(
+					methodElement.getQualifiedName(), METHOD_NODE_NAME, inOutErrorList);
+
+			name = ModelParserHelper.getElementName(methodElement, inOutErrorList);
 		} catch (ParserException e) {
-			return Optional.empty();
+			inOutErrorList.add("Cannot parse name of method.");
+			return null;
 		}
 
 		MethodNode targetMethodNode = new MethodNode(name, classNode.getModelChangeRegistrator());
 		targetMethodNode.setParent(classNode);
 
-		parseMethodProperties(methodElement, targetMethodNode);
+		return targetMethodNode;
+	}
 
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeNames())) {
-			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, targetMethodNode, errorList)
-				.ifPresent(targetMethodNode::addParameter);
-			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, targetMethodNode, errorList)
-				.ifPresent(targetMethodNode::addParameter);
+	private void parseParameters(Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
+
+		List<Element> parameterElements = 
+				ModelParserHelper.getIterableChildren(
+						methodElement, SerializationHelperVersion1.getParameterNodeNames());
+
+		for (Element parameterElement : parameterElements) {
+
+			parseParameterElement(parameterElement, targetMethodNode, inOutErrorList);
+		}
+
+	}
+
+	private void parseParameterElement(
+			Element parameterElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
+
+		String basicParameterElementName = SerializationHelperVersion1.getBasicParameterNodeName(); // TODO MO-RE looks like a bug - version 1 ??
+
+		if (ModelParserHelper.verifyElementName(parameterElement, basicParameterElementName)) {
+
+			Optional<BasicParameterNode> basicParameterNode = 
+					fModelParserForMethodParameter.parseMethodParameter(
+							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+
+			basicParameterNode.ifPresent(targetMethodNode::addParameter);
+			return;
+		} 
+
+		String compositeParameterElementName = SerializationHelperVersion1.getCompositeParameterNodeName();
+
+		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
+
+			Optional<CompositeParameterNode> compositeParameter = 
+					fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
+							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+
+			compositeParameter.ifPresent(targetMethodNode::addParameter);
+			return;
+		}
+
+		inOutErrorList.add("Invalid type of parameter element.");
+	}
+
+	private void parseConstraints(
+			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) throws ParserException {
+
+		List<Element> constraintElements = 
+				ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME);
+
+		for (Element constraintElement : constraintElements) {
+
+			Optional<ConstraintNode> constraint = 
+					fModelParserForConstraint.parseConstraint(constraintElement, targetMethodNode, inOutErrorList);
+
+			constraint.ifPresent(targetMethodNode::addConstraint);
+		}
+	}
+
+	private void parseTestCases(Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
+
+		try {
+			List<Element> testCaseElements = 
+					ModelParserHelper.getIterableChildren(
+							methodElement, SerializationConstants.TEST_CASE_NODE_NAME);
+
+			for (Element testCaseElement : testCaseElements) {
+
+				Optional<TestCaseNode> testCase = 
+						fModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
+
+				testCase.ifPresent(targetMethodNode::addTestCase);
+
 			}
+		} catch (Exception e) {
+			inOutErrorList.add("Failed to parse test cases.");
 		}
+	}
 
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			fModelParserForConstraint.parseConstraint(child, targetMethodNode, errorList)
-			.ifPresent(targetMethodNode::addConstraint);
-		}
+	private void parseDeployedParameters(
+			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 
 		List<ParameterWithLinkingContext> parametersWithContexts = new ArrayList<>();
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_TAG)) {
-			for (Element childNested : ModelParserHelper.getIterableChildren(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(childNested, targetMethodNode, errorList)
-				.ifPresent(parametersWithContexts::add);
-			}
+
+		List<Element> deploymentElements = 
+				ModelParserHelper.getIterableChildren(
+						methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_TAG);
+
+		for (Element deploymentElement : deploymentElements) {
+
+			parseDeploymentElement(deploymentElement, targetMethodNode, parametersWithContexts, inOutErrorList);
 		}
 
 		targetMethodNode.setDeployedParametersWithContexts(parametersWithContexts);
+	}
 
-		try {
-			for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
-				fModelParserForTestCase.parseTestCase(child, targetMethodNode, errorList)
-				.ifPresent(targetMethodNode::addTestCase);
-			}
-		} catch (Exception e) {
-			// TODO MO-RE fix parsing test cases
-			System.out.println("Error parsing test case.");
+	private void parseDeploymentElement(
+			Element deploymentElement, 
+			MethodNode targetMethodNode,
+			List<ParameterWithLinkingContext> inOutParametersWithContexts,
+			ListOfStrings inOutErrorList) {
+
+		List<Element> iterableChildren = 
+				ModelParserHelper.getIterableChildren(
+						deploymentElement, SerializationHelperVersion1.getBasicParameterNodeName());
+
+		for (Element childNested : iterableChildren) {
+
+			Optional<ParameterWithLinkingContext> parameterWithLinkingContext = 
+					fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
+							childNested, targetMethodNode, inOutErrorList);
+
+			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add);
 		}
-
-		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
-
-		return Optional.of(targetMethodNode);
 	}
 
 	private void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode);
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodElement, targetMethodNode); // TODO MO-RE obsolete property ?
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
+		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
 	}
 
 	private void parseMethodProperty(

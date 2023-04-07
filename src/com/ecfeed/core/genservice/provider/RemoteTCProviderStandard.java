@@ -336,7 +336,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
                 choiceNode = new ChoiceNode(choiceName, choiceValue, basicParameterNode.getModelChangeRegistrator());
                 choiceNode.setParent(basicParameterNode);
             } else {
-                choiceNode = basicParameterNode.findChoice(choiceName);
+                choiceNode = BasicParameterNodeHelper.findChoice(basicParameterNode, choiceName);
             }
 
             if (choiceNode == null) {

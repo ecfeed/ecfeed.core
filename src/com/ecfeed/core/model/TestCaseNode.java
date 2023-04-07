@@ -141,8 +141,12 @@ public class TestCaseNode extends AbstractNode {
 		return abstractParameterNode;
 	}
 
-	public List<ChoiceNode> getTestData(){
+	public List<ChoiceNode> getTestData() {
 		return fTestData;
+	}
+	
+	public void setTestData(List<ChoiceNode> testData) {
+		fTestData = testData;
 	}
 
 	public void replaceValue(int index, ChoiceNode newValue) {

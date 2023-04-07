@@ -19,7 +19,7 @@ public class SerializationHelperVersion1 {
 	private static final String CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
 	private static final String STATEMENT_CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
 	private static final String CONSTRAINT_NAME_VERSION_5 = "Constraint";
-	private static final String[] PARAMETER_NODE_NAMES_VERSION_5 = new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5, CONSTRAINT_NAME_VERSION_5};
+	private static final String[] PARAMETER_NODE_NAMES_VERSION_5 = new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5, CONSTRAINT_NAME_VERSION_5}; // TODO MO-RE CONSTRAINT_NAME_VERSION_5 looks like a bug here
 
 	public static String getChoiceNodeName() {
 		return CHOICE_NODE_NAME_VERSION_1;
