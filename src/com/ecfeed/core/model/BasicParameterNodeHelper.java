@@ -35,7 +35,7 @@ public class BasicParameterNodeHelper {
 		}
 
 		ModelCompareHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		ModelCompareHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices());
+		ModelCompareHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
 		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
 			ModelCompareHelper.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
 		}
@@ -519,22 +519,5 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
-
-//	public static ChoiceNode findFirstChoiceWithValue(BasicParameterNode basicParameterNode, String choiceValueString) {
-//
-//		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
-//
-//		Iterator<ChoiceNode> it = choiceNodes.iterator();
-//
-//		while(it.hasNext()) {
-//			ChoiceNode choiceNode = it.next();
-//
-//			if (choiceNode.getValueString().equals(choiceValueString)) {
-//				return choiceNode;
-//			}
-//		}
-//
-//		return null;
-//	}
 
 }

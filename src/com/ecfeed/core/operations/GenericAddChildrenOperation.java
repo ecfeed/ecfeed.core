@@ -39,7 +39,7 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 		for (IAbstractNode child : childrenToAdd) {
 
 			try {
-				IModelOperation operation = createAddOperation(child, -1, target, validate);
+				IModelOperation operation = createAddOperation(child, index, target, validate);
 
 				if (operation != null) {
 					addOperation(operation);

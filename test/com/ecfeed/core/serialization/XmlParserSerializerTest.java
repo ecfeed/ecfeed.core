@@ -676,7 +676,7 @@ public class XmlParserSerializerTest {
 	private void compareModels(RootNode model1, RootNode model2) {
 
 		try {
-			ModelComparator.assertModelsEqual(model1, model2);
+			ModelComparator.compareRootNodes(model1, model2);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

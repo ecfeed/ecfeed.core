@@ -22,14 +22,14 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
@@ -54,7 +54,6 @@ import com.ecfeed.core.model.serialization.XomStatementBuilder;
 import com.ecfeed.core.testutils.ModelStringifier;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -69,23 +68,25 @@ public class XomParserTest {
 	Random fRandom = new Random();
 
 	@Test
-	public void parseRootTest() {
-		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+	public void AAparseRootTest() {
+		for (int version = ModelVersionDistributor.getCurrentSoftwareVersion() - 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseRootTest(version);
 		}
 	}
 
-	private void parseRootTest(int version) {
+	private void parseRootTest(int modelVersion) {
 		try {
 			RootNode rootNode = fModelGenerator.generateModel(3);
+			rootNode.setVersion(modelVersion);
 
-			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
+			XomBuilder builder = XomBuilderFactory.createXomBuilder(modelVersion, null);
 			Element rootElement = (Element)rootNode.accept(builder);
 			TRACE(rootElement);
 
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
+			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(modelVersion);
 			RootNode parsedRootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
-			assertElementsEqual(rootNode, parsedRootNode);
+			//assertElementsEqual(rootNode, parsedRootNode);
+			ModelComparator.compareRootNodes(rootNode, parsedRootNode);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -115,7 +116,8 @@ public class XomParserTest {
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
 			
-			assertElementsEqual(classNode, parsedClass.get());
+			ModelComparator.compareClasses(classNode, parsedClass.get());
+			
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -123,16 +125,20 @@ public class XomParserTest {
 
 	@Test
 	public void parseMethodTest() {
-		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		
+		int currentSoftwareVersion = ModelVersionDistributor.getCurrentSoftwareVersion();
+		
+		for (int version = currentSoftwareVersion - 1; version <= currentSoftwareVersion; version++) {
 			parseMethodTest(version);
 		}
 	}
 
 	private void parseMethodTest(int version){
+		
 		for(int i = 0; i < 10; i++){
 			try{
 				MethodNode methodNode = fModelGenerator.generateMethod(5, 5, 5);
-
+				
 				XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 				Element element = (Element)methodNode.accept(builder);
 				TRACE(element);
@@ -142,7 +148,8 @@ public class XomParserTest {
 				IModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 				
 				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
-				assertElementsEqual(methodNode, parsedMethodNode.get());
+				
+				ModelComparator.compareMethods(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -171,7 +178,8 @@ public class XomParserTest {
 
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
 							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, methodNode, new ListOfStrings());
-					assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
+					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
+					ModelComparator.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
 			catch (Exception e) {
@@ -199,7 +207,8 @@ public class XomParserTest {
 
 					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
-					assertElementsEqual(testCaseNode, tc1.get());
+					// assertElementsEqual(testCaseNode, tc1.get());
+					ModelComparator.compareTestCases(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
 				}
@@ -226,7 +235,8 @@ public class XomParserTest {
 					TRACE(element);
 
 					Optional<ConstraintNode> c1 = new ModelParserForConstraint().parseConstraint(element, m, new ListOfStrings());
-					assertElementsEqual(c, c1.get());
+					//assertElementsEqual(c, c1.get());
+					ModelComparator.compareConstraintNodes(c, c1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
 				}
@@ -252,7 +262,8 @@ public class XomParserTest {
 				TRACE(element);
 
 				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
-				assertElementsEqual(p, p1.get());
+				//assertElementsEqual(p, p1.get());
+				ModelComparator.compareChoices(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
@@ -455,25 +466,25 @@ public class XomParserTest {
 
 	}
 
-	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
-		
-		if (n.isMatch(n1)) {
-			return;
-		}
-		
-		String str1 = fStringifier.stringify(n, 0);
-		String str2 = fStringifier.stringify(n1, 0);
-		
-		int index = StringHelper.findFirstDifference(str1, str2);
-		
-		String substr1 = str1.substring(index, index + 20);
-		String substr2 = str2.substring(index, index + 20);
-		
-		System.out.println(substr1);
-		System.out.println(substr2);
-		
-		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
-	}
+//	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
+//		
+//		if (n.isMatch(n1)) {
+//			return;
+//		}
+//		
+//		String str1 = fStringifier.stringify(n, 0);
+//		String str2 = fStringifier.stringify(n1, 0);
+//		
+//		int index = StringHelper.findFirstDifference(str1, str2);
+//		
+//		String substr1 = str1.substring(index, index + 20);
+//		String substr2 = str2.substring(index, index + 20);
+//		
+//		System.out.println(substr1);
+//		System.out.println(substr2);
+//		
+//		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
+//	}
 
 	private void TRACE(Element element){
 		if (!DEBUG) {

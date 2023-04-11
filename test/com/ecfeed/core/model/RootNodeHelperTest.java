@@ -25,19 +25,19 @@ public class RootNodeHelperTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 		final String classNameCore = "Class";
-		String newClassName = RootNodeHelper.generateNewClassName(rootNode, classNameCore);
+		String newClassName = RootNodeHelper.generateUniqueClassName(rootNode, classNameCore);
 		assertEquals("Class1", newClassName);
 
 		ClassNode class1 = new ClassNode(newClassName, null);
 		rootNode.addClass(class1);
 
-		newClassName = RootNodeHelper.generateNewClassName(rootNode, classNameCore);
+		newClassName = RootNodeHelper.generateUniqueClassName(rootNode, classNameCore);
 		assertEquals("Class2", newClassName);
 
 		ClassNode class2 = new ClassNode(newClassName, null);
 		rootNode.addClass(class2);
 
-		newClassName = RootNodeHelper.generateNewClassName(rootNode, classNameCore);
+		newClassName = RootNodeHelper.generateUniqueClassName(rootNode, classNameCore);
 		assertEquals("Class3", newClassName);
 	}
 

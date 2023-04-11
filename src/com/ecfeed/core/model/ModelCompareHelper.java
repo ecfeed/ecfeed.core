@@ -15,11 +15,19 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class ModelCompareHelper { // TODO MO-RE use ModelComparator
+public class ModelCompareHelper { // TODO MO-RE move methods to model comparator
 
-	public static void compareSizes(Collection<? extends Object> collection1, Collection<? extends Object> collection2) {
-		if(collection1.size() != collection2.size()){
-			ExceptionHelper.reportRuntimeException("Different sizes of collections");
+	public static void compareSizes(
+			Collection<? extends Object> collection1, 
+			Collection<? extends Object> collection2, 
+			String errorMessage) {
+
+		int size1 = collection1.size();
+
+		int size2 = collection2.size();
+
+		if (size1 != size2) {
+			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
 		}
 	}
 
@@ -46,9 +54,9 @@ public class ModelCompareHelper { // TODO MO-RE use ModelComparator
 			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
 		}
 	}
-	
+
 	public static void compareValues(Object value1, Object value2) {
-		
+
 		boolean result = true;
 		if(value1 == null){
 			result = (value2 == null);
@@ -67,7 +75,7 @@ public class ModelCompareHelper { // TODO MO-RE use ModelComparator
 			assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
 	}
-	
+
 	private static void assertIsTrue(boolean b, String message) {
 
 		if (b == true) {
@@ -76,7 +84,7 @@ public class ModelCompareHelper { // TODO MO-RE use ModelComparator
 
 		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
 	}
-	
+
 
 	public static void assertIntegersEqual(int size, int size2, String message) {
 
@@ -86,5 +94,5 @@ public class ModelCompareHelper { // TODO MO-RE use ModelComparator
 
 		ExceptionHelper.reportRuntimeException("Integers do not match." + " " + message);
 	}
-	
+
 }

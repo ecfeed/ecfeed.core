@@ -113,7 +113,7 @@ public class ModelSerializerTest {
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
-			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -188,7 +188,7 @@ public class ModelSerializerTest {
 			IParametersParentNode parsedParent3 = (IParametersParentNode) parsedParent2.getParent();
 			assertEquals(parsedMethodNode, parsedParent3);
 
-			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
