@@ -34,10 +34,10 @@ public class BasicParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Expected property does not match.");
 		}
 
-		ModelCompareHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		ModelCompareHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
+		ModelComparator.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
+		ModelComparator.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
 		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
-			ModelCompareHelper.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
+			ModelComparator.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
 		}
 
 	}

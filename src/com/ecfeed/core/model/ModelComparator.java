@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 
 import java.io.ByteArrayOutputStream;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -23,8 +25,8 @@ public class ModelComparator {
 
 	public static void compareRootNodes(RootNode model1, RootNode model2) {
 
-		ModelCompareHelper.compareNames(model1.getName(), model2.getName());
-		ModelCompareHelper.compareSizes(model1.getClasses(), model2.getClasses(), "Number of classes differ.");
+		compareNames(model1.getName(), model2.getName());
+		compareSizes(model1.getClasses(), model2.getClasses(), "Number of classes differ.");
 
 		for(int i = 0; i < model1.getClasses().size(); ++i){
 			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
@@ -70,8 +72,8 @@ public class ModelComparator {
 
 	public static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
 
-		ModelCompareHelper.compareNames(classNode1.getName(), classNode2.getName());
-		ModelCompareHelper.compareSizes(classNode1.getMethods(), classNode2.getMethods(), "Number of methods differ.");
+		compareNames(classNode1.getName(), classNode2.getName());
+		compareSizes(classNode1.getMethods(), classNode2.getMethods(), "Number of methods differ.");
 
 		for(int i = 0; i < classNode1.getMethods().size(); ++i){
 			compareMethods(classNode1.getMethods().get(i), classNode2.getMethods().get(i));
@@ -88,10 +90,10 @@ public class ModelComparator {
 			ExceptionHelper.reportRuntimeException("Empty method 2.");
 		}
 
-		ModelCompareHelper.compareNames(method1.getName(), method2.getName());
-		ModelCompareHelper.compareSizes(method1.getParameters(), method2.getParameters(), "Number of parameters differ.");
-		ModelCompareHelper.compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes(), "Number of constraints differ.");
-		ModelCompareHelper.compareSizes(method1.getTestCases(), method2.getTestCases(), "Number of test cases differ.");
+		compareNames(method1.getName(), method2.getName());
+		compareSizes(method1.getParameters(), method2.getParameters(), "Number of parameters differ.");
+		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes(), "Number of constraints differ.");
+		compareSizes(method1.getTestCases(), method2.getTestCases(), "Number of test cases differ.");
 
 		for(int i =0; i < method1.getParameters().size(); ++i){
 			compareParameters(method1.getParameters().get(i), method2.getParameters().get(i));
@@ -112,18 +114,18 @@ public class ModelComparator {
 
 		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
 		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
-		
+
 		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
 			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
 		}
-		
+
 		int size = deployedParametersWithContexts1.size();
-		
+
 		for (int i = 0; i < size; ++i) {
-			
+
 			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
 			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
-			
+
 			compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
 		}
 	}
@@ -138,7 +140,7 @@ public class ModelComparator {
 
 		AbstractParameterNodeHelper.compareParameterTypes(abstractParameter1, abstractParameter2);
 
-		ModelCompareHelper.compareNames(abstractParameter1.getName(), abstractParameter2.getName());
+		compareNames(abstractParameter1.getName(), abstractParameter2.getName());
 
 		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
 
@@ -171,12 +173,12 @@ public class ModelComparator {
 
 	public static void compareMethodParameters(BasicParameterNode methodParameterNode1, BasicParameterNode methodParameterNode2) {
 
-		ModelCompareHelper.compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
+		compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
 
-		ModelCompareHelper.assertIntegersEqual(methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size(), "Length of choices list differs.");
+		assertIntegersEqual(methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size(), "Length of choices list differs.");
 
 		for(int i = 0; i < methodParameterNode1.getChoices().size(); i++){
-			ModelCompareHelper.compareChoices(methodParameterNode1.getChoices().get(i), methodParameterNode2.getChoices().get(i));
+			compareChoices(methodParameterNode1.getChoices().get(i), methodParameterNode2.getChoices().get(i));
 		}
 	}
 
@@ -191,7 +193,7 @@ public class ModelComparator {
 
 	public static void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
 
-		ModelCompareHelper.compareNames(constraint1.getName(), constraint2.getName());
+		compareNames(constraint1.getName(), constraint2.getName());
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
@@ -270,7 +272,7 @@ public class ModelComparator {
 		}
 
 		if (condition1 instanceof ChoiceNode && condition2 instanceof ChoiceNode) {
-			ModelCompareHelper.compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
+			compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
 			return;
 		}
 
@@ -295,7 +297,7 @@ public class ModelComparator {
 		if(array1.getOperator() != array2.getOperator()){
 			ExceptionHelper.reportRuntimeException("Operator of compared statement arrays differ");
 		}
-		ModelCompareHelper.compareSizes(array1.getChildren(), array2.getChildren(), "Number of statements differ.");
+		compareSizes(array1.getChildren(), array2.getChildren(), "Number of statements differ.");
 		for(int i = 0; i < array1.getChildren().size(); ++i){
 			compareStatements(array1.getChildren().get(i), array2.getChildren().get(i));
 		}
@@ -308,18 +310,18 @@ public class ModelComparator {
 	}
 
 	public static void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
-		
-		ModelCompareHelper.compareNames(testCase1.getName(), testCase2.getName());
-		ModelCompareHelper.compareSizes(testCase1.getTestData(), testCase2.getTestData(), "Number of choices differ.");
+
+		compareNames(testCase1.getName(), testCase2.getName());
+		compareSizes(testCase1.getTestData(), testCase2.getTestData(), "Number of choices differ.");
 		for(int i = 0; i < testCase1.getTestData().size(); i++){
 			ChoiceNode testValue1 = testCase1.getTestData().get(i);
 			ChoiceNode testValue2 = testCase2.getTestData().get(i);
 
 			if(testValue1.getParameter() instanceof BasicParameterNode){
-				ModelCompareHelper.compareValues(testValue1.getValueString(), testValue2.getValueString());
+				compareValues(testValue1.getValueString(), testValue2.getValueString());
 			}
 			else{
-				ModelCompareHelper.compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
+				compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
 			}
 		}
 	}
@@ -332,9 +334,83 @@ public class ModelComparator {
 
 		ExceptionHelper.reportRuntimeException("String values do not match." + " " + message);
 	}
-	
-	public static void compareChoices(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
-		ModelCompareHelper.compareChoices(choiceNode1, choiceNode2);
+
+	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
+
+		compareNames(choice1.getName(), choice2.getName());
+		compareValues(choice1.getValueString(),choice2.getValueString());
+		compareLabels(choice1.getLabels(), choice2.getLabels());
+		assertIntegersEqual(choice1.getChoices().size(), choice2.getChoices().size(), "Length of choices list differs.");
+		for(int i = 0; i < choice1.getChoices().size(); i++){
+			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
+		}
+	}
+
+	public static void compareSizes(
+			Collection<? extends Object> collection1, 
+			Collection<? extends Object> collection2, 
+			String errorMessage) {
+
+		int size1 = collection1.size();
+
+		int size2 = collection2.size();
+
+		if (size1 != size2) {
+			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
+		}
+	}
+
+	public static void compareNames(String name, String name2) {
+		if(name.equals(name2) == false){
+			ExceptionHelper.reportRuntimeException("Different names: " + name + ", " + name2);
+		}
+	}
+
+	public static void compareTypes(String type1, String type2) {
+
+		if(type1.equals(type2) == false){
+			ExceptionHelper.reportRuntimeException("Different types: " + type1 + ", " + type2);
+		}
+	}
+
+	public static void compareValues(Object value1, Object value2) {
+
+		boolean result = true;
+		if(value1 == null){
+			result = (value2 == null);
+		}
+		else{
+			result = value1.equals(value2);
+		}
+		if(!result){
+			ExceptionHelper.reportRuntimeException("Value " + value1 + " differ from " + value2);
+		}
+	}
+
+	public static void compareLabels(Set<String> labels, Set<String> labels2) {
+		assertIsTrue(labels.size() == labels2.size(), "Sizes of labels should be equal.");
+		for(String label : labels){
+			assertIsTrue(labels2.contains(label), "Label2 should contain label1");
+		}
+	}
+
+	private static void assertIsTrue(boolean b, String message) {
+
+		if (b == true) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
+	}
+
+
+	public static void assertIntegersEqual(int size, int size2, String message) {
+
+		if (size == size2) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Integers do not match." + " " + message);
 	}
 
 }
