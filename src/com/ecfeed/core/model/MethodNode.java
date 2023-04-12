@@ -598,6 +598,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void removeAllTestCases() {
 
 		fTestCaseNodes.clear();
+		fTestSuiteNodes.clear();
 		registerChange();
 	}
 
