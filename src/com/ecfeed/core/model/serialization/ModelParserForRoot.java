@@ -61,7 +61,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 	private void parseGlobalParametersOfRoot(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
 		
 		List<Element> parameterElements = 
-				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
+				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
 		
 		for (Element parameterElement : parameterElements) {
 			

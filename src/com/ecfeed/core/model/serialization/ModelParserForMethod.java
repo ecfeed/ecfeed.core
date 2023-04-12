@@ -105,7 +105,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		List<Element> parameterElements = 
 				ModelParserHelper.getIterableChildren(
-						methodElement, SerializationHelperVersion1.getParameterNodeNames());
+						methodElement, SerializationHelperVersion1.getParametersElementNames());
 
 		for (Element parameterElement : parameterElements) {
 

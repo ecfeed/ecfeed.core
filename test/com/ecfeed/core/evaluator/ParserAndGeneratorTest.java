@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SatSolverConstraintNestedEvaluatorTest {
+public class ParserAndGeneratorTest {
 
     private int countGeneratedTestCases(String xmlModel) {
         AbstractAlgorithm<ChoiceNode> algorithm = new NWiseAwesomeAlgorithm<>(2, 100);

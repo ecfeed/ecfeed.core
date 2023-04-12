@@ -47,7 +47,7 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 
 		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrar);
 
-		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
+		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
 
 		for (Element child : children) {
 
