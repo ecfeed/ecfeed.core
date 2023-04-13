@@ -50,18 +50,30 @@ public class TestCaseNode extends AbstractNode {
 
 		MethodNode methodNode = (MethodNode) parent; // XYX move code somewhere ?? use test cases holder ??
 
-		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
-		oldTestSuiteNode.removeTestCase(this);
-
-		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
-			methodNode.removeTestSuite(oldTestSuiteNode);
-		}
+		methodNode.removeTestCase(this);
+		//removeTestCase(this, methodNode);
 
 		super.setName(newNameInIntrLanguage);
 
-		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
-		newTestSuiteNode.addTestCase(this);
+		methodNode.addTestCase(this);
+		//addTestCase(this, methodNode);
 	}
+
+	//	public void addTestCase(TestCaseNode testCase, MethodNode methodNode) { // XYX remove
+	//		
+	//		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(testCase.getName());
+	//		newTestSuiteNode.addTestCase(this);
+	//	}
+
+	//	public static void removeTestCase(TestCaseNode testCaseNode, MethodNode methodNode) { // XYX remove
+	//		
+	//		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(testCaseNode.getName());
+	//		oldTestSuiteNode.removeTestCase(testCaseNode);
+	//
+	//		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
+	//			methodNode.removeTestSuite(oldTestSuiteNode);
+	//		}
+	//	}
 
 	@Override
 	public int getMyIndex(){
@@ -144,7 +156,7 @@ public class TestCaseNode extends AbstractNode {
 	public List<ChoiceNode> getTestData() {
 		return fTestData;
 	}
-	
+
 	public void setTestData(List<ChoiceNode> testData) {
 		fTestData = testData;
 	}
