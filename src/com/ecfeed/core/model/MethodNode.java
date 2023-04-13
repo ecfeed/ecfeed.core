@@ -396,14 +396,17 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuiteName) { // XYX MOVE
-		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
-		for(TestCaseNode testCase : getTestCases()){
-			if(testSuiteName.equals(testCase.getName())){
-				testCases.add(testCase);
-			}
-		}
-		return testCases;
+	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+
+		return fTestCasesHolder.getTestCases(testSuiteName);
+
+		//		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
+		//		for(TestCaseNode testCase : getTestCases()){
+		//			if(testSuiteName.equals(testCase.getName())){
+		//				testCases.add(testCase);
+		//			}
+		//		}
+		//		return testCases;
 	}
 
 	public Set<String> getTestCaseNames() {

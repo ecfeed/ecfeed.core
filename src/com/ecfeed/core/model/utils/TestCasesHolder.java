@@ -11,6 +11,7 @@
 package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -211,6 +212,19 @@ public class TestCasesHolder {
 		}
 
 		return names;
+	}
+
+	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+
+		ArrayList<TestCaseNode> result = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : fTestCaseNodes) {
+
+			if (testSuiteName.equals(testCaseNode.getName())) {
+				result.add(testCaseNode);
+			}
+		}
+		return result;
 	}
 
 
