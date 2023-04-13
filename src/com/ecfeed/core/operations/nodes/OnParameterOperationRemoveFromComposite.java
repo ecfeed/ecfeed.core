@@ -116,7 +116,7 @@ public class OnParameterOperationRemoveFromComposite extends CompositeOperation 
 				setOneNodeToSelect(getCompositeParameter());
 
 				if (fMethodNode != null) {
-					fMethodNode.setTestCases(fOriginalTestCases);
+					fMethodNode.replaceTestCases(fOriginalTestCases);
 					fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
 				}
 

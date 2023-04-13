@@ -37,7 +37,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
-		
+
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
@@ -234,7 +234,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public TestSuiteNode provideValidTestSuiteNode(String newName) {
+	public TestSuiteNode provideValidTestSuiteNode(String newName) { // XYX MOVE
 
 		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
 
@@ -245,19 +245,19 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return newTestSuiteNode;
 	}
 
-	private void addTestSuite(TestSuiteNode testSuite) {
+	private void addTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
 		//addTestSuite(testSuite, fTestSuiteNodes.size());
 		fTestCasesHolder.addTestSuite(testSuite, this);
 	}
 
-	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {
+	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
 		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
 		//		testCase.setParent(this);
 		//		fTestSuiteNodes.add(index, testCase);
 		//		registerChange();
 	}
 
-	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {  // XYX MOVE
 
 		String testSuiteName = testCaseNode.getName();
 
@@ -282,12 +282,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		registerChange();
 	}
 
-	public void addTestCase(TestCaseNode testCaseNode) {
+	public void addTestCase(TestCaseNode testCaseNode) {  // XYX CHANGE TO SIMPLE CALL
 
 		addTestCase(testCaseNode, fTestCasesHolder.getTestCaseNodes().size(), Optional.empty());
 	}
 
-	public void removeTestCase(TestCaseNode testCaseNode) {
+	public void removeTestCase(TestCaseNode testCaseNode) { // XYX MOVE
 
 		String testSuiteName = testCaseNode.getName();
 
@@ -311,7 +311,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		registerChange();
 	}
 
-	public TestSuiteNode findTestSuite(String testSuiteName) {
+	public TestSuiteNode findTestSuite(String testSuiteName) { // XYX MOVE
 
 		return fTestCasesHolder.findTestSuite(testSuiteName);
 
@@ -328,7 +328,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		//		return null;
 	}
 
-	public int findTestSuiteIndex(String testSuiteName) {
+	public int findTestSuiteIndex(String testSuiteName) { // XYX MOVE
 
 		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
 
@@ -461,7 +461,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fTestCasesHolder.getTestSuiteNodes();
 	}
 
-	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
+	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) { // XYX remove
 
 		return fTestCasesHolder.getTestSuite(testSuiteName);
 		//		for (TestSuiteNode testSuite : fTestSuiteNodes) {
@@ -480,7 +480,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return true;
 	}
 
-	public boolean hasTestSuites() {
+	public boolean hasTestSuites() { // XYX remove
 		return fTestCasesHolder.hasTestSuites();
 		//		if (fTestSuiteNodes.isEmpty()) {
 		//			return false;
@@ -495,7 +495,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+	public Collection<TestCaseNode> getTestCases(String testSuiteName) { // XYX MOVE
 		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 		for(TestCaseNode testCase : getTestCases()){
 			if(testSuiteName.equals(testCase.getName())){
@@ -505,7 +505,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return testCases;
 	}
 
-	public Set<String> getTestCaseNames() {
+	public Set<String> getTestCaseNames() { // XYX MOVE
 
 		Set<String> names = new HashSet<String>();
 
@@ -516,7 +516,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return names;
 	}
 
-	void removeTestSuite(TestSuiteNode testSuite) {
+	void removeTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
 
 		fTestCasesHolder.removeTestSuite(testSuite);
 		//		fTestSuiteNodes.remove(testSuite);
@@ -848,11 +848,6 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fDeployedParametersHolder.setParametersWithLinkingContexts(deployedParametersWithContexts);
 	}
 
-	//	public void setOriginalParametersWithContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
-	//		
-	//		fOriginalParametersHolder.setParametersWithLinkingContexts(parametersWithContexts);
-	//	}
-
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
 
@@ -929,18 +924,9 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fParametersHolder.getParameterWithLinkingContexts(index);
 	}
 
-
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();
-	}
-
-	public void setTestCases(List<TestCaseNode> testCases) { // TODO MO-RE remove - convert to replaceTestCases
-
-		//		fTestCaseNodes.clear();
-		//		fTestCaseNodes.addAll(testCases);
-
-		fTestCasesHolder.replaceTestCases(testCases);
 	}
 
 	@Override
