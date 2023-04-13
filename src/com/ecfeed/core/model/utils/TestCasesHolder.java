@@ -198,4 +198,15 @@ public class TestCasesHolder {
 		return newTestSuiteNode;
 	}
 
+	public int findTestSuiteIndex(String testSuiteName) {
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			return -1;
+		}
+
+		return testSuiteNode.getMyIndex();
+	}
+	
 }

@@ -234,56 +234,14 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public TestSuiteNode provideValidTestSuiteNode(String newName) {
+	public TestSuiteNode provideValidTestSuiteNode(String newName) { // XYX do we need this function ?
 
 		return fTestCasesHolder.provideValidTestSuiteNode(newName, this);
-
-		//		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
-		//
-		//		if (newTestSuiteNode == null) {
-		//			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
-		//			addTestSuite(newTestSuiteNode);
-		//		}
-		//		return newTestSuiteNode;
 	}
-
-	//	private void addTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
-	//		//addTestSuite(testSuite, fTestSuiteNodes.size());
-	//		fTestCasesHolder.addTestSuite(testSuite, this);
-	//	}
-
-	//	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
-	//		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
-	//		//		testCase.setParent(this);
-	//		//		fTestSuiteNodes.add(index, testCase);
-	//		//		registerChange();
-	//	}
 
 	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
 
 		fTestCasesHolder.addTestCase(testCaseNode, index, indexOfNewTestCase, this);
-
-		//		String testSuiteName = testCaseNode.getName();
-		//
-		//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-		//
-		//		if (testSuiteNode == null) {
-		//			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
-		//
-		//			if (indexOfNewTestCase.isPresent()) {
-		//				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
-		//			} else {
-		//				addTestSuite(testSuiteNode);
-		//			}
-		//		}
-		//
-		//		testSuiteNode.addTestCase(testCaseNode);
-		//
-		//		fTestCasesHolder.addTestCase(testCaseNode, index);
-		//		//fTestCaseNodes.add(index, testCaseNode);
-		//		testCaseNode.setParent(this);
-		//
-		//		registerChange();
 	}
 
 	public void addTestCase(TestCaseNode testCaseNode) {  // XYX CHANGE TO SIMPLE CALL
@@ -291,69 +249,24 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		addTestCase(testCaseNode, fTestCasesHolder.getTestCaseNodes().size(), Optional.empty());
 	}
 
-	public void removeTestCase(TestCaseNode testCaseNode) { // XYX MOVE
+	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.removeTestCase(testCaseNode);
-
-		//		String testSuiteName = testCaseNode.getName();
-		//
-		//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-		//
-		//		if (testSuiteNode == null) {
-		//			ExceptionHelper.reportRuntimeException("Non existing test suite.");
-		//		}
-		//
-		//		testSuiteNode.removeTestCase(testCaseNode);
-		//
-		//		if (testSuiteNode.getTestCaseNodes().size() == 0) {
-		//			removeTestSuite(testSuiteNode);
-		//		}
-		//
-		//		testCaseNode.setParent(null);
-		//
-		//		fTestCasesHolder.removeTestCase(testCaseNode);
-		//		//fTestCaseNodes.remove(testCaseNode);
-		//
-		//		registerChange();
 	}
 
-	public TestSuiteNode findTestSuite(String testSuiteName) { // XYX MOVE
+	public TestSuiteNode findTestSuite(String testSuiteName) {
 
 		return fTestCasesHolder.findTestSuite(testSuiteName);
-
-		//		if (testSuiteName == null) {
-		//			ExceptionHelper.reportRuntimeException("Empty test suite name.");
-		//		}
-		//
-		//		for (TestSuiteNode testSuiteNode : fTestSuiteNodes) {
-		//			if (testSuiteName.equals(testSuiteNode.getName())) {
-		//				return testSuiteNode; 
-		//			}
-		//		}
-		//
-		//		return null;
 	}
 
-	public int findTestSuiteIndex(String testSuiteName) { // XYX MOVE
+	public int findTestSuiteIndex(String testSuiteName) { // XYX do we need this function ?
 
-		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-
-		if (testSuiteNode == null) {
-			return -1;
-		}
-
-		return testSuiteNode.getMyIndex();
+		return fTestCasesHolder.findTestSuiteIndex(testSuiteName);
 	}
-
 
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
 	}
-
-	//	@Override
-	//	public BasicParameterNode findMethodParameter(String name){
-	//		return (BasicParameterNode)findParameter(name);
-	//	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
 
@@ -467,31 +380,11 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fTestCasesHolder.getTestSuiteNodes();
 	}
 
-	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) { // XYX remove
-
-		return fTestCasesHolder.getTestSuite(testSuiteName);
-		//		for (TestSuiteNode testSuite : fTestSuiteNodes) {
-		//			if (testSuite.getSuiteName().equalsIgnoreCase(testSuiteName)) {
-		//				return Optional.of(testSuite);
-		//			}
-		//		}
-		//
-		//		return Optional.empty();
-	}
-
 	public boolean hasParameters() {
 		if (getParameters().isEmpty()) {
 			return false; 
 		}
 		return true;
-	}
-
-	public boolean hasTestSuites() { // XYX remove
-		return fTestCasesHolder.hasTestSuites();
-		//		if (fTestSuiteNodes.isEmpty()) {
-		//			return false;
-		//		}
-		//		return true;
 	}
 
 	public boolean hasTestCases() {
