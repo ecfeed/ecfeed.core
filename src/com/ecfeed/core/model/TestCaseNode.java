@@ -48,7 +48,7 @@ public class TestCaseNode extends AbstractNode {
 			return;
 		}
 
-		MethodNode methodNode = (MethodNode) parent;
+		MethodNode methodNode = (MethodNode) parent; // XYX move code somewhere ?? use test cases holder ??
 
 		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
 		oldTestSuiteNode.removeTestCase(this);

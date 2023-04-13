@@ -11,11 +11,13 @@
 package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -51,14 +53,13 @@ public class TestCasesHolder {
 		return true;
 	}
 
-	public void addTestCase(TestCaseNode testCaseNode, int index) { // XYX REMOVE ??
+	public void addTestCase(TestCaseNode testCaseNode, MethodNode parent) {
 
-		fTestCaseNodes.add(index, testCaseNode);
-		registerChange();
+		addTestCase(testCaseNode, fTestCaseNodes.size(), Optional.empty(), parent);
 	}
 
 	public void addTestCase(
-			TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestSuite, IAbstractNode parent) {
+			TestCaseNode testCaseNode, int index, Optional<Integer> indexOfTestSuite, MethodNode parent) {
 
 		String testSuiteName = testCaseNode.getName();
 
@@ -68,8 +69,8 @@ public class TestCasesHolder {
 
 			testSuiteNode = new TestSuiteNode(testSuiteName, fModelChangeRegistrator);
 
-			if (indexOfNewTestSuite.isPresent()) {
-				addTestSuite(testSuiteNode, indexOfNewTestSuite.get(), parent);
+			if (indexOfTestSuite.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfTestSuite.get(), parent);
 			} else {
 				addTestSuite(testSuiteNode, parent);
 			}
@@ -82,12 +83,6 @@ public class TestCasesHolder {
 
 		registerChange();
 	}
-
-	//	public void removeTestCase(TestCaseNode testCaseNode) {
-	//		
-	//		fTestCaseNodes.remove(testCaseNode);
-	//		registerChange();
-	//	}
 
 	public void removeTestCase(TestCaseNode testCaseNode) {
 
@@ -107,19 +102,17 @@ public class TestCasesHolder {
 
 		testCaseNode.setParent(null);
 
-		//		fTestCasesHolder.removeTestCase(testCaseNode);
 		fTestCaseNodes.remove(testCaseNode);
 
 		registerChange();
 	}
 
-
-	public void addTestSuite(TestSuiteNode testSuite, IAbstractNode parent) {
+	public void addTestSuite(TestSuiteNode testSuite, MethodNode parent) {
 
 		addTestSuite(testSuite, fTestSuiteNodes.size(), parent);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuiteNode, int index, IAbstractNode parent) {
+	public void addTestSuite(TestSuiteNode testSuiteNode, int index, MethodNode parent) {
 
 		testSuiteNode.setParent(parent);
 		fTestSuiteNodes.add(index, testSuiteNode);
@@ -186,7 +179,7 @@ public class TestCasesHolder {
 		return null;
 	}
 
-	public TestSuiteNode provideValidTestSuiteNode(String newName, IAbstractNode parent) { // XYX convert parent type do method node - also in other methods
+	public TestSuiteNode provideValidTestSuiteNode(String newName, MethodNode parent) {
 
 		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
 
@@ -208,5 +201,17 @@ public class TestCasesHolder {
 
 		return testSuiteNode.getMyIndex();
 	}
-	
+
+	public Set<String> getTestCaseNames() {
+
+		Set<String> names = new HashSet<String>();
+
+		for (TestCaseNode testCase : fTestCaseNodes) {
+			names.add(testCase.getName());
+		}
+
+		return names;
+	}
+
+
 }
