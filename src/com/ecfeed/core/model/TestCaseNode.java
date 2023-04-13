@@ -48,32 +48,14 @@ public class TestCaseNode extends AbstractNode {
 			return;
 		}
 
-		MethodNode methodNode = (MethodNode) parent; // XYX move code somewhere ?? use test cases holder ??
+		MethodNode methodNode = (MethodNode) parent;
 
 		methodNode.removeTestCase(this);
-		//removeTestCase(this, methodNode);
 
 		super.setName(newNameInIntrLanguage);
 
 		methodNode.addTestCase(this);
-		//addTestCase(this, methodNode);
 	}
-
-	//	public void addTestCase(TestCaseNode testCase, MethodNode methodNode) { // XYX remove
-	//		
-	//		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(testCase.getName());
-	//		newTestSuiteNode.addTestCase(this);
-	//	}
-
-	//	public static void removeTestCase(TestCaseNode testCaseNode, MethodNode methodNode) { // XYX remove
-	//		
-	//		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(testCaseNode.getName());
-	//		oldTestSuiteNode.removeTestCase(testCaseNode);
-	//
-	//		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
-	//			methodNode.removeTestSuite(oldTestSuiteNode);
-	//		}
-	//	}
 
 	@Override
 	public int getMyIndex(){

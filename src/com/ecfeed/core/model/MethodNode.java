@@ -247,8 +247,6 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void addTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.addTestCase(testCaseNode, this);
-
-		//addTestCase(testCaseNode, fTestCasesHolder.getTestCaseNodes().size(), Optional.empty());
 	}
 
 	public void removeTestCase(TestCaseNode testCaseNode) {
