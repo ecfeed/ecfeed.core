@@ -237,53 +237,53 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public TestSuiteNode provideValidTestSuiteNode(String newName) {
 
 		return fTestCasesHolder.provideValidTestSuiteNode(newName, this);
-		
-//		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
-//
-//		if (newTestSuiteNode == null) {
-//			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
-//			addTestSuite(newTestSuiteNode);
-//		}
-//		return newTestSuiteNode;
+
+		//		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+		//
+		//		if (newTestSuiteNode == null) {
+		//			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
+		//			addTestSuite(newTestSuiteNode);
+		//		}
+		//		return newTestSuiteNode;
 	}
 
-	private void addTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
-		//addTestSuite(testSuite, fTestSuiteNodes.size());
-		fTestCasesHolder.addTestSuite(testSuite, this);
-	}
+	//	private void addTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
+	//		//addTestSuite(testSuite, fTestSuiteNodes.size());
+	//		fTestCasesHolder.addTestSuite(testSuite, this);
+	//	}
 
-//	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
-//		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
-//		//		testCase.setParent(this);
-//		//		fTestSuiteNodes.add(index, testCase);
-//		//		registerChange();
-//	}
+	//	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
+	//		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
+	//		//		testCase.setParent(this);
+	//		//		fTestSuiteNodes.add(index, testCase);
+	//		//		registerChange();
+	//	}
 
 	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
-		
+
 		fTestCasesHolder.addTestCase(testCaseNode, index, indexOfNewTestCase, this);
 
-//		String testSuiteName = testCaseNode.getName();
-//
-//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-//
-//		if (testSuiteNode == null) {
-//			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
-//
-//			if (indexOfNewTestCase.isPresent()) {
-//				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
-//			} else {
-//				addTestSuite(testSuiteNode);
-//			}
-//		}
-//
-//		testSuiteNode.addTestCase(testCaseNode);
-//
-//		fTestCasesHolder.addTestCase(testCaseNode, index);
-//		//fTestCaseNodes.add(index, testCaseNode);
-//		testCaseNode.setParent(this);
-//
-//		registerChange();
+		//		String testSuiteName = testCaseNode.getName();
+		//
+		//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+		//
+		//		if (testSuiteNode == null) {
+		//			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
+		//
+		//			if (indexOfNewTestCase.isPresent()) {
+		//				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
+		//			} else {
+		//				addTestSuite(testSuiteNode);
+		//			}
+		//		}
+		//
+		//		testSuiteNode.addTestCase(testCaseNode);
+		//
+		//		fTestCasesHolder.addTestCase(testCaseNode, index);
+		//		//fTestCaseNodes.add(index, testCaseNode);
+		//		testCaseNode.setParent(this);
+		//
+		//		registerChange();
 	}
 
 	public void addTestCase(TestCaseNode testCaseNode) {  // XYX CHANGE TO SIMPLE CALL
@@ -293,26 +293,28 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 	public void removeTestCase(TestCaseNode testCaseNode) { // XYX MOVE
 
-		String testSuiteName = testCaseNode.getName();
-
-		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-
-		if (testSuiteNode == null) {
-			ExceptionHelper.reportRuntimeException("Non existing test suite.");
-		}
-
-		testSuiteNode.removeTestCase(testCaseNode);
-
-		if (testSuiteNode.getTestCaseNodes().size() == 0) {
-			removeTestSuite(testSuiteNode);
-		}
-
-		testCaseNode.setParent(null);
-
 		fTestCasesHolder.removeTestCase(testCaseNode);
-		//fTestCaseNodes.remove(testCaseNode);
 
-		registerChange();
+		//		String testSuiteName = testCaseNode.getName();
+		//
+		//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+		//
+		//		if (testSuiteNode == null) {
+		//			ExceptionHelper.reportRuntimeException("Non existing test suite.");
+		//		}
+		//
+		//		testSuiteNode.removeTestCase(testCaseNode);
+		//
+		//		if (testSuiteNode.getTestCaseNodes().size() == 0) {
+		//			removeTestSuite(testSuiteNode);
+		//		}
+		//
+		//		testCaseNode.setParent(null);
+		//
+		//		fTestCasesHolder.removeTestCase(testCaseNode);
+		//		//fTestCaseNodes.remove(testCaseNode);
+		//
+		//		registerChange();
 	}
 
 	public TestSuiteNode findTestSuite(String testSuiteName) { // XYX MOVE

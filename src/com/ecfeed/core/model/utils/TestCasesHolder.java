@@ -21,55 +21,55 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 
 public class TestCasesHolder {
-	
+
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
 	public TestCasesHolder(IModelChangeRegistrator modelChangeRegistrator) {
-		
+
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
 	public List<TestCaseNode> getTestCaseNodes() { // XYX convert to getting copies
-		
+
 		return fTestCaseNodes;
 	}
-	
+
 	public List<TestSuiteNode> getTestSuiteNodes() { // XYX remove
-		
+
 		return fTestSuiteNodes;
 	}
-	
+
 	public boolean hasTestSuites() {
-		
+
 		if (fTestSuiteNodes.isEmpty()) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public void addTestCase(TestCaseNode testCaseNode, int index) { // XYX REMOVE ??
-		
+
 		fTestCaseNodes.add(index, testCaseNode);
 		registerChange();
 	}
-	
+
 	public void addTestCase(
-			TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase, IAbstractNode parent) {
+			TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestSuite, IAbstractNode parent) {
 
 		String testSuiteName = testCaseNode.getName();
 
 		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
 
 		if (testSuiteNode == null) {
-			
+
 			testSuiteNode = new TestSuiteNode(testSuiteName, fModelChangeRegistrator);
 
-			if (indexOfNewTestCase.isPresent()) {
-				addTestSuite(testSuiteNode, indexOfNewTestCase.get(), parent);
+			if (indexOfNewTestSuite.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfNewTestSuite.get(), parent);
 			} else {
 				addTestSuite(testSuiteNode, parent);
 			}
@@ -82,36 +82,61 @@ public class TestCasesHolder {
 
 		registerChange();
 	}
-	
+
+	//	public void removeTestCase(TestCaseNode testCaseNode) {
+	//		
+	//		fTestCaseNodes.remove(testCaseNode);
+	//		registerChange();
+	//	}
+
+	public void removeTestCase(TestCaseNode testCaseNode) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			ExceptionHelper.reportRuntimeException("Non existing test suite.");
+		}
+
+		testSuiteNode.removeTestCase(testCaseNode);
+
+		if (testSuiteNode.getTestCaseNodes().size() == 0) {
+			removeTestSuite(testSuiteNode);
+		}
+
+		testCaseNode.setParent(null);
+
+		//		fTestCasesHolder.removeTestCase(testCaseNode);
+		fTestCaseNodes.remove(testCaseNode);
+
+		registerChange();
+	}
+
+
 	public void addTestSuite(TestSuiteNode testSuite, IAbstractNode parent) {
-		
+
 		addTestSuite(testSuite, fTestSuiteNodes.size(), parent);
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index, IAbstractNode parent) {
-		
-		testCase.setParent(parent);
-		fTestSuiteNodes.add(index, testCase);
+	public void addTestSuite(TestSuiteNode testSuiteNode, int index, IAbstractNode parent) {
+
+		testSuiteNode.setParent(parent);
+		fTestSuiteNodes.add(index, testSuiteNode);
 		registerChange();
 	}
-	
-	public void removeTestCase(TestCaseNode testCaseNode) {
-		
-		fTestCaseNodes.remove(testCaseNode);
-		registerChange();
-	}
-	
+
 	public void removeTestSuite(TestSuiteNode testSuite) {
 
 		fTestSuiteNodes.remove(testSuite);
 		registerChange();
 	}
-	
+
 	public boolean isEmpty() {
-		
+
 		return fTestCaseNodes.isEmpty();
 	}
-	
+
 	public void removeAllTestCases() {
 
 		fTestCaseNodes.clear();
@@ -127,14 +152,14 @@ public class TestCasesHolder {
 
 		fModelChangeRegistrator.registerChange();
 	}
-	
+
 	public void replaceTestCases(List<TestCaseNode> testCases){ // TODO MO-RE fix test suites after changing test cases
-		
+
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);
 		registerChange();
 	}
-	
+
 	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
 
 		for (TestSuiteNode testSuite : fTestSuiteNodes) {
@@ -169,8 +194,8 @@ public class TestCasesHolder {
 			newTestSuiteNode = new TestSuiteNode(newName, fModelChangeRegistrator);
 			addTestSuite(newTestSuiteNode, parent);
 		}
-		
+
 		return newTestSuiteNode;
 	}
-	
+
 }

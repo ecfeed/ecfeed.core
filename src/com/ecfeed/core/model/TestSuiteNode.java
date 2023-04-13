@@ -112,7 +112,7 @@ public class TestSuiteNode extends AbstractNode {
 		fTestCaseNodes.add(testCaseNode);
 	}
 
-	void removeTestCase(TestCaseNode testCaseNode) {
+	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCaseNodes.remove(testCaseNode);
 	}
