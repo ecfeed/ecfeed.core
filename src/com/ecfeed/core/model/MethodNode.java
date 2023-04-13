@@ -26,9 +26,9 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
-	ParametersLister fParametersHolder; // TODO MO-RE private
-	ParametersLister fDeployedParametersHolder;
-	TestCasesHolder fTestCasesHolder;
+	private ParametersLister fParametersHolder;
+	private ParametersLister fDeployedParametersHolder;
+	private TestCasesHolder fTestCasesHolder;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	@Override

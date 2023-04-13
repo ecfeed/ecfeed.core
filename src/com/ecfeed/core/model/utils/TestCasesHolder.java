@@ -36,22 +36,14 @@ public class TestCasesHolder {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public List<TestCaseNode> getTestCaseNodes() { // XYX convert to getting copies
+	public List<TestCaseNode> getTestCaseNodes() {
 
 		return fTestCaseNodes;
 	}
 
-	public List<TestSuiteNode> getTestSuiteNodes() { // XYX remove
+	public List<TestSuiteNode> getTestSuiteNodes() {
 
 		return fTestSuiteNodes;
-	}
-
-	public boolean hasTestSuites() {
-
-		if (fTestSuiteNodes.isEmpty()) {
-			return false;
-		}
-		return true;
 	}
 
 	public void addTestCase(TestCaseNode testCaseNode, MethodNode parent) {
@@ -108,24 +100,6 @@ public class TestCasesHolder {
 		registerChange();
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite, MethodNode parent) {
-
-		addTestSuite(testSuite, fTestSuiteNodes.size(), parent);
-	}
-
-	public void addTestSuite(TestSuiteNode testSuiteNode, int index, MethodNode parent) {
-
-		testSuiteNode.setParent(parent);
-		fTestSuiteNodes.add(index, testSuiteNode);
-		registerChange();
-	}
-
-	public void removeTestSuite(TestSuiteNode testSuite) {
-
-		fTestSuiteNodes.remove(testSuite);
-		registerChange();
-	}
-
 	public boolean isEmpty() {
 
 		return fTestCaseNodes.isEmpty();
@@ -136,15 +110,6 @@ public class TestCasesHolder {
 		fTestCaseNodes.clear();
 		fTestSuiteNodes.clear();
 		registerChange();
-	}
-
-	private void registerChange() {
-
-		if (fModelChangeRegistrator == null) {
-			return;
-		}
-
-		fModelChangeRegistrator.registerChange();
 	}
 
 	public void replaceTestCases(List<TestCaseNode> testCases){ // TODO MO-RE fix test suites after changing test cases
@@ -178,18 +143,6 @@ public class TestCasesHolder {
 		}
 
 		return null;
-	}
-
-	public TestSuiteNode provideValidTestSuiteNode(String newName, MethodNode parent) {
-
-		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
-
-		if (newTestSuiteNode == null) {
-			newTestSuiteNode = new TestSuiteNode(newName, fModelChangeRegistrator);
-			addTestSuite(newTestSuiteNode, parent);
-		}
-
-		return newTestSuiteNode;
 	}
 
 	public int findTestSuiteIndex(String testSuiteName) {
@@ -227,5 +180,31 @@ public class TestCasesHolder {
 		return result;
 	}
 
+	private void addTestSuite(TestSuiteNode testSuite, MethodNode parent) {
+
+		addTestSuite(testSuite, fTestSuiteNodes.size(), parent);
+	}
+
+	private void addTestSuite(TestSuiteNode testSuiteNode, int index, MethodNode parent) {
+
+		testSuiteNode.setParent(parent);
+		fTestSuiteNodes.add(index, testSuiteNode);
+		registerChange();
+	}
+
+	private void removeTestSuite(TestSuiteNode testSuite) {
+
+		fTestSuiteNodes.remove(testSuite);
+		registerChange();
+	}
+
+	private void registerChange() {
+
+		if (fModelChangeRegistrator == null) {
+			return;
+		}
+
+		fModelChangeRegistrator.registerChange();
+	}
 
 }
