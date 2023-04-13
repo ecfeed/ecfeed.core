@@ -234,15 +234,17 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public TestSuiteNode provideValidTestSuiteNode(String newName) { // XYX MOVE
+	public TestSuiteNode provideValidTestSuiteNode(String newName) {
 
-		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
-
-		if (newTestSuiteNode == null) {
-			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
-			addTestSuite(newTestSuiteNode);
-		}
-		return newTestSuiteNode;
+		return fTestCasesHolder.provideValidTestSuiteNode(newName, this);
+		
+//		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+//
+//		if (newTestSuiteNode == null) {
+//			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
+//			addTestSuite(newTestSuiteNode);
+//		}
+//		return newTestSuiteNode;
 	}
 
 	private void addTestSuite(TestSuiteNode testSuite) { // XYX REMOVE
@@ -250,36 +252,38 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fTestCasesHolder.addTestSuite(testSuite, this);
 	}
 
-	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
-		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
-		//		testCase.setParent(this);
-		//		fTestSuiteNodes.add(index, testCase);
-		//		registerChange();
-	}
+//	private void addTestSuite(TestSuiteNode testSuiteNode, int index) {  // XYX REMOVE
+//		fTestCasesHolder.addTestSuite(testSuiteNode, index, this);
+//		//		testCase.setParent(this);
+//		//		fTestSuiteNodes.add(index, testCase);
+//		//		registerChange();
+//	}
 
-	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {  // XYX MOVE
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
+		
+		fTestCasesHolder.addTestCase(testCaseNode, index, indexOfNewTestCase, this);
 
-		String testSuiteName = testCaseNode.getName();
-
-		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-
-		if (testSuiteNode == null) {
-			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
-
-			if (indexOfNewTestCase.isPresent()) {
-				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
-			} else {
-				addTestSuite(testSuiteNode);
-			}
-		}
-
-		testSuiteNode.addTestCase(testCaseNode);
-
-		fTestCasesHolder.addTestCase(testCaseNode, index);
-		//fTestCaseNodes.add(index, testCaseNode);
-		testCaseNode.setParent(this);
-
-		registerChange();
+//		String testSuiteName = testCaseNode.getName();
+//
+//		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+//
+//		if (testSuiteNode == null) {
+//			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
+//
+//			if (indexOfNewTestCase.isPresent()) {
+//				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
+//			} else {
+//				addTestSuite(testSuiteNode);
+//			}
+//		}
+//
+//		testSuiteNode.addTestCase(testCaseNode);
+//
+//		fTestCasesHolder.addTestCase(testCaseNode, index);
+//		//fTestCaseNodes.add(index, testCaseNode);
+//		testCaseNode.setParent(this);
+//
+//		registerChange();
 	}
 
 	public void addTestCase(TestCaseNode testCaseNode) {  // XYX CHANGE TO SIMPLE CALL

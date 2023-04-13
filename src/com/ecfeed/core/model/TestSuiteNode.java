@@ -103,7 +103,7 @@ public class TestSuiteNode extends AbstractNode {
 		return fDisplayLimitExceeded;
 	}
 
-	void addTestCase(TestCaseNode testCaseNode) {
+	public void addTestCase(TestCaseNode testCaseNode) {
 
 		if (!StringHelper.isEqual(testCaseNode.getName(), this.getName())) {
 			ExceptionHelper.reportRuntimeException("Test case name does not match test suite name.");

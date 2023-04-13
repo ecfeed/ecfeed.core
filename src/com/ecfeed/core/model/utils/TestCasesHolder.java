@@ -33,12 +33,12 @@ public class TestCasesHolder {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public List<TestCaseNode> getTestCaseNodes() {
+	public List<TestCaseNode> getTestCaseNodes() { // XYX convert to getting copies
 		
 		return fTestCaseNodes;
 	}
 	
-	public List<TestSuiteNode> getTestSuiteNodes() {
+	public List<TestSuiteNode> getTestSuiteNodes() { // XYX remove
 		
 		return fTestSuiteNodes;
 	}
@@ -51,9 +51,35 @@ public class TestCasesHolder {
 		return true;
 	}
 	
-	public void addTestCase(TestCaseNode testCaseNode, int index) {
+	public void addTestCase(TestCaseNode testCaseNode, int index) { // XYX REMOVE ??
 		
 		fTestCaseNodes.add(index, testCaseNode);
+		registerChange();
+	}
+	
+	public void addTestCase(
+			TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase, IAbstractNode parent) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			
+			testSuiteNode = new TestSuiteNode(testSuiteName, fModelChangeRegistrator);
+
+			if (indexOfNewTestCase.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfNewTestCase.get(), parent);
+			} else {
+				addTestSuite(testSuiteNode, parent);
+			}
+		}
+
+		testSuiteNode.addTestCase(testCaseNode);
+
+		fTestCaseNodes.add(index, testCaseNode);
+		testCaseNode.setParent(parent);
+
 		registerChange();
 	}
 	
@@ -133,6 +159,18 @@ public class TestCasesHolder {
 		}
 
 		return null;
+	}
+
+	public TestSuiteNode provideValidTestSuiteNode(String newName, IAbstractNode parent) { // XYX convert parent type do method node - also in other methods
+
+		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+
+		if (newTestSuiteNode == null) {
+			newTestSuiteNode = new TestSuiteNode(newName, fModelChangeRegistrator);
+			addTestSuite(newTestSuiteNode, parent);
+		}
+		
+		return newTestSuiteNode;
 	}
 	
 }
