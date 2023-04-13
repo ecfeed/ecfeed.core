@@ -234,12 +234,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public TestSuiteNode provideValidTestSuiteNode(String newName) { // XYX do we need this function ?
-
-		return fTestCasesHolder.provideValidTestSuiteNode(newName, this);
-	}
-
-	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestSuite) { // XYX index should be calculated internally in holder  
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestSuite) {  
 
 		fTestCasesHolder.addTestCase(testCaseNode, index, indexOfNewTestSuite, this);
 	}
@@ -259,7 +254,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fTestCasesHolder.findTestSuite(testSuiteName);
 	}
 
-	public int findTestSuiteIndex(String testSuiteName) { // XYX do we need this function ?
+	public int findTestSuiteIndex(String testSuiteName) {
 
 		return fTestCasesHolder.findTestSuiteIndex(testSuiteName);
 	}
@@ -397,24 +392,11 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
 
 		return fTestCasesHolder.getTestCases(testSuiteName);
-
-		//		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
-		//		for(TestCaseNode testCase : getTestCases()){
-		//			if(testSuiteName.equals(testCase.getName())){
-		//				testCases.add(testCase);
-		//			}
-		//		}
-		//		return testCases;
 	}
 
 	public Set<String> getTestCaseNames() {
 
 		return fTestCasesHolder.getTestCaseNames();
-	}
-
-	void removeTestSuite(TestSuiteNode testSuite) { // XYX REMOVE ??
-
-		fTestCasesHolder.removeTestSuite(testSuite);
 	}
 
 	@Override
