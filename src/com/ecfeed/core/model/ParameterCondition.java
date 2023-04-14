@@ -255,15 +255,12 @@ public class ParameterCondition implements IStatementCondition {
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.SHORTENED,
 						fRightParameterNode,
-						ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
 						Decorations.NO,
 						TypeIncluded.NO,
 						extLanguageManager);
-		String name =
-				signatureNew;
 
-
-		return StatementConditionHelper.createParameterDescription(name);
+		return StatementConditionHelper.createParameterDescription(signatureNew);
 	}
 
 	@Override
