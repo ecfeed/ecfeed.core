@@ -59,7 +59,8 @@ public abstract class MethodDeployer {
 			MethodNode methodNode, 
 			NodeMapper nodeMapper) {
 
-		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethodNode.getParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = 
+				deployedMethodNode.getParametersWithLinkingContexts();
 
 		List<ParameterWithLinkingContext> originalParametersWithContexts =
 				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);

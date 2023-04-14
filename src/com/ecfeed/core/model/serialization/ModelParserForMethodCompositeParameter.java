@@ -27,7 +27,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 	private IModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForMethodCompositeParameter(IModelParserForMethodParameter modelParserForMethodParameter,
-												  IModelParserForConstraint modelParserForConstraint) {
+			IModelParserForConstraint modelParserForConstraint) {
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
@@ -50,16 +50,16 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, method.getModelChangeRegistrator());
 		targetCompositeParameterNode.setParent(parent);
 
-		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
+		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
 
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForMethodParameter.parseMethodParameter(child, method, targetCompositeParameterNode, errorList)
-						.ifPresent(targetCompositeParameterNode::addParameter);
+				.ifPresent(targetCompositeParameterNode::addParameter);
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList)
-						.ifPresent(targetCompositeParameterNode::addParameter);
+				.ifPresent(targetCompositeParameterNode::addParameter);
 			}
 		}
 
@@ -69,7 +69,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 				try {
 					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)
-							.ifPresent(targetCompositeParameterNode::addConstraint);
+					.ifPresent(targetCompositeParameterNode::addConstraint);
 				} catch (Exception e) {
 					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
 				}

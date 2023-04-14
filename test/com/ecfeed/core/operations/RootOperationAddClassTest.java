@@ -33,7 +33,8 @@ public class RootOperationAddClassTest {
 
 		ClassNode classNode1 = new ClassNode("com.Class1", null);
 
-		OnClassOperationAddToRoot operation1Simple = new OnClassOperationAddToRoot(rootNode, classNode1, new ExtLanguageManagerForSimple());
+		OnClassOperationAddToRoot operation1Simple = 
+				new OnClassOperationAddToRoot(rootNode, classNode1, false, new ExtLanguageManagerForSimple());
 
 		try {
 			operation1Simple.execute();
@@ -45,7 +46,8 @@ public class RootOperationAddClassTest {
 
 		ClassNode classNode2 = new ClassNode("com.xx.Class1", null);
 
-		OnClassOperationAddToRoot operation2Simple = new OnClassOperationAddToRoot(rootNode, classNode2, new ExtLanguageManagerForSimple());
+		OnClassOperationAddToRoot operation2Simple = 
+				new OnClassOperationAddToRoot(rootNode, classNode2, false, new ExtLanguageManagerForSimple());
 
 		try {
 			operation2Simple.execute();
@@ -60,7 +62,8 @@ public class RootOperationAddClassTest {
 
 		// adding the same class in Java mode should be ok
 
-		OnClassOperationAddToRoot operation2Java = new OnClassOperationAddToRoot(rootNode, classNode2, new ExtLanguageManagerForJava());
+		OnClassOperationAddToRoot operation2Java = 
+				new OnClassOperationAddToRoot(rootNode, classNode2, false, new ExtLanguageManagerForJava());
 
 		try {
 			operation2Java.execute();

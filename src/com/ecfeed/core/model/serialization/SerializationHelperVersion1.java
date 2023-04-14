@@ -19,7 +19,7 @@ public class SerializationHelperVersion1 {
 	private static final String CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
 	private static final String STATEMENT_CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
 	private static final String CONSTRAINT_NAME_VERSION_5 = "Constraint";
-	private static final String[] PARAMETER_NODE_NAMES_VERSION_5 = new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5, CONSTRAINT_NAME_VERSION_5};
+	private static final String[] PARAMETERS_AND_CONSTRAINTS_ELEMENT_NAMES_VERSION_5 = new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5, CONSTRAINT_NAME_VERSION_5};
 
 	public static String getChoiceNodeName() {
 		return CHOICE_NODE_NAME_VERSION_1;
@@ -49,7 +49,12 @@ public class SerializationHelperVersion1 {
 		return STATEMENT_PARAMETER_ATTRIBUTE_NAME_VERSION_1;
 	}
 
-	public static String[] getParameterNodeNames() {
-		return PARAMETER_NODE_NAMES_VERSION_5;
+	public static String[] getParametersAndConstraintsElementNames() {
+		return PARAMETERS_AND_CONSTRAINTS_ELEMENT_NAMES_VERSION_5;
 	}
+	
+	public static String[] getParametersElementNames() {
+		return new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5};
+	}
+	
 }

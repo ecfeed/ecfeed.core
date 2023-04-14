@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnTestCasesOperationSimpleRemoveAll extends AbstractModelOperation {
 
-	private static final String ADD_TEST_CASES = "Add test cases";
+	private static final String REMOVE_TEST_CASES = "Remove test cases";
 
 	ITestCasesParentNode fMethodNode;
 	List<TestCaseNode> fOriginalTestCases;
@@ -29,7 +29,7 @@ public class OnTestCasesOperationSimpleRemoveAll extends AbstractModelOperation 
 			ITestCasesParentNode methodNode,
 			IExtLanguageManager extLanguageManager) {
 
-		super(ADD_TEST_CASES, extLanguageManager);
+		super(REMOVE_TEST_CASES, extLanguageManager);
 
 		fMethodNode = methodNode;
 		fOriginalTestCases = methodNode.getTestCases();
@@ -50,7 +50,7 @@ public class OnTestCasesOperationSimpleRemoveAll extends AbstractModelOperation 
 	private class ReverseOperation extends AbstractModelOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super("Reverse operation to " + ADD_TEST_CASES, extLanguageManager);
+			super("Reverse operation to " + REMOVE_TEST_CASES, extLanguageManager);
 		}
 
 		@Override

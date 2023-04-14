@@ -223,25 +223,25 @@ public abstract class AbstractParameterNodeHelper {
 	public static void compareParameterTypes(
 			AbstractParameterNode abstractParameter1,
 			AbstractParameterNode abstractParameter2) {
-		
+
 		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
-			
+
 			ExceptionHelper.reportRuntimeException("Types of nodes do not match: basic parameter vs composite parameter.");
 		}
 
 		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
-			
+
 			ExceptionHelper.reportRuntimeException("Types of nodes do not match: composite parameter vs basic parameter.");
 		}
-		
+
 	}
 
 	public static AbstractParameterNode findParameterByAbsolutePath(String path, RootNode rootNode) {
-		
+
 		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			ExceptionHelper.reportRuntimeException("Invalid path. Path with root marker expected.");
 		}
-		
+
 		String pathWithoutRootMarker = path.substring(1);
 		String[] pathElements = pathWithoutRootMarker.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
@@ -273,5 +273,5 @@ public abstract class AbstractParameterNodeHelper {
 		ExceptionHelper.reportRuntimeException("Parameter not found");
 		return null;
 	}
-	
+
 }

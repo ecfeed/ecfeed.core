@@ -66,7 +66,7 @@ public class RandomModelGenerator {
 		return null;
 	}
 
-	public RootNode generateModel(int classes){
+	public RootNode generateModel(int classes) {
 		String name = generateString(RegexHelper.REGEX_ROOT_NODE_NAME);
 
 		RootNode root = new RootNode(name, null);
@@ -88,7 +88,8 @@ public class RandomModelGenerator {
 //		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, "true");
 //		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, "runner");
 
-		for(int i = 0; i < methods; i++){
+		for (int i = 0; i < methods; i++) {
+			
 			int parameters = rand.nextInt(MAX_PARAMETERS);
 			int constraints = rand.nextInt(MAX_CONSTRAINTS);
 			int testCases = rand.nextInt(MAX_TEST_CASES);
@@ -99,35 +100,41 @@ public class RandomModelGenerator {
 		return theClass;
 	}
 
-	public MethodNode generateMethod(int parameters, int constraints, int testCases){
+	public MethodNode generateMethod(int parameters, int constraints, int testCases) {
+		
 		String name = generateString(RegexHelper.REGEX_METHOD_NODE_NAME);
 
-		MethodNode method = new MethodNode(name, null);
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, "runner");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, "false");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, "Chrome");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, "driver");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, "false");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_START_URL, "startUrl");
+		MethodNode methodNode = new MethodNode(name, null);
+		
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, "runner");
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, "false");
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, "Chrome");
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, "driver");
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, "false");
+		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_START_URL, "startUrl");
 
 		for (int i = 0; i < parameters; i++) {
 			boolean expected = rand.nextInt(4) < 3 ? false : true;
 			String type = randomType(true);
 
-			method.addParameter(generateParameter(type, expected,
+			methodNode.addParameter(generateParameter(type, expected,
 					rand.nextInt(MAX_PARTITION_LEVELS), rand.nextInt(MAX_PARTITIONS) + 1,
 					rand.nextInt(MAX_PARTITION_LABELS)));
 		}
 
 		for(int i = 0; i < constraints; i++){
-			method.addConstraint(generateConstraint(method));
+			methodNode.addConstraint(generateConstraint(methodNode));
 		}
 
 		for(int i = 0; i < testCases; i++){
-			method.addTestCase(generateTestCase(method));
+			methodNode.addTestCase(generateTestCase(methodNode));
 		}
 
-		return method;
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+		
+		return methodNode;
 	}
 
 	public BasicParameterNode generateParameter(String type, boolean expected, int choiceLevels, int choices, int labels){

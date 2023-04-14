@@ -50,17 +50,11 @@ public class TestCaseNode extends AbstractNode {
 
 		MethodNode methodNode = (MethodNode) parent;
 
-		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
-		oldTestSuiteNode.removeTestCase(this);
-
-		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
-			methodNode.removeTestSuite(oldTestSuiteNode);
-		}
+		methodNode.removeTestCase(this);
 
 		super.setName(newNameInIntrLanguage);
 
-		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
-		newTestSuiteNode.addTestCase(this);
+		methodNode.addTestCase(this);
 	}
 
 	@Override
@@ -141,8 +135,12 @@ public class TestCaseNode extends AbstractNode {
 		return abstractParameterNode;
 	}
 
-	public List<ChoiceNode> getTestData(){
+	public List<ChoiceNode> getTestData() {
 		return fTestData;
+	}
+
+	public void setTestData(List<ChoiceNode> testData) {
+		fTestData = testData;
 	}
 
 	public void replaceValue(int index, ChoiceNode newValue) {

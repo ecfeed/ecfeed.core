@@ -71,7 +71,7 @@ public class ModelParserForClass implements IModelParserForClass {
 
 		List<Element> iterableChildren = 
 				ModelParserHelper.getIterableChildren(
-						classElement, SerializationHelperVersion1.getParameterNodeNames());
+						classElement, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
 
 		for (Element child : iterableChildren) {
 

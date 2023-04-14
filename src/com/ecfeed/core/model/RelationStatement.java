@@ -184,23 +184,17 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftParameter = getLeftParameter();
 		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
-		String signatureNew = 
-		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				linkingContext,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.SHORTENED,
-				leftParameter,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
-				Decorations.NO,
-				TypeIncluded.NO,
-				new ExtLanguageManagerForJava());
 
-		//		String nameInIntrLanguage = 
-		//				AbstractParameterSignatureHelper.getQualifiedName(leftParameter, linkingContext);
-
-		String nameInIntrLanguage =
-				signatureNew;
-
+		String nameInIntrLanguage = 
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						linkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						leftParameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM, buf statement editor requires full path 
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
 
 		return nameInIntrLanguage;
 	}
@@ -218,26 +212,23 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftBasicParameterNode = getLeftParameter();
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
+		
 		String signatureNew = 
-		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				leftParameterLinkingCondition,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.SHORTENED,
-				leftBasicParameterNode,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM,
-				Decorations.NO,
-				TypeIncluded.NO,
-				extLanguageManager);
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						leftParameterLinkingCondition,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						leftBasicParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 
 		//		String parameterName = 
 		//				AbstractParameterSignatureHelper.getQualifiedName(
 		//						leftBasicParameterNode, leftParameterLinkingCondition, extLanguageManager);
 
-		String parameterName =
-				signatureNew;
-
-
-		return parameterName + getRelation() + conditionSignature;
+		return signatureNew + getRelation() + conditionSignature;
 	}
 
 	@Override
