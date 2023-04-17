@@ -157,6 +157,12 @@ public class FactoryAddChildOperation implements IModelVisitor {
 					node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 
+		if (fChild instanceof ConstraintNode ) {
+
+			return new OnConstraintOperationAdd
+					(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+		}
+		
 		reportOperationNotSupportedException();
 		return null;
 	}

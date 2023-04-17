@@ -816,6 +816,17 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		if (child instanceof AbstractParameterNode) {
 			return true;
 		}
+		
+		if (child instanceof ConstraintNode) {
+			
+			IAbstractNode parent = child.getParent();
+			
+			if (!parent.equals(this)) {
+				return false;
+			}
+			
+			return true;
+		}
 
 		return false;
 	}
