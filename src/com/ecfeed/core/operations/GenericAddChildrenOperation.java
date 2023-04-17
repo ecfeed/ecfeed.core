@@ -54,11 +54,12 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 	private IModelOperation createAddOperation(
 			IAbstractNode child, int index,
 			IAbstractNode target, boolean validate) throws Exception {
-		
-		IModelOperation operation = 
-				(IModelOperation)target.accept(
-						new FactoryAddChildOperation(child, index, validate, getExtLanguageManager()));
-		
+
+		AddChildOperationCreator addChildOperationCreator = 
+				new AddChildOperationCreator(child, index, validate, getExtLanguageManager());
+
+		IModelOperation operation = (IModelOperation)target.accept(addChildOperationCreator);
+
 		return operation;
 	}
 
