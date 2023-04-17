@@ -90,7 +90,7 @@ public class MethodNodeHelper {
 		List<String> parameterNames = method.getParameters().stream().map(e -> AbstractParameterSignatureHelper.createSignatureOldStandard(e, manager)).collect(Collectors.toList());
 		String methodName = method.getName();
 
-		return methodName + String.join(", ", parameterNames);
+		return methodName + "(" + String.join(", ", parameterNames) + ")";
 	}
 
 	public static String createSignatureNewStandard(
