@@ -52,7 +52,7 @@ public abstract class AbstractParameterSignatureHelper {
 			AbstractParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
 
-		var signature = createSignatureWithLinkNewStandard(
+		String signature = createSignatureWithLinkNewStandard(
 				parameter,
 				ExtendedName.NAME_ONLY,
 				TypeOfLink.IRRELEVANT,
@@ -63,7 +63,7 @@ public abstract class AbstractParameterSignatureHelper {
 				extLanguageManager);
 
 		signature = signature.replaceAll(" ", "");
-		var elements = signature.split(":");
+		String[] elements = signature.split(":");
 
 		return elements[1] + " " + elements[0];
 	}

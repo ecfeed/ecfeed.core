@@ -87,8 +87,8 @@ public class MethodNodeHelper {
 
 	public static String createSignatureOldStandard(MethodNode method, IExtLanguageManager manager) {
 
-		var parameterNames = method.getParameters().stream().map(e -> AbstractParameterSignatureHelper.createSignatureOldStandard(e, manager)).collect(Collectors.toList());
-		var methodName = method.getName();
+		List<String> parameterNames = method.getParameters().stream().map(e -> AbstractParameterSignatureHelper.createSignatureOldStandard(e, manager)).collect(Collectors.toList());
+		String methodName = method.getName();
 
 		return methodName + String.join(", ", parameterNames);
 	}
