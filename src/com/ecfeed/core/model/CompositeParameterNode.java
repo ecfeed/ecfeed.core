@@ -413,7 +413,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 		
 		if (child instanceof ConstraintNode) {
-			return true;
+			return AbstractNodeHelper.parentIsTheSame(child, this);
 		}
 
 		return false;

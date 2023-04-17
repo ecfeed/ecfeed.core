@@ -177,5 +177,16 @@ public abstract class AbstractNodeHelper  {
 		String shortClassName = StringHelper.getLastToken(fullClassName, ".");
 		return shortClassName;
 	}
+
+	public static boolean parentIsTheSame(IAbstractNode child, IAbstractNode expectedParent) {
+		
+		IAbstractNode parent = child.getParent();
+		
+		if (!parent.equals(expectedParent)) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 }
