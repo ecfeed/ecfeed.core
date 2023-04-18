@@ -19,6 +19,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 
 public class TestCaseNode extends AbstractNode {
+	
 	List<ChoiceNode> fTestData;
 
 	@Override
@@ -85,6 +86,10 @@ public class TestCaseNode extends AbstractNode {
 		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
 		return copy;
+	}
+	
+	public List<ChoiceNode> getChoices() { 
+		return fTestData;
 	}
 
 	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
