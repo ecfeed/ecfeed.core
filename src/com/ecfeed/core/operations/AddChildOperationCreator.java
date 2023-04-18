@@ -32,7 +32,7 @@ import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class FactoryAddChildOperation implements IModelVisitor {
+public class AddChildOperationCreator implements IModelVisitor {
 
 	private IAbstractNode fChild;
 	private int fIndex;
@@ -40,7 +40,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 	private boolean fValidate;
 	IExtLanguageManager fExtLanguageManager;
 
-	public FactoryAddChildOperation(
+	public AddChildOperationCreator(
 			IAbstractNode child, 
 			int index, 
 			boolean validate,
@@ -52,7 +52,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		fExtLanguageManager = extLanguageManager;
 	}
 
-	public FactoryAddChildOperation(
+	public AddChildOperationCreator(
 			IAbstractNode child, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
@@ -157,6 +157,12 @@ public class FactoryAddChildOperation implements IModelVisitor {
 					node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 
+		if (fChild instanceof ConstraintNode ) {
+
+			return new OnConstraintOperationAdd
+					(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+		}
+		
 		reportOperationNotSupportedException();
 		return null;
 	}

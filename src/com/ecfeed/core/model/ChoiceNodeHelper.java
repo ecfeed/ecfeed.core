@@ -86,7 +86,7 @@ public class ChoiceNodeHelper {
 			return null;
 		}
 
-		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
 
 		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
 
@@ -96,6 +96,22 @@ public class ChoiceNodeHelper {
 
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 		return basicParameterNode;
+	}
+
+	private static int findIndexOfChoiceInTestCase(ChoiceNode choiceNodeToFind, TestCaseNode testCaseNode) {
+
+		List<ChoiceNode> choices = testCaseNode.getChoices();
+
+		for (int index = 0; index < choices.size(); index++) {
+
+			ChoiceNode choiceNode = choices.get(index);
+
+			if (choiceNode.isMatch(choiceNodeToFind)) {
+				return index;
+			}
+		}			
+
+		return -1;
 	}
 
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {

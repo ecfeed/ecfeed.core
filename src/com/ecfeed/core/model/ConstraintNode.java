@@ -21,6 +21,17 @@ public class ConstraintNode extends AbstractNode {
 
 	private Constraint fConstraint;
 
+	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
+
+		super(name, modelChangeRegistrator);
+		fConstraint = constraint;
+	}
+
+	public ConstraintNode(String name, Constraint constraint) {
+
+		this(name, constraint, null);
+	}
+
 	@Override
 	public String getNonQualifiedName() {
 		return getName();
@@ -71,10 +82,12 @@ public class ConstraintNode extends AbstractNode {
 
 		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
 		copy.setProperties(getProperties());
+		
 		return copy;
 	}
 
 	public ConstraintNode createCopy(NodeMapper mapper) {
+		
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
 
 		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
@@ -82,17 +95,6 @@ public class ConstraintNode extends AbstractNode {
 		copyOfConstraintNode.setProperties(getProperties());
 
 		return copyOfConstraintNode;
-	}
-
-	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
-
-		super(name, modelChangeRegistrator);
-		fConstraint = constraint;
-	}
-
-	public ConstraintNode(String name, Constraint constraint) {
-
-		this(name, constraint, null);
 	}
 
 	public Constraint getConstraint() {
