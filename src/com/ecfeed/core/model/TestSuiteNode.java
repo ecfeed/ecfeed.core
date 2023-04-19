@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -177,6 +178,14 @@ public class TestSuiteNode extends AbstractNode {
 		return (MethodNode)getParent();
 	}
 
+	@Override
+	public IAbstractNode makeClone(Optional<NodeMapper> nodeMapper) {
+		
+		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
+		copy.setProperties(getProperties());
+		return copy;
+	}
+	
 	@Override
 	public TestSuiteNode makeClone() {
 

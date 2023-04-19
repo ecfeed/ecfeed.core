@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface IAbstractNode {
@@ -42,6 +43,7 @@ public interface IAbstractNode {
 	public boolean isMatch(IAbstractNode nodeToCompare);
 	public int getMaxIndex();
 	public abstract IAbstractNode makeClone();
+	public abstract IAbstractNode makeClone(Optional<NodeMapper> nodeMapper);
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 	public void setProperties(NodeProperties nodeProperties);
 	public NodeProperties getProperties();

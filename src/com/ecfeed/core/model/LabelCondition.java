@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -89,6 +90,12 @@ public class LabelCondition implements IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		return StatementConditionHelper.createLabelDescription(fRightLabel);
+	}
+
+	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+		
+		return new LabelCondition(fRightLabel, statement);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.utils.ParametersLister;
@@ -77,6 +78,29 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return copy;
 	}
 
+	@Override
+	public ClassNode makeClone(Optional<NodeMapper> nodeMapper) {
+		
+		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
+
+		copy.setProperties(getProperties());
+
+		for (BasicParameterNode parameter : getGlobalBasicParameters()) {
+			
+			BasicParameterNode clonedParameter = parameter.makeClone(nodeMapper);
+			copy.addParameter(clonedParameter);
+		}
+
+		for (MethodNode method : fMethods) {
+			
+			MethodNode clonedMethod = method.makeClone(nodeMapper);
+			copy.addMethod(clonedMethod);
+		}
+
+		copy.setParent(getParent());
+		return copy;
+	}
+	
 	@Override
 	public RootNode getRoot(){
 		return (RootNode) getParent();

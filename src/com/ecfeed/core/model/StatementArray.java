@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -162,6 +163,19 @@ public class StatementArray extends AbstractStatement {
 		return null;
 	}
 
+	@Override
+	public AbstractStatement makeClone(Optional<NodeMapper> mapper) {
+		
+		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
+
+		for (AbstractStatement statement: fStatements) {
+			copy.addStatement(statement.makeClone(mapper));
+		}
+
+		return copy;
+	}
+
+	
 	@Override
 	public StatementArray makeClone() {
 

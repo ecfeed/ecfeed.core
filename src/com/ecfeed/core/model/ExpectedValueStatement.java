@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
@@ -174,13 +175,27 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public ExpectedValueStatement makeClone(){
+	public ExpectedValueStatement makeClone(Optional<NodeMapper> mapper) {
+		
+		if (mapper.isPresent()) {
+			BasicParameterNode parameter = mapper.get().getDeployedNode(fLeftParameterNode); 
+			ChoiceNode choice = mapper.get().getDeployedNode(fChoiceNode);
+	
+			return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
+		}
+		
+		return new ExpectedValueStatement(
+				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(mapper), fPredicate);
+	}
+	
+	@Override
+	public ExpectedValueStatement makeClone(){ // TODO MO-RE obsolete ?
 		return new ExpectedValueStatement(
 				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(), fPredicate);
 	}
 
 	@Override
-	public ExpectedValueStatement createCopy(NodeMapper mapper) {
+	public ExpectedValueStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete ?
 		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameterNode); 
 		ChoiceNode choice = mapper.getDeployedNode(fChoiceNode);
 

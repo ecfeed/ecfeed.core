@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -79,6 +80,12 @@ public class StaticStatement extends AbstractStatement {
 		}
 
 		return STATIC_STATEMENT_NULL_VALUE;
+	}
+
+	@Override
+	public AbstractStatement makeClone(Optional<NodeMapper> mapper) {
+		
+		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
 	@Override

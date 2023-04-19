@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
@@ -82,6 +83,22 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		return copy;
 	}
 
+	@Override
+	public CompositeParameterNode makeClone(Optional<NodeMapper> nodeMapper) {
+		
+		CompositeParameterNode copy = 
+				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+
+		for (AbstractParameterNode parameter : getParameters()) {
+			copy.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
+		}
+
+		copy.setProperties(getProperties());
+		copy.setParent(this.getParent());
+
+		return copy;
+	}
+	
 	@Override
 	public List<IAbstractNode> getChildren() {
 

@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -238,6 +239,27 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
+	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
+		
+		if (mapper.isPresent()) {
+			BasicParameterNode parameter = mapper.get().getDeployedNode(fLeftParameter);
+
+			RelationStatement statement = 
+					new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);
+
+			IStatementCondition condition = fRightCondition.makeClone(statement, mapper);
+			statement.setCondition(condition);
+
+			return statement;
+		}
+		
+		RelationStatement relationStatement = new RelationStatement(
+				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
+		
+		return relationStatement;
+	}
+	
+	@Override  // TODO MO-RE obsolete
 	public RelationStatement makeClone() {
 
 		return 
@@ -246,7 +268,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(NodeMapper mapper) {
+	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
 
 		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameter);
 
