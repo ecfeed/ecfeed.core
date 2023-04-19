@@ -87,6 +87,10 @@ public class ChoiceNodeHelper {
 		}
 
 		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
+		
+		if (indexOfChoiceNodeInTestCase < 0) {
+			return null;
+		}
 
 		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
 
