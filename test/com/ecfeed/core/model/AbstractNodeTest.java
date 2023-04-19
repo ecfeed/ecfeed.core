@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Test;
@@ -41,6 +42,11 @@ public class AbstractNodeTest{
 
 		@Override
 		public AbstractNode makeClone() {
+			return null;
+		}
+
+		@Override
+		public AbstractNode makeClone(Optional<NodeMapper> nodeMapper) {
 			return null;
 		}
 

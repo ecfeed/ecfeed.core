@@ -78,6 +78,21 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
+	public IAbstractNode makeClone(Optional<NodeMapper> nodeMapper) {
+		
+		List<ChoiceNode> testdata = new ArrayList<>();
+		
+		for (ChoiceNode choice : fTestData) {
+			testdata.add(choice);
+		}
+		
+		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
+		copy.setProperties(getProperties());
+		
+		return copy;
+	}
+	
+	@Override
 	public TestCaseNode makeClone(){
 		List<ChoiceNode> testdata = new ArrayList<>();
 		for(ChoiceNode choice : fTestData){

@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.utils.ParametersLister;
 
@@ -52,6 +53,12 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof ClassNode) return getClasses().size();
 		return super.getMaxChildIndex(potentialChild);
+	}
+
+	@Override
+	public IAbstractNode makeClone(Optional<NodeMapper> nodeMapper) {
+
+		return makeClone();
 	}
 
 	@Override
@@ -334,5 +341,5 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		return false;
 	}
-	
+
 }

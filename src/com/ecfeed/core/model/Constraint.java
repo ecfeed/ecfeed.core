@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -583,7 +584,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
-	public Constraint createCopy(NodeMapper mapper) {
+	public Constraint createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
 
 		AbstractStatement precondition = fPrecondition.createCopy(mapper);
 		AbstractStatement postcondition = fPostcondition.createCopy(mapper);
@@ -591,6 +592,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
+	public Constraint makeClone(Optional<NodeMapper> mapper) {
+
+		AbstractStatement precondition = fPrecondition.makeClone(mapper);
+		AbstractStatement postcondition = fPostcondition.makeClone(mapper);
+
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+	
 	public void verifyConversionOfParameterFromToType(
 			BasicParameterNode methodParameterNode,
 			String oldType,

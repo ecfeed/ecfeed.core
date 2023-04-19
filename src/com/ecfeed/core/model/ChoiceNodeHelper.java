@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -131,8 +132,7 @@ public class ChoiceNodeHelper {
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
-			NodeMapper mapper
-			) {
+			Optional<NodeMapper> mapper) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -144,8 +144,8 @@ public class ChoiceNodeHelper {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
-			if (mapper != null) {
-				mapper.addMappings(choiceNode, clonedChoiceNode);
+			if (mapper.isPresent()) {
+				mapper.get().addMappings(choiceNode, clonedChoiceNode);
 			}
 
 			clonedChoiceNode.clearChoices();

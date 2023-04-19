@@ -179,6 +179,35 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return clonedMethodNode;
 	}
 
+	@Override
+	public MethodNode makeClone(Optional<NodeMapper> nodeMapper) {
+
+		MethodNode clonedMethodNode = new MethodNode(getName(), getModelChangeRegistrator());
+
+		clonedMethodNode.setProperties(getProperties());
+
+		for (AbstractParameterNode parameter : getParameters()) {
+
+			AbstractParameterNode clonedParameter = (AbstractParameterNode) parameter.makeClone(nodeMapper);
+
+			clonedMethodNode.addParameter(clonedParameter);
+		}
+
+		for (TestCaseNode testcase : fTestCasesHolder.getTestCaseNodes()) {
+
+			TestCaseNode tcase = (TestCaseNode) testcase.makeClone(nodeMapper);
+
+			if (tcase != null) {
+				clonedMethodNode.addTestCase(tcase);
+			}
+		}
+
+		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
+		clonedMethodNode.setParent(getParent());
+		
+		return clonedMethodNode;
+	}
+	
 	public int getMyMethodIndex() {
 
 		if (getParent() == null) {

@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
@@ -86,8 +87,8 @@ public class ConstraintNode extends AbstractNode {
 		return copy;
 	}
 
-	public ConstraintNode createCopy(NodeMapper mapper) {
-		
+	public ConstraintNode createCopy(NodeMapper mapper) {// TODO MO-RE obsolete
+
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
 
 		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
@@ -97,6 +98,18 @@ public class ConstraintNode extends AbstractNode {
 		return copyOfConstraintNode;
 	}
 
+	@Override
+	public ConstraintNode makeClone(Optional<NodeMapper> mapper) {
+		
+		Constraint copyOfConstraint = fConstraint.makeClone(mapper);
+
+		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
+
+		copyOfConstraintNode.setProperties(getProperties());
+
+		return copyOfConstraintNode;
+	}
+	
 	public Constraint getConstraint() {
 
 		return fConstraint;

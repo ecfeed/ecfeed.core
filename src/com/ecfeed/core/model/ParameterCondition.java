@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -172,6 +173,19 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+		
+		if (mapper.isPresent()) {
+			
+			BasicParameterNode parameter = mapper.get().getDeployedNode(fRightParameterNode);
+
+			return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
+		}
+		
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
+	}
+	
+	@Override
 	public ParameterCondition makeClone() {
 
 		// parameters are not cloned
@@ -180,6 +194,7 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+		
 		BasicParameterNode parameter = mapper.getDeployedNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
