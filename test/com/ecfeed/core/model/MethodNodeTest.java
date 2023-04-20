@@ -10,6 +10,13 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +27,6 @@ import org.junit.Test;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-
-import static org.junit.Assert.*;
 
 public class MethodNodeTest {
 
@@ -659,8 +664,8 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void copyMethodTest() { // XYX add and check deployed parameters and constraints - references to copied params and choices
-		
+	public void copyMethodTest() {
+
 		MethodNode method = new MethodNode("method", null);
 		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
 		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
@@ -689,82 +694,86 @@ public class MethodNodeTest {
 
 	@Test
 	public void copyMethodWithConstraintsTest() {
-		
-		MethodNode MethodNode = new MethodNode("method", null);
-		
+
+		MethodNode methodNode = new MethodNode("method", null);
+
 		BasicParameterNode basicParameterNode = 
-				MethodNodeHelper.addNewBasicParameter(MethodNode, "par1", "int", "0", true, null);
-		
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
 		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode, "choice1", "0", false, true, null);
-		
+
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
-		
+
 		RelationStatement postcondition = RelationStatement.createRelationStatementWithChoiceCondition(
 				basicParameterNode, null, EMathRelation.EQUAL, choiceNode);
-				
+
 		Constraint constraint = 
 				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
-		
+
 		ConstraintNode constraintNode = new ConstraintNode("Constraint", constraint, null);
-		
-		MethodNode.addConstraint(constraintNode);
-		
+
+		methodNode.addConstraint(constraintNode);
+
 		NodeMapper nodeMapper = new NodeMapper();
-		MethodNode clonedMethodNode = MethodNode.makeClone(Optional.of(nodeMapper));
-		
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper));
+
 		BasicParameterNode clonedBasicParameter = (BasicParameterNode) clonedMethodNode.getParameter(0);
 		assertNotEquals(clonedBasicParameter, basicParameterNode);
 		assertEquals(clonedBasicParameter.getParent(), clonedMethodNode);
-		
+
 		ChoiceNode clonedChoiceNode = clonedBasicParameter.getChoices().get(0);
 		assertNotEquals(clonedChoiceNode, choiceNode);
 		assertEquals(clonedChoiceNode.getParent(), clonedBasicParameter);
-		
+
 		ConstraintNode clonedConstraintNode = clonedMethodNode.getConstraintNodes().get(0);
 		assertNotEquals(clonedConstraintNode, constraintNode);
 		assertEquals(clonedConstraintNode.getParent(), clonedMethodNode);
-		
+
 		Constraint clonedConstraint = clonedConstraintNode.getConstraint();
 		assertNotEquals(clonedConstraint, constraint);
-		
+
 		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
 		assertNotEquals(clonedPostcondition, postcondition);
-		
+
 		ChoiceCondition clonedChoiceCondition = (ChoiceCondition) clonedPostcondition.getCondition();
 		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
 		assertEquals(clonedChoiceNodeFromConstraint, clonedChoiceNode);
-		
-		ModelComparator.compareMethods(MethodNode, clonedMethodNode);
+
+		ModelComparator.compareMethods(methodNode, clonedMethodNode);
 	}
 
 	@Test
-	public void copyMethodWithDeployedParameters() { // XYX todo
-		
-		MethodNode method = new MethodNode("method", null);
-		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
-		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
-		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
-		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
-		par1.addChoice(choice1);
-		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
-		expectedChoice1.setParent(par2);
-		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
-		expectedChoice2.setParent(par2);
-		TestCaseNode testCase1 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
-		TestCaseNode testCase2 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice2));
+	public void copyMethodWithDeployedParameters() {
 
-		method.addParameter(par1);
-		method.addParameter(par2);
-		method.addConstraint(constraint1);
-		method.addConstraint(constraint2);
-		method.addTestCase(testCase1);
-		method.addTestCase(testCase2);
+		MethodNode methodNode = new MethodNode("method", null);
 
-		NodeMapper nodeMapper = new NodeMapper();
-		MethodNode copy = method.makeClone(Optional.of(nodeMapper));
-		ModelComparator.compareMethods(method, copy);
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode, "choice1", "0", false, true, null);
+
+		NodeMapper nodeMapper1 = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper1);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper1);
+
+		BasicParameterNode deployedParameter = 
+				(BasicParameterNode) methodNode.getDeployedParametersWithLinkingContexts().get(0).getParameter();
+		assertEquals(deployedParameter.getParent(), methodNode);
+
+		NodeMapper nodeMapper2 = new NodeMapper();
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper2));
+
+		BasicParameterNode clonedDeployedParameter = 
+				(BasicParameterNode) clonedMethodNode.getDeployedParametersWithLinkingContexts().get(0).getParameter();
+
+		assertEquals(clonedDeployedParameter.getParent(), clonedMethodNode);
+
+		ChoiceNode clonedDeployedChoice = clonedDeployedParameter.getChoices().get(0);
+		assertEquals(clonedDeployedChoice.getParent(), clonedDeployedParameter);
+
+		ModelComparator.compareMethods(methodNode, clonedMethodNode);
 	}
-	
+
 }

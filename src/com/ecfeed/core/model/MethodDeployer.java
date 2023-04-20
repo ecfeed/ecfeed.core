@@ -56,7 +56,7 @@ public abstract class MethodDeployer {
 
 	public static void copyDeployedParametersWithConversionToOriginals(
 			MethodNode deployedMethodNode, 
-			MethodNode methodNode, 
+			MethodNode destinationMethodNode, 
 			NodeMapper nodeMapper) {
 
 		List<ParameterWithLinkingContext> deployedParametersWithContexts = 
@@ -65,7 +65,7 @@ public abstract class MethodDeployer {
 		List<ParameterWithLinkingContext> originalParametersWithContexts =
 				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
 
-		methodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
+		destinationMethodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
 
 		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
 		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
