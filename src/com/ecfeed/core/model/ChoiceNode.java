@@ -144,8 +144,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return fOrigChoiceNode;
 	}
 
-	@Override
-	public ChoiceNode makeClone() {
+	public ChoiceNode makeClone() { // TODO MO-RE remove ?
 		
 		ChoiceNode copy = makeCloneUnlink();
 
@@ -154,6 +153,24 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		else
 			copy.setOrigChoiceNode(this);
 
+		return copy;
+	}
+	
+	public ChoiceNode makeCloneUnlink() { // TODO MO-RE rename ? private ?
+		
+		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
+
+		copy.setProperties(getProperties());
+		copy.setParent(getParent());
+
+		for(ChoiceNode choice : getChoices()){
+			copy.addChoice(choice.makeClone());
+		}
+		for(String label : fLabels){
+			copy.addLabel(label);
+		}
+
+		copy.setRandomizedValue(fIsRandomizedValue);
 		return copy;
 	}
 
@@ -178,24 +195,6 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			nodeMapper.get().addMappings(this, copy);
 		}
 		
-		return copy;
-	}
-
-	public ChoiceNode makeCloneUnlink() { // TODO MO-RE rename ? private ?
-		
-		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
-
-		copy.setProperties(getProperties());
-		copy.setParent(getParent());
-
-		for(ChoiceNode choice : getChoices()){
-			copy.addChoice(choice.makeClone());
-		}
-		for(String label : fLabels){
-			copy.addLabel(label);
-		}
-
-		copy.setRandomizedValue(fIsRandomizedValue);
 		return copy;
 	}
 

@@ -78,14 +78,14 @@ public class ConstraintNode extends AbstractNode {
 		return 0;
 	}
 
-	@Override
-	public ConstraintNode makeClone() {
-
-		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
-		copy.setProperties(getProperties());
-		
-		return copy;
-	}
+	//	@Override
+	//	public ConstraintNode makeClone() {
+	//
+	//		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
+	//		copy.setProperties(getProperties());
+	//		
+	//		return copy;
+	//	}
 
 	public ConstraintNode createCopy(NodeMapper mapper) {// TODO MO-RE obsolete
 
@@ -100,7 +100,7 @@ public class ConstraintNode extends AbstractNode {
 
 	@Override
 	public ConstraintNode makeClone(Optional<NodeMapper> mapper) {
-		
+
 		Constraint copyOfConstraint = fConstraint.makeClone(mapper);
 
 		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
@@ -109,7 +109,7 @@ public class ConstraintNode extends AbstractNode {
 
 		return copyOfConstraintNode;
 	}
-	
+
 	public Constraint getConstraint() {
 
 		return fConstraint;
@@ -200,7 +200,8 @@ public class ConstraintNode extends AbstractNode {
 
 	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
-		ConstraintNode copy = makeClone();
+		// XYX obsolete method
+		ConstraintNode copy = makeClone(Optional.empty());
 		return copy;
 
 		//		if (copy.updateReferences(parent))

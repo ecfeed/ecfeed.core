@@ -32,7 +32,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator, int modelVersion) {
 
 		super(name, modelChangeRegistrator);
-		
+
 		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 
 		fClasses = new ArrayList<ClassNode>();
@@ -57,13 +57,13 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public RootNode makeClone(Optional<NodeMapper> nodeMapper) {
-		
+
 		RootNode copy = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
 
 		copy.setProperties(getProperties());
 
 		for (AbstractParameterNode abstractParameterNode : getParameters()) {
-			
+
 			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 			copy.addParameter(globalParameterNode.makeClone(nodeMapper));
 		}
@@ -71,30 +71,30 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		for (ClassNode classnode : fClasses){
 			copy.addClass(classnode.makeClone(nodeMapper));
 		}
-		
+
 		copy.setParent(this.getParent());
 		return copy;
 	}
 
-	@Override
-	public RootNode makeClone() {
-		RootNode copy = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
-
-		copy.setProperties(getProperties());
-
-		for (AbstractParameterNode abstractParameterNode : getParameters()) {
-			
-			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
-			copy.addParameter(globalParameterNode.makeClone());
-		}
-
-		for (ClassNode classnode : fClasses){
-			copy.addClass(classnode.makeClone());
-		}
-		
-		copy.setParent(this.getParent());
-		return copy;
-	}
+	//	@Override
+	//	public RootNode makeClone() {
+	//		RootNode copy = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
+	//
+	//		copy.setProperties(getProperties());
+	//
+	//		for (AbstractParameterNode abstractParameterNode : getParameters()) {
+	//			
+	//			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
+	//			copy.addParameter(globalParameterNode.makeClone());
+	//		}
+	//
+	//		for (ClassNode classnode : fClasses){
+	//			copy.addClass(classnode.makeClone());
+	//		}
+	//		
+	//		copy.setParent(this.getParent());
+	//		return copy;
+	//	}
 
 	@Override
 	public String getNonQualifiedName() {
@@ -147,23 +147,23 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public boolean isMatch(IAbstractNode other){
-		
+
 		if(other instanceof RootNode == false){
 			return false;
 		}
 
 		RootNode otherRootNode = (RootNode)other;
-		
+
 		if (!fParametersHolder.isMatch(otherRootNode.fParametersHolder)) {
 			return false;
 		}
-		
+
 		if(getClasses().size() != otherRootNode.getClasses().size()){
 			return false;
 		}
 
 		for (int classIndex = 0; classIndex < getClasses().size(); classIndex++) {
-			
+
 			if (getClasses().get(classIndex).isMatch(otherRootNode.getClasses().get(classIndex)) == false) {
 				return false;
 			}
@@ -184,160 +184,160 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		}
 		return result;
 	} 
-	
+
 	@Override
 	public int getChildrenCount() {
-		
+
 		int countOfParameters = fParametersHolder.getParametersCount();
 		int countOfClasses = getClasses().size();
-		
+
 		return countOfParameters + countOfClasses;
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
-		
+
 		fParametersHolder.addParameter(parameter, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext,
 			int index) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
-		
+
 		fParametersHolder.addParameter(parameter, null, index, this);
 	}
-	
+
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.addParameters(parameters, this);
 	}
 
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
-		
+
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.replaceParameters(parameters, this);
 	}
 
 	@Override
 	public int getParametersCount() {
-		
+
 		return fParametersHolder.getParametersCount();
 	}
 
 	@Override
 	public List<AbstractParameterNode> getParameters() {
-		
+
 		return fParametersHolder.getParameters();
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
-		
+
 		return fParametersHolder.getParameter(parameterIndex);
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-		
+
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}
 
 	@Override
 	public int getParameterIndex(String parameterName) {
-		
+
 		return fParametersHolder.getParameterIndex(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(String parameterName) {
-		
+
 		return fParametersHolder.parameterExists(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
-		
+
 		return fParametersHolder.parameterExists(abstractParameterNode);
 	}
 
 	@Override
 	public List<String> getParameterTypes() {
-		
+
 		return fParametersHolder.getParameterTypes();
 	}
 
 	@Override
 	public List<String> getParametersNames() {
-		
+
 		return fParametersHolder.getParametersNames();
 	}
 
 	@Override
 	public String generateNewParameterName(String startParameterName) {
-		
+
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
-	
+
 	public List<BasicParameterNode> getGlobalBasicParameters() {
-		
+
 		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
-		
+
 		List<AbstractParameterNode> abstractParameters = getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
-			
+
 			if (abstractParameterNode instanceof BasicParameterNode) {
 				BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
-				
+
 				globalParameterNodes.add(globalParameterNode);
 			}
 		}
-		
+
 		return globalParameterNodes;
 	}
-	
+
 	public List<CompositeParameterNode> getGlobalCompositeParameters() {
-		
+
 		List<CompositeParameterNode> globalParameterNodes = new ArrayList<>();
-		
+
 		List<AbstractParameterNode> abstractParameters = getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
-			
+
 			if (abstractParameterNode instanceof CompositeParameterNode) {
 				CompositeParameterNode globalParameterNode = (CompositeParameterNode) abstractParameterNode;
-				
+
 				globalParameterNodes.add(globalParameterNode);
 				globalParameterNodes.addAll(globalParameterNode.getNestedCompositeParameters(true));
 			}
 		}
-		
+
 		return globalParameterNodes;
 	}
-	
+
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
@@ -345,15 +345,15 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public boolean canAddChild(IAbstractNode child) {
-		
+
 		if (child instanceof AbstractParameterNode) {
 			return true;
 		}
-		
+
 		if (child instanceof ClassNode) {
 			return true;
 		}
-		
+
 		return false;
 	}
 

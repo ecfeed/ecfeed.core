@@ -18,6 +18,7 @@ import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
@@ -30,13 +31,14 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 
 	public OnMethodParametersOperationReplaceWithGlobal(
 			IParametersParentNode parent, 
-			List<BasicParameterNode> originals, 
+			List<BasicParameterNode> originals,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 		
 		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
 		
 		for(BasicParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, extLanguageManager));
+			addOperation(new ReplaceParameterWithLink(parameter, parent, nodeMapper, extLanguageManager));
 		}
 	}
 	
@@ -44,12 +46,13 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 
 		public ReplaceParameterWithLink(
 				BasicParameterNode target, 
-				IParametersParentNode parent, 
+				IParametersParentNode parent,
+				Optional<NodeMapper> nodeMapper,
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = (MethodNode) target.getParent();
 			BasicParameterNode global =
-					target.makeClone();
+					target.makeClone(nodeMapper);
 					// new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
@@ -60,12 +63,12 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 			
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
-					ConstraintNode copy = constraint.makeClone();
+					ConstraintNode copy = constraint.makeClone(nodeMapper);
 					addOperation(new OnConstraintOperationAdd(method, copy, constraint.getMyIndex(), extLanguageManager));
 				}
 			}
 			for(TestCaseNode tc : method.getTestCases()){
-				TestCaseNode copy = tc.makeClone();
+				TestCaseNode copy = tc.makeClone(nodeMapper);
 				addOperation(
 						new OnTestCaseOperationAddToMethod(
 								method, copy, tc.getMyIndex(), Optional.empty(), extLanguageManager));

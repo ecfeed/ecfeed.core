@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.operations.link.OperationSimpleSetLink;
 import com.ecfeed.core.operations.nodes.OnChoiceOperationAddSimple;
@@ -36,6 +37,7 @@ public class ParameterTransformer {
 			BasicParameterNode dstGlobalParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ListOfModelOperations outReverseOperations,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
@@ -44,7 +46,7 @@ public class ParameterTransformer {
 		String globalParameterType = dstGlobalParameterNode.getType();
 		
 		OnConstraintsOperationSetOnMethod reverseOperation = 
-				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
+				createReverseOperationSetConstraints(srcMethodParameterNode, nodeMapper, extLanguageManager);
 
 		outReverseOperations.add(reverseOperation);
 
@@ -361,6 +363,7 @@ public class ParameterTransformer {
 
 	private static OnConstraintsOperationSetOnMethod createReverseOperationSetConstraints(
 			BasicParameterNode srcParameterNode,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
@@ -371,7 +374,7 @@ public class ParameterTransformer {
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
-			ConstraintNode clone = constraintNode.makeClone();
+			ConstraintNode clone = constraintNode.makeClone(nodeMapper);
 			listOfClonedConstraintNodes.add(clone);
 		}
 
