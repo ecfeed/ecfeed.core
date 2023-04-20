@@ -86,17 +86,21 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public CompositeParameterNode makeClone(Optional<NodeMapper> nodeMapper) {
 		
-		CompositeParameterNode copy = 
+		CompositeParameterNode copyOfCompositeParameter = 
 				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
 
 		for (AbstractParameterNode parameter : getParameters()) {
-			copy.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
+			copyOfCompositeParameter.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
 		}
 
-		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
+		copyOfCompositeParameter.setProperties(getProperties());
+		copyOfCompositeParameter.setParent(this.getParent());
 
-		return copy;
+		if (nodeMapper.isPresent()) {
+			nodeMapper.get().addMappings(this, copyOfCompositeParameter);
+		}
+		
+		return copyOfCompositeParameter;
 	}
 	
 	@Override

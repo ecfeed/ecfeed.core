@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -655,4 +657,33 @@ public class MethodNodeTest {
 		assertNull(foundTestSuite1);
 	}
 
+	@Test
+	public void copyMethodTest() { // XYX add and check deployed parameters and constraints - references to copied params and choices
+		
+		MethodNode method = new MethodNode("method", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
+		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		par1.addChoice(choice1);
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
+		expectedChoice1.setParent(par2);
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
+		expectedChoice2.setParent(par2);
+		TestCaseNode testCase1 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
+		TestCaseNode testCase2 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice2));
+
+		method.addParameter(par1);
+		method.addParameter(par2);
+		method.addConstraint(constraint1);
+		method.addConstraint(constraint2);
+		method.addTestCase(testCase1);
+		method.addTestCase(testCase2);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode copy = method.makeClone(Optional.of(nodeMapper));
+		ModelComparator.compareMethods(method, copy);
+	}
+	
 }

@@ -62,6 +62,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public ClassNode makeClone(){
+		
+		ExceptionHelper.reportRuntimeException("Obsolete cloning function called.");
+		
 		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
@@ -80,27 +83,31 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public ClassNode makeClone(Optional<NodeMapper> nodeMapper) {
-		
-		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
 
-		copy.setProperties(getProperties());
+		ClassNode clonedClassNode = new ClassNode(getName(), getModelChangeRegistrator());
+
+		clonedClassNode.setProperties(getProperties());
 
 		for (BasicParameterNode parameter : getGlobalBasicParameters()) {
-			
+
 			BasicParameterNode clonedParameter = parameter.makeClone(nodeMapper);
-			copy.addParameter(clonedParameter);
+			clonedParameter.setParent(clonedClassNode);
+			
+			clonedClassNode.addParameter(clonedParameter);
 		}
 
 		for (MethodNode method : fMethods) {
-			
+
 			MethodNode clonedMethod = method.makeClone(nodeMapper);
-			copy.addMethod(clonedMethod);
+			clonedMethod.setParent(clonedClassNode);
+
+			clonedClassNode.addMethod(clonedMethod);
 		}
 
-		copy.setParent(getParent());
-		return copy;
+		clonedClassNode.setParent(getParent());
+		return clonedClassNode;
 	}
-	
+
 	@Override
 	public RootNode getRoot(){
 		return (RootNode) getParent();
