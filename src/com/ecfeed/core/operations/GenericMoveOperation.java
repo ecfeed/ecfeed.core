@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
@@ -33,15 +35,17 @@ public class GenericMoveOperation extends CompositeOperation {
 	public GenericMoveOperation(
 			List<? extends IAbstractNode> moved, 
 			IAbstractNode newParent, 
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 		
-		this(moved, newParent, -1, extLanguageManager);
+		this(moved, newParent, -1, nodeMapper, extLanguageManager);
 	}
 
 	public GenericMoveOperation(
 			List<? extends IAbstractNode> moved, 
 			IAbstractNode newParent, 
 			int newIndex,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguageManager);
@@ -54,14 +58,14 @@ public class GenericMoveOperation extends CompositeOperation {
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
 						
-						processTestCaseNode((TestCaseNode) node, (TestSuiteNode) newParent);
+						processTestCaseNode((TestCaseNode) node, (TestSuiteNode) newParent, nodeMapper);
 						continue;
 					}
 					
 					
 					if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
 						
-						processTestSuiteNode((TestSuiteNode) node, (MethodNode) newParent);
+						processTestSuiteNode((TestSuiteNode) node, (MethodNode) newParent, nodeMapper);
 						continue;
 					}
 					
@@ -79,12 +83,12 @@ public class GenericMoveOperation extends CompositeOperation {
 					if(newIndex != -1){
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new AddChildOperationCreator(node, newIndex, false, extLanguageManager)));
+										new AddChildOperationCreator(node, newIndex, false, nodeMapper, extLanguageManager)));
 					}
 					else{
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new AddChildOperationCreator(node, false, extLanguageManager)));
+										new AddChildOperationCreator(node, false, nodeMapper, extLanguageManager)));
 					}
 					
 					for(MethodNode method : methodsInvolved){
@@ -103,35 +107,55 @@ public class GenericMoveOperation extends CompositeOperation {
 		setOneNodeToSelect(newParent);
 	}
 	
-	private void processTestCaseNode(TestCaseNode node, TestSuiteNode newParent) throws Exception {
+	private void processTestCaseNode(
+			TestCaseNode node, 
+			TestSuiteNode newParent,
+			Optional<NodeMapper> nodeMapper) throws Exception {
+		
 			Collection<TestCaseNode> element = new ArrayList<>();
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
 				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
-				TestCaseNode nodeCopy = node.makeClone();
+				TestCaseNode nodeCopy = node.makeClone(nodeMapper);
 				element.add(nodeCopy);
 				
-				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.getParent().accept(new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
+				addOperation(
+						new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
+				
+				addOperation(
+						(IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)newParent.getParent().accept(
+								new AddChildOperationCreator(nodeCopy, false, nodeMapper, getExtLanguageManager())));
 			}
 	}
 	
-	private void processTestSuiteNode(TestSuiteNode node, MethodNode newParent) throws Exception {
+	private void processTestSuiteNode(
+			TestSuiteNode node, 
+			MethodNode newParent,
+			Optional<NodeMapper> nodeMapper) throws Exception {
 			
 			if (node.getParent() == newParent) {
 				return;
 			} else {
 				Collection<TestCaseNode> element = new ArrayList<>();
 				
-				TestSuiteNode nodeCopy = node.makeClone();
+				TestSuiteNode nodeCopy = node.makeClone(nodeMapper);
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
 				addOperation(new OnTestCasesOperationRename(element, node.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.accept(new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation(
+						(IModelOperation)newParent.accept(
+								new AddChildOperationCreator(nodeCopy, false, nodeMapper, getExtLanguageManager())));
 			}
 	}
 

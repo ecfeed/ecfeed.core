@@ -69,23 +69,23 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		return getName() + " : " + "Structure";
 	}
 
-	@Override
-	public CompositeParameterNode makeClone() {
-		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
-
-		for (AbstractParameterNode parameter : getParameters()) {
-			copy.addParameter((AbstractParameterNode) parameter.makeClone());
-		}
-
-		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
-
-		return copy;
-	}
+	//	@Override
+	//	public CompositeParameterNode makeClone() {
+	//		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+	//
+	//		for (AbstractParameterNode parameter : getParameters()) {
+	//			copy.addParameter((AbstractParameterNode) parameter.makeClone());
+	//		}
+	//
+	//		copy.setProperties(getProperties());
+	//		copy.setParent(this.getParent());
+	//
+	//		return copy;
+	//	}
 
 	@Override
 	public CompositeParameterNode makeClone(Optional<NodeMapper> nodeMapper) {
-		
+
 		CompositeParameterNode copyOfCompositeParameter = 
 				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
 
@@ -99,7 +99,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		if (nodeMapper.isPresent()) {
 			nodeMapper.get().addMappings(this, copyOfCompositeParameter);
 		}
-		
+
 		return copyOfCompositeParameter;
 	}
 	
@@ -432,7 +432,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		if (child instanceof AbstractParameterNode) {
 			return true;
 		}
-		
+
 		if (child instanceof ConstraintNode) {
 			return AbstractNodeHelper.parentIsTheSame(child, this);
 		}

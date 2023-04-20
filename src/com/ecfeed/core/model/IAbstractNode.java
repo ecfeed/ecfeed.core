@@ -42,7 +42,7 @@ public interface IAbstractNode {
 	public String getFullNamePath();
 	public boolean isMatch(IAbstractNode nodeToCompare);
 	public int getMaxIndex();
-	public abstract IAbstractNode makeClone();
+	//public abstract IAbstractNode makeClone();
 	public abstract IAbstractNode makeClone(Optional<NodeMapper> nodeMapper);
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 	public void setProperties(NodeProperties nodeProperties);

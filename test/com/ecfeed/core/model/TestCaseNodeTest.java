@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -119,7 +120,8 @@ public class TestCaseNodeTest {
 		method.addParameter(par2);
 		method.addTestCase(testCase);
 
-		TestCaseNode copy = testCase.makeClone();
+		NodeMapper nodeMapper = new NodeMapper();
+		TestCaseNode copy = testCase.makeClone(Optional.of(nodeMapper));
 		assertTrue(testCase.isMatch(copy));
 	}
 

@@ -13,6 +13,8 @@ package com.ecfeed.core.model;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.Test;
 
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
@@ -123,7 +125,8 @@ public class ConstraintNodeTest {
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null), null);
 		method.addConstraint(constraint);
 
-		ConstraintNode copy = constraint.makeClone();
+		NodeMapper nodeMapper = new NodeMapper();
+		ConstraintNode copy = constraint.makeClone(Optional.of(nodeMapper));
 		assertTrue(constraint.isMatch(copy));
 	}
 	

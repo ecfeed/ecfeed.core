@@ -21,6 +21,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -36,28 +37,32 @@ public class AddChildOperationCreator implements IModelVisitor {
 
 	private IAbstractNode fChild;
 	private int fIndex;
-	Optional<String> fUniqueChildName;
+	//private Optional<String> fUniqueChildName;
 	private boolean fValidate;
-	IExtLanguageManager fExtLanguageManager;
+	private Optional<NodeMapper> fNodeMapper;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public AddChildOperationCreator(
 			IAbstractNode child, 
 			int index, 
 			boolean validate,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
+		fNodeMapper = nodeMapper;
 		fExtLanguageManager = extLanguageManager;
 	}
 
 	public AddChildOperationCreator(
 			IAbstractNode child, 
 			boolean validate,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
-		this(child, -1, validate, extLanguageManager);
+		this(child, -1, validate, nodeMapper, extLanguageManager);
 	}
 
 	@Override
@@ -88,7 +93,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
 		}else if(fChild instanceof BasicParameterNode){
 			BasicParameterNode globalParameter = 
-					((BasicParameterNode)fChild).makeClone();
+					((BasicParameterNode)fChild).makeClone(fNodeMapper);
 			//					new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
@@ -202,7 +207,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
 
 		IAbstractNode globalParameter =
-				((AbstractParameterNode)abstractParameterNode).makeClone();
+				((AbstractParameterNode)abstractParameterNode).makeClone(fNodeMapper);
 
 		return new GenericOperationAddParameter(
 				rootNode, (AbstractParameterNode) globalParameter, fIndex, true, fExtLanguageManager);

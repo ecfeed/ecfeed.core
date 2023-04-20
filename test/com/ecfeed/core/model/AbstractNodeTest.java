@@ -40,10 +40,10 @@ public class AbstractNodeTest{
 			return 0;
 		}
 
-		@Override
-		public AbstractNode makeClone() {
-			return null;
-		}
+		//		@Override
+		//		public AbstractNode makeClone() {
+		//			return null;
+		//		}
 
 		@Override
 		public AbstractNode makeClone(Optional<NodeMapper> nodeMapper) {

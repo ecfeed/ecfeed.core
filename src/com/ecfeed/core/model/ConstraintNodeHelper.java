@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -149,13 +150,15 @@ public class ConstraintNodeHelper {
 
 	}
 
-	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {
+	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(
+			List<ConstraintNode> constraints,
+			Optional<NodeMapper> nodeMapper) {
 
 		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
 
 		for (ConstraintNode constraint : constraints) {
 
-			ConstraintNode clonedConstraint = constraint.makeClone();
+			ConstraintNode clonedConstraint = constraint.makeClone(nodeMapper);
 
 			clonedConstraint.derandomize();
 			clonedConstraintNodes.add(clonedConstraint);
