@@ -163,7 +163,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
-		BasicParameterNode parameter = makeClone(null);
+		BasicParameterNode parameter = makeClone(Optional.empty());
 
 		parameter.setParent(getParent());
 
@@ -202,6 +202,10 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		copyProperties(copyOfBasicParameterNode);
 
+		if (mapper.isPresent()) {
+			mapper.get().addMappings(this, copyOfBasicParameterNode);
+		}
+		
 		if (!this.isLinked()) {
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
 		}

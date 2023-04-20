@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ConstraintNodeListHolder {
@@ -63,21 +64,24 @@ public class ConstraintNodeListHolder {
 	}
 	
 	public void addConstraint(ConstraintNode constraint, int index, IParametersAndConstraintsParentNode parentNode) {
-		constraint.setParent(parentNode);
+		constraint.setParent(parentNode); // TODO MO-RE remove this and put in calling methods (this is the convention)
 		fConstraintNodes.add(index, constraint);
 		registerChange();
 	}
 	
-	public ConstraintNodeListHolder makeClone(IParametersAndConstraintsParentNode parent) {
+	public ConstraintNodeListHolder makeClone(
+			IParametersAndConstraintsParentNode newParent, Optional<NodeMapper> nodeMapper) {
 		
 		ConstraintNodeListHolder cloneOfConstraintNodeListHolder = 
 				new ConstraintNodeListHolder(fModelChangeRegistrator);
 		
-		for(ConstraintNode constraint : fConstraintNodes){
-			ConstraintNode clonedConstraint = constraint.getCopy(parent);
+		for (ConstraintNode constraint : fConstraintNodes) {
+			
+			ConstraintNode clonedConstraint = constraint.makeClone(nodeMapper);
+			clonedConstraint.setParent(newParent);
 			
 			if (clonedConstraint != null) {
-				cloneOfConstraintNodeListHolder.addConstraint(constraint, parent);
+				cloneOfConstraintNodeListHolder.addConstraint(constraint, newParent);
 			}
 		}
 

@@ -53,4 +53,17 @@ public class StaticStatementTest {
 		assertTrue(false1.isEqualTo(false2));
 		assertFalse(true1.isEqualTo(false1));
 	}
+	
+	@Test
+	public void copyStaticStatementTest(){
+		StaticStatement statement1 = new StaticStatement(true, null);
+		StaticStatement statement2 = new StaticStatement(false, null);
+
+		StaticStatement copy1 = statement1.makeClone();
+		StaticStatement copy2 = statement2.makeClone();
+
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
+	}
+	
 }
