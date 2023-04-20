@@ -200,7 +200,10 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 	private void cloneConstraints(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {
 
-		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode, nodeMapper);
+		ConstraintNodeListHolder clonedConstraintHolder = 
+				fConstraintNodeListHolder.makeClone(clonedMethodNode, nodeMapper);
+		
+		clonedMethodNode.fConstraintNodeListHolder = clonedConstraintHolder;
 	}
 
 	private void cloneTestCases(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {

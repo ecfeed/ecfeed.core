@@ -198,9 +198,8 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
+	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) { // TODO MO-RE obsolete
 
-		// XYX obsolete method
 		ConstraintNode copy = makeClone(Optional.empty());
 		return copy;
 
