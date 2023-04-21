@@ -151,14 +151,15 @@ public class ConstraintNodeHelper {
 	}
 
 	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(
-			List<ConstraintNode> constraints,
-			Optional<NodeMapper> nodeMapper) {
+			List<ConstraintNode> constraints) {
 
 		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
 
+		NodeMapper nodeMapper = new NodeMapper();
+		
 		for (ConstraintNode constraint : constraints) {
 
-			ConstraintNode clonedConstraint = constraint.makeClone(nodeMapper);
+			ConstraintNode clonedConstraint = constraint.makeClone(Optional.of(nodeMapper));
 
 			clonedConstraint.derandomize();
 			clonedConstraintNodes.add(clonedConstraint);
