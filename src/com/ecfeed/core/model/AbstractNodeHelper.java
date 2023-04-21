@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.ui.dialogs.basic.ErrorDialog;
 
 public abstract class AbstractNodeHelper  {
 
@@ -191,7 +190,7 @@ public abstract class AbstractNodeHelper  {
 		return true;
 	}
 
-	public static boolean canAddChildrenToParent(
+	public static String checkIfCanAddChildrenToParent(
 			Collection<IAbstractNode> childrenToAdd, 
 			IAbstractNode parentNode, 
 			boolean displayErrorDialog) {
@@ -202,15 +201,11 @@ public abstract class AbstractNodeHelper  {
 
 				String className = AbstractNodeHelper.getShortClassName(child);
 
-				if (displayErrorDialog) {
-					ErrorDialog.open("Cannot add " + className + " to parent: " + parentNode.getName());
-				}
-
-				return false;
+				return ("Cannot add " + className + " to parent: " + parentNode.getName());
 			}
 		}
 
-		return true;
+		return null;
 	}
 
 }
