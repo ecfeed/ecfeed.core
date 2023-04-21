@@ -177,9 +177,9 @@ public class ParameterCondition implements IStatementCondition {
 		
 		if (mapper.isPresent()) {
 			
-			BasicParameterNode parameter = mapper.get().getDeployedNode(fRightParameterNode);
+			BasicParameterNode clonedParameter = mapper.get().getDeployedNode(fRightParameterNode);
 
-			return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
+			return new ParameterCondition(clonedParameter, fRightParameterLinkingContext, statement); // XYX map linking context
 		}
 		
 		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);

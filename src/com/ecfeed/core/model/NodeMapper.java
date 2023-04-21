@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NodeMapper {
+public class NodeMapper { // XYX rename deployed to destination
 
 	private final Map<AbstractNode, AbstractNode> fSourceToDeployedMap = new HashMap<>();
 	private final Map<AbstractNode, AbstractNode> fDeployedToSourceMap = new HashMap<>();

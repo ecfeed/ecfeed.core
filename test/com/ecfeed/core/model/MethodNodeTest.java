@@ -693,9 +693,8 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void copyMethodWithConstraintsTest() { // XYX add parameter condition
+	public void cloneMethodWithChoiceConditionConstraintTest() {
 
-		// XYX check left parameter in constraint
 		MethodNode methodNode = new MethodNode("method", null);
 
 		BasicParameterNode basicParameterNode = 
@@ -736,6 +735,9 @@ public class MethodNodeTest {
 
 		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
 		assertNotEquals(clonedPostcondition, postcondition);
+		
+		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
+		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter);
 
 		ChoiceCondition clonedChoiceCondition = (ChoiceCondition) clonedPostcondition.getCondition();
 		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
@@ -744,6 +746,66 @@ public class MethodNodeTest {
 		ModelComparator.compareMethods(methodNode, clonedMethodNode);
 	}
 
+	@Test
+	public void cloneMethodWithParameterConditionConstraintTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode1, "choice1", "0", false, true, null);
+		
+		BasicParameterNode basicParameterNode2 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode2, "choice2", "0", false, true, null);
+		
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = RelationStatement.createRelationStatementWithParameterCondition(
+				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2);
+
+		Constraint constraint = 
+				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
+
+		ConstraintNode constraintNode = new ConstraintNode("Constraint", constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper));
+
+		BasicParameterNode clonedBasicParameter1 = (BasicParameterNode) clonedMethodNode.getParameter(0);
+		assertNotEquals(clonedBasicParameter1, basicParameterNode1);
+		assertEquals(clonedBasicParameter1.getParent(), clonedMethodNode);
+
+		BasicParameterNode clonedBasicParameter2 = (BasicParameterNode) clonedMethodNode.getParameter(1);
+		assertNotEquals(clonedBasicParameter2, basicParameterNode2);
+		assertEquals(clonedBasicParameter2.getParent(), clonedMethodNode);
+
+		ConstraintNode clonedConstraintNode = clonedMethodNode.getConstraintNodes().get(0);
+		assertNotEquals(clonedConstraintNode, constraintNode);
+		assertEquals(clonedConstraintNode.getParent(), clonedMethodNode);
+
+		Constraint clonedConstraint = clonedConstraintNode.getConstraint();
+		assertNotEquals(clonedConstraint, constraint);
+
+		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
+		assertNotEquals(clonedPostcondition, postcondition);
+		
+		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
+		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter1);
+
+		ParameterCondition clonedParameterCondition = (ParameterCondition) clonedPostcondition.getCondition();
+		BasicParameterNode clonedParameter2NodeFromConstraint = clonedParameterCondition.getRightParameterNode();
+		assertEquals(clonedParameter2NodeFromConstraint, clonedBasicParameter2);
+
+		ModelComparator.compareMethods(methodNode, clonedMethodNode);
+	}
+	
 	@Test
 	public void copyMethodWithDeployedParameters() { // XYX add test when linking context in deployed parameters is not null
 

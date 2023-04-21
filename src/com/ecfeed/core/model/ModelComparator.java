@@ -21,7 +21,7 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ModelComparator {
+public class ModelComparator { // XYX improve method comparator to check parents (if parent matches in model1 then it should match also in model2) 
 
 	public static void compareRootNodes(RootNode model1, RootNode model2) {
 
