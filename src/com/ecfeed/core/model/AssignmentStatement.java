@@ -204,7 +204,7 @@ public class AssignmentStatement extends RelationStatement {
 	@Override
 	public AssignmentStatement createCopy(NodeMapper mapper) {
 
-		BasicParameterNode deployedParameter = mapper.getDeployedNode(super.getLeftParameter());
+		BasicParameterNode deployedParameter = mapper.getDestinationNode(super.getLeftParameter());
 
 		AssignmentStatement statementCopy = new AssignmentStatement(deployedParameter, null);
 		IStatementCondition conditionCopy = super.getCondition().createCopy(this, mapper);

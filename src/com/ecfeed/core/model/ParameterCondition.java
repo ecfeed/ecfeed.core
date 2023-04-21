@@ -177,7 +177,7 @@ public class ParameterCondition implements IStatementCondition {
 		
 		if (mapper.isPresent()) {
 			
-			BasicParameterNode clonedParameter = mapper.get().getDeployedNode(fRightParameterNode);
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fRightParameterNode);
 
 			return new ParameterCondition(clonedParameter, fRightParameterLinkingContext, statement); // XYX map linking context
 		}
@@ -195,7 +195,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 		
-		BasicParameterNode parameter = mapper.getDeployedNode(fRightParameterNode);
+		BasicParameterNode parameter = mapper.getDestinationNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}

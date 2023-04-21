@@ -13,29 +13,29 @@ package com.ecfeed.core.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NodeMapper { // XYX rename deployed to destination
+public class NodeMapper {
 
-	private final Map<AbstractNode, AbstractNode> fSourceToDeployedMap = new HashMap<>();
-	private final Map<AbstractNode, AbstractNode> fDeployedToSourceMap = new HashMap<>();
+	private final Map<AbstractNode, AbstractNode> fSourceToDestination = new HashMap<>();
+	private final Map<AbstractNode, AbstractNode> fDestinationToSource = new HashMap<>();
 
-	public void addMappings(AbstractNode sourceNode, AbstractNode deployedNode) {
+	public void addMappings(AbstractNode sourceNode, AbstractNode destinationNode) {
 
-		fSourceToDeployedMap.put(sourceNode, deployedNode);
-		fDeployedToSourceMap.put(deployedNode, sourceNode);
+		fSourceToDestination.put(sourceNode, destinationNode);
+		fDestinationToSource.put(destinationNode, sourceNode);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractNode> T getSourceNode(T deployedNode) {
 
-		AbstractNode sourceNode = fDeployedToSourceMap.get(deployedNode);
+		AbstractNode sourceNode = fDestinationToSource.get(deployedNode);
 
 		return sourceNode != null ? (T) sourceNode : deployedNode;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractNode> T getDeployedNode(T sourceNode) {
+	public <T extends AbstractNode> T getDestinationNode(T sourceNode) {
 
-		AbstractNode deployedNode = fSourceToDeployedMap.get(sourceNode);
+		AbstractNode deployedNode = fSourceToDestination.get(sourceNode);
 
 		return deployedNode != null ? (T) deployedNode : sourceNode;
 	}

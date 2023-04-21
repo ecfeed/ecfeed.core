@@ -65,7 +65,7 @@ public class ChoiceCondition implements IStatementCondition {
 		
 		if (nodeMapper.isPresent()) {
 			
-			ChoiceNode clonedChoiceNode = nodeMapper.get().getDeployedNode(fRightChoice);
+			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
 			
 			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
 		}
@@ -92,7 +92,7 @@ public class ChoiceCondition implements IStatementCondition {
 		if (isSourceLinked()) {
 			node = fRightChoice;
 		} else {
-			node = mapper.getDeployedNode(fRightChoice);
+			node = mapper.getDestinationNode(fRightChoice);
 		}
 
 		node.setOrigChoiceNode(null);

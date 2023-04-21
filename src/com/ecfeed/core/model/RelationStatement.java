@@ -242,7 +242,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
 		
 		if (mapper.isPresent()) {
-			BasicParameterNode clonedParameter = mapper.get().getDeployedNode(fLeftParameter);
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
 
 			RelationStatement clonedStatement = 
 					new RelationStatement(clonedParameter, fLeftParameterLinkingContext, fRelation, null);
@@ -270,7 +270,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
 
-		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameter);
+		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
 
 		RelationStatement statement = 
 				new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);

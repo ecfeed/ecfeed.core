@@ -178,8 +178,8 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public ExpectedValueStatement makeClone(Optional<NodeMapper> mapper) {
 		
 		if (mapper.isPresent()) {
-			BasicParameterNode parameter = mapper.get().getDeployedNode(fLeftParameterNode); 
-			ChoiceNode choice = mapper.get().getDeployedNode(fChoiceNode);
+			BasicParameterNode parameter = mapper.get().getDestinationNode(fLeftParameterNode); 
+			ChoiceNode choice = mapper.get().getDestinationNode(fChoiceNode);
 	
 			return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 		}
@@ -196,8 +196,8 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete ?
-		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameterNode); 
-		ChoiceNode choice = mapper.getDeployedNode(fChoiceNode);
+		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameterNode); 
+		ChoiceNode choice = mapper.getDestinationNode(fChoiceNode);
 
 		return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 	}
