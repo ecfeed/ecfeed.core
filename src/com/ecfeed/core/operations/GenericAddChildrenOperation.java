@@ -11,10 +11,8 @@
 package com.ecfeed.core.operations;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.LogHelperCore;
 
@@ -24,10 +22,9 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 			IAbstractNode target, 
 			Collection<? extends IAbstractNode> childrenToAdd, 
 			boolean validate,
-			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
-		this(target, childrenToAdd, -1, validate, nodeMapper, extLanguageManager);
+		this(target, childrenToAdd, -1, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
@@ -35,7 +32,6 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 			Collection<? extends IAbstractNode> childrenToAdd, 
 			int index, 
 			boolean validate,
-			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
@@ -43,7 +39,7 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 		for (IAbstractNode child : childrenToAdd) {
 
 			try {
-				IModelOperation operation = createAddOperation(child, index, target, validate, nodeMapper);
+				IModelOperation operation = createAddOperation(child, index, target, validate);
 
 				if (operation != null) {
 					addOperation(operation);
@@ -59,11 +55,10 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 			IAbstractNode child, 
 			int index,
 			IAbstractNode target,
-			boolean validate,
-			Optional<NodeMapper> nodeMapper) throws Exception {
+			boolean validate) throws Exception {
 
 		AddChildOperationCreator addChildOperationCreator = 
-				new AddChildOperationCreator(child, index, validate, nodeMapper, getExtLanguageManager());
+				new AddChildOperationCreator(child, index, validate, getExtLanguageManager());
 
 		IModelOperation operation = (IModelOperation)target.accept(addChildOperationCreator);
 
