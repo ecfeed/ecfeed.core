@@ -242,15 +242,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
 		
 		if (mapper.isPresent()) {
-			BasicParameterNode parameter = mapper.get().getDeployedNode(fLeftParameter);
+			BasicParameterNode clonedParameter = mapper.get().getDeployedNode(fLeftParameter);
 
-			RelationStatement statement = 
-					new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);
+			RelationStatement clonedStatement = 
+					new RelationStatement(clonedParameter, fLeftParameterLinkingContext, fRelation, null);
 
-			IStatementCondition condition = fRightCondition.makeClone(statement, mapper);
-			statement.setCondition(condition);
+			IStatementCondition clonedCondition = fRightCondition.makeClone(clonedStatement, mapper);
+			clonedStatement.setCondition(clonedCondition);
 
-			return statement;
+			return clonedStatement;
 		}
 		
 		RelationStatement relationStatement = new RelationStatement(

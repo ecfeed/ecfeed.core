@@ -60,17 +60,21 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition makeClone(RelationStatement statement, Optional<NodeMapper>nodeMapper) {
+	public ChoiceCondition makeClone(
+			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
 		
 		if (nodeMapper.isPresent()) {
-			return new ChoiceCondition(updateChoiceReference(nodeMapper.get()), statement);
+			
+			ChoiceNode clonedChoiceNode = nodeMapper.get().getDeployedNode(fRightChoice);
+			
+			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
 		}
 
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 	
 	@Override
-	public ChoiceCondition makeClone() {
+	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
 		// choices are not cloned
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}

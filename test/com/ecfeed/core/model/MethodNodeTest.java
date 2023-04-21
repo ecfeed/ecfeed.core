@@ -693,8 +693,9 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void copyMethodWithConstraintsTest() {
+	public void copyMethodWithConstraintsTest() { // XYX add parameter condition
 
+		// XYX check left parameter in constraint
 		MethodNode methodNode = new MethodNode("method", null);
 
 		BasicParameterNode basicParameterNode = 
@@ -744,7 +745,7 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void copyMethodWithDeployedParameters() {
+	public void copyMethodWithDeployedParameters() { // XYX add test when linking context in deployed parameters is not null
 
 		MethodNode methodNode = new MethodNode("method", null);
 

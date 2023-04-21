@@ -12,12 +12,17 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
+
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 
 public class CompositeParameterNodeTest {
 
@@ -168,6 +173,57 @@ public class CompositeParameterNodeTest {
 		
 		compositeParameterNode1.removeParameter(compositeParameterNode2);
 		assertEquals(0, compositeParameterNode1.getParametersCount());
+	}
+	
+	@Test
+	public void copyCompositeParameterWithConstraintsTest() {
+
+		CompositeParameterNode compositeParameterNode = new CompositeParameterNode("method", null);
+
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(compositeParameterNode, "par1", "int", "0", null);
+
+		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode, "choice1", "0", false, true, null);
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = RelationStatement.createRelationStatementWithChoiceCondition(
+				basicParameterNode, null, EMathRelation.EQUAL, choiceNode);
+
+		Constraint constraint = 
+				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
+
+		ConstraintNode constraintNode = new ConstraintNode("Constraint", constraint, null);
+
+		compositeParameterNode.addConstraint(constraintNode);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		CompositeParameterNode clonedCompositeParameterNode = compositeParameterNode.makeClone(Optional.of(nodeMapper));
+
+		BasicParameterNode clonedBasicParameter = (BasicParameterNode) clonedCompositeParameterNode.getParameter(0);
+		assertNotEquals(clonedBasicParameter, basicParameterNode);
+		assertEquals(clonedBasicParameter.getParent(), clonedCompositeParameterNode);
+
+		ChoiceNode clonedChoiceNode = clonedBasicParameter.getChoices().get(0);
+		assertNotEquals(clonedChoiceNode, choiceNode);
+		assertEquals(clonedChoiceNode.getParent(), clonedBasicParameter);
+
+		ConstraintNode clonedConstraintNode = clonedCompositeParameterNode.getConstraintNodes().get(0);
+		assertNotEquals(clonedConstraintNode, constraintNode);
+		assertEquals(clonedConstraintNode.getParent(), clonedCompositeParameterNode);
+
+		Constraint clonedConstraint = clonedConstraintNode.getConstraint();
+		assertNotEquals(clonedConstraint, constraint);
+
+		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
+		assertNotEquals(clonedPostcondition, postcondition);
+
+		ChoiceCondition clonedChoiceCondition = (ChoiceCondition) clonedPostcondition.getCondition();
+		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
+		assertEquals(clonedChoiceNodeFromConstraint, clonedChoiceNode);
+
+		ModelComparator.compareParameters(compositeParameterNode, clonedCompositeParameterNode);
 	}
 	
 }

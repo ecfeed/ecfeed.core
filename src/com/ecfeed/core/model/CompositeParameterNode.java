@@ -69,29 +69,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		return getName() + " : " + "Structure";
 	}
 
-	//	@Override
-	//	public CompositeParameterNode makeClone() {
-	//		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
-	//
-	//		for (AbstractParameterNode parameter : getParameters()) {
-	//			copy.addParameter((AbstractParameterNode) parameter.makeClone());
-	//		}
-	//
-	//		copy.setProperties(getProperties());
-	//		copy.setParent(this.getParent());
-	//
-	//		return copy;
-	//	}
-
 	@Override
 	public CompositeParameterNode makeClone(Optional<NodeMapper> nodeMapper) {
 
 		CompositeParameterNode copyOfCompositeParameter = 
 				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
 
-		for (AbstractParameterNode parameter : getParameters()) {
-			copyOfCompositeParameter.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
-		}
+		cloneParameters(copyOfCompositeParameter, nodeMapper);
+		
+		cloneConstraints(copyOfCompositeParameter, nodeMapper);
 
 		copyOfCompositeParameter.setProperties(getProperties());
 		copyOfCompositeParameter.setParent(this.getParent());
@@ -101,6 +87,22 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 
 		return copyOfCompositeParameter;
+	}
+
+	private void cloneParameters(CompositeParameterNode copyOfCompositeParameter, Optional<NodeMapper> nodeMapper) {
+		
+		for (AbstractParameterNode parameter : getParameters()) {
+			
+			copyOfCompositeParameter.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
+		}
+	}
+	
+	private void cloneConstraints(CompositeParameterNode clonedCompositeParameterNode, Optional<NodeMapper> nodeMapper) {
+
+		ConstraintNodeListHolder clonedConstraintHolder = 
+				fConstraintNodeListHolder.makeClone(clonedCompositeParameterNode, nodeMapper);
+		
+		clonedCompositeParameterNode.fConstraintNodeListHolder = clonedConstraintHolder;
 	}
 	
 	@Override
