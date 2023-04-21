@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Test;
 
@@ -28,7 +27,6 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
@@ -49,9 +47,8 @@ public class GenericAddChildrenOperationTest {
 
 		ClassNode classNode1 = new ClassNode("Class1", null);
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(rootNode, classNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(rootNode, classNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		List<ClassNode> classNodes = rootNode.getClasses();
@@ -62,7 +59,7 @@ public class GenericAddChildrenOperationTest {
 		ClassNode classNode2 = new ClassNode("Class2", null);
 
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(rootNode, classNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(rootNode, classNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		classNodes = rootNode.getClasses();
@@ -73,7 +70,7 @@ public class GenericAddChildrenOperationTest {
 		ClassNode classNode3 = new ClassNode("Class3", null);
 
 		GenericAddChildrenOperation genericAddChildrenOperation3 = 
-				createAddingNodeOperation(rootNode, classNode3, 2, Optional.of(nodeMapper));
+				createAddingNodeOperation(rootNode, classNode3, 2);
 		genericAddChildrenOperation3.execute();
 
 		classNodes = rootNode.getClasses();
@@ -109,10 +106,8 @@ public class GenericAddChildrenOperationTest {
 
 		MethodNode methodNode1 = new MethodNode("Method1");
 		
-		NodeMapper nodeMapper = new NodeMapper();
-		
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(classNode, methodNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(classNode, methodNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		List<MethodNode> methods = classNode.getMethods();
@@ -122,7 +117,7 @@ public class GenericAddChildrenOperationTest {
 
 		MethodNode methodNode2 = new MethodNode("Method2");
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(classNode, methodNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(classNode, methodNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		methods = classNode.getMethods();
@@ -162,9 +157,8 @@ public class GenericAddChildrenOperationTest {
 				new BasicParameterNode(
 						"BasicParam1", "String", "", false, null);
 		
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(methodNode, basicParameterNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, basicParameterNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
@@ -176,7 +170,7 @@ public class GenericAddChildrenOperationTest {
 				new BasicParameterNode("BasicParam2", "String", "", false, null);
 		
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(methodNode, basicParameterNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, basicParameterNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		parameterNodes = methodNode.getParameters();
@@ -216,9 +210,8 @@ public class GenericAddChildrenOperationTest {
 
 		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0);
 		
 		genericAddChildrenOperation1.execute();
 
@@ -230,7 +223,7 @@ public class GenericAddChildrenOperationTest {
 		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
 
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(basicParameterNode1, choiceNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(basicParameterNode1, choiceNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		choiceNodes = basicParameterNode1.getChoices();
@@ -267,10 +260,8 @@ public class GenericAddChildrenOperationTest {
 
 		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
 
-		NodeMapper nodeMapper = new NodeMapper();
-		
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0);
 		
 		genericAddChildrenOperation1.execute();
 
@@ -281,7 +272,7 @@ public class GenericAddChildrenOperationTest {
 		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
 
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(choiceNode1, choiceNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(choiceNode1, choiceNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		assertEquals(1, basicParameterNode1.getChoices().size());
@@ -324,9 +315,8 @@ public class GenericAddChildrenOperationTest {
 
 		// add constraint
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation = 
-				createAddingNodeOperation(methodNode, constraintNode, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, constraintNode, 0);
 		genericAddChildrenOperation.execute();
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
@@ -376,9 +366,8 @@ public class GenericAddChildrenOperationTest {
 		
 		TestCaseNode testCaseNode1 = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(methodNode, testCaseNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, testCaseNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		assertEquals(1, methodNode.getTestCases().size());
@@ -391,7 +380,7 @@ public class GenericAddChildrenOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(methodNode, testCaseNode, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, testCaseNode, 0);
 		genericAddChildrenOperation2.execute();
 		
 		assertEquals(2, methodNode.getTestCases().size());
@@ -443,9 +432,8 @@ public class GenericAddChildrenOperationTest {
 
 		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(methodNode, compositeParameterNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(methodNode, compositeParameterNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		assertEquals(2, methodNode.getParameters().size());
@@ -457,7 +445,7 @@ public class GenericAddChildrenOperationTest {
 		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode("S2", null);
 		
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
-				createAddingNodeOperation(compositeParameterNode1, compositeParameterNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(compositeParameterNode1, compositeParameterNode2, 0);
 		genericAddChildrenOperation2.execute();
 
 		assertEquals(2, methodNode.getParameters().size());
@@ -521,9 +509,8 @@ public class GenericAddChildrenOperationTest {
 
 		// add parameter 2 by operation
 
-		NodeMapper nodeMapper = new NodeMapper();
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(compositeParameterNode1, basicParameterNode2, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(compositeParameterNode1, basicParameterNode2, 0);
 		genericAddChildrenOperation1.execute();
 
 		assertEquals(2, methodNode.getParameters().size());
@@ -550,10 +537,8 @@ public class GenericAddChildrenOperationTest {
 				new BasicParameterNode(
 						"GlobalBasicParam1", "String", "", false, null);
 
-		NodeMapper nodeMapper = new NodeMapper();
-		
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(rootNode, globalBasicParameterNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(rootNode, globalBasicParameterNode1, 0);
 		genericAddChildrenOperation1.execute();
 
 		assertEquals(1, rootNode.getParameters().size());
@@ -576,10 +561,8 @@ public class GenericAddChildrenOperationTest {
 
 		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
 
-		NodeMapper nodeMapper = new NodeMapper();
-		
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(globalBasicParameterNode1, choiceNode1, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(globalBasicParameterNode1, choiceNode1, 0);
 		
 		genericAddChildrenOperation1.execute();
 
@@ -625,10 +608,8 @@ public class GenericAddChildrenOperationTest {
 
 		ChoiceNode choiceNode12 = new ChoiceNode("Choice12", "12");
 
-		NodeMapper nodeMapper = new NodeMapper();
-		
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
-				createAddingNodeOperation(basicParameterNode1, choiceNode12, 0, Optional.of(nodeMapper));
+				createAddingNodeOperation(basicParameterNode1, choiceNode12, 0);
 		genericAddChildrenOperation1.execute();
 
 
@@ -683,8 +664,7 @@ public class GenericAddChildrenOperationTest {
 	private GenericAddChildrenOperation createAddingNodeOperation(
 			IAbstractNode parent,
 			IAbstractNode child,
-			int index,
-			Optional<NodeMapper> nodeMapper) {
+			int index) {
 
 		List<IAbstractNode> children = Arrays.asList(child);
 
@@ -694,7 +674,6 @@ public class GenericAddChildrenOperationTest {
 						children, 
 						index, 
 						true,
-						nodeMapper,
 						new ExtLanguageManagerForJava());
 
 		return genericAddChildrenOperation;
