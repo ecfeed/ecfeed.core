@@ -13,14 +13,19 @@ public class CompositeParameterNodeHelper {
 			String name, 
 			String type,
 			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode parameterNode = 
+		BasicParameterNode basicParameterNode = 
 				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
 
-		compositeParameterNode.addParameter(parameterNode);
+		if (setParent) {
+			basicParameterNode.setParent(compositeParameterNode);
+		}
 
-		return parameterNode;
+		compositeParameterNode.addParameter(basicParameterNode);
+
+		return basicParameterNode;
 	}
 
 	public static CompositeParameterNode addCompositeParameter(

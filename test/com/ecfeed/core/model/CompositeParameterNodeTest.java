@@ -182,7 +182,7 @@ public class CompositeParameterNodeTest {
 
 		BasicParameterNode basicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-						compositeParameterNode, "par1", "int", "0", null);
+						compositeParameterNode, "par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode, "choice1", "0", false, true, null);

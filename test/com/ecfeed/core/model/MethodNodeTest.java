@@ -846,11 +846,11 @@ public class MethodNodeTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalComposite = 
-				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "GS1", null); // XYX set parent
+				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-						globalComposite, "GP1", "int", "0", null); // XYX set parent
+						globalComposite, "GP1", "int", "0", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameterNode, "GC1", "1", false, true, null);

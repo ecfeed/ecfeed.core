@@ -60,7 +60,7 @@ public class ModelSerializerTest {
 
 		// BasicParameterNode globalBasicParameterNode1 = 
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-				globalCompositeParameterNode1, "GP", "int", "o", null);
+				globalCompositeParameterNode1, "GP", "int", "o", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
 				CompositeParameterNodeHelper.addNewCompositeParameterNodeToCompositeParameter(
@@ -68,7 +68,7 @@ public class ModelSerializerTest {
 
 		// BasicParameterNode globalBasicParameterNode2 =
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-				globalCompositeParameterNode2, "GP", "int", "o", null);
+				globalCompositeParameterNode2, "GP", "int", "o", true, null);
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
@@ -134,7 +134,7 @@ public class ModelSerializerTest {
 		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
 
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-				compositeParameterNode, "LP", "int", "0", null);
+				compositeParameterNode, "LP", "int", "0", true, null);
 
 		// root
 		//   class

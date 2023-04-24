@@ -848,7 +848,7 @@ public class MethodDeployerTest {
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LC", true, null);
 
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-				compositeParameterNode, "LP", "int", "0", null);
+				compositeParameterNode, "LP", "int", "0", true, null);
 
 		NodeMapper nodeMapper = new NodeMapper();
 		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
