@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatementHelper {
 
@@ -64,7 +65,38 @@ public class RelationStatementHelper {
 					statement1.getRelation() + " and " + statement2.getRelation());
 		}
 		
-		ModelComparator.compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
+		compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
+	}
+	
+	public static void compareConditions(Object condition1, Object condition2) { // XYX move ?
+
+		if (condition1 instanceof String && condition2 instanceof String) {
+			if(condition1.equals(condition2) == false){
+				ExceptionHelper.reportRuntimeException("Compared labels are different: " + condition1 + "!=" + condition2);
+				return;
+			}
+		}
+
+		if (condition1 instanceof ChoiceNode && condition2 instanceof ChoiceNode) {
+			ModelComparator.compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
+			return;
+		}
+
+		if (condition1 instanceof BasicParameterNode && condition2 instanceof BasicParameterNode) {
+			ModelComparator.compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2); // XYX
+			return;
+
+		}
+
+		if (condition1 instanceof java.lang.String && condition2 instanceof java.lang.String) {
+			StringHelper.compareStrings((String)condition1, (String) condition2, "Condition strings do not match.");
+			return;
+		}
+
+		String type1 = condition1.getClass().getTypeName();
+		String type2 = condition2.getClass().getTypeName();
+
+		ExceptionHelper.reportRuntimeException("Unknown or not same types of compared conditions of types: " + type1 + ", " + type2 + ".");
 	}
 	
 }

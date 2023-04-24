@@ -55,4 +55,14 @@ public class TypeHelper {
 		}
 	}
 
+	public static void compareIntegers(int size, int size2, String message) {
+
+		if (size == size2) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Integers do not match." + " " + message);
+	}
+
+
 }

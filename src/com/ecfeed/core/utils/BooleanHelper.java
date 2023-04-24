@@ -21,4 +21,13 @@ public class BooleanHelper {
 		return Boolean.parseBoolean(str);
 	}
 
+	public static void assertIsTrue(boolean b, String message) {
+
+		if (b == true) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
+	}
+
 }

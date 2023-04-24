@@ -648,4 +648,24 @@ public class MethodNodeHelper {
 		return null;
 	}
 
+	public static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
+
+		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
+
+		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
+			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
+		}
+
+		int size = deployedParametersWithContexts1.size();
+
+		for (int i = 0; i < size; ++i) {
+
+			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
+			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
+
+			ModelComparator.compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
+		}
+	}
+	
 }
