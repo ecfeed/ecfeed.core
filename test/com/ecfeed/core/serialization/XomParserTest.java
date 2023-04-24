@@ -28,10 +28,12 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintNodeHelper;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
@@ -120,7 +122,7 @@ public class XomParserTest {
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
 			
-			ModelComparator.compareClasses(classNode, parsedClass.get());
+			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
 			
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -153,7 +155,7 @@ public class XomParserTest {
 				
 				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				
-				ModelComparator.compareMethods(methodNode, parsedMethodNode.get());
+				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());

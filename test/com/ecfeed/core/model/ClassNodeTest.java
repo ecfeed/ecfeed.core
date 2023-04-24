@@ -40,7 +40,7 @@ public class ClassNodeTest extends ClassNode {
 
 		NodeMapper nodeMapper = new NodeMapper();
 		ClassNode copy = classNode.makeClone(Optional.of(nodeMapper));
-		ModelComparator.compareClasses(classNode, copy);
+		ClassNodeHelper.compareClasses(classNode, copy);
 	}
 
 	@Test

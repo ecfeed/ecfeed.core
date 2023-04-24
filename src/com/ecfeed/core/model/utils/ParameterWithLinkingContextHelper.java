@@ -11,6 +11,7 @@
 package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 
 public class ParameterWithLinkingContextHelper {
@@ -28,4 +29,15 @@ public class ParameterWithLinkingContextHelper {
 		return (BasicParameterNode) link;
 	}
 
+	public static void compareParametersWithLinkingContexts(
+			ParameterWithLinkingContext parameterWithContext1, 
+			ParameterWithLinkingContext parameterWithContext2) {
+
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getParameter(), parameterWithContext2.getParameter());
+		
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getLinkingContext(), parameterWithContext2.getLinkingContext());
+	}
+	
 }

@@ -689,7 +689,7 @@ public class MethodNodeTest {
 
 		NodeMapper nodeMapper = new NodeMapper();
 		MethodNode copy = method.makeClone(Optional.of(nodeMapper));
-		ModelComparator.compareMethods(method, copy);
+		MethodNodeHelper.compareMethods(method, copy);
 	}
 
 	@Test
@@ -743,7 +743,7 @@ public class MethodNodeTest {
 		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
 		assertEquals(clonedChoiceNodeFromConstraint, clonedChoiceNode);
 
-		ModelComparator.compareMethods(methodNode, clonedMethodNode);
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
 	}
 
 	@Test
@@ -803,7 +803,7 @@ public class MethodNodeTest {
 		BasicParameterNode clonedParameter2NodeFromConstraint = clonedParameterCondition.getRightParameterNode();
 		assertEquals(clonedParameter2NodeFromConstraint, clonedBasicParameter2);
 
-		ModelComparator.compareMethods(methodNode, clonedMethodNode);
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
 	}
 	
 	@Test
@@ -836,7 +836,7 @@ public class MethodNodeTest {
 		ChoiceNode clonedDeployedChoice = clonedDeployedParameter.getChoices().get(0);
 		assertEquals(clonedDeployedChoice.getParent(), clonedDeployedParameter);
 
-		ModelComparator.compareMethods(methodNode, clonedMethodNode);
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
 	}
 
 }

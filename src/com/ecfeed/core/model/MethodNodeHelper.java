@@ -17,6 +17,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -666,7 +667,7 @@ public class MethodNodeHelper {
 			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
 			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
 
-			ModelComparator.compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
+			ParameterWithLinkingContextHelper.compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
 		}
 	}
 
@@ -688,7 +689,7 @@ public class MethodNodeHelper {
 
 		AbstractNodeHelper.compareSizes(
 				methodNode1.getTestCases(), methodNode2.getTestCases(), "Number of test cases differs.");
-		
+
 		for (int i =0; i < methodNode1.getTestCases().size(); ++i) {
 
 			TestCaseNode testCaseNode1 = methodNode1.getTestCases().get(i);
@@ -705,7 +706,7 @@ public class MethodNodeHelper {
 		List<AbstractParameterNode> parameters2 = methodNode2.getParameters();
 
 		AbstractNodeHelper.compareSizes(parameters1, parameters2, "Number of parameters differs.");
-		
+
 		for (int i =0; i < parameters1.size(); ++i) {
 
 			AbstractParameterNode abstractParameterNode1 = parameters1.get(i);
@@ -720,13 +721,13 @@ public class MethodNodeHelper {
 
 		List<ConstraintNode> constraintNodes1 = methodNode1.getConstraintNodes();
 		List<ConstraintNode> constraintNodes2 = methodNode2.getConstraintNodes();
-		
+
 		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
-		
+
 		for (int i =0; i < constraintNodes1.size(); ++i) {
 
 			ConstraintNode constraintNode1 = constraintNodes1.get(i);
-			
+
 			ConstraintNode constraintNode2 = constraintNodes2.get(i);
 
 			AbstractNodeHelper.compareParents(constraintNode1, methodNode1, constraintNode2, methodNode2);
@@ -734,6 +735,22 @@ public class MethodNodeHelper {
 		}
 	}
 
-	
-	
+	public static void compareMethods(MethodNode method1, MethodNode method2) {
+
+		if (method1 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 1.");
+		}
+
+		if (method2 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 2.");
+		}
+
+		NameHelper.compareNames(method1.getName(), method2.getName());
+
+		MethodNodeHelper.compareMethodParameters(method1, method2);
+		MethodNodeHelper.compareDeployedParameters(method1, method2);
+		MethodNodeHelper.compareMethodConstraints(method1, method2);
+		MethodNodeHelper.compareTestCases(method1, method2);
+	}
+
 }

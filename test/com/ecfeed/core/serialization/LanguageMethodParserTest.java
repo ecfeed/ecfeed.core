@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelComparator;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
@@ -245,7 +245,7 @@ public class LanguageMethodParserTest {
 
 		MethodNode methodNodeFromXml = parseXml(methodXml);
 		
-		ModelComparator.compareMethods(methodNodeFromSignature, methodNodeFromXml);
+		MethodNodeHelper.compareMethods(methodNodeFromSignature, methodNodeFromXml);
 	}
 
 	private MethodNode parseXml(String methodXml) {
