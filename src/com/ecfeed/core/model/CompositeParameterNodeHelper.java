@@ -272,37 +272,36 @@ public class CompositeParameterNodeHelper {
 		}
 
 		compareConstraints(compositeParameterNode1, compositeParameterNode2);
-		
+
 		List<AbstractParameterNode> parameters1 = compositeParameterNode1.getParameters();
 		List<AbstractParameterNode> parameters2 = compositeParameterNode2.getParameters();
 
-		AbstractNodeHelper.compareSizes(parameters1, parameters1, "Number of parameters differs."); // XYX compare sizes inside of compareChildParameters 
 		compareChildParameters(parameters1, parameters2);
 	}
-	
+
 	private static void compareConstraints(
 			CompositeParameterNode compositeParameterNode1, 
 			CompositeParameterNode compositeParameterNode2) {
-		
+
 		List<ConstraintNode> constraintNodes1 = compositeParameterNode1.getConstraintNodes();
 		List<ConstraintNode> constraintNodes2 = compositeParameterNode2.getConstraintNodes();
-		
+
 		for (int i =0; i < constraintNodes1.size(); ++i) {
-			
+
 			ConstraintNode constraintNode1 = constraintNodes1.get(i);
 			ConstraintNode constraintNode2 = constraintNodes2.get(i);
-			
+
 			AbstractNodeHelper.compareParents(constraintNode1, compositeParameterNode1, constraintNode2, compositeParameterNode2);
 			ConstraintNodeHelper.compareConstraintNodes(constraintNode1, constraintNode2);
 		}
 	}
 
-	
-
 	private static void compareChildParameters(
 			List<AbstractParameterNode> parameters1,
 			List<AbstractParameterNode> parameters2) {
-		
+
+		AbstractNodeHelper.compareSizes(parameters1, parameters1, "Number of parameters differs.");
+
 		for (int index = 0; index < parameters1.size(); index++) {
 
 			AbstractParameterNode parameter1 = parameters1.get(index);

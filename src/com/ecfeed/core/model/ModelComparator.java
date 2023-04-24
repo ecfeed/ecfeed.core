@@ -19,8 +19,6 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ModelComparator { 
 
-	// XYX compare constraints of composite parameter
-
 	public static void compareRootNodes(RootNode rootNode1, RootNode rootNode2) {
 
 		RootNodeHelper.compareRootNodes(rootNode1, rootNode2);

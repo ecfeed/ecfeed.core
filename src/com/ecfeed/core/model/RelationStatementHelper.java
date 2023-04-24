@@ -58,17 +58,17 @@ public class RelationStatementHelper {
 	}
 
 	public static void compareRelationStatements(RelationStatement statement1, RelationStatement statement2) {
-		
+
 		AbstractParameterNodeHelper.compareParameters(statement1.getLeftParameter(), statement2.getLeftParameter());
 		if((statement1.getRelation() != statement2.getRelation())){
 			ExceptionHelper.reportRuntimeException("Compared statements have different relations: " +
 					statement1.getRelation() + " and " + statement2.getRelation());
 		}
-		
+
 		compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
 	}
-	
-	public static void compareConditions(Object condition1, Object condition2) { // XYX move ?
+
+	private static void compareConditions(Object condition1, Object condition2) {
 
 		if (condition1 instanceof String && condition2 instanceof String) {
 			if(condition1.equals(condition2) == false){
@@ -83,7 +83,7 @@ public class RelationStatementHelper {
 		}
 
 		if (condition1 instanceof BasicParameterNode && condition2 instanceof BasicParameterNode) {
-			MethodNodeHelper.compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2); // XYX
+			MethodNodeHelper.compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2);
 			return;
 
 		}
@@ -98,6 +98,6 @@ public class RelationStatementHelper {
 
 		ExceptionHelper.reportRuntimeException("Unknown or not same types of compared conditions of types: " + type1 + ", " + type2 + ".");
 	}
-	
+
 }
 
