@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class RelationStatementHelper {
@@ -55,5 +56,16 @@ public class RelationStatementHelper {
 		return true;
 	}
 
+	public static void compareRelationStatements(RelationStatement statement1, RelationStatement statement2) {
+		
+		AbstractParameterNodeHelper.compareParameters(statement1.getLeftParameter(), statement2.getLeftParameter());
+		if((statement1.getRelation() != statement2.getRelation())){
+			ExceptionHelper.reportRuntimeException("Compared statements have different relations: " +
+					statement1.getRelation() + " and " + statement2.getRelation());
+		}
+		
+		ModelComparator.compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
+	}
+	
 }
 

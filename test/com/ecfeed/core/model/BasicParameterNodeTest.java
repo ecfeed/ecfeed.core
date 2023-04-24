@@ -34,7 +34,7 @@ public class BasicParameterNodeTest{
 
 		NodeMapper nodeMapper = new NodeMapper();
 		BasicParameterNode copy = parameter.makeClone(Optional.of(nodeMapper));
-		ModelComparator.compareParameters(parameter, copy);
+		AbstractParameterNodeHelper.compareParameters(parameter, copy);
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class BasicParameterNodeTest{
 
 		NodeMapper nodeMapper = new NodeMapper();
 		BasicParameterNode copy = parameter.makeClone(Optional.of(nodeMapper));
-		ModelComparator.compareParameters(parameter, copy);
+		AbstractParameterNodeHelper.compareParameters(parameter, copy);
 	}
 
 	

@@ -22,11 +22,13 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintNodeHelper;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelComparator;
@@ -179,7 +181,7 @@ public class XomParserTest {
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
 							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, methodNode, new ListOfStrings());
 					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
-					ModelComparator.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
+					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
 			catch (Exception e) {
@@ -236,7 +238,7 @@ public class XomParserTest {
 
 					Optional<ConstraintNode> c1 = new ModelParserForConstraint().parseConstraint(element, m, new ListOfStrings());
 					//assertElementsEqual(c, c1.get());
-					ModelComparator.compareConstraintNodes(c, c1.get());
+					ConstraintNodeHelper.compareConstraintNodes(c, c1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
 				}

@@ -48,5 +48,11 @@ public class TypeHelper {
 		return null;
 	}
 
+	public static void compareTypes(String type1, String type2) {
+
+		if(type1.equals(type2) == false){
+			ExceptionHelper.reportRuntimeException("Different types: " + type1 + ", " + type2);
+		}
+	}
 
 }

@@ -12,36 +12,49 @@ package com.ecfeed.core.model;
 
 
 import java.io.ByteArrayOutputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ModelComparator { // XYX improve method comparator to check parents (if parent matches in model1 then it should match also in model2) 
 
-	public static void compareRootNodes(RootNode model1, RootNode model2) {
+	// XYX compare constraints of composite parameter
 
-		compareNames(model1.getName(), model2.getName());
-		compareSizes(model1.getClasses(), model2.getClasses(), "Number of classes differ.");
+	public static void compareRootNodes(RootNode rootNode1, RootNode rootNode2) {
 
-		for(int i = 0; i < model1.getClasses().size(); ++i){
-			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
+		NameHelper.compareNames(rootNode1.getName(), rootNode2.getName());
+		
+		AbstractNodeHelper.compareSizes(rootNode1.getClasses(), rootNode2.getClasses(), "Number of classes differs.");
+
+		for (int i = 0; i < rootNode1.getClasses().size(); ++i) {
+
+			ClassNode classNode1 = rootNode1.getClasses().get(i);
+			ClassNode classNode2 = rootNode2.getClasses().get(i);
+
+			AbstractNodeHelper.compareParents(classNode1, rootNode1, classNode2, rootNode2);
+			compareClasses(classNode1, classNode2);
 		}
 
-		compareSerializedModelsAsLastResort(model1, model2);
+		compareSerializedModelsAsLastResort(rootNode1, rootNode2);
 	}
 
 	public static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
 
-		compareNames(classNode1.getName(), classNode2.getName());
-		compareSizes(classNode1.getMethods(), classNode2.getMethods(), "Number of methods differ.");
+		NameHelper.compareNames(classNode1.getName(), classNode2.getName());
+		AbstractNodeHelper.compareSizes(classNode1.getMethods(), classNode2.getMethods(), "Number of methods differs.");
 
-		for(int i = 0; i < classNode1.getMethods().size(); ++i){
-			compareMethods(classNode1.getMethods().get(i), classNode2.getMethods().get(i));
+		for (int i = 0; i < classNode1.getMethods().size(); ++i) {
+
+			MethodNode methodNode1 = classNode1.getMethods().get(i);
+			MethodNode methodNode2 = classNode2.getMethods().get(i);
+
+			AbstractNodeHelper.compareParents(methodNode1, classNode1, methodNode2, classNode2);
+			compareMethods(methodNode1, methodNode2);
 		}
 	}
 
@@ -55,70 +68,72 @@ public class ModelComparator { // XYX improve method comparator to check parents
 			ExceptionHelper.reportRuntimeException("Empty method 2.");
 		}
 
-		compareNames(method1.getName(), method2.getName());
-		compareSizes(method1.getParameters(), method2.getParameters(), "Number of parameters differ.");
-		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes(), "Number of constraints differ.");
-		compareSizes(method1.getTestCases(), method2.getTestCases(), "Number of test cases differ.");
+		NameHelper.compareNames(method1.getName(), method2.getName());
+		AbstractNodeHelper.compareSizes(method1.getParameters(), method2.getParameters(), "Number of parameters differs.");
+		AbstractNodeHelper.compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes(), "Number of constraints differs.");
+		AbstractNodeHelper.compareSizes(method1.getTestCases(), method2.getTestCases(), "Number of test cases differs.");
 
-		for(int i =0; i < method1.getParameters().size(); ++i){
-			compareParameters(method1.getParameters().get(i), method2.getParameters().get(i));
-		}
-
+		compareMethodParameters(method1, method2);
 		compareDeployedParameters(method1, method2);
+		compareMethodConstraints(method1, method2);
+		compareTestCases(method1, method2);
+	}
 
-		for(int i =0; i < method1.getConstraintNodes().size(); ++i){
-			compareConstraintNodes(method1.getConstraintNodes().get(i), method2.getConstraintNodes().get(i));
-		}
+	private static void compareTestCases(MethodNode methodNode1, MethodNode methodNode2) {
 
-		for(int i =0; i < method1.getTestCases().size(); ++i){
-			compareTestCases(method1.getTestCases().get(i), method2.getTestCases().get(i));
+		for (int i =0; i < methodNode1.getTestCases().size(); ++i) {
+
+			TestCaseNode testCaseNode1 = methodNode1.getTestCases().get(i);
+			TestCaseNode testCaseNode2 = methodNode2.getTestCases().get(i);
+
+			AbstractNodeHelper.compareParents(testCaseNode1, methodNode1, testCaseNode2, methodNode2);
+			compareTestCases(testCaseNode1, testCaseNode2);
 		}
 	}
 
-	public static void compareParameters(
-			AbstractParameterNode abstractParameter1, 
-			AbstractParameterNode abstractParameter2) {
+	private static void compareMethodConstraints(MethodNode methodNode1, MethodNode methodNode2) {
 
-		if (abstractParameter1 == null && abstractParameter2 == null) {
-			return;
+		// XYX check sizes here and not outside of function
+
+		for (int i =0; i < methodNode1.getConstraintNodes().size(); ++i) {
+
+			ConstraintNode constraintNode1 = methodNode1.getConstraintNodes().get(i);
+			ConstraintNode constraintNode2 = methodNode2.getConstraintNodes().get(i);
+
+			AbstractNodeHelper.compareParents(constraintNode1, methodNode1, constraintNode2, methodNode2);
+			ConstraintNodeHelper.compareConstraintNodes(constraintNode1, constraintNode2);
 		}
+	}
 
-		AbstractParameterNodeHelper.compareParameterTypes(abstractParameter1, abstractParameter2);
+	private static void compareMethodParameters(MethodNode methodNode1, MethodNode methodNode2) {
 
-		compareNames(abstractParameter1.getName(), abstractParameter2.getName());
+		for (int i =0; i < methodNode1.getParameters().size(); ++i) {
 
-		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
 
-			BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
-			BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+			AbstractParameterNode abstractParameterNode1 = methodNode1.getParameters().get(i);
+			AbstractParameterNode abstractParameterNode2 = methodNode2.getParameters().get(i);
 
-			BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
-			return;
+			AbstractNodeHelper.compareParents(abstractParameterNode1, methodNode1, abstractParameterNode2, methodNode2);
+			AbstractParameterNodeHelper.compareParameters(abstractParameterNode1, abstractParameterNode2);
 		}
-
-		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
-
-			CompositeParameterNode basicParameterNode1 = (CompositeParameterNode) abstractParameter1;
-			CompositeParameterNode basicParameterNode2 = (CompositeParameterNode) abstractParameter2;
-
-			CompositeParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
-			return;
-		}
-
-		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
 	}
 
 	public static void compareParametersWithLinkingContexts(
 			ParameterWithLinkingContext parameterWithContext1, 
 			ParameterWithLinkingContext parameterWithContext2) {
 
-		compareParameters(parameterWithContext1.getParameter(), parameterWithContext2.getParameter());
-		compareParameters(parameterWithContext1.getLinkingContext(), parameterWithContext2.getLinkingContext());
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getParameter(), parameterWithContext2.getParameter());
+		
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getLinkingContext(), parameterWithContext2.getLinkingContext());
 	}
 
-	public static void compareMethodParameters(BasicParameterNode methodParameterNode1, BasicParameterNode methodParameterNode2) {
+	public static void compareMethodParameters(
+			BasicParameterNode methodParameterNode1, 
+			BasicParameterNode methodParameterNode2) {
 
-		compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
+		NameHelper.compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
 
 		compareIntegers(methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size(), "Length of choices list differs.");
 
@@ -127,57 +142,14 @@ public class ModelComparator { // XYX improve method comparator to check parents
 		}
 	}
 
-	public static void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
-
-		compareNames(constraint1.getName(), constraint2.getName());
-		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
-	}
-
-	public static void compareConstraints(Constraint constraint1, Constraint constraint2) {
-
-		if (constraint1.getType() != constraint2.getType()) {
-			ExceptionHelper.reportRuntimeException("Constraint types different.");
-		}
-
-		compareStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
-		compareStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
-	}
-
-	public static void compareStatements(AbstractStatement statement1, AbstractStatement statement2) {
-
-		if (statement1 instanceof StaticStatement && statement2 instanceof StaticStatement) {
-			compareStaticStatements((StaticStatement)statement1, (StaticStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof RelationStatement && statement2 instanceof RelationStatement) {
-			compareRelationStatements((RelationStatement)statement1, (RelationStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof StatementArray && statement2 instanceof StatementArray) {
-			compareStatementArrays((StatementArray)statement1, (StatementArray)statement2);
-			return;
-		}
-
-		if (statement1 instanceof ExpectedValueStatement && statement2 instanceof ExpectedValueStatement) {
-			compareExpectedValueStatements((ExpectedValueStatement)statement1, (ExpectedValueStatement)statement2);
-			return;
-		}
-
-		if (statement1 instanceof AssignmentStatement && statement2 instanceof AssignmentStatement) {
-			compareAssignmentStatements((AssignmentStatement)statement1, (AssignmentStatement)statement2);
-			return;
-		}
-
-		ExceptionHelper.reportRuntimeException("Unknown type of statement or compared statements are of didderent types");
-	}
-
 	public static void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
 
-		compareNames(testCase1.getName(), testCase2.getName());
-		compareSizes(testCase1.getTestData(), testCase2.getTestData(), "Number of choices differ.");
+		NameHelper.compareNames(testCase1.getName(), testCase2.getName());
+		
+		AbstractNodeHelper.compareSizes(testCase1.getTestData(), testCase2.getTestData(), "Number of choices differs.");
+		
 		for(int i = 0; i < testCase1.getTestData().size(); i++){
+			
 			ChoiceNode testValue1 = testCase1.getTestData().get(i);
 			ChoiceNode testValue2 = testCase2.getTestData().get(i);
 
@@ -192,39 +164,12 @@ public class ModelComparator { // XYX improve method comparator to check parents
 
 	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
 
-		compareNames(choice1.getName(), choice2.getName());
+		NameHelper.compareNames(choice1.getName(), choice2.getName());
 		compareValues(choice1.getValueString(),choice2.getValueString());
 		compareLabels(choice1.getLabels(), choice2.getLabels());
 		compareIntegers(choice1.getChoices().size(), choice2.getChoices().size(), "Length of choices list differs.");
 		for(int i = 0; i < choice1.getChoices().size(); i++){
 			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
-		}
-	}
-
-	public static void compareSizes(
-			Collection<? extends Object> collection1, 
-			Collection<? extends Object> collection2, 
-			String errorMessage) {
-
-		int size1 = collection1.size();
-
-		int size2 = collection2.size();
-
-		if (size1 != size2) {
-			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
-		}
-	}
-
-	public static void compareNames(String name, String name2) {
-		if(name.equals(name2) == false){
-			ExceptionHelper.reportRuntimeException("Different names: " + name + ", " + name2);
-		}
-	}
-
-	public static void compareTypes(String type1, String type2) {
-
-		if(type1.equals(type2) == false){
-			ExceptionHelper.reportRuntimeException("Different types: " + type1 + ", " + type2);
 		}
 	}
 
@@ -325,41 +270,7 @@ public class ModelComparator { // XYX improve method comparator to check parents
 		}
 	}
 
-	private static void compareStrings(String str1, String str2) {
-
-		if (StringHelper.isEqual(str1, str2)) {
-			return;
-		}
-
-		ExceptionHelper.reportRuntimeException("String values differ");
-	}
-
-	private static void compareExpectedValueStatements(
-			ExpectedValueStatement statement1,
-			ExpectedValueStatement statement2) {
-
-		compareParameters(statement1.getLeftMethodParameterNode(), statement2.getLeftMethodParameterNode());
-		assertStringsEqual(statement1.getChoice().getValueString(), statement2.getChoice().getValueString(), "Conditions differ.");
-	}
-
-	private static void compareAssignmentStatements(
-			AssignmentStatement statement1, AssignmentStatement statement2) {
-
-		if (statement1.isEqualTo(statement1)) {
-			ExceptionHelper.reportRuntimeException("Assignment statements do not match");
-		}
-	}
-
-	private static void compareRelationStatements(RelationStatement statement1, RelationStatement statement2) {
-		compareParameters(statement1.getLeftParameter(), statement2.getLeftParameter());
-		if((statement1.getRelation() != statement2.getRelation())){
-			ExceptionHelper.reportRuntimeException("Compared statements have different relations: " +
-					statement1.getRelation() + " and " + statement2.getRelation());
-		}
-		compareConditions(statement1.getConditionValue(), statement2.getConditionValue());
-	}
-
-	private static void compareConditions(Object condition1, Object condition2) {
+	public static void compareConditions(Object condition1, Object condition2) { // XYX move ?
 
 		if (condition1 instanceof String && condition2 instanceof String) {
 			if(condition1.equals(condition2) == false){
@@ -380,7 +291,7 @@ public class ModelComparator { // XYX improve method comparator to check parents
 		}
 
 		if (condition1 instanceof java.lang.String && condition2 instanceof java.lang.String) {
-			compareStrings((String)condition1, (String) condition2);
+			StringHelper.compareStrings((String)condition1, (String) condition2, "Condition strings do not match.");
 			return;
 		}
 
@@ -389,31 +300,5 @@ public class ModelComparator { // XYX improve method comparator to check parents
 
 		ExceptionHelper.reportRuntimeException("Unknown or not same types of compared conditions of types: " + type1 + ", " + type2 + ".");
 	}
-
-	private static void compareStatementArrays(StatementArray array1, StatementArray array2) {
-		if(array1.getOperator() != array2.getOperator()){
-			ExceptionHelper.reportRuntimeException("Operator of compared statement arrays differ");
-		}
-		compareSizes(array1.getChildren(), array2.getChildren(), "Number of statements differ.");
-		for(int i = 0; i < array1.getChildren().size(); ++i){
-			compareStatements(array1.getChildren().get(i), array2.getChildren().get(i));
-		}
-	}
-
-	private static void compareStaticStatements(StaticStatement statement1, StaticStatement statement2) {
-		if(statement1.getValue() != statement2.getValue()){
-			ExceptionHelper.reportRuntimeException("Static statements different");
-		}
-	}
-
-	private static void assertStringsEqual(String valueString, String valueString2, String message) {
-
-		if (valueString.equals(valueString2))  {
-			return;
-		}
-
-		ExceptionHelper.reportRuntimeException("String values do not match." + " " + message);
-	}
-
 
 }

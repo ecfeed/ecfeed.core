@@ -224,7 +224,7 @@ public class CompositeParameterNodeTest {
 		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
 		assertEquals(clonedChoiceNodeFromConstraint, clonedChoiceNode);
 
-		ModelComparator.compareParameters(compositeParameterNode, clonedCompositeParameterNode);
+		AbstractParameterNodeHelper.compareParameters(compositeParameterNode, clonedCompositeParameterNode);
 	}
 	
 }

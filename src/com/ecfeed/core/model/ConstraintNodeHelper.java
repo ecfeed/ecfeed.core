@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -195,4 +196,10 @@ public class ConstraintNodeHelper {
 		return constraints;
 	}
 
+	public static void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
+
+		NameHelper.compareNames(constraint1.getName(), constraint2.getName());
+		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
+	}
+	
 }

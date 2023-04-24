@@ -23,6 +23,7 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class BasicParameterNodeHelper {
 
@@ -34,8 +35,8 @@ public class BasicParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Expected property does not match.");
 		}
 
-		ModelComparator.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		ModelComparator.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
+		TypeHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
+		AbstractNodeHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
 		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
 			ModelComparator.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
 		}
