@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -735,7 +736,7 @@ public class MethodNodeTest {
 
 		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
 		assertNotEquals(clonedPostcondition, postcondition);
-		
+
 		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
 		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter);
 
@@ -756,13 +757,13 @@ public class MethodNodeTest {
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode1, "choice1", "0", false, true, null);
-		
+
 		BasicParameterNode basicParameterNode2 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode2, "choice2", "0", false, true, null);
-		
+
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
 
 		RelationStatement postcondition = RelationStatement.createRelationStatementWithParameterCondition(
@@ -795,7 +796,7 @@ public class MethodNodeTest {
 
 		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
 		assertNotEquals(clonedPostcondition, postcondition);
-		
+
 		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
 		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter1);
 
@@ -805,9 +806,9 @@ public class MethodNodeTest {
 
 		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
 	}
-	
+
 	@Test
-	public void copyMethodWithDeployedParameters() { // XYX add test when linking context in deployed parameters is not null
+	public void copyMethodWithDeployedParameters() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -837,6 +838,54 @@ public class MethodNodeTest {
 		assertEquals(clonedDeployedChoice.getParent(), clonedDeployedParameter);
 
 		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
+	}
+
+	@Test
+	public void copyMethodWithDeployedParametersAndLinkingContext() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		CompositeParameterNode globalComposite = 
+				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "GS1", null); // XYX set parent
+
+		BasicParameterNode globalBasicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalComposite, "GP1", "int", "0", null); // XYX set parent
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameterNode, "GC1", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "CLL1", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
+
+		CompositeParameterNode localCompositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+
+		localCompositeParameterNode.setLinkToGlobalParameter(globalComposite);
+
+		// deployment
+
+		NodeMapper nodeMapper1 = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper1);
+
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper1);
+
+		List<ParameterWithLinkingContext> deployedParameterWithLinkingContexts = 
+				methodNode.getDeployedParametersWithLinkingContexts();
+
+		ParameterWithLinkingContext firstDeployedParameterWithLinkingContext = 
+				deployedParameterWithLinkingContexts.get(0);
+
+		assertEquals(firstDeployedParameterWithLinkingContext.getParameter(), globalBasicParameterNode);
+		assertEquals(firstDeployedParameterWithLinkingContext.getLinkingContext(), localCompositeParameterNode);
+
+		// clone
+
+		NodeMapper nodeMapper2 = new NodeMapper();
+		RootNode clonedRootNode = rootNode.makeClone(Optional.of(nodeMapper2));
+
+		RootNodeHelper.compareRootNodes(rootNode, clonedRootNode);
 	}
 
 }

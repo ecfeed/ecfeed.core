@@ -144,7 +144,7 @@ public abstract class MethodDeployer {
 			NodeMapper nodeMapper) {
 
 		// deployBasicParameterOldVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
-		deployBasicParameterNewVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
+		deployBasicParameterWithLinkingContext(parameterWithLinkingContext, targetMethodNode, nodeMapper);
 	}
 
 	//	private static void deployBasicParameterOldVersion(
@@ -160,7 +160,7 @@ public abstract class MethodDeployer {
 	//		targetMethodNode.addParameter(copy, linkingContext);
 	//	}
 
-	private static void deployBasicParameterNewVersion(
+	private static void deployBasicParameterWithLinkingContext(
 			ParameterWithLinkingContext parameterWithLinkingContext,
 			MethodNode deployedMethodNode, 
 			NodeMapper nodeMapper) {
@@ -178,6 +178,8 @@ public abstract class MethodDeployer {
 		}
 
 		if (sourceLinkingContext instanceof CompositeParameterNode) {
+
+			nodeMapper.addMappingsForOneNode(sourceLinkingContext);
 
 			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
 			deployedParameter.setParent(deployedMethodNode);

@@ -245,6 +245,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			}
 
 			AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+			
 			AbstractParameterNode clonedLinkingContext = cloneLinkingContext(linkingContext, nodeMapper);
 
 			if (clonedLinkingContext != null) {

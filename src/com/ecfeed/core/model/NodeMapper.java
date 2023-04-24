@@ -24,12 +24,16 @@ public class NodeMapper {
 		fDestinationToSource.put(destinationNode, sourceNode);
 	}
 
+	public void addMappingsForOneNode(AbstractNode sourceNode) {
+		addMappings(sourceNode, sourceNode);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractNode> T getSourceNode(T deployedNode) {
 
 		AbstractNode sourceNode = fDestinationToSource.get(deployedNode);
 
-		return sourceNode != null ? (T) sourceNode : deployedNode;
+		return sourceNode != null ? (T) sourceNode : deployedNode; // XYX remove this as this masks bugs
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,6 +41,6 @@ public class NodeMapper {
 
 		AbstractNode deployedNode = fSourceToDestination.get(sourceNode);
 
-		return deployedNode != null ? (T) deployedNode : sourceNode;
+		return deployedNode != null ? (T) deployedNode : sourceNode; // XYX remove this as this masks bugs
 	}
 }

@@ -450,7 +450,7 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameterToMethod(
 			MethodNode methodNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);

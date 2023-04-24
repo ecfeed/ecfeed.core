@@ -110,7 +110,7 @@ public class ParametersMapperTest {
 		// composite parameter 1
 
 		CompositeParameterNode compositeParameterNode1 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "S1", true, null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
 
 		// parameter 1 of composite 1
 

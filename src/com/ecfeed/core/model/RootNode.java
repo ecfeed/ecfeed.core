@@ -58,22 +58,23 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public RootNode makeClone(Optional<NodeMapper> nodeMapper) {
 
-		RootNode copy = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
+		RootNode cloneOfRootNode = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
 
-		copy.setProperties(getProperties());
+		cloneOfRootNode.setProperties(getProperties());
 
 		for (AbstractParameterNode abstractParameterNode : getParameters()) {
 
-			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
-			copy.addParameter(globalParameterNode.makeClone(nodeMapper));
+			AbstractParameterNode clone = (AbstractParameterNode) abstractParameterNode.makeClone(nodeMapper);
+			cloneOfRootNode.addParameter(clone);
 		}
 
 		for (ClassNode classnode : fClasses){
-			copy.addClass(classnode.makeClone(nodeMapper));
+			cloneOfRootNode.addClass(classnode.makeClone(nodeMapper));
 		}
 
-		copy.setParent(this.getParent());
-		return copy;
+		cloneOfRootNode.setParent(this.getParent());
+		
+		return cloneOfRootNode;
 	}
 
 	//	@Override
