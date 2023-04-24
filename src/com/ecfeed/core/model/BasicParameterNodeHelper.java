@@ -38,7 +38,7 @@ public class BasicParameterNodeHelper {
 		TypeHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
 		AbstractNodeHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
 		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
-			ModelComparator.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
+			ChoiceNodeHelper.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
 		}
 
 	}

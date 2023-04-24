@@ -26,6 +26,7 @@ import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintNodeHelper;
@@ -38,6 +39,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestCaseNodeHelper;
 import com.ecfeed.core.model.serialization.IModelParserForClass;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
@@ -210,7 +212,7 @@ public class XomParserTest {
 					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					// assertElementsEqual(testCaseNode, tc1.get());
-					ModelComparator.compareTestCases(testCaseNode, tc1.get());
+					TestCaseNodeHelper.compareTestCases(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
 				}
@@ -265,7 +267,7 @@ public class XomParserTest {
 
 				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
 				//assertElementsEqual(p, p1.get());
-				ModelComparator.compareChoices(p, p1.get());
+				ChoiceNodeHelper.compareChoices(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}

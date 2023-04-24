@@ -78,12 +78,12 @@ public class RelationStatementHelper {
 		}
 
 		if (condition1 instanceof ChoiceNode && condition2 instanceof ChoiceNode) {
-			ModelComparator.compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
+			ChoiceNodeHelper.compareChoices((ChoiceNode)condition1, (ChoiceNode)condition2);
 			return;
 		}
 
 		if (condition1 instanceof BasicParameterNode && condition2 instanceof BasicParameterNode) {
-			ModelComparator.compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2); // XYX
+			MethodNodeHelper.compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2); // XYX
 			return;
 
 		}

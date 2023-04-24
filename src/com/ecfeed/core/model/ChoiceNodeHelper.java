@@ -29,16 +29,19 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class ChoiceNodeHelper {
 
@@ -1040,4 +1043,24 @@ public class ChoiceNodeHelper {
 		return resultTestCaseNodesToDelete;
 	}
 
+	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
+
+		NameHelper.compareNames(choice1.getName(), choice2.getName());
+		StringHelper.compareStrings(choice1.getValueString(),choice2.getValueString(), "Choice values differ.");
+		compareLabels(choice1.getLabels(), choice2.getLabels());
+		TypeHelper.compareIntegers(choice1.getChoices().size(), choice2.getChoices().size(), "Length of choices list differs.");
+		for(int i = 0; i < choice1.getChoices().size(); i++){
+			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
+		}
+	}
+
+	public static void compareLabels(Set<String> labels, Set<String> labels2) {
+
+		BooleanHelper.assertIsTrue(labels.size() == labels2.size(), "Sizes of labels should be equal.");
+
+		for(String label : labels){
+			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
+		}
+	}
+	
 }
