@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -74,7 +75,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
 
 		// add class node
 
@@ -87,11 +88,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0", null);
+						globalParameterNodeOfClass, globalChoiceName1, "0", false, true, null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -125,11 +126,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -206,7 +209,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
 
 		// add class node
 
@@ -219,13 +222,13 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0", null);
+						globalParameterNodeOfClass, globalChoiceName1, "0", false, true, null);
 
 		globalChoiceNodeForClass.addLabel(globalLabel1);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -262,11 +265,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -342,7 +347,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
 
 		// add class node
 
@@ -355,11 +360,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0", null);
+						globalParameterNodeOfClass, globalChoiceName1, "0", false, true, null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -396,11 +401,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
-				reverseOperations, 
+				reverseOperations,
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -478,7 +485,7 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNode = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+						globalParameterNodeOfRoot, globalChoiceName1, "0", false, false, null);
 
 		globalChoiceNode.addLabel(globalLabel1);
 
@@ -493,11 +500,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0", null);
+						globalParameterNodeOfClass, globalChoiceName1, "0", false, false, null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -532,11 +539,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -613,7 +622,7 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeOfRoot = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+						globalParameterNodeOfRoot, globalChoiceName1, "0", false, false, null);
 
 		// add class node
 
@@ -625,11 +634,11 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfClass, globalChoiceName1, "0", null);
+				globalParameterNodeOfClass, globalChoiceName1, "0", false, false, null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -663,11 +672,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfRoot, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of root
@@ -743,7 +754,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
+				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
 
 		// add class node
 
@@ -756,11 +767,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0", null);
+						globalParameterNodeOfClass, globalChoiceName1, "0", false, true, null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		// add parameter and choice to method
 
@@ -807,11 +818,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -890,11 +903,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNode11 = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
+						globalParameterNodeOfClass1, "CC11", choiceValueString, false, true, null);
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter and choice to method
 
@@ -936,11 +949,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		int globalParamChoiceCount = globalParameterNodeOfClass1.getChoiceCount();
@@ -1009,14 +1024,14 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNode1 = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass1, "CC1", choiceValueString, null);
+						globalParameterNodeOfClass1, "CC1", choiceValueString, false, true, null);
 
 		ChoiceNode globalChoiceNode11 = 
 				ChoiceNodeHelper.addChoiceToChoice(globalChoiceNode1, "CC11", choiceValueString);
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter and choice to method
 
@@ -1047,11 +1062,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 
@@ -1145,11 +1162,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceOfClass11 =
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
+						globalParameterNodeOfClass1, "CC11", choiceValueString, false, true, null);
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter and choice to method
 
@@ -1191,11 +1208,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// checking test cases - should be deleted
@@ -1227,11 +1246,11 @@ public class ParameterTransformerTest {
 
 		ChoiceNode globalChoiceNodeOfRoot1 = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfRoot1, "C1", choiceValueString, null);
+						globalParameterNodeOfRoot1, "C1", choiceValueString, false, true, null);
 
 		ChoiceNode globalChoiceNodeOfRoot2 = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-						globalParameterNodeOfRoot1, "C2", choiceValueString, null);
+						globalParameterNodeOfRoot1, "C2", choiceValueString, false, true, null);
 
 		// add class node
 
@@ -1240,7 +1259,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter and choice to method
 
@@ -1382,7 +1401,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter and choice to method
 
@@ -1419,7 +1438,7 @@ public class ParameterTransformerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add parameter
 

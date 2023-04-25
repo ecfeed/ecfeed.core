@@ -96,17 +96,17 @@ public class TestCasesExportHelperTest {
         performTest(5, "55", "", "%index, $1.value ABCD", "5, 55 ABCD", new ExtLanguageManagerForSimple());
     }
 
-//    @Test TODO MO-RE
-//    public void shouldParseNameByParamNumber() {
-//        performTest("0", "1", "$1.name", "par_0", new ExtLanguageManagerForJava());
-//        performTest("0", "1", "$1.name", "par 0", new ExtLanguageManagerForSimple());
-//    }
+    @Test
+    public void shouldParseNameByParamNumber() {
+        performTest("0", "1", "$1.name", "par_0", new ExtLanguageManagerForJava());
+        performTest("0", "1", "$1.name", "par 0", new ExtLanguageManagerForSimple());
+    }
 
-//    @Test TODO-MO-RE
-//    public void shouldParseNameByParamName() {
-//        performTest("MIN_VALUE", "MAX_VALUE", "$par_0.name", "par_0", new ExtLanguageManagerForJava());
-//        performTest("MIN_VALUE", "MAX_VALUE", "$par 0.name", "par 0", new ExtLanguageManagerForSimple());
-//    }
+    @Test
+    public void AAshouldParseNameByParamName() {
+        performTest("MIN_VALUE", "MAX_VALUE", "$par_0.name", "par_0", new ExtLanguageManagerForJava());
+        performTest("MIN_VALUE", "MAX_VALUE", "$par 0.name", "par 0", new ExtLanguageManagerForSimple());
+    }
 
     @Test
     public void shouldParsePackageClassMethod() {
@@ -230,14 +230,6 @@ public class TestCasesExportHelperTest {
 		MethodNode methodNode = new MethodNode("testMethod_1", null);
 		theClass.addMethod(methodNode);
 
-		NodeMapper nodeMapper = new NodeMapper();
-		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
-
-		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
-		List<ParameterWithLinkingContext> depParameterWithLinkingContexts = 
-				methodNode.getDeployedParametersWithLinkingContexts();
-
-
 		BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
 		ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
 		parameter0.addChoice(choiceNode00);
@@ -255,47 +247,19 @@ public class TestCasesExportHelperTest {
 		TestCaseNode testCase = new TestCaseNode("default", null, choices);
 		testCase.setParent(methodNode);
 
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+		List<ParameterWithLinkingContext> deloyedParameterWithLinkingContexts = 
+				methodNode.getDeployedParametersWithLinkingContexts();
+		
 		String result = 
 				TestCasesExportHelper.generateTestCaseString(
-						sequenceIndex, testCase, methodNode, depParameterWithLinkingContexts,template, extLanguageManager);
+						sequenceIndex, testCase, methodNode, deloyedParameterWithLinkingContexts,template, extLanguageManager);
 
 		result = TestCasesExportHelper.evaluateMinWidthOperators(result);
 		assertEquals(expectedResult, result);
 	}
-    
-//    private void performTest(
-//            int sequenceIndex,
-//            String par0Value,
-//            String par1Value,
-//            String template,
-//            String expectedResult,
-//            IExtLanguageManager extLanguageManager) {
-//
-//        ClassNode theClass = new ClassNode("package_1.Test_1", null);
-//
-//        MethodNode methodNode = new MethodNode("testMethod_1", null);
-//        theClass.addMethod(methodNode);
-//
-//        BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
-//        ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
-//        parameter0.addChoice(choiceNode00);
-//        methodNode.addParameter(parameter0);
-//
-//        BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "MIN_VALUE", false, null);
-//        ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
-//        parameter1.addChoice(choiceNode11);
-//        methodNode.addParameter(parameter1);
-//
-//        List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
-//        choices.add(choiceNode00);
-//        choices.add(choiceNode11);
-//
-//        TestCaseNode testCase = new TestCaseNode("default", null, choices);
-//        testCase.setParent(methodNode);
-//
-//        String result = TestCasesExportHelper.generateTestCaseString(sequenceIndex, testCase, methodNode, template, extLanguageManager);
-//        result = TestCasesExportHelper.evaluateMinWidthOperators(result);
-//        assertEquals(expectedResult, result);
-//    }
 
 }

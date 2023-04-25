@@ -15,6 +15,7 @@ public class CommonConstants {
 
 	public static final String DEFAULT_NEW_METHOD_NAME = "testMethod";
 	public static final String DEFAULT_NEW_PARAMETER_NAME = "par";
+	public static final String DEFAULT_NEW_COMPOSITE_PARAMETER_NAME = "str";
 	public static final String DEFAULT_USER_TYPE_FOR_JAVA = "default.UserType";
 	public static final String DEFAULT_USER_TYPE_FOR_SIMPLE = "UserType";
 	public static final String DEFAULT_NEW_CONSTRAINT_NAME = "constraint";

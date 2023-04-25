@@ -13,10 +13,12 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.utils.ParametersLister;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends AbstractNode implements IParametersParentNode {
@@ -58,22 +60,52 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return parametetersSize + methodsSize;
 	}
 
+	//	@Override
+	//	public ClassNode makeClone(){
+	//		
+	//		ExceptionHelper.reportRuntimeException("Obsolete cloning function called.");
+	//		
+	//		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
+	//
+	//		copy.setProperties(getProperties());
+	//
+	//		for(BasicParameterNode parameter : getGlobalBasicParameters()){
+	//			copy.addParameter(parameter.makeClone());
+	//		}
+	//
+	//		for(MethodNode method : fMethods){
+	//			copy.addMethod(method.makeClone());
+	//		}
+	//
+	//		copy.setParent(getParent());
+	//		return copy;
+	//	}
+
 	@Override
-	public ClassNode makeClone(){
-		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
+	public ClassNode makeClone(Optional<NodeMapper> nodeMapper) {
 
-		copy.setProperties(getProperties());
+		ClassNode clonedClassNode = new ClassNode(getName(), getModelChangeRegistrator());
 
-		for(BasicParameterNode parameter : getGlobalBasicParameters()){
-			copy.addParameter(parameter.makeClone());
+		clonedClassNode.setProperties(getProperties());
+
+		for (BasicParameterNode parameter : getGlobalBasicParameters()) {
+
+			BasicParameterNode clonedParameter = parameter.makeClone(nodeMapper);
+			clonedParameter.setParent(clonedClassNode);
+
+			clonedClassNode.addParameter(clonedParameter);
 		}
 
-		for(MethodNode method : fMethods){
-			copy.addMethod(method.makeClone());
+		for (MethodNode method : fMethods) {
+
+			MethodNode clonedMethod = method.makeClone(nodeMapper);
+			clonedMethod.setParent(clonedClassNode);
+
+			clonedClassNode.addMethod(clonedMethod);
 		}
 
-		copy.setParent(getParent());
-		return copy;
+		clonedClassNode.setParent(getParent());
+		return clonedClassNode;
 	}
 
 	@Override
@@ -252,22 +284,22 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
-	
+
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
 		fParametersHolder.addParameter(parameter, null, index, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext,
 			int index) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
@@ -354,12 +386,12 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		List<BasicParameterNode> result = new ArrayList<>();
 
 		result.addAll(getBasicParametersFromClass());
-		
+
 		return result;
 	}
 
 	private List<BasicParameterNode> getBasicParametersFromClass() {
-		
+
 		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
 
 		List<AbstractParameterNode> abstractParameters = getParameters();
@@ -371,28 +403,28 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 			} else if (abstractParameterNode instanceof CompositeParameterNode) {
 				globalParameterNodes.addAll(((CompositeParameterNode) abstractParameterNode).getNestedBasicParameters(true));
 			}
-			
+
 		}
-		
+
 		return globalParameterNodes;
 	}
-	
+
 	public List<CompositeParameterNode> getGlobalCompositeParameters() {
 
 		List<CompositeParameterNode> result = new ArrayList<>();
 		result.addAll(getCompositeParametersFromClass());
-		
+
 		return result;
 	}
 
 	private List<CompositeParameterNode> getCompositeParametersFromClass() {
-		
+
 		List<CompositeParameterNode> globalParameterNodes = new ArrayList<>();
-		
+
 		List<AbstractParameterNode> abstractParameters = getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
-			
+
 			if (abstractParameterNode instanceof CompositeParameterNode) {
 				globalParameterNodes.add((CompositeParameterNode) abstractParameterNode);
 				globalParameterNodes.addAll(((CompositeParameterNode) abstractParameterNode).getNestedCompositeParameters(true));
@@ -410,9 +442,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		RootNode rootNode = (RootNode)getParent();
 
 		result.addAll(rootNode.getGlobalBasicParameters());
-		
+
 		result.addAll(getBasicParametersFromClass());
-		
+
 		return result;
 	}
 
@@ -422,7 +454,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		for (BasicParameterNode parameter : globalParameters) {
 
-			String currentQualifiedName = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+			String currentQualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
 
 			if(currentQualifiedName.equals(qualifiedName)){
 				return parameter;
@@ -431,10 +465,24 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		return null;
 	}
-	
+
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof AbstractParameterNode) {
+			return true;
+		}
+
+		if (child instanceof MethodNode) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

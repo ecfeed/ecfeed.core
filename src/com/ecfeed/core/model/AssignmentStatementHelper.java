@@ -8,26 +8,19 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.utils;
+package com.ecfeed.core.model;
 
-public class BooleanHelper {
+import com.ecfeed.core.utils.ExceptionHelper;
 
-	public static String toString(boolean boolSimple) {
-		Boolean boolWrapped = boolSimple;
-		return boolWrapped.toString();
-	}
+public class AssignmentStatementHelper {
 
-	public static boolean parseBoolean(String str) {
-		return Boolean.parseBoolean(str);
-	}
+	public static void compareAssignmentStatements(
+			AssignmentStatement statement1, AssignmentStatement statement2) {
 
-	public static void assertIsTrue(boolean b, String message) {
-
-		if (b == true) {
-			return;
+		if (statement1.isEqualTo(statement1)) {
+			ExceptionHelper.reportRuntimeException("Assignment statements do not match");
 		}
-
-		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
 	}
 
 }
+

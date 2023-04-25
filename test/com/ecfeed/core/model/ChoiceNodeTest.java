@@ -454,4 +454,25 @@ public class ChoiceNodeTest{
 		}
 	}
 
+	@Test
+	public void copyChoiceTest(){
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
+		ChoiceNode choice21 = new ChoiceNode("choice21", "0", null);
+		ChoiceNode choice22 = new ChoiceNode("choice22", "0", null);
+
+		choice.addChoice(choice1);
+		choice.addChoice(choice2);
+		choice1.addChoice(choice11);
+		choice1.addChoice(choice12);
+		choice2.addChoice(choice21);
+		choice2.addChoice(choice22);
+
+		ChoiceNode copy = choice.makeClone();
+		assertTrue(choice.isMatch(copy));
+	}
+
 }

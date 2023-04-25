@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-
-import java.util.List;
 
 public class AssignmentStatement extends RelationStatement {
 
@@ -200,5 +200,20 @@ public class AssignmentStatement extends RelationStatement {
 
 		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
 	}
+
+	@Override
+	public AssignmentStatement createCopy(NodeMapper mapper) {
+
+		BasicParameterNode deployedParameter = mapper.getDestinationNode(super.getLeftParameter());
+
+		AssignmentStatement statementCopy = new AssignmentStatement(deployedParameter, null);
+		IStatementCondition conditionCopy = super.getCondition().createCopy(this, mapper);
+
+		statementCopy.setCondition(conditionCopy);
+		conditionCopy.setParentRelationStatement(statementCopy);
+
+		return statementCopy;
+	}
+
 }
 

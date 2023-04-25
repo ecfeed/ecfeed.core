@@ -59,29 +59,29 @@ public class ModelSerializerTest {
 				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
 
 		// BasicParameterNode globalBasicParameterNode1 = 
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				globalCompositeParameterNode1, "GP", "int", "o", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				globalCompositeParameterNode1, "GP", "int", "o", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
 				CompositeParameterNodeHelper.addNewCompositeParameterNodeToCompositeParameter(
 						globalCompositeParameterNode1, "GS2", null);
 
 		// BasicParameterNode globalBasicParameterNode2 =
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				globalCompositeParameterNode2, "GP", "int", "o", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				globalCompositeParameterNode2, "GP", "int", "o", true, null);
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS1", null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
 
 		CompositeParameterNode localCompositeParameterNode2 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS2", null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS2", true, null);
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -113,7 +113,7 @@ public class ModelSerializerTest {
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
-			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -127,14 +127,14 @@ public class ModelSerializerTest {
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
-		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", null);
+		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
-		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LS", null);
+		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
 
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				compositeParameterNode, "LP", "int", "0", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				compositeParameterNode, "LP", "int", "0", true, null);
 
 		// root
 		//   class
@@ -188,7 +188,7 @@ public class ModelSerializerTest {
 			IParametersParentNode parsedParent3 = (IParametersParentNode) parsedParent2.getParent();
 			assertEquals(parsedMethodNode, parsedParent3);
 
-			ModelComparator.assertModelsEqual(rootNode, parsedModel);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());

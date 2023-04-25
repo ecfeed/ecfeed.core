@@ -79,7 +79,7 @@ public class ModelSerializerWithConstraintsTest {
         c1p231.addChoice(new ChoiceNode("C1P231C2", "2"));
         c1p231.addChoice(new ChoiceNode("C1P231C3", "3"));
 
-        MethodNode m1 = ClassNodeHelper.addNewMethodToClass(c1, "Method1", null);
+        MethodNode m1 = ClassNodeHelper.addNewMethodToClass(c1, "Method1", true, null);
 
         BasicParameterNode m1p1 = 
         		//BasicParameterNode.createLocalStandardParameter("M1P1", "int", null, null);

@@ -15,56 +15,50 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class TestCaseNodeTest {
-	
+
 	@Test
 	public void setNameForSingleTestCaseAndTestSuite() {
-		
+
 		MethodNode methodNode = new MethodNode("Method");
-		
+
 		ChoiceNode p1 = new ChoiceNode("name", "value", null);
 
 		List<ChoiceNode> td1 = new ArrayList<ChoiceNode>();
 		td1.add(p1);
-		
+
 		String testSuiteName = "TestSuite";
 		TestCaseNode tc1 = new TestCaseNode(testSuiteName, null, td1);
-		
+
 		methodNode.addTestCase(tc1);
-		
+
 		assertEquals(1, methodNode.getTestCases().size());
 		assertEquals(1, methodNode.getTestSuites().size());
-		
+
 		String newTestSuiteName = "NewTestSuite";
-		
+
 		tc1.setName(newTestSuiteName);
-		
+
 		List<TestCaseNode> resultTestCaseNodes = methodNode.getTestCases();
 		assertEquals(1, resultTestCaseNodes.size());
-		
+
 		TestCaseNode resultTestCaseNode1 = resultTestCaseNodes.get(0);
 		assertEquals(newTestSuiteName, resultTestCaseNode1.getName());
-		
-		
+
 		List<TestSuiteNode> resultTestSuiteNodes = methodNode.getTestSuites();
 		assertEquals(1, resultTestSuiteNodes.size());
-		
+
 		TestSuiteNode resultTestSuiteNode = resultTestSuiteNodes.get(0);
 		assertEquals(newTestSuiteName, resultTestSuiteNode.getName());
 
-
-		
-		
-		
-		
-		
-		
 		TestCaseNode resultTestCaseNode2 = resultTestSuiteNode.getTestCaseNodes().get(0);
 		assertEquals(newTestSuiteName, resultTestCaseNode2.getName());
 	}		
@@ -108,4 +102,27 @@ public class TestCaseNodeTest {
 			assertTrue(t.isMatch(t));
 		}
 	}
+	
+	@Test
+	public void copyTestCaseTest(){
+		MethodNode method = new MethodNode("method", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		par1.addChoice(choice1);
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
+		expectedChoice1.setParent(par2);
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
+		expectedChoice2.setParent(par2);
+		TestCaseNode testCase = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
+
+		method.addParameter(par1);
+		method.addParameter(par2);
+		method.addTestCase(testCase);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		TestCaseNode copy = testCase.makeClone(Optional.of(nodeMapper));
+		assertTrue(testCase.isMatch(copy));
+	}
+
 }

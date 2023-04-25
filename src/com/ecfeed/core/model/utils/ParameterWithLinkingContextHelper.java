@@ -11,36 +11,33 @@
 package com.ecfeed.core.model.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
-import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
 
 public class ParameterWithLinkingContextHelper {
 
-	public static String createSignature(
-			ParameterWithLinkingContext parameterWithLinkingContext,
-			IExtLanguageManager extLanguageManager) {
+	public static BasicParameterNode findChoicesParentParameter(ParameterWithLinkingContext parameterWithLinkingContext) {
 
-		AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();		
-		AbstractParameterNode context = parameterWithLinkingContext.getLinkingContext();
+		BasicParameterNode basicParameterNode = (BasicParameterNode) parameterWithLinkingContext.getParameter();
 
-		// return AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(parameter, context);
+		AbstractParameterNode link = basicParameterNode.getLinkToGlobalParameter();
 
-		String signature = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-						context,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.NORMAL,
-						parameter,
-						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						Decorations.NO,
-						TypeIncluded.NO,
-						extLanguageManager);
+		if (link == null) {
+			return basicParameterNode;
+		}
 
-		return signature;
+		return (BasicParameterNode) link;
 	}
 
+	public static void compareParametersWithLinkingContexts(
+			ParameterWithLinkingContext parameterWithContext1, 
+			ParameterWithLinkingContext parameterWithContext2) {
+
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getParameter(), parameterWithContext2.getParameter());
+		
+		AbstractParameterNodeHelper.compareParameters(
+				parameterWithContext1.getLinkingContext(), parameterWithContext2.getLinkingContext());
+	}
+	
 }

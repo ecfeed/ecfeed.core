@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -40,9 +41,14 @@ public class ClassNodeHelper {
 	}
 
 	public static MethodNode addNewMethodToClass(
-			ClassNode classNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+			ClassNode classNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
+		
+		if (setParent) {
+			methodNode.setParent(classNode);
+		}
+		
 		classNode.addMethod(methodNode);
 
 		return methodNode;
@@ -218,4 +224,20 @@ public class ClassNodeHelper {
 
 		return null;
 	}
+	
+	public static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
+
+		NameHelper.compareNames(classNode1.getName(), classNode2.getName());
+		AbstractNodeHelper.compareSizes(classNode1.getMethods(), classNode2.getMethods(), "Number of methods differs.");
+
+		for (int i = 0; i < classNode1.getMethods().size(); ++i) {
+
+			MethodNode methodNode1 = classNode1.getMethods().get(i);
+			MethodNode methodNode2 = classNode2.getMethods().get(i);
+
+			AbstractNodeHelper.compareParents(methodNode1, classNode1, methodNode2, classNode2);
+			MethodNodeHelper.compareMethods(methodNode1, methodNode2);
+		}
+	}
+
 }

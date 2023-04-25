@@ -22,7 +22,6 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
@@ -32,16 +31,15 @@ import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.StringHelper;
 
-public class FactoryAddChildOperation implements IModelVisitor {
+public class AddChildOperationCreator implements IModelVisitor {
 
 	private IAbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
-	IExtLanguageManager fExtLanguageManager;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public FactoryAddChildOperation(
+	public AddChildOperationCreator(
 			IAbstractNode child, 
 			int index, 
 			boolean validate,
@@ -53,7 +51,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		fExtLanguageManager = extLanguageManager;
 	}
 
-	public FactoryAddChildOperation(
+	public AddChildOperationCreator(
 			IAbstractNode child, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
@@ -67,10 +65,11 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		if (fChild instanceof ClassNode) {
 
 			return createOperationAddClass(rootNode);
+		} 
+		
+		if (fChild instanceof AbstractParameterNode) {
 
-		} else if (fChild instanceof BasicParameterNode) {
-
-			return createOperationAddParameter(rootNode);
+			return createOperationAddParameterToRootNode(rootNode);
 		}
 
 		reportOperationNotSupportedException();
@@ -88,7 +87,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
 		}else if(fChild instanceof BasicParameterNode){
 			BasicParameterNode globalParameter = 
-					((BasicParameterNode)fChild).makeClone();
+					((BasicParameterNode)fChild).makeClone(Optional.empty());
 			//					new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
@@ -157,6 +156,12 @@ public class FactoryAddChildOperation implements IModelVisitor {
 					node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 
+		if (fChild instanceof ConstraintNode ) {
+
+			return new OnConstraintOperationAdd
+					(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+		}
+		
 		reportOperationNotSupportedException();
 		return null;
 	}
@@ -191,36 +196,26 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		return null;
 	}
 
-	private Object createOperationAddParameter(RootNode rootNode) {
+	private Object createOperationAddParameterToRootNode(RootNode rootNode) {
 
-		BasicParameterNode abstractParameterNode = (BasicParameterNode)fChild;
+		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
 
-		BasicParameterNode globalParameter =
-				((BasicParameterNode)abstractParameterNode).makeClone();
-				// new BasicParameterNode(abstractParameterNode);
+		IAbstractNode globalParameter =
+				((AbstractParameterNode)abstractParameterNode).makeClone(Optional.empty());
 
-		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
+		return new GenericOperationAddParameter(
+				rootNode, (AbstractParameterNode) globalParameter, fIndex, true, fExtLanguageManager);
 	}
 
 	private Object createOperationAddClass(RootNode rootNode) {
 
 		ClassNode classNode = (ClassNode)fChild;
 
-		generateUniqueNameForClass(rootNode, classNode);
-
-		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, fExtLanguageManager);
-	}
-
-	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
-
-		String oldName = classNode.getName();
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
-
-		classNode.setName(newName);
+		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, true, fExtLanguageManager);
 	}
 
 	private void reportOperationNotSupportedException() throws Exception {
+
 		if (fValidate) {
 			return;
 		}

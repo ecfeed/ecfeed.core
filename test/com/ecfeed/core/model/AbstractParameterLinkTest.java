@@ -194,7 +194,7 @@ public class AbstractParameterLinkTest {
         classCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         classCompositeCompositeBasic.addChoice(classCompositeCompositeBasicChoice);
 
-        methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+        methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
         methodBasic = new BasicParameterNode("MethodBasic", "int", "0", false, null);
         methodNode.addParameter(methodBasic);

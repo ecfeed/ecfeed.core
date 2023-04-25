@@ -12,9 +12,11 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -134,7 +136,7 @@ public class ConstraintNodeHelper {
 				return "";
 			}
 
-			if ((parent instanceof MethodNode) || (parent instanceof RootNode)) {
+			if ((parent instanceof MethodNode) || (parent instanceof RootNode) || (parent instanceof ClassNode)) {
 				return prefix;
 			}
 
@@ -149,13 +151,16 @@ public class ConstraintNodeHelper {
 
 	}
 
-	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {
+	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(
+			List<ConstraintNode> constraints) {
 
 		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
 
+		NodeMapper nodeMapper = new NodeMapper();
+		
 		for (ConstraintNode constraint : constraints) {
 
-			ConstraintNode clonedConstraint = constraint.makeClone();
+			ConstraintNode clonedConstraint = constraint.makeClone(Optional.of(nodeMapper));
 
 			clonedConstraint.derandomize();
 			clonedConstraintNodes.add(clonedConstraint);
@@ -191,4 +196,10 @@ public class ConstraintNodeHelper {
 		return constraints;
 	}
 
+	public static void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
+
+		NameHelper.compareNames(constraint1.getName(), constraint2.getName());
+		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
+	}
+	
 }

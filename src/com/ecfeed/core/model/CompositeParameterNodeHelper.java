@@ -8,19 +8,24 @@ import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
 
-	public static BasicParameterNode addNewBasicParameterNodeToCompositeParameter( // TODO MO-RE rename to addBasicParameter
+	public static BasicParameterNode addNewBasicParameterToComposite(
 			CompositeParameterNode compositeParameterNode, 
 			String name, 
 			String type,
 			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode parameterNode = 
+		BasicParameterNode basicParameterNode = 
 				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
 
-		compositeParameterNode.addParameter(parameterNode);
+		if (setParent) {
+			basicParameterNode.setParent(compositeParameterNode);
+		}
 
-		return parameterNode;
+		compositeParameterNode.addParameter(basicParameterNode);
+
+		return basicParameterNode;
 	}
 
 	public static CompositeParameterNode addCompositeParameter(
@@ -262,7 +267,7 @@ public class CompositeParameterNodeHelper {
 	public static void compareParameters(
 			CompositeParameterNode compositeParameterNode1,
 			CompositeParameterNode compositeParameterNode2) {
-		
+
 		if (!compositeParameterNode1.getName().equals(compositeParameterNode2.getName())) {
 			ExceptionHelper.reportRuntimeException("Composite parameter names do not match.");
 		}
@@ -270,22 +275,50 @@ public class CompositeParameterNodeHelper {
 		if (compositeParameterNode1.getParametersCount() != compositeParameterNode2.getParametersCount()) {
 			ExceptionHelper.reportRuntimeException("Count of parameters does not match.");
 		}
-		
+
+		compareConstraints(compositeParameterNode1, compositeParameterNode2);
+
 		List<AbstractParameterNode> parameters1 = compositeParameterNode1.getParameters();
 		List<AbstractParameterNode> parameters2 = compositeParameterNode2.getParameters();
-		
+
+		compareChildParameters(parameters1, parameters2);
+	}
+
+	private static void compareConstraints(
+			CompositeParameterNode compositeParameterNode1, 
+			CompositeParameterNode compositeParameterNode2) {
+
+		List<ConstraintNode> constraintNodes1 = compositeParameterNode1.getConstraintNodes();
+		List<ConstraintNode> constraintNodes2 = compositeParameterNode2.getConstraintNodes();
+
+		for (int i =0; i < constraintNodes1.size(); ++i) {
+
+			ConstraintNode constraintNode1 = constraintNodes1.get(i);
+			ConstraintNode constraintNode2 = constraintNodes2.get(i);
+
+			AbstractNodeHelper.compareParents(constraintNode1, compositeParameterNode1, constraintNode2, compositeParameterNode2);
+			ConstraintNodeHelper.compareConstraintNodes(constraintNode1, constraintNode2);
+		}
+	}
+
+	private static void compareChildParameters(
+			List<AbstractParameterNode> parameters1,
+			List<AbstractParameterNode> parameters2) {
+
+		AbstractNodeHelper.compareSizes(parameters1, parameters1, "Number of parameters differs.");
+
 		for (int index = 0; index < parameters1.size(); index++) {
-			
+
 			AbstractParameterNode parameter1 = parameters1.get(index);
 			AbstractParameterNode parameter2 = parameters2.get(index);
-			
+
 			AbstractParameterNodeHelper.compareParameterTypes(parameter1, parameter2);
-			
+
 			if (parameter1 instanceof BasicParameterNode) {
 				BasicParameterNodeHelper.compareParameters(
 						(BasicParameterNode)parameter1, (BasicParameterNode)parameter2);
 			}
-				
+
 			if (parameter1 instanceof CompositeParameterNode) {
 				CompositeParameterNodeHelper.compareParameters(
 						(CompositeParameterNode)parameter1, (CompositeParameterNode)parameter2);

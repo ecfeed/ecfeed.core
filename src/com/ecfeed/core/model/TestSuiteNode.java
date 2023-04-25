@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -74,7 +75,7 @@ public class TestSuiteNode extends AbstractNode {
 	public String toString() {
 		return getName();
 	}
-	
+
 	@Override
 	public int getMyIndex() {
 
@@ -87,12 +88,12 @@ public class TestSuiteNode extends AbstractNode {
 		if (!(parent instanceof MethodNode)) {
 			return -1;
 		}
-		
+
 		MethodNode methodNode = (MethodNode) parent;
-		
+
 		return methodNode.getTestSuites().indexOf(this);
 	}
-	
+
 
 	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
 		fDisplayLimitExceeded  = displayLimitExceeded;
@@ -103,16 +104,16 @@ public class TestSuiteNode extends AbstractNode {
 		return fDisplayLimitExceeded;
 	}
 
-	void addTestCase(TestCaseNode testCaseNode) {
-		
+	public void addTestCase(TestCaseNode testCaseNode) {
+
 		if (!StringHelper.isEqual(testCaseNode.getName(), this.getName())) {
 			ExceptionHelper.reportRuntimeException("Test case name does not match test suite name.");
 		}
 
 		fTestCaseNodes.add(testCaseNode);
 	}
-	
-	void removeTestCase(TestCaseNode testCaseNode) {
+
+	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCaseNodes.remove(testCaseNode);
 	}
@@ -154,7 +155,7 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	public TestSuiteNode getCopy(MethodNode method){
-		TestSuiteNode tcase = makeClone();
+		TestSuiteNode tcase = makeClone(Optional.empty());
 		if(tcase.updateReferences(method)){
 			tcase.setParent(method);
 			return tcase;
@@ -177,8 +178,16 @@ public class TestSuiteNode extends AbstractNode {
 		return (MethodNode)getParent();
 	}
 
+	//	@Override
+	//	public TestSuiteNode makeClone() {
+	//
+	//		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
+	//		copy.setProperties(getProperties());
+	//		return copy;
+	//	}
+
 	@Override
-	public TestSuiteNode makeClone() {
+	public TestSuiteNode makeClone(Optional<NodeMapper> nodeMapper) {
 
 		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
 		copy.setProperties(getProperties());
@@ -194,5 +203,15 @@ public class TestSuiteNode extends AbstractNode {
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
 	}
-	
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof TestCaseNode) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

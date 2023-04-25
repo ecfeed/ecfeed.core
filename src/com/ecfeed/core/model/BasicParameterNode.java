@@ -12,8 +12,8 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -110,21 +110,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		addChoices(source.getChoices());
 	}
 
-	//	private BasicParameterNode(BasicParameterNode source) {
-	//
-	//		this(
-	//				source.getName(),
-	//				source.getType(),
-	//				source.getDefaultValue(),
-	//				source.fExpected,
-	//				source.getLinkToGlobalParameter(),
-	//				source.getModelChangeRegistrator());
-	//
-	//		for(ChoiceNode choice : source.getChoices()){
-	//			addChoice(choice.makeClone());
-	//		}
-	//	}
-
 	@Override
 	public void setName(String name) {
 
@@ -161,18 +146,9 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return getName() + ": " + getType();
 	}
 
-	@Override
-	public BasicParameterNode makeClone() {
-		BasicParameterNode parameter = makeClone(null);
-
-		parameter.setParent(getParent());
-
-		return parameter;
-	}
-
 	public BasicParameterNode createCopyForDeployment(NodeMapper mapper) {
-		
-		BasicParameterNode copy = makeClone(mapper);
+
+		BasicParameterNode copy = makeClone(Optional.ofNullable(mapper));
 
 		copy.setDeploymentParameter(this);
 		copy.setParent(null);
@@ -193,13 +169,27 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fDeploymentParameterNode = parameterNode;
 	}
 
-	private BasicParameterNode makeClone(NodeMapper mapper) {
+	//	@Override
+	//	public BasicParameterNode makeClone() {
+	//		BasicParameterNode parameter = makeClone(Optional.empty());
+	//
+	//		parameter.setParent(getParent());
+	//
+	//		return parameter;
+	//	}
+
+	@Override
+	public BasicParameterNode makeClone(Optional<NodeMapper> mapper) {
 
 		BasicParameterNode copyOfBasicParameterNode =
 				new BasicParameterNode(
 						getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator());
 
 		copyProperties(copyOfBasicParameterNode);
+
+		if (mapper.isPresent()) {
+			mapper.get().addMappings(this, copyOfBasicParameterNode);
+		}
 
 		if (!this.isLinked()) {
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
@@ -321,40 +311,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return getChoices();
-	}
-
-	public ChoiceNode findChoice(String choiceQualifiedName) {
-
-		Set<ChoiceNode> choiceNodes = getAllChoices();
-
-		Iterator<ChoiceNode> it = choiceNodes.iterator();
-
-		while(it.hasNext()) {
-			ChoiceNode choiceNode = it.next();
-
-			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
-				return choiceNode;
-			}
-		}
-
-		return null;
-	}
-
-	public ChoiceNode findFirstChoiceWithValue(String choiceValueString) {
-
-		Set<ChoiceNode> choiceNodes = getAllChoices();
-
-		Iterator<ChoiceNode> it = choiceNodes.iterator();
-
-		while(it.hasNext()) {
-			ChoiceNode choiceNode = it.next();
-
-			if (choiceNode.getValueString().equals(choiceValueString)) {
-				return choiceNode;
-			}
-		}
-
-		return null;
 	}
 
 	private boolean choiceListsMatch(List<ChoiceNode> list1,
@@ -701,5 +657,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof ChoiceNode) {
+			return true;
+		}
+
+		return false;
 	}
 }

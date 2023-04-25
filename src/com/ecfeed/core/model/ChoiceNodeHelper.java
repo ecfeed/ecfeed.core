@@ -25,19 +25,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class ChoiceNodeHelper {
 
@@ -86,7 +90,11 @@ public class ChoiceNodeHelper {
 			return null;
 		}
 
-		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
+		
+		if (indexOfChoiceNodeInTestCase < 0) {
+			return null;
+		}
 
 		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
 
@@ -96,6 +104,22 @@ public class ChoiceNodeHelper {
 
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 		return basicParameterNode;
+	}
+
+	private static int findIndexOfChoiceInTestCase(ChoiceNode choiceNodeToFind, TestCaseNode testCaseNode) {
+
+		List<ChoiceNode> choices = testCaseNode.getChoices();
+
+		for (int index = 0; index < choices.size(); index++) {
+
+			ChoiceNode choiceNode = choices.get(index);
+
+			if (choiceNode.isMatch(choiceNodeToFind)) {
+				return index;
+			}
+		}			
+
+		return -1;
 	}
 
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
@@ -111,8 +135,7 @@ public class ChoiceNodeHelper {
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
-			NodeMapper mapper
-			) {
+			Optional<NodeMapper> mapper) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -124,8 +147,8 @@ public class ChoiceNodeHelper {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
-			if (mapper != null) {
-				mapper.addMappings(choiceNode, clonedChoiceNode);
+			if (mapper.isPresent()) {
+				mapper.get().addMappings(choiceNode, clonedChoiceNode);
 			}
 
 			clonedChoiceNode.clearChoices();
@@ -1020,4 +1043,24 @@ public class ChoiceNodeHelper {
 		return resultTestCaseNodesToDelete;
 	}
 
+	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
+
+		NameHelper.compareNames(choice1.getName(), choice2.getName());
+		StringHelper.compareStrings(choice1.getValueString(),choice2.getValueString(), "Choice values differ.");
+		compareLabels(choice1.getLabels(), choice2.getLabels());
+		TypeHelper.compareIntegers(choice1.getChoices().size(), choice2.getChoices().size(), "Length of choices list differs.");
+		for(int i = 0; i < choice1.getChoices().size(); i++){
+			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
+		}
+	}
+
+	public static void compareLabels(Set<String> labels, Set<String> labels2) {
+
+		BooleanHelper.assertIsTrue(labels.size() == labels2.size(), "Sizes of labels should be equal.");
+
+		for(String label : labels){
+			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
+		}
+	}
+	
 }

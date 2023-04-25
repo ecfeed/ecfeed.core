@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
@@ -69,19 +70,41 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	}
 
 	@Override
-	public CompositeParameterNode makeClone() {
-		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+	public CompositeParameterNode makeClone(Optional<NodeMapper> nodeMapper) {
 
-		for (AbstractParameterNode parameter : getParameters()) {
-			copy.addParameter((AbstractParameterNode) parameter.makeClone());
+		CompositeParameterNode copyOfCompositeParameter = 
+				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+
+		cloneParameters(copyOfCompositeParameter, nodeMapper);
+		
+		cloneConstraints(copyOfCompositeParameter, nodeMapper);
+
+		copyOfCompositeParameter.setProperties(getProperties());
+		copyOfCompositeParameter.setParent(this.getParent());
+
+		if (nodeMapper.isPresent()) {
+			nodeMapper.get().addMappings(this, copyOfCompositeParameter);
 		}
 
-		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
-
-		return copy;
+		return copyOfCompositeParameter;
 	}
 
+	private void cloneParameters(CompositeParameterNode copyOfCompositeParameter, Optional<NodeMapper> nodeMapper) {
+		
+		for (AbstractParameterNode parameter : getParameters()) {
+			
+			copyOfCompositeParameter.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
+		}
+	}
+	
+	private void cloneConstraints(CompositeParameterNode clonedCompositeParameterNode, Optional<NodeMapper> nodeMapper) {
+
+		ConstraintNodeListHolder clonedConstraintHolder = 
+				fConstraintNodeListHolder.makeClone(clonedCompositeParameterNode, nodeMapper);
+		
+		clonedCompositeParameterNode.fConstraintNodeListHolder = clonedConstraintHolder;
+	}
+	
 	@Override
 	public List<IAbstractNode> getChildren() {
 
@@ -151,21 +174,21 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		fParametersHolder.addParameter(parameter, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, this);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext,
 			int index) {
-		
+
 		fParametersHolder.addParameter(parameter, linkingContext, index, this);
 	}
 
@@ -403,6 +426,20 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof AbstractParameterNode) {
+			return true;
+		}
+
+		if (child instanceof ConstraintNode) {
+			return AbstractNodeHelper.parentIsTheSame(child, this);
+		}
+
+		return false;
 	}
 
 }

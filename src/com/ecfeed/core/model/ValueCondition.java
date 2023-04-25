@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -102,6 +103,11 @@ public class ValueCondition implements IStatementCondition {
 		return fParentRelationStatement;
 	}
 
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
+	}
+
 	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
@@ -118,6 +124,13 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+		
+		return new ValueCondition(fRightValue, statement);
+	}
+
+	
 	@Override
 	public ValueCondition makeClone() {
 

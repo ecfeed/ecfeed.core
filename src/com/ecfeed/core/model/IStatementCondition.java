@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -21,6 +22,7 @@ public interface IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager);
 	public Object getCondition();
 	public RelationStatement getParentRelationStatement();
+	public void setParentRelationStatement(RelationStatement relationStatement);
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
 	//public boolean updateReferences(IParametersParentNode methodNode);
@@ -35,7 +37,8 @@ public interface IStatementCondition {
 	public void convert(ParameterConversionItem parameterConversionItem);
 	public String getLabel(BasicParameterNode methodParameterNode);
 	public IStatementCondition makeClone();
-	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper);
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
+	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper); // TODO MO-RE obsolete
+	IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper);
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 }
 

@@ -10,8 +10,11 @@
 
 package com.ecfeed.core.operations.link;
 
+import java.util.Optional;
+
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
@@ -20,18 +23,20 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation {
 
-	BasicParameterNode fSrcMethodParameterNode;
-	BasicParameterNode fDstParameterForChoices;
-	ParameterConversionDefinition fParameterConversionDefinition;
+	private BasicParameterNode fSrcMethodParameterNode;
+	private BasicParameterNode fDstParameterForChoices;
+	private ParameterConversionDefinition fParameterConversionDefinition;
+	private Optional<NodeMapper> fNodeMapper;
+	private IExtLanguageManager fExtLanguageManager;
 
 	ListOfModelOperations fReverseOperations;
-
-	IExtLanguageManager fExtLanguageManager;
+	
 
 	public MethodOperationLinkToGlobalParameter(
 			BasicParameterNode srcMethodParameterNode,
 			BasicParameterNode dstParameterForChoices, 
 			ParameterConversionDefinition parameterConversionDefinition,
+			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);
@@ -39,6 +44,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 		fSrcMethodParameterNode = srcMethodParameterNode;
 		fDstParameterForChoices = dstParameterForChoices;
 		fParameterConversionDefinition = parameterConversionDefinition;
+		fNodeMapper = nodeMapper;
 		fExtLanguageManager = extLanguageManager;
 
 		fReverseOperations = new ListOfModelOperations();
@@ -54,6 +60,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 				fDstParameterForChoices, 
 				fParameterConversionDefinition,
 				fReverseOperations,
+				fNodeMapper,
 				fExtLanguageManager);
 
 		markModelUpdated();
@@ -83,6 +90,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 					fSrcMethodParameterNode,
 					fDstParameterForChoices, 
 					fParameterConversionDefinition,
+					fNodeMapper,
 					fExtLanguageManager);
 		}
 

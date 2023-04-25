@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.TestHelper;
@@ -159,7 +158,7 @@ public class MethodDeployerTest {
 				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", "String", null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, "RC11", "100", null);
+				globalParameterNodeOfRoot, "RC11", "100", false, false, null);
 
 		// add class node
 
@@ -168,7 +167,7 @@ public class MethodDeployerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// add composite parameter
 
@@ -253,7 +252,8 @@ public class MethodDeployerTest {
 		AbstractParameterNode linkingContext1 = parameterWithLinkingContext1.getLinkingContext();
 		assertNull(linkingContext1);
 
-		String testedSignature1 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext1, nodeMapper);
+		String testedSignature1 = 
+				MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext1, nodeMapper, new ExtLanguageManagerForJava());
 		assertEquals("P1->RP1", testedSignature1);
 
 		// param2
@@ -263,7 +263,8 @@ public class MethodDeployerTest {
 		AbstractParameterNode linkingContext2 = parameterWithLinkingContext2.getLinkingContext();
 		assertNull(linkingContext2);
 
-		String testedSignature2 = MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext2, nodeMapper);
+		String testedSignature2 = 
+				MethodDeployer.createSignatureOfOriginalNodes(parameterWithLinkingContext2, nodeMapper, new ExtLanguageManagerForJava());
 		assertEquals("S1:P2->RP1", testedSignature2);
 	}
 
@@ -310,7 +311,7 @@ public class MethodDeployerTest {
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		// local composite
 
@@ -345,7 +346,10 @@ public class MethodDeployerTest {
 		// check the first parameter
 
 		ParameterWithLinkingContext deployedPar1 = deployedParameters.get(0);
-		String signature1 = ParameterWithLinkingContextHelper.createSignature(deployedPar1, new ExtLanguageManagerForJava());
+		String signature1 = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						deployedPar1.getParameter(), deployedPar1.getLinkingContext(), new ExtLanguageManagerForJava());
+
 		assertEquals("S1->GP1", signature1);
 
 		AbstractParameterNode originalGlobalParameter1 = nodeMapper.getSourceNode(deployedPar1.getParameter());
@@ -363,7 +367,10 @@ public class MethodDeployerTest {
 		// check the second parameter
 
 		ParameterWithLinkingContext deployedPar2 = deployedParameters.get(1);
-		String signature2 = ParameterWithLinkingContextHelper.createSignature(deployedPar2, new ExtLanguageManagerForJava());
+		String signature2 = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						deployedPar2.getParameter(), deployedPar2.getLinkingContext(), new ExtLanguageManagerForJava());
+
 		assertEquals("S2->GP1", signature2);
 
 		AbstractParameterNode originalGlobalParameter2 = nodeMapper.getSourceNode(deployedPar2.getParameter());
@@ -784,7 +791,7 @@ public class MethodDeployerTest {
 		String globalChoiceNodeName = "RC11";
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
+				globalParameterNodeOfRoot, globalChoiceNodeName, "100", false, false, null);
 
 		// add class node
 
@@ -793,7 +800,7 @@ public class MethodDeployerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
 		BasicParameterNode basicParameterNodeOfMethod = 
 				new BasicParameterNode(
@@ -825,7 +832,7 @@ public class MethodDeployerTest {
 
 		return methodNode;
 	}
-	
+
 	@Test
 	public void checkDeployedParametersWithConflictingParameterNames() {
 
@@ -833,43 +840,44 @@ public class MethodDeployerTest {
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
-		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", null);
+		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
-		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LC", null);
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LC", true, null);
 
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-						compositeParameterNode, "LP", "int", "0", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				compositeParameterNode, "LP", "int", "0", true, null);
 
 		NodeMapper nodeMapper = new NodeMapper();
 		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
-		
+
 		List<ParameterWithLinkingContext> parametersWithContextFromDeployedMethod = 
 				deployedMethodNode.getParametersWithLinkingContexts();
-		
+
 		ParameterWithLinkingContext parameterWithContext11 = parametersWithContextFromDeployedMethod.get(0);
 		assertNull(parameterWithContext11.getLinkingContext());
 		assertEquals(deployedMethodNode, parameterWithContext11.getParameter().getParent());
-		
+
 		ParameterWithLinkingContext parameterWithContext12 = parametersWithContextFromDeployedMethod.get(1);
 		assertNull(parameterWithContext12.getLinkingContext());
 		assertEquals(deployedMethodNode, parameterWithContext12.getParameter().getParent());
-		
+
 		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
 
 		List<ParameterWithLinkingContext> originalDeployedParameters = 
 				methodNode.getDeployedParametersWithLinkingContexts();
-		
+
 		ParameterWithLinkingContext parameterWithContext21 = originalDeployedParameters.get(0);
 		assertNull(parameterWithContext21.getLinkingContext());
 		assertEquals(methodNode, parameterWithContext21.getParameter().getParent());
-		
+
 		ParameterWithLinkingContext parameterWithContext22 = originalDeployedParameters.get(1);
 		assertNull(parameterWithContext22.getLinkingContext());
 		assertEquals(compositeParameterNode, parameterWithContext22.getParameter().getParent());
 	}
-	
+
 	//	private MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
 	//
 	//		RootNode rootNode = new RootNode("Root", null);

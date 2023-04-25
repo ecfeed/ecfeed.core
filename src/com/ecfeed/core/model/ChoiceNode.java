@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -38,10 +39,10 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
-		
+
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
-	
+
 	public ChoiceNode(String name, String value) {
 		this(name, value, null);
 	}
@@ -51,13 +52,13 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
-		
+
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 
 	@Override
 	public BasicParameterNode getParameter() {
-		
+
 		BasicParameterNode basicParameterNode = ChoiceNodeHelper.getBasicParameter(this);
 		return basicParameterNode;
 	}
@@ -126,7 +127,6 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return getQualifiedName() + "(" + getValueString() + ")";
 	}
 
-
 	public boolean isClone()
 	{
 		return fOrigChoiceNode==null;
@@ -144,8 +144,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return fOrigChoiceNode;
 	}
 
-	@Override
-	public ChoiceNode makeClone(){
+	public ChoiceNode makeClone() { // TODO MO-RE remove ?
+		
 		ChoiceNode copy = makeCloneUnlink();
 
 		if(isClone())
@@ -155,8 +155,9 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 		return copy;
 	}
-
-	public ChoiceNode makeCloneUnlink() {
+	
+	public ChoiceNode makeCloneUnlink() { // TODO MO-RE rename ? private ?
+		
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
@@ -170,6 +171,30 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		}
 
 		copy.setRandomizedValue(fIsRandomizedValue);
+		return copy;
+	}
+
+	@Override
+	public ChoiceNode makeClone(Optional<NodeMapper> nodeMapper) {
+		
+		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
+
+		copy.setProperties(getProperties());
+		copy.setParent(getParent());
+		copy.setRandomizedValue(fIsRandomizedValue);
+
+		for (ChoiceNode choice : getChoices()) {
+			copy.addChoice(choice.makeClone(nodeMapper));
+		}
+		
+		for (String label : fLabels) {
+			copy.addLabel(label);
+		}
+		
+		if (nodeMapper.isPresent()) {
+			nodeMapper.get().addMappings(this, copy);
+		}
+		
 		return copy;
 	}
 
@@ -192,21 +217,21 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
-		
+
 		IAbstractNode parent = getParent();
-		
+
 		if (parent == null) {
 			ExceptionHelper.reportRuntimeException(NO_PARENT);
 			return false;
 		}
-		
+
 		if (!(parent instanceof IChoicesParentNode)) {
 			ExceptionHelper.reportRuntimeException(NO_PARENT);
 			return false;
 		}
-		
+
 		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
-		
+
 		return choicesParentNode.getParameter().isCorrectableToBeRandomizedType() && !isAbstract();
 	}
 
@@ -248,24 +273,24 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	}
 
 	public void renameLabel(String oldValue, String newValue) {
-		
+
 		if (fLabels.contains(oldValue)) {
 			fLabels.remove(oldValue);
 			fLabels.add(newValue);
 		}
 	}
-	
+
 	public Set<String> getLabels(){
 		return fLabels;
 	}
 
 	@Override
 	public Set<String> getLeafLabels() {
-		
+
 		if (isAbstract() == false) {
 			return getAllLabels();
 		}
-		
+
 		return ChoiceNodeHelper.getLeafLabels(getLeafChoices());
 	}
 
@@ -397,56 +422,56 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	public ChoiceNode getParentChoice() {
 
 		IAbstractNode parent = getParent();
-		
+
 		if (parent == null) {
 			return null;
 		}
-		
+
 		if (parent instanceof ChoiceNode) {
 			return (ChoiceNode)parent;
 		}
-		
+
 		return null;
 	}
 
-//	public MethodNode getMethodNode() {
-//
-//		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
-//
-//		if (methodParameterNode == null) {
-//			return null;
-//		}
-//
-//		MethodNode methodNode = methodParameterNode.getMethod();
-//
-//		return methodNode;
-//	}
-	
+	//	public MethodNode getMethodNode() {
+	//
+	//		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
+	//
+	//		if (methodParameterNode == null) {
+	//			return null;
+	//		}
+	//
+	//		MethodNode methodNode = methodParameterNode.getMethod();
+	//
+	//		return methodNode;
+	//	}
+
 	@Override
 	public int getChildrenCount() {
-		
+
 		return getChoiceCount();
 	}
 
 	@Override
 	public boolean hasChoices() {
-		
+
 		if (getChoiceCount() == 0) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd) {
-		
+
 		fChoicesListHolder.addChoice(choiceToAdd, this);
 	}
 
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd, int index) {
-		
+
 		fChoicesListHolder.addChoice(choiceToAdd, index, this);
 		registerChange();
 	}
@@ -546,7 +571,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	@Override
 	public void replaceChoices(List<ChoiceNode> newChoices) {
-		
+
 		fChoicesListHolder.replaceChoices(newChoices, this);
 		registerChange();
 	}
@@ -563,19 +588,29 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	}
 
 	public boolean isPartOfGlobalParameter() {
-		
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
-		
+
 		if (methodNode == null) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
 		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		if (child instanceof ChoiceNode) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

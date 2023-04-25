@@ -15,7 +15,7 @@ import com.ecfeed.core.exception.ClientException;
 public class ExceptionHelper {
 
 	public static void reportClientException(String message) {
-
+		
 		throw new ClientException(message);
 	}
 
@@ -26,21 +26,28 @@ public class ExceptionHelper {
 
 	public static void reportRuntimeException(String message) {
 
+		runtimeExceptionMarker();
 		throw new RuntimeException(message);
 	}
 
 	public static void reportRuntimeException(String message, Exception e) {
 
+		runtimeExceptionMarker();
 		throw new RuntimeException(message, e);
 	}
 
 	public static void reportRuntimeException(Exception e) {
-
+		
+		runtimeExceptionMarker();
 		throw new RuntimeException(e);
 	}
 
 	public static void reportRuntimeExceptionCanNotCreateObject() {
 
 		ExceptionHelper.reportRuntimeException("Can not create object.");
+	}
+	
+	private static void runtimeExceptionMarker() {
+		System.out.println("EXCEPTION");
 	}
 }

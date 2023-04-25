@@ -20,41 +20,49 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
-			Collection<? extends IAbstractNode> children, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
-		
-		this(target, children, -1, validate, extLanguageManager);
+
+		this(target, childrenToAdd, -1, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 
-			Collection<? extends IAbstractNode> children, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			int index, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
 
-		for (IAbstractNode child : children) {
-			IModelOperation operation;
+		for (IAbstractNode child : childrenToAdd) {
+
 			try {
-				if (index != -1) {
-					operation = 
-							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(
-											child, index++, validate, getExtLanguageManager()));
-				} else {
-					operation = 
-							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(child, validate, getExtLanguageManager()));
-				}
+				IModelOperation operation = createAddOperation(child, index, target, validate);
+
 				if (operation != null) {
 					addOperation(operation);
 				}
 			} catch (Exception e) {
 				LogHelperCore.logCatch(e);}
+
+			index++;
 		}
+	}
+
+	private IModelOperation createAddOperation(
+			IAbstractNode child, 
+			int index,
+			IAbstractNode target,
+			boolean validate) throws Exception {
+
+		AddChildOperationCreator addChildOperationCreator = 
+				new AddChildOperationCreator(child, index, validate, getExtLanguageManager());
+
+		IModelOperation operation = (IModelOperation)target.accept(addChildOperationCreator);
+
+		return operation;
 	}
 
 	public boolean enabled(){

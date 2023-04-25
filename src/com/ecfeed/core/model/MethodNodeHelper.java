@@ -12,17 +12,21 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class MethodNodeHelper {
 
@@ -82,6 +86,14 @@ public class MethodNodeHelper {
 
 		return signature;
 
+	}
+
+	public static String createSignatureOldStandard(MethodNode method, IExtLanguageManager manager) {
+
+		List<String> parameterNames = method.getParameters().stream().map(e -> AbstractParameterSignatureHelper.createSignatureOldStandard(e, manager)).collect(Collectors.toList());
+		String methodName = method.getName();
+
+		return methodName + "(" + String.join(", ", parameterNames) + ")";
 	}
 
 	public static String createSignatureNewStandard(
@@ -329,18 +341,16 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-								basicParameterNode.getType(),
-								basicParameterNode.getName(),
-								basicParameterNode.isExpected(), 
+						AbstractParameterSignatureHelper.createSignatureNewStandard(
+								basicParameterNode, 
+								ExtendedName.NAME_ONLY, 
+								Decorations.YES, 
+								TypeIncluded.YES, 
 								extLanguageManager);
 			} else {
 
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
-				//signatureOfOneParameter = 
-						//AbstractParameterSignatureHelper.createSignature(compositeParameterNode, extLanguageManager);
-				
 				signatureOfOneParameter = 
 						AbstractParameterSignatureHelper.createSignatureNewStandard(
 								compositeParameterNode, 
@@ -389,111 +399,6 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-
-	//	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
-	//
-	//		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-	//
-	//		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-	//
-	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-	//				continue;
-	//			}
-	//
-	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-	//
-	//			if (basicParameterNode.isExpected()) {
-	//				expectedFlags.add(true);
-	//			} else {
-	//				expectedFlags.add(false);
-	//			}
-	//		}
-	//
-	//		return expectedFlags;
-	//	}
-
-	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
-	//
-	//		List<TestSuiteNode> testSuites = method.getTestSuites();
-	//
-	//		List<String> testSuiteNames = new ArrayList<>();
-	//		testSuiteNames.addAll(method.getTestCaseNames());
-	//
-	//		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
-	//
-	//		TestSuiteNode testSuiteNode;
-	//		for (String testSuiteName : testSuiteNames) {
-	//
-	//			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
-	//
-	//			if (existingNode.isPresent()) {
-	//				testSuiteNode = existingNode.get();
-	//				testSuiteNode.getTestCaseNodes().clear();
-	//			} else {
-	//				testSuiteNode = new TestSuiteNode();
-	//				testSuiteNode.setSuiteName(testSuiteName);
-	//				testSuiteNode.setParent(method);
-	//				testSuites.add(testSuiteNode);
-	//			}
-	//
-	//			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
-	//			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-	//				testSuiteNode.setName(testSuiteName);
-	//				testSuiteNode.setDisplayLimitExceededFlag(true);
-	//			} else {
-	//				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
-	//				testSuiteNode.setName(testSuiteName);
-	//				testSuiteNode.setDisplayLimitExceededFlag(false);
-	//			}
-	//		}
-	//
-	//		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
-	//
-	//		return testSuites;
-	//	}
-
-	//	public static String findNotUsedJavaTypeForParameter(
-	//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-	//
-	//		ClassNode classNode = methodNode.getClassNode();
-	//
-	//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-	//
-	//		for (String type : typeListInExtLanguage) {
-	//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-	//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-	//				return type;
-	//			}
-	//		}
-	//
-	//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-	//
-	//		return userType;
-	//	}
-
-	//	private static boolean isNewTypeUsed(
-	//			String typeForLastParameter,
-	//			ClassNode classNode,
-	//			MethodNode methodNode,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-	////		parameterTypesInExternalLanguage.add(typeForLastParameter);
-	//
-	//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-	//
-	//		MethodNode foundMethodNode =
-	//				ClassNodeHelper.findMethodByExtLanguage(
-	//						classNode,
-	//						methodNameInExternalLanguage,
-	//						extLanguageManager);
-	//
-	//		if (foundMethodNode != null) {
-	//			return true;
-	//		}
-	//
-	//		return false;
-	//	}
 
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 
@@ -554,10 +459,14 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addCompositeParameter( // TODO MO-RE rename addNew ... because creating
-			MethodNode methodNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+	public static CompositeParameterNode addNewCompositeParameterToMethod(
+			MethodNode methodNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+
+		if (setParent) {
+			compositeParameterNode.setParent(methodNode);
+		}
 
 		methodNode.addParameter(compositeParameterNode);
 
@@ -569,21 +478,37 @@ public class MethodNodeHelper {
 			String name, 
 			String type,
 			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode basicParameterNode = 
 				new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
+
+		if (setParent) {
+			basicParameterNode.setParent(methodNode);
+		}
 
 		methodNode.addParameter(basicParameterNode);
 
 		return basicParameterNode;
 	}
 
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase) {
+	public static TestCaseNode addNewTestCase(MethodNode methodNode, String testCaseName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
 
-		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode(testCaseName, null, choicesOfTestCase);
+
+		if (setParent) {
+			testCaseNode.setParent(methodNode);
+		}
+
 		methodNode.addTestCase(testCaseNode);
 
+		return testCaseNode;
+	}
+
+	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
+
+		TestCaseNode testCaseNode = addNewTestCase(methodNode, "Test case", choicesOfTestCase, setParent);
 		return testCaseNode;
 	}
 
@@ -733,6 +658,108 @@ public class MethodNodeHelper {
 
 		ExceptionHelper.reportRuntimeException("Parameter not found");
 		return null;
+	}
+
+	public static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
+
+		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
+
+		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
+			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
+		}
+
+		int size = deployedParametersWithContexts1.size();
+
+		for (int i = 0; i < size; ++i) {
+
+			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
+			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
+
+			ParameterWithLinkingContextHelper.compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
+		}
+	}
+
+	public static void compareMethodParameters(
+			BasicParameterNode methodParameterNode1, 
+			BasicParameterNode methodParameterNode2) {
+
+		NameHelper.compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
+
+		TypeHelper.compareIntegers(
+				methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size(), "Length of choices list differs.");
+
+		for(int i = 0; i < methodParameterNode1.getChoices().size(); i++){
+			ChoiceNodeHelper.compareChoices(methodParameterNode1.getChoices().get(i), methodParameterNode2.getChoices().get(i));
+		}
+	}
+
+	public static void compareTestCases(MethodNode methodNode1, MethodNode methodNode2) {
+
+		AbstractNodeHelper.compareSizes(
+				methodNode1.getTestCases(), methodNode2.getTestCases(), "Number of test cases differs.");
+
+		for (int i =0; i < methodNode1.getTestCases().size(); ++i) {
+
+			TestCaseNode testCaseNode1 = methodNode1.getTestCases().get(i);
+			TestCaseNode testCaseNode2 = methodNode2.getTestCases().get(i);
+
+			AbstractNodeHelper.compareParents(testCaseNode1, methodNode1, testCaseNode2, methodNode2);
+			TestCaseNodeHelper.compareTestCases(testCaseNode1, testCaseNode2);
+		}
+	}
+
+	public static void compareMethodParameters(MethodNode methodNode1, MethodNode methodNode2) {
+
+		List<AbstractParameterNode> parameters1 = methodNode1.getParameters();
+		List<AbstractParameterNode> parameters2 = methodNode2.getParameters();
+
+		AbstractNodeHelper.compareSizes(parameters1, parameters2, "Number of parameters differs.");
+
+		for (int i =0; i < parameters1.size(); ++i) {
+
+			AbstractParameterNode abstractParameterNode1 = parameters1.get(i);
+			AbstractParameterNode abstractParameterNode2 = parameters2.get(i);
+
+			AbstractNodeHelper.compareParents(abstractParameterNode1, methodNode1, abstractParameterNode2, methodNode2);
+			AbstractParameterNodeHelper.compareParameters(abstractParameterNode1, abstractParameterNode2);
+		}
+	}
+
+	public static void compareMethodConstraints(MethodNode methodNode1, MethodNode methodNode2) {
+
+		List<ConstraintNode> constraintNodes1 = methodNode1.getConstraintNodes();
+		List<ConstraintNode> constraintNodes2 = methodNode2.getConstraintNodes();
+
+		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
+
+		for (int i =0; i < constraintNodes1.size(); ++i) {
+
+			ConstraintNode constraintNode1 = constraintNodes1.get(i);
+
+			ConstraintNode constraintNode2 = constraintNodes2.get(i);
+
+			AbstractNodeHelper.compareParents(constraintNode1, methodNode1, constraintNode2, methodNode2);
+			ConstraintNodeHelper.compareConstraintNodes(constraintNode1, constraintNode2);
+		}
+	}
+
+	public static void compareMethods(MethodNode method1, MethodNode method2) {
+
+		if (method1 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 1.");
+		}
+
+		if (method2 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 2.");
+		}
+
+		NameHelper.compareNames(method1.getName(), method2.getName());
+
+		MethodNodeHelper.compareMethodParameters(method1, method2);
+		MethodNodeHelper.compareDeployedParameters(method1, method2);
+		MethodNodeHelper.compareMethodConstraints(method1, method2);
+		MethodNodeHelper.compareTestCases(method1, method2);
 	}
 
 }

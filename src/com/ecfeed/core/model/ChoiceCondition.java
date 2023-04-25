@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -59,24 +60,39 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition makeClone() {
+	public ChoiceCondition makeClone(
+			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
+		
+		if (nodeMapper.isPresent()) {
+			
+			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
+			
+			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
+		}
+
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	}
+	
+	@Override
+	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
 		// choices are not cloned
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
-	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) { // TODO MO-RE obsolete
 
 		return new ChoiceCondition(updateChoiceReference(mapper), statement);
 	}
 
 	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
+		
 		ChoiceNode node;
 
 		if (isSourceLinked()) {
 			node = fRightChoice;
 		} else {
-			node = mapper.getDeployedNode(fRightChoice);
+			node = mapper.getDestinationNode(fRightChoice);
 		}
 
 		node.setOrigChoiceNode(null);
@@ -97,30 +113,6 @@ public class ChoiceCondition implements IStatementCondition {
 
 		return !(node instanceof MethodNode);
 	}
-
-	//	@Override
-	//	public boolean updateReferences(IParametersParentNode methodNode) {
-	//
-	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fParentRelationStatement.getLeftParameter());
-	//
-	//		BasicParameterNode basicParameterNode = 
-	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
-	//						compositeName, methodNode);
-	//
-	//		//		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-	//		//		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
-	//
-	//		String choiceName = fRightChoice.getQualifiedName();
-	//
-	//		ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
-	//
-	//		if (choiceNode == null) {
-	//			return false;
-	//		}
-	//
-	//		fRightChoice = choiceNode;
-	//		return true;
-	//	}
 
 	@Override
 	public Object getCondition(){
@@ -191,6 +183,11 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
+	}
+
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
 	}
 
 	public ChoiceNode getRightChoice() {

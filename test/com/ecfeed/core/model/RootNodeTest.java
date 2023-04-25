@@ -14,11 +14,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.Test;
 
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class RootNodeTest{
+
+	@Test
+	public void copyRootTest(){
+		RootNode root = new RootNode("name", null);
+		ClassNode class1 = new ClassNode("class1", null);
+		ClassNode class2 = new ClassNode("class2", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", false, null);
+		root.addClass(class1);
+		root.addClass(class2);
+		root.addParameter(par1);
+		root.addParameter(par2);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		RootNode copy = root.makeClone(Optional.of(nodeMapper));
+		assertTrue(root.isMatch(copy));
+	}
 
 	@Test
 	public void addClassTest(){
@@ -84,7 +103,7 @@ public class RootNodeTest{
 
 	@Test
 	public void compareTest() {
-		
+
 		RootNode r1 = new RootNode("r1", null);
 		RootNode r2 = new RootNode("r2", null);
 
@@ -127,11 +146,18 @@ public class RootNodeTest{
 	}
 
 	@Test
-	public void getCopyTest(){
+	public void copyGeneratedModelTest() {
+
 		RandomModelGenerator generator = new RandomModelGenerator();
-		for(int i = 0; i < 100; i++){
+
+		for (int i = 0; i < 10; i++) {
+
 			RootNode root = generator.generateModel(3);
-			RootNode copy = root.makeClone();
+
+			NodeMapper nodeMapper = new NodeMapper();
+			RootNode copy = root.makeClone(Optional.of(nodeMapper));
+
+			ModelComparator.compareRootNodes(root, copy);
 			assertTrue(copy.isMatch(root));
 		}
 	}

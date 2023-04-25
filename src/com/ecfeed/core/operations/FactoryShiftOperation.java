@@ -19,6 +19,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -29,7 +30,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryShiftOperation {
-	
+
 	private static class MoveUpDownOperationProvider implements IModelVisitor{
 
 		private List<? extends IAbstractNode> fShifted;
@@ -50,28 +51,33 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fUp, fExtLanguageManager);
 			}
-			
+
 			IAbstractNode abstractNode = fShifted.get(0);
-			
-			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
+
+			if (abstractNode instanceof AbstractParameterNode && ((AbstractParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
-			
+
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			
-			IAbstractNode abstractNode = fShifted.get(0);
-			
-			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode) abstractNode).isGlobalParameter()) {
+
+
+			IAbstractNode firstShiftedNode = fShifted.get(0);
+
+			if ( ((firstShiftedNode instanceof AbstractParameterNode))
+					&& ((AbstractParameterNode)firstShiftedNode).isGlobalParameter()) {
+
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof MethodNode){
+
+			if(firstShiftedNode instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fUp, fExtLanguageManager);
 			}
+
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
@@ -99,23 +105,34 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			
+
 			IAbstractNode abstractNode = fShifted.get(0);
-			
+
 			if(abstractNode instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
-			
+
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			
+			IAbstractNode firstShiftedNode = fShifted.get(0);
+
+			if(firstShiftedNode instanceof AbstractParameterNode){
+				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+			}
+			
+			if(firstShiftedNode instanceof ConstraintNode){
+				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
+			}
+
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
-		
+
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -162,9 +179,9 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
-			
+
 			IAbstractNode abstractNode = fShifted.get(0);
-			
+
 			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
@@ -177,9 +194,9 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fShift, fExtLanguageManager);
 			}
-			
+
 			IAbstractNode abstractNode = fShifted.get(0);
-			
+
 			if(abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
@@ -226,13 +243,13 @@ public class FactoryShiftOperation {
 			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
 			return null;
 		}
-		
+
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
-		
+
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -260,9 +277,9 @@ public class FactoryShiftOperation {
 			List<? extends IAbstractNode> shifted, 
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		IAbstractNode parent = getParent(shifted);
-		
+
 		return getShiftOperation(
 				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguageManager));
 	}
@@ -316,7 +333,7 @@ public class FactoryShiftOperation {
 	}
 
 	private static IAbstractNode getParent(List<? extends IAbstractNode> nodes) {
-		
+
 		if(nodes.size() == 0){
 			return null;
 		}

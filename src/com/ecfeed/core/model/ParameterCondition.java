@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -31,12 +32,12 @@ import com.ecfeed.core.utils.RelationMatcher;
 public class ParameterCondition implements IStatementCondition {
 
 	private BasicParameterNode fRightParameterNode;
-	private CompositeParameterNode fRightParameterLinkingContext;
+	private AbstractParameterNode fRightParameterLinkingContext;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
 			BasicParameterNode rightParameter,
-			CompositeParameterNode rightParameterLinkingContext,
+			AbstractParameterNode rightParameterLinkingContext,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
@@ -65,6 +66,11 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
+	}
+
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
 	}
 
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
@@ -167,6 +173,20 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+
+		if (mapper.isPresent()) {
+
+			BasicParameterNode mappedLinkinContext = mapper.get().getDestinationNode(fRightParameterNode);
+			AbstractParameterNode mappedLinkingContext = mapper.get().getDestinationNode(fRightParameterLinkingContext);
+
+			return new ParameterCondition(mappedLinkinContext, mappedLinkingContext, statement);
+		}
+
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
+	}
+
+	@Override
 	public ParameterCondition makeClone() {
 
 		// parameters are not cloned
@@ -175,7 +195,8 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getDeployedNode(fRightParameterNode);
+
+		BasicParameterNode parameter = mapper.getDestinationNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}
@@ -245,20 +266,17 @@ public class ParameterCondition implements IStatementCondition {
 		//						fRightParameterNode, fRightParameterLinkingContext);
 
 		String signatureNew = 
-		AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				fRightParameterLinkingContext,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.SHORTENED,
-				fRightParameterNode,
-				ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_LINKED_ITEM,
-				Decorations.NO,
-				TypeIncluded.NO,
-				extLanguageManager);
-		String name =
-				signatureNew;
+				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+						fRightParameterLinkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.SHORTENED,
+						fRightParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
 
-
-		return StatementConditionHelper.createParameterDescription(name);
+		return StatementConditionHelper.createParameterDescription(signatureNew);
 	}
 
 	@Override

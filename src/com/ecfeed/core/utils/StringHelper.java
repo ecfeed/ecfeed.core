@@ -570,5 +570,15 @@ public class StringHelper {
 		
 		return null;
 	}	
+
+	public static void compareStrings(String str1, String str2, String errorMessage) {
+
+		if (StringHelper.isEqual(str1, str2)) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException(errorMessage);
+	}
+
 	
 }

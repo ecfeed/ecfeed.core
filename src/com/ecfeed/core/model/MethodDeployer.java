@@ -13,13 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
@@ -60,15 +56,16 @@ public abstract class MethodDeployer {
 
 	public static void copyDeployedParametersWithConversionToOriginals( // TODO MO-RE divide into two functions? 1)convert to originals 2)copy
 			MethodNode deployedMethodNode, 
-			MethodNode methodNode, 
+			MethodNode destinationMethodNode, 
 			NodeMapper nodeMapper) {
 
-		List<ParameterWithLinkingContext> deployedParametersWithContexts = deployedMethodNode.getParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = 
+				deployedMethodNode.getParametersWithLinkingContexts();
 
 		List<ParameterWithLinkingContext> originalParametersWithContexts =
 				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
 
-		methodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
+		destinationMethodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
 
 		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
 		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
@@ -147,7 +144,7 @@ public abstract class MethodDeployer {
 			NodeMapper nodeMapper) {
 
 		// deployBasicParameterOldVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
-		deployBasicParameterNewVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
+		deployBasicParameterWithLinkingContext(parameterWithLinkingContext, targetMethodNode, nodeMapper);
 	}
 
 	//	private static void deployBasicParameterOldVersion(
@@ -163,7 +160,7 @@ public abstract class MethodDeployer {
 	//		targetMethodNode.addParameter(copy, linkingContext);
 	//	}
 
-	private static void deployBasicParameterNewVersion(
+	private static void deployBasicParameterWithLinkingContext(
 			ParameterWithLinkingContext parameterWithLinkingContext,
 			MethodNode deployedMethodNode, 
 			NodeMapper nodeMapper) {
@@ -181,6 +178,8 @@ public abstract class MethodDeployer {
 		}
 
 		if (sourceLinkingContext instanceof CompositeParameterNode) {
+
+			nodeMapper.addMappingsForOneNode(sourceLinkingContext);
 
 			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
 			deployedParameter.setParent(deployedMethodNode);
@@ -211,10 +210,10 @@ public abstract class MethodDeployer {
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
 
-		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, nodeMapper));
+		parameters.forEach(e -> deployConstraintsRecursively(e, targetMethod, prefix, nodeMapper));
 	}
 
-	private static void deployConstraintsForCompositeParameterRecursively(
+	private static void deployConstraintsRecursively(
 			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
 
 		if (parameter instanceof BasicParameterNode) {
@@ -230,7 +229,7 @@ public abstract class MethodDeployer {
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
+				deployConstraintsRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
 			}
 		}
 	}
@@ -281,36 +280,17 @@ public abstract class MethodDeployer {
 
 	public static String createSignatureOfOriginalNodes(
 			ParameterWithLinkingContext deployedParameterWithLinkingContext,
-			NodeMapper nodeMapper) {
+			NodeMapper nodeMapper,
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());
-		AbstractParameterNode linkOfParameter = parameter.getLinkToGlobalParameter();
 		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
 
-		if (context == null && linkOfParameter != null) {
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						parameter, context, extLanguageManager);
 
-			String signature = 
-					AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
-							linkOfParameter, parameter);
-
-			return signature;
-		}
-
-		//		String signature1 = 
-		//				AbstractParameterSignatureHelper.createSignatureOfParameterWithContext(
-		//						parameter, context);
-
-		String signature2 = AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
-				context,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				TypeOfLink.NORMAL,
-				parameter,
-				ExtendedName.PATH_TO_TOP_CONTAINTER,
-				Decorations.NO,
-				TypeIncluded.NO,
-				new ExtLanguageManagerForJava());
-
-		return signature2;
+		return signature;
 	}
 
 }
