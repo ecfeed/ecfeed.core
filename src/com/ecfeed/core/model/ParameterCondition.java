@@ -32,12 +32,12 @@ import com.ecfeed.core.utils.RelationMatcher;
 public class ParameterCondition implements IStatementCondition {
 
 	private BasicParameterNode fRightParameterNode;
-	private CompositeParameterNode fRightParameterLinkingContext;
+	private AbstractParameterNode fRightParameterLinkingContext;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
 			BasicParameterNode rightParameter,
-			CompositeParameterNode rightParameterLinkingContext,
+			AbstractParameterNode rightParameterLinkingContext,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
@@ -174,17 +174,18 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
-		
-		if (mapper.isPresent()) {
-			
-			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fRightParameterNode);
 
-			return new ParameterCondition(clonedParameter, fRightParameterLinkingContext, statement); // XYX map linking context
+		if (mapper.isPresent()) {
+
+			BasicParameterNode mappedLinkinContext = mapper.get().getDestinationNode(fRightParameterNode);
+			AbstractParameterNode mappedLinkingContext = mapper.get().getDestinationNode(fRightParameterLinkingContext);
+
+			return new ParameterCondition(mappedLinkinContext, mappedLinkingContext, statement);
 		}
-		
+
 		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
 	}
-	
+
 	@Override
 	public ParameterCondition makeClone() {
 
@@ -194,7 +195,7 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
-		
+
 		BasicParameterNode parameter = mapper.getDestinationNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);

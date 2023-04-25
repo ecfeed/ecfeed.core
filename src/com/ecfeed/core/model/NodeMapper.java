@@ -33,7 +33,7 @@ public class NodeMapper {
 
 		AbstractNode sourceNode = fDestinationToSource.get(deployedNode);
 
-		return sourceNode != null ? (T) sourceNode : deployedNode; // XYX remove this as this masks bugs
+		return sourceNode != null ? (T) sourceNode : deployedNode; // TODO MO-RE remove this as this masks bugs
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,6 +41,6 @@ public class NodeMapper {
 
 		AbstractNode deployedNode = fSourceToDestination.get(sourceNode);
 
-		return deployedNode != null ? (T) deployedNode : sourceNode; // XYX remove this as this masks bugs
+		return deployedNode != null ? (T) deployedNode : sourceNode; // TODO MO-RE remove this as this masks bugs
 	}
 }
