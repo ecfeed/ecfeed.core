@@ -626,7 +626,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	@Override
 	public void excludeAssignment(List<ChoiceNode> choicesToExclude) {
 
-		fSat4Solver.setHasConstraints();
+//		fSat4Solver.setHasConstraints();
 
 		if (fSat4Solver.isContradicting()) {
 			return;
