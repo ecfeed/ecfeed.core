@@ -36,9 +36,8 @@ public class AddChildOperationCreator implements IModelVisitor {
 
 	private IAbstractNode fChild;
 	private int fIndex;
-	Optional<String> fUniqueChildName;
 	private boolean fValidate;
-	IExtLanguageManager fExtLanguageManager;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public AddChildOperationCreator(
 			IAbstractNode child, 
@@ -88,7 +87,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
 		}else if(fChild instanceof BasicParameterNode){
 			BasicParameterNode globalParameter = 
-					((BasicParameterNode)fChild).makeClone();
+					((BasicParameterNode)fChild).makeClone(Optional.empty());
 			//					new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
@@ -202,7 +201,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
 
 		IAbstractNode globalParameter =
-				((AbstractParameterNode)abstractParameterNode).makeClone();
+				((AbstractParameterNode)abstractParameterNode).makeClone(Optional.empty());
 
 		return new GenericOperationAddParameter(
 				rootNode, (AbstractParameterNode) globalParameter, fIndex, true, fExtLanguageManager);

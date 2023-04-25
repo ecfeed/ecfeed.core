@@ -52,8 +52,10 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 	}
 
 	private IModelOperation createAddOperation(
-			IAbstractNode child, int index,
-			IAbstractNode target, boolean validate) throws Exception {
+			IAbstractNode child, 
+			int index,
+			IAbstractNode target,
+			boolean validate) throws Exception {
 
 		AddChildOperationCreator addChildOperationCreator = 
 				new AddChildOperationCreator(child, index, validate, getExtLanguageManager());

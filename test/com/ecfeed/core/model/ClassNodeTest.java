@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
@@ -23,6 +24,23 @@ import org.junit.Test;
 public class ClassNodeTest extends ClassNode {
 	public ClassNodeTest(){
 		super("com.ecfeed.model.ClassNodeTest", null);
+	}
+
+	@Test
+	public void copyClassTest() {
+		ClassNode classNode = new ClassNode("Class", null);
+		MethodNode method1 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", false, null);
+		classNode.addMethod(method1);
+		classNode.addMethod(method2);
+		classNode.addParameter(par1);
+		classNode.addParameter(par2);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		ClassNode copy = classNode.makeClone(Optional.of(nodeMapper));
+		ClassNodeHelper.compareClasses(classNode, copy);
 	}
 
 	@Test

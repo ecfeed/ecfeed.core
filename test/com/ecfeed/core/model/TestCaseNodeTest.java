@@ -15,7 +15,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -100,4 +102,27 @@ public class TestCaseNodeTest {
 			assertTrue(t.isMatch(t));
 		}
 	}
+	
+	@Test
+	public void copyTestCaseTest(){
+		MethodNode method = new MethodNode("method", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		par1.addChoice(choice1);
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
+		expectedChoice1.setParent(par2);
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
+		expectedChoice2.setParent(par2);
+		TestCaseNode testCase = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
+
+		method.addParameter(par1);
+		method.addParameter(par2);
+		method.addTestCase(testCase);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		TestCaseNode copy = testCase.makeClone(Optional.of(nodeMapper));
+		assertTrue(testCase.isMatch(copy));
+	}
+
 }

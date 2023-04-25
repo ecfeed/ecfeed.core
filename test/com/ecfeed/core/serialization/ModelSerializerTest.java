@@ -59,29 +59,29 @@ public class ModelSerializerTest {
 				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
 
 		// BasicParameterNode globalBasicParameterNode1 = 
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				globalCompositeParameterNode1, "GP", "int", "o", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				globalCompositeParameterNode1, "GP", "int", "o", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
 				CompositeParameterNodeHelper.addNewCompositeParameterNodeToCompositeParameter(
 						globalCompositeParameterNode1, "GS2", null);
 
 		// BasicParameterNode globalBasicParameterNode2 =
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				globalCompositeParameterNode2, "GP", "int", "o", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				globalCompositeParameterNode2, "GP", "int", "o", true, null);
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
 
 		CompositeParameterNode localCompositeParameterNode2 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "LS2", true, null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS2", true, null);
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -131,10 +131,10 @@ public class ModelSerializerTest {
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
-		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addCompositeParameter(methodNode, "LS", true, null);
+		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
 
-		CompositeParameterNodeHelper.addNewBasicParameterNodeToCompositeParameter(
-				compositeParameterNode, "LP", "int", "0", null);
+		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				compositeParameterNode, "LP", "int", "0", true, null);
 
 		// root
 		//   class

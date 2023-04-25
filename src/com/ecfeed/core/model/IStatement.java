@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -28,8 +29,9 @@ public interface IStatement{
 	List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
 	List<String> getLabels(BasicParameterNode methodParameterNode);
 	void derandomize();
-	AbstractStatement makeClone();
-	AbstractStatement createCopy(NodeMapper mapper);
+	AbstractStatement makeClone(); // TODO MO-RE obsolete ?
+	AbstractStatement createCopy(NodeMapper mapper); // TODO MO-RE obsolete ?
+	AbstractStatement makeClone(Optional<NodeMapper> mapper);
 	String getLeftOperandName();
 	BasicParameterNode getLeftParameter();
 	CompositeParameterNode getLeftParameterLinkingContext();

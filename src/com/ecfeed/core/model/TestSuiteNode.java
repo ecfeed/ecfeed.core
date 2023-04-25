@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -154,7 +155,7 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	public TestSuiteNode getCopy(MethodNode method){
-		TestSuiteNode tcase = makeClone();
+		TestSuiteNode tcase = makeClone(Optional.empty());
 		if(tcase.updateReferences(method)){
 			tcase.setParent(method);
 			return tcase;
@@ -177,8 +178,16 @@ public class TestSuiteNode extends AbstractNode {
 		return (MethodNode)getParent();
 	}
 
+	//	@Override
+	//	public TestSuiteNode makeClone() {
+	//
+	//		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
+	//		copy.setProperties(getProperties());
+	//		return copy;
+	//	}
+
 	@Override
-	public TestSuiteNode makeClone() {
+	public TestSuiteNode makeClone(Optional<NodeMapper> nodeMapper) {
 
 		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
 		copy.setProperties(getProperties());

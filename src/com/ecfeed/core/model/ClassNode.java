@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.utils.ParametersLister;
@@ -59,22 +60,52 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return parametetersSize + methodsSize;
 	}
 
+	//	@Override
+	//	public ClassNode makeClone(){
+	//		
+	//		ExceptionHelper.reportRuntimeException("Obsolete cloning function called.");
+	//		
+	//		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
+	//
+	//		copy.setProperties(getProperties());
+	//
+	//		for(BasicParameterNode parameter : getGlobalBasicParameters()){
+	//			copy.addParameter(parameter.makeClone());
+	//		}
+	//
+	//		for(MethodNode method : fMethods){
+	//			copy.addMethod(method.makeClone());
+	//		}
+	//
+	//		copy.setParent(getParent());
+	//		return copy;
+	//	}
+
 	@Override
-	public ClassNode makeClone(){
-		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
+	public ClassNode makeClone(Optional<NodeMapper> nodeMapper) {
 
-		copy.setProperties(getProperties());
+		ClassNode clonedClassNode = new ClassNode(getName(), getModelChangeRegistrator());
 
-		for(BasicParameterNode parameter : getGlobalBasicParameters()){
-			copy.addParameter(parameter.makeClone());
+		clonedClassNode.setProperties(getProperties());
+
+		for (BasicParameterNode parameter : getGlobalBasicParameters()) {
+
+			BasicParameterNode clonedParameter = parameter.makeClone(nodeMapper);
+			clonedParameter.setParent(clonedClassNode);
+
+			clonedClassNode.addParameter(clonedParameter);
 		}
 
-		for(MethodNode method : fMethods){
-			copy.addMethod(method.makeClone());
+		for (MethodNode method : fMethods) {
+
+			MethodNode clonedMethod = method.makeClone(nodeMapper);
+			clonedMethod.setParent(clonedClassNode);
+
+			clonedClassNode.addMethod(clonedMethod);
 		}
 
-		copy.setParent(getParent());
-		return copy;
+		clonedClassNode.setParent(getParent());
+		return clonedClassNode;
 	}
 
 	@Override

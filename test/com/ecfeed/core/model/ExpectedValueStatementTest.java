@@ -88,4 +88,16 @@ public class ExpectedValueStatementTest{
 		assertTrue(s1.isEqualTo(s2));
 
 	}
+	
+	@Test
+	public void expectedStatementTest(){
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "65", true, null);
+		ChoiceNode choice = new ChoiceNode("expected", "876", null);
+		choice.setParent(parameter);
+
+		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
+		ExpectedValueStatement copy = statement.makeClone();
+		assertTrue(statement.isEqualTo(copy));
+	}
+	
 }

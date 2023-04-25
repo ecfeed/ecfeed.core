@@ -10,12 +10,16 @@
 
 package com.ecfeed.core.model;
 
+import java.util.Collection;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractNodeHelper  {
+
+	private static final String PARENT_NODES_DO_NOT_MATCH = "Parent nodes do not match.";
 
 	public static String convertTextFromIntrToExtLanguage(
 			String textInIntrLanguage,
@@ -172,21 +176,78 @@ public abstract class AbstractNodeHelper  {
 	}
 
 	public static String getShortClassName(IAbstractNode abstractNode) {
-		
+
 		String fullClassName = abstractNode.getClass().getName();
 		String shortClassName = StringHelper.getLastToken(fullClassName, ".");
 		return shortClassName;
 	}
 
 	public static boolean parentIsTheSame(IAbstractNode child, IAbstractNode expectedParent) {
-		
+
 		IAbstractNode parent = child.getParent();
-		
+
 		if (!parent.equals(expectedParent)) {
 			return false;
 		}
-		
+
 		return true;
+	}
+
+	public static String checkIfCanAddChildrenToParent(
+			Collection<IAbstractNode> childrenToAdd, 
+			IAbstractNode parentNode, 
+			boolean displayErrorDialog) {
+
+		for (IAbstractNode child : childrenToAdd) {
+
+			if (!parentNode.canAddChild(child)) {
+
+				String className = AbstractNodeHelper.getShortClassName(child);
+
+				return ("Cannot add " + className + " to parent: " + parentNode.getName());
+			}
+		}
+
+		return null;
+	}
+
+	public static void compareParents(
+			AbstractNode node1, AbstractNode parent1, 
+			AbstractNode node2, AbstractNode parent2) {
+
+		if (node1.getParent() == null && node2.getParent() == null) {
+			return;
+		}
+
+		if (node1.getParent() == null && node2.getParent() != null) {
+			ExceptionHelper.reportRuntimeException(PARENT_NODES_DO_NOT_MATCH);
+		}
+
+		if (node1.getParent() != null && node2.getParent() == null) {
+			ExceptionHelper.reportRuntimeException(PARENT_NODES_DO_NOT_MATCH);
+		}
+
+		if (node1.getParent() == parent1 && node2.getParent() != parent2) {
+			ExceptionHelper.reportRuntimeException(PARENT_NODES_DO_NOT_MATCH);
+		}
+
+		if (node1.getParent() != parent1 && node2.getParent() == parent2) {
+			ExceptionHelper.reportRuntimeException(PARENT_NODES_DO_NOT_MATCH);
+		}
+	}
+
+	public static void compareSizes(
+			Collection<? extends IAbstractNode> collection1, 
+			Collection<? extends IAbstractNode> collection2, 
+			String errorMessage) {
+
+		int size1 = collection1.size();
+
+		int size2 = collection2.size();
+
+		if (size1 != size2) {
+			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
+		}
 	}
 	
 }

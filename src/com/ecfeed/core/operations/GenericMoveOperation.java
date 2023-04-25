@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
@@ -104,34 +105,49 @@ public class GenericMoveOperation extends CompositeOperation {
 	}
 	
 	private void processTestCaseNode(TestCaseNode node, TestSuiteNode newParent) throws Exception {
+		
 			Collection<TestCaseNode> element = new ArrayList<>();
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
 				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
-				TestCaseNode nodeCopy = node.makeClone();
+				TestCaseNode nodeCopy = node.makeClone(Optional.empty());
 				element.add(nodeCopy);
 				
-				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.getParent().accept(new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
+				addOperation(
+						new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
+				
+				addOperation(
+						(IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)newParent.getParent().accept(
+								new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
 			}
 	}
 	
-	private void processTestSuiteNode(TestSuiteNode node, MethodNode newParent) throws Exception {
+	private void processTestSuiteNode(
+			TestSuiteNode node, MethodNode newParent) throws Exception {
 			
 			if (node.getParent() == newParent) {
 				return;
 			} else {
 				Collection<TestCaseNode> element = new ArrayList<>();
 				
-				TestSuiteNode nodeCopy = node.makeClone();
+				TestSuiteNode nodeCopy = node.makeClone(Optional.empty());
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
 				addOperation(new OnTestCasesOperationRename(element, node.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.accept(new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation(
+						(IModelOperation)newParent.accept(
+								new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
 			}
 	}
 

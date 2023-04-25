@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -125,11 +126,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -262,11 +265,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -396,11 +401,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
-				reverseOperations, 
+				reverseOperations,
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -532,11 +539,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -663,11 +672,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfRoot, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of root
@@ -807,11 +818,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// check global parameter of class
@@ -936,11 +949,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		int globalParamChoiceCount = globalParameterNodeOfClass1.getChoiceCount();
@@ -1047,11 +1062,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 
@@ -1191,11 +1208,13 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
+		NodeMapper nodeMapper = new NodeMapper();
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				parameterConversionDefinition, 
 				reverseOperations, 
+				Optional.of(nodeMapper),
 				extLanguageManager);
 
 		// checking test cases - should be deleted

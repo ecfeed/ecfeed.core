@@ -325,4 +325,19 @@ public class StatementArrayTest {
 		ss2.setValue(false);
 		assertTrue(s1.isEqualTo(s2));
 	}
+	
+	@Test
+	public void copyStatementArrayTest(){
+		for(StatementArrayOperator operator : new StatementArrayOperator[]{StatementArrayOperator.AND, StatementArrayOperator.OR}){
+			StatementArray array = new StatementArray(operator, null);
+			array.addStatement(new StaticStatement(true, null));
+			array.addStatement(new StaticStatement(false, null));
+			array.addStatement(new StaticStatement(true, null));
+			array.addStatement(new StaticStatement(false, null));
+
+			StatementArray copy = array.makeClone();
+			assertTrue(array.isEqualTo(copy));
+		}
+	}
+	
 }

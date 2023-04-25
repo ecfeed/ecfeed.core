@@ -56,7 +56,7 @@ public abstract class MethodDeployer {
 
 	public static void copyDeployedParametersWithConversionToOriginals( // TODO MO-RE divide into two functions? 1)convert to originals 2)copy
 			MethodNode deployedMethodNode, 
-			MethodNode methodNode, 
+			MethodNode destinationMethodNode, 
 			NodeMapper nodeMapper) {
 
 		List<ParameterWithLinkingContext> deployedParametersWithContexts = 
@@ -65,7 +65,7 @@ public abstract class MethodDeployer {
 		List<ParameterWithLinkingContext> originalParametersWithContexts =
 				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
 
-		methodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
+		destinationMethodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
 
 		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
 		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
@@ -144,7 +144,7 @@ public abstract class MethodDeployer {
 			NodeMapper nodeMapper) {
 
 		// deployBasicParameterOldVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
-		deployBasicParameterNewVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
+		deployBasicParameterWithLinkingContext(parameterWithLinkingContext, targetMethodNode, nodeMapper);
 	}
 
 	//	private static void deployBasicParameterOldVersion(
@@ -160,7 +160,7 @@ public abstract class MethodDeployer {
 	//		targetMethodNode.addParameter(copy, linkingContext);
 	//	}
 
-	private static void deployBasicParameterNewVersion(
+	private static void deployBasicParameterWithLinkingContext(
 			ParameterWithLinkingContext parameterWithLinkingContext,
 			MethodNode deployedMethodNode, 
 			NodeMapper nodeMapper) {
@@ -178,6 +178,8 @@ public abstract class MethodDeployer {
 		}
 
 		if (sourceLinkingContext instanceof CompositeParameterNode) {
+
+			nodeMapper.addMappingsForOneNode(sourceLinkingContext);
 
 			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
 			deployedParameter.setParent(deployedMethodNode);

@@ -13,6 +13,7 @@ package com.ecfeed.core.operations.nodes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -22,6 +23,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
@@ -34,53 +36,22 @@ public class OnParameterOperationSetExpected extends AbstractModelOperation {
 
 	private BasicParameterNode fTarget;
 	private boolean fExpected;
+	private Optional<NodeMapper> fNodeMapper;
 	private List<TestCaseNode> fOriginalTestCases;
 	private List<ConstraintNode> fOriginalConstraints;
 	private List<ChoiceNode> fOriginalChoices;
 	private String fOriginalDefaultValue;
 
-	private class ReverseOperation extends AbstractModelOperation{
-
-		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(OnParameterOperationSetExpected.this.getName(), extLanguageManager);
-		}
-
-		@Override
-		public void execute() {
-
-			setOneNodeToSelect(fTarget);
-
-			fTarget.setExpected(!fExpected);
-			
-			IAbstractNode parent = fTarget.getParent();
-			
-			if (parent != null) { 
-				
-				if (parent instanceof IConstraintsParentNode) {
-					((IConstraintsParentNode)parent).replaceConstraints(fOriginalConstraints);
-				}
-				
-				if (parent instanceof ITestCasesParentNode) {
-					((ITestCasesParentNode)parent).replaceTestCases(fOriginalTestCases);
-				}
-			}
-			
-			fTarget.replaceChoices(fOriginalChoices);
-			fTarget.setDefaultValueString(fOriginalDefaultValue);
-			markModelUpdated();
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new OnParameterOperationSetExpected(fTarget, fExpected, getExtLanguageManager());
-		}
-
-	}
-
-	public OnParameterOperationSetExpected(BasicParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
+	public OnParameterOperationSetExpected(
+			BasicParameterNode target, 
+			boolean expected, 
+			Optional<NodeMapper> nodeMapper,
+			IExtLanguageManager extLanguageManager) {
+		
 		super(OperationNames.SET_EXPECTED_STATUS, extLanguageManager);
 		fTarget = target;
 		fExpected = expected;
+		fNodeMapper = nodeMapper;
 
 		IAbstractNode method = target.getParent(); 
 		
@@ -100,7 +71,7 @@ public class OnParameterOperationSetExpected extends AbstractModelOperation {
 		fOriginalChoices.addAll(fTarget.getChoices());
 		fOriginalDefaultValue = fTarget.getDefaultValue();
 	}
-
+	
 	@Override
 	public void execute() {
 
@@ -141,7 +112,7 @@ public class OnParameterOperationSetExpected extends AbstractModelOperation {
 									fTarget.getModelChangeRegistrator());
 					
 					p.setParent(fTarget);
-					TestCaseNode newTestCase = testCase.makeClone();
+					TestCaseNode newTestCase = testCase.makeClone(fNodeMapper);
 					newTestCase.setParent(methodNode);
 					newTestCase.getTestData().set(index, p.makeClone());
 					tcIt.set(newTestCase);
@@ -174,4 +145,42 @@ public class OnParameterOperationSetExpected extends AbstractModelOperation {
 		return fExpected;
 	}
 
+	private class ReverseOperation extends AbstractModelOperation{
+
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(OnParameterOperationSetExpected.this.getName(), extLanguageManager);
+		}
+
+		@Override
+		public void execute() {
+
+			setOneNodeToSelect(fTarget);
+
+			fTarget.setExpected(!fExpected);
+			
+			IAbstractNode parent = fTarget.getParent();
+			
+			if (parent != null) { 
+				
+				if (parent instanceof IConstraintsParentNode) {
+					((IConstraintsParentNode)parent).replaceConstraints(fOriginalConstraints);
+				}
+				
+				if (parent instanceof ITestCasesParentNode) {
+					((ITestCasesParentNode)parent).replaceTestCases(fOriginalTestCases);
+				}
+			}
+			
+			fTarget.replaceChoices(fOriginalChoices);
+			fTarget.setDefaultValueString(fOriginalDefaultValue);
+			markModelUpdated();
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new OnParameterOperationSetExpected(fTarget, fExpected, fNodeMapper, getExtLanguageManager());
+		}
+
+	}
+	
 }

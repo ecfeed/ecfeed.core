@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -59,24 +60,39 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition makeClone() {
+	public ChoiceCondition makeClone(
+			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
+		
+		if (nodeMapper.isPresent()) {
+			
+			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
+			
+			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
+		}
+
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	}
+	
+	@Override
+	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
 		// choices are not cloned
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
-	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) { // TODO MO-RE obsolete
 
 		return new ChoiceCondition(updateChoiceReference(mapper), statement);
 	}
 
 	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
+		
 		ChoiceNode node;
 
 		if (isSourceLinked()) {
 			node = fRightChoice;
 		} else {
-			node = mapper.getDeployedNode(fRightChoice);
+			node = mapper.getDestinationNode(fRightChoice);
 		}
 
 		node.setOrigChoiceNode(null);

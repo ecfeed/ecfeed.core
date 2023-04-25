@@ -142,41 +142,142 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 				|| fTestCasesHolder.getTestCaseNodes().size() != 0);
 	}
 
+	//	@Override
+	//	public MethodNode makeClone() {
+	//
+	//		ExceptionHelper.reportRuntimeException("Obsolete cloning function called.");
+	//		
+	//		MethodNode clonedMethodNode = new MethodNode(getName(), getModelChangeRegistrator());
+	//
+	//		clonedMethodNode.setProperties(getProperties());
+	//
+	//		for (AbstractParameterNode parameter : getParameters()) {
+	//
+	//			AbstractParameterNode clonedParameter = (AbstractParameterNode) parameter.makeClone();
+	//
+	//			clonedMethodNode.addParameter(clonedParameter);
+	//		}
+	//
+	//		for (TestCaseNode testcase : fTestCasesHolder.getTestCaseNodes()) {
+	//
+	//			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
+	//
+	//			if (tcase != null) {
+	//				clonedMethodNode.addTestCase(tcase);
+	//			}
+	//		}
+	//
+	//		cloneConstraints(clonedMethodNode, Optional.empty());
+	//
+	//		//		for(ConstraintNode constraint : fConstraintNodes){
+	//		//			constraint = constraint.getCopy(copy);
+	//		//			if(constraint != null)
+	//		//				copy.addConstraint(constraint);
+	//		//		}
+	//
+	//		clonedMethodNode.setParent(getParent());
+	//		//		if(!copy.isMatch(this))
+	//		//			assert copy.isMatch(this);
+	//		return clonedMethodNode;
+	//	}
+
 	@Override
-	public MethodNode makeClone() {
+	public MethodNode makeClone(Optional<NodeMapper> nodeMapper) {
 
 		MethodNode clonedMethodNode = new MethodNode(getName(), getModelChangeRegistrator());
+		clonedMethodNode.setParent(getParent());
 
 		clonedMethodNode.setProperties(getProperties());
 
-		for (AbstractParameterNode parameter : getParameters()) {
+		cloneParameters(clonedMethodNode, nodeMapper);
+		cloneDeployedParameters(clonedMethodNode, nodeMapper);
 
-			AbstractParameterNode clonedParameter = (AbstractParameterNode) parameter.makeClone();
+		cloneConstraints(clonedMethodNode, nodeMapper);
+		cloneTestCases(clonedMethodNode, nodeMapper);
 
-			clonedMethodNode.addParameter(clonedParameter);
-		}
+		return clonedMethodNode;
+	}
+
+	private void cloneConstraints(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {
+
+		ConstraintNodeListHolder clonedConstraintHolder = 
+				fConstraintNodeListHolder.makeClone(clonedMethodNode, nodeMapper);
+		
+		clonedMethodNode.fConstraintNodeListHolder = clonedConstraintHolder;
+	}
+
+	private void cloneTestCases(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {
 
 		for (TestCaseNode testcase : fTestCasesHolder.getTestCaseNodes()) {
 
-			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
+			TestCaseNode clonedTestCaseNode = (TestCaseNode) testcase.makeClone(nodeMapper);
+			clonedTestCaseNode.setParent(clonedMethodNode);
 
-			if (tcase != null) {
-				clonedMethodNode.addTestCase(tcase);
+			if (clonedTestCaseNode != null) {
+				clonedMethodNode.addTestCase(clonedTestCaseNode);
 			}
 		}
+	}
 
-		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
+	private void cloneParameters(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {
 
-		//		for(ConstraintNode constraint : fConstraintNodes){
-		//			constraint = constraint.getCopy(copy);
-		//			if(constraint != null)
-		//				copy.addConstraint(constraint);
-		//		}
+		for (AbstractParameterNode parameter : getParameters()) {
 
-		clonedMethodNode.setParent(getParent());
-		//		if(!copy.isMatch(this))
-		//			assert copy.isMatch(this);
-		return clonedMethodNode;
+			AbstractParameterNode clonedParameter = cloneLinkingContext(parameter, nodeMapper);
+			clonedParameter.setParent(clonedMethodNode);
+
+			clonedMethodNode.addParameter(clonedParameter);
+		}
+	}
+
+	private void cloneDeployedParameters(MethodNode clonedMethodNode, Optional<NodeMapper> nodeMapper) {
+
+		List<ParameterWithLinkingContext> parameterWithLinkingContexts = getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> cloneOfParametersWithContexts = new ArrayList<>();
+
+		for (ParameterWithLinkingContext parameterWithLinkingContext : parameterWithLinkingContexts) {
+
+			BasicParameterNode parameter = (BasicParameterNode) parameterWithLinkingContext.getParameter();
+			BasicParameterNode clonedParameter = cloneParameter(parameter, nodeMapper);
+
+			if (clonedParameter != null) {
+				clonedParameter.setParent(clonedMethodNode);
+			}
+
+			AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+			
+			AbstractParameterNode clonedLinkingContext = cloneLinkingContext(linkingContext, nodeMapper);
+
+			if (clonedLinkingContext != null) {
+				clonedLinkingContext.setParent(clonedMethodNode);
+			}
+
+			ParameterWithLinkingContext cloneOfParameterWithLinkingContext = 
+					new ParameterWithLinkingContext(clonedParameter, clonedLinkingContext);
+
+			cloneOfParametersWithContexts.add(cloneOfParameterWithLinkingContext);
+		}
+
+		clonedMethodNode.setDeployedParametersWithContexts(cloneOfParametersWithContexts);
+	}
+
+	private BasicParameterNode cloneParameter(BasicParameterNode parameter, Optional<NodeMapper> nodeMapper) {
+
+		if (parameter == null) {
+			return null;
+		}
+
+		return parameter.makeClone(nodeMapper);
+	}
+
+	private AbstractParameterNode cloneLinkingContext(
+			AbstractParameterNode linkingContext, Optional<NodeMapper> nodeMapper) {
+
+		if (linkingContext == null) {
+			return null;
+		}
+
+		return (AbstractParameterNode)linkingContext.makeClone(nodeMapper);
 	}
 
 	public int getMyMethodIndex() {
@@ -816,7 +917,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		if (child instanceof AbstractParameterNode) {
 			return true;
 		}
-		
+
 		if (child instanceof ConstraintNode) {
 			return AbstractNodeHelper.parentIsTheSame(child, this);
 		}
