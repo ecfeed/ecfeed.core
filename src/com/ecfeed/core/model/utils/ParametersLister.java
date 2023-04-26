@@ -42,6 +42,15 @@ public class ParametersLister {
 		fElementLister.addElement(parameter);
 	}
 
+	public void addParameter(
+			AbstractParameterNode parameter,
+			int index,
+			IAbstractNode parent) {
+
+		parameter.setParent(parent);
+		fElementLister.addElement(parameter, index);
+	}
+	
 	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
 		for (AbstractParameterNode methodParameterNode : parameters) {
