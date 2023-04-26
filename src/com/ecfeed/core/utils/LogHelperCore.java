@@ -55,7 +55,7 @@ public class LogHelperCore {
 
         logger = context.getLogger("MainCore");
         logger.setAdditive(false);
-        logger.setLevel(Level.DEBUG);
+        logger.setLevel(Level.WARN);
         logger.addAppender(appender);
 
         logInfo("Initialized");
