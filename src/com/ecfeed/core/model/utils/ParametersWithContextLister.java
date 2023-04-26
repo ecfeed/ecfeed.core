@@ -26,20 +26,30 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersWithContextLister {
 
-	private List<ParameterWithLinkingContext> fParametersWithContexts;
-	private IModelChangeRegistrator fModelChangeRegistrator;
+	//private List<ParameterWithLinkingContext> fParametersWithContexts;
+	private ElementLister<ParameterWithLinkingContext> fElementLister;
+	//private IModelChangeRegistrator fModelChangeRegistrator;
 
 	public ParametersWithContextLister(IModelChangeRegistrator modelChangeRegistrator) {
 
-		fModelChangeRegistrator = modelChangeRegistrator;
-		fParametersWithContexts = new ArrayList<ParameterWithLinkingContext>();
+		//fModelChangeRegistrator = modelChangeRegistrator;
+		//fParametersWithContexts = new ArrayList<ParameterWithLinkingContext>();
+
+		fElementLister = new ElementLister<ParameterWithLinkingContext>(modelChangeRegistrator);
 	}
 
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			IAbstractNode parent) {
 
-		addParameter(parameter, null, fParametersWithContexts.size(), parent);
+		// addParameter(parameter, null, fParametersWithContexts.size(), parent);
+		parameter.setParent(parent);
+
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				new ParameterWithLinkingContext(parameter, null);
+
+		fElementLister.addElement(parameterWithLinkingContext);
+
 	}
 
 	public void addParameter(
@@ -47,7 +57,14 @@ public class ParametersWithContextLister {
 			AbstractParameterNode linkingContext, 
 			IAbstractNode parent) {
 
-		addParameter(parameter, linkingContext, fParametersWithContexts.size(), parent);
+		//addParameter(parameter, linkingContext, fParametersWithContexts.size(), parent);
+
+		parameter.setParent(parent);
+
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				new ParameterWithLinkingContext(parameter, linkingContext);
+
+		fElementLister.addElement(parameterWithLinkingContext);
 	}
 
 	public void addParameter(
@@ -56,30 +73,31 @@ public class ParametersWithContextLister {
 			int index, 
 			IAbstractNode parent) {
 
-		if (parameterWithContextExists(parameter, linkingContext)) {
-			reportErrorParameterExists(parameter, linkingContext);
-		}
+		//fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, linkingContext));
+		//parameter.setParent(parent);
 
-		fParametersWithContexts.add(index, new ParameterWithLinkingContext(parameter, linkingContext));
 		parameter.setParent(parent);
 
-		registerChange();
+		ParameterWithLinkingContext parameterWithLinkingContext = 
+				new ParameterWithLinkingContext(parameter, linkingContext);
+
+		fElementLister.addElement(parameterWithLinkingContext, index);
 	}
 
-	private void reportErrorParameterExists(
-			AbstractParameterNode parameter,
-			AbstractParameterNode linkingContext) {
-
-		if (linkingContext == null) {
-			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
-		}
-
-		ExceptionHelper.reportRuntimeException(
-				"Parameter: " + parameter.getName() 
-				+ " with linking context" + linkingContext.getName() 
-				+ " already exists.");
-
-	}
+	//	private void reportErrorParameterExists(
+	//			AbstractParameterNode parameter,
+	//			AbstractParameterNode linkingContext) {
+	//
+	//		if (linkingContext == null) {
+	//			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
+	//		}
+	//
+	//		ExceptionHelper.reportRuntimeException(
+	//				"Parameter: " + parameter.getName() 
+	//				+ " with linking context" + linkingContext.getName() 
+	//				+ " already exists.");
+	//
+	//	}
 
 	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
@@ -90,43 +108,50 @@ public class ParametersWithContextLister {
 
 	public void setBasicParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
 
-		fParametersWithContexts.clear();
+		fElementLister.clear();
 
 		for (BasicParameterNode basicParameterNode : parameters) {
 
-			fParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode, null));
+			ParameterWithLinkingContext parameterWithLinkingContext = 
+					new ParameterWithLinkingContext(basicParameterNode, null);
+
+			fElementLister.addElement(parameterWithLinkingContext);
 		}
 	}
 
 	public void setParametersWithLinkingContexts(List<ParameterWithLinkingContext> parametersWithContexts) {
 
-		fParametersWithContexts.clear();
-		fParametersWithContexts.addAll(parametersWithContexts);
-	}
+		fElementLister.clear();
 
+		for (ParameterWithLinkingContext parameterWithContexts : parametersWithContexts) {
 
-	private boolean parameterWithContextExists(
-			AbstractParameterNode parameter,
-			AbstractParameterNode linkingContext) {
-
-		ParameterWithLinkingContext parameterWithLinkingContextToFind = 
-				new ParameterWithLinkingContext(parameter, linkingContext);
-
-		for (ParameterWithLinkingContext currentParameterWithLinkingContext : fParametersWithContexts) {
-
-			if (parameterWithLinkingContextToFind.isMatch(currentParameterWithLinkingContext)) {
-				return true;
-			}
+			fElementLister.addElement(parameterWithContexts);
 		}
-
-		return false;
 	}
+
+
+	//	private boolean parameterWithContextExists(
+	//			AbstractParameterNode parameter,
+	//			AbstractParameterNode linkingContext) {
+	//
+	//		ParameterWithLinkingContext parameterWithLinkingContextToFind = 
+	//				new ParameterWithLinkingContext(parameter, linkingContext);
+	//
+	//		for (ParameterWithLinkingContext currentParameterWithLinkingContext : fElementLister.getReferenceToElements()) {
+	//
+	//			if (parameterWithLinkingContextToFind.isMatch(currentParameterWithLinkingContext)) {
+	//				return true;
+	//			}
+	//		}
+	//
+	//		return false;
+	//	}
 
 	public List<AbstractParameterNode> getParameters() {
 
 		List<AbstractParameterNode> result = new ArrayList<>();
 
-		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fElementLister.getReferenceToElements()) {
 
 			result.add(parameterWithLinkingContext.getParameter());
 		}
@@ -136,15 +161,16 @@ public class ParametersWithContextLister {
 
 	public List<ParameterWithLinkingContext> getParametersWithLinkingContexts() {
 
-		List<ParameterWithLinkingContext> copy = new ArrayList<>(fParametersWithContexts);
-
-		return copy;
+		//		List<ParameterWithLinkingContext> copy = new ArrayList<>(fParametersWithContexts);
+		//
+		//		return copy;
+		return fElementLister.getReferenceToElements();
 	}
 
 	public ParameterWithLinkingContext getParameterWithLinkingContexts(int index) {
 
 		ParameterWithLinkingContext copy = 
-				new ParameterWithLinkingContext(fParametersWithContexts.get(index));
+				new ParameterWithLinkingContext(fElementLister.getElement(index));
 
 		return copy;
 	}
@@ -153,7 +179,7 @@ public class ParametersWithContextLister {
 
 		List<BasicParameterNode> result = new ArrayList<>();
 
-		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fElementLister.getReferenceToElements()) {
 
 			AbstractParameterNode abstractParameterNode = parameterWithLinkingContext.getParameter();
 
@@ -169,7 +195,7 @@ public class ParametersWithContextLister {
 
 	public int getParametersCount(){
 
-		return fParametersWithContexts.size();
+		return fElementLister.getElementsCount();
 	}	
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
@@ -212,7 +238,7 @@ public class ParametersWithContextLister {
 
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		ParameterWithLinkingContext parameterWithLinkingContext = fParametersWithContexts.get(parameterIndex);
+		ParameterWithLinkingContext parameterWithLinkingContext = fElementLister.getElement(parameterIndex);
 
 		return parameterWithLinkingContext.getParameter();
 	}	
@@ -221,7 +247,7 @@ public class ParametersWithContextLister {
 
 		int index = 0;
 
-		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fElementLister.getReferenceToElements()) {
 
 			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
 
@@ -255,7 +281,7 @@ public class ParametersWithContextLister {
 
 		List<String> types = new ArrayList<String>();
 
-		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fElementLister.getReferenceToElements()) {
 
 			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
 
@@ -273,7 +299,7 @@ public class ParametersWithContextLister {
 
 		List<String> names = new ArrayList<String>();
 
-		for (ParameterWithLinkingContext parameterWithLinkingContext : fParametersWithContexts) {
+		for (ParameterWithLinkingContext parameterWithLinkingContext : fElementLister.getReferenceToElements()) {
 
 			AbstractParameterNode parameter = parameterWithLinkingContext.getParameter();
 
@@ -285,25 +311,29 @@ public class ParametersWithContextLister {
 
 	public boolean removeParameter(AbstractParameterNode parameter) {
 
+		//		parameter.setParent(null);
+		//		boolean result = fParametersWithContexts.removeIf(e -> e.getParameter().equals(parameter));
+		//		return result;
+
 		parameter.setParent(null);
 
-		boolean result = fParametersWithContexts.removeIf(e -> e.getParameter().equals(parameter));
-		registerChange();
+		// XYX rewrite in ParametersLister
+		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.getParameter().equals(parameter));
+		fElementLister.registerChange();
 
 		return result;
+
 	}
 
 	public void removeAllParameters() {
 
-		fParametersWithContexts.clear();
+		fElementLister.clear();
 	}
 
 	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
-		fParametersWithContexts.clear();
+		fElementLister.clear();
 		addParameters(parameters, parent);
-
-		registerChange();
 	}
 
 	public String generateNewParameterName(String startParameterName) {
@@ -346,15 +376,6 @@ public class ParametersWithContextLister {
 		}
 
 		return true;
-	}
-
-	private void registerChange() {
-
-		if (fModelChangeRegistrator == null) {
-			return;
-		}
-
-		fModelChangeRegistrator.registerChange();
 	}
 
 }
