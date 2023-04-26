@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.utils.ParametersWithContextLister;
+import com.ecfeed.core.model.utils.ParametersLister;
 
 public class RootNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersWithContextLister fParametersHolder;
+	ParametersLister fParametersHolder;
 	private List<ClassNode> fClasses;
 	private int fModelVersion;
 
@@ -33,7 +33,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 		super(name, modelChangeRegistrator);
 
-		fParametersHolder = new ParametersWithContextLister(modelChangeRegistrator);
+		fParametersHolder = new ParametersLister(modelChangeRegistrator);
 
 		fClasses = new ArrayList<ClassNode>();
 		fModelVersion = modelVersion;
@@ -42,7 +42,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public List<IAbstractNode> getChildren(){
 		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
-		children.addAll(fParametersHolder.getParameters());
+		children.addAll(fParametersHolder.getReferenceToParameters());
 		children.addAll(fClasses);
 		return children;
 	}
@@ -210,24 +210,25 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext) {
+			AbstractParameterNode linkingContext // XYX
+			) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext,
+			AbstractParameterNode linkingContext,// XYX
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
@@ -257,7 +258,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParametersHolder.getParameters();
+		return fParametersHolder.getReferenceToParameters();
 	}
 
 	@Override
