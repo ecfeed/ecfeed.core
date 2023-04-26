@@ -24,12 +24,12 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ParametersLister {
+public class ParametersWithContextLister {
 
 	private List<ParameterWithLinkingContext> fParametersWithContexts;
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
-	public ParametersLister(IModelChangeRegistrator modelChangeRegistrator) {
+	public ParametersWithContextLister(IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
 		fParametersWithContexts = new ArrayList<ParameterWithLinkingContext>();
@@ -324,7 +324,7 @@ public class ParametersLister {
 		}
 	}
 
-	public boolean isMatch(ParametersLister otherParametersHolder) {
+	public boolean isMatch(ParametersWithContextLister otherParametersHolder) {
 
 		List<AbstractParameterNode> parameters = getParameters();
 		List<AbstractParameterNode> otherParameters = otherParametersHolder.getParameters();
