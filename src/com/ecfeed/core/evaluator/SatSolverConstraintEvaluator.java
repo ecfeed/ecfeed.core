@@ -38,6 +38,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			return;
 		}
 
+		fSat4Solver.setHasConstraints();
+
 		initMethod(constraints);
 	}
 
@@ -102,7 +104,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void prepareSolversClauses() {
 // This is always executed (providing that there are constraints).
-		fSat4Solver.setHasConstraints();
+//		fSat4Solver.setHasConstraints();
 
 		collectAllRelationStatements();
 
