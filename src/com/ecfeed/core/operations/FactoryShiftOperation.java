@@ -181,15 +181,18 @@ public class FactoryShiftOperation {
 				return new GenericShiftOperation(rootNode.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
 
-			if (fShifted.get(0) instanceof CompositeParameterNode) { // XYX
-				return new GenericShiftOperation(
-						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
-			}
+//			if (fShifted.get(0) instanceof CompositeParameterNode) { // XYX
+//				return new GenericShiftOperation(
+//						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
+//			}
 			
 			IAbstractNode abstractNode = fShifted.get(0);
 
-			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
-				return new GenericShiftOperation(rootNode.getParameters(), fShifted, fShift, fExtLanguageManager);
+			if (abstractNode instanceof AbstractParameterNode 
+					&& ((AbstractParameterNode)abstractNode).isGlobalParameter()) {
+				
+				List<AbstractParameterNode> parameters = rootNode.getParameters();
+				return new GenericShiftOperation(parameters, fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
