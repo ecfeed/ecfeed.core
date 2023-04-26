@@ -121,6 +121,12 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return fClasses;
 	}
 
+	public List<CompositeParameterNode> getCompositeParameterNodes() {
+		
+		List<CompositeParameterNode> nodes = CompositeParameterNodeHelper.getChildCompositeParameterNodes(this);
+		return nodes;
+	}
+	
 	public int getModelVersion() {
 		return fModelVersion;
 	}

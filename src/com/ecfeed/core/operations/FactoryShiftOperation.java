@@ -175,22 +175,28 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(RootNode node) throws Exception {
-			if(fShifted.get(0) instanceof ClassNode){
-				return new GenericShiftOperation(node.getClasses(), fShifted, fShift, fExtLanguageManager);
+		public Object visit(RootNode rootNode) throws Exception {
+			
+			if (fShifted.get(0) instanceof ClassNode) {
+				return new GenericShiftOperation(rootNode.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
 
+			if (fShifted.get(0) instanceof CompositeParameterNode) { // XYX
+				return new GenericShiftOperation(
+						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
+			}
+			
 			IAbstractNode abstractNode = fShifted.get(0);
 
 			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
-				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
+				return new GenericShiftOperation(rootNode.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
-		public Object visit(ClassNode node) throws Exception {
+		public Object visit(ClassNode node) throws Exception { // XYX
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fShift, fExtLanguageManager);
 			}
