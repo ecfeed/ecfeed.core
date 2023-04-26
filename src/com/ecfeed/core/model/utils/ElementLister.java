@@ -29,7 +29,19 @@ public class ElementLister<TypeOfElement> {
 	public void addElement(TypeOfElement element) {
 
 		fElements.add(element);
+		registerChange();
 	}
+	
+	public void clear() {
+		
+		fElements.clear();
+	}
+	
+	public List<TypeOfElement> getReferenceToElements() {
+
+		return fElements;
+	}
+	
 
 //	public void addParameter(
 //			AbstractParameterNode parameter, 
@@ -109,18 +121,6 @@ public class ElementLister<TypeOfElement> {
 //		}
 //
 //		return false;
-//	}
-//
-//	public List<AbstractParameterNode> getParameters() {
-//
-//		List<AbstractParameterNode> result = new ArrayList<>();
-//
-//		for (TypeOfElement parameterWithLinkingContext : fElements) {
-//
-//			result.add(parameterWithLinkingContext.getParameter());
-//		}
-//
-//		return result;
 //	}
 //
 //	public List<TypeOfElement> getParametersWithLinkingContexts() {
@@ -337,13 +337,23 @@ public class ElementLister<TypeOfElement> {
 //		return true;
 //	}
 
-	private void registerChange() {
+	public int getElementsCount() {
+		
+		return fElements.size();
+	}
+
+	public void registerChange() { // XYX make private
 
 		if (fModelChangeRegistrator == null) {
 			return;
 		}
 
 		fModelChangeRegistrator.registerChange();
+	}
+
+	public TypeOfElement getElement(int index) {
+
+		return fElements.get(index);
 	}
 
 }
