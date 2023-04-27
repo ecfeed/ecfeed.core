@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -56,5 +60,4 @@ public class RandomGeneratorTest {
 			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
-
 }

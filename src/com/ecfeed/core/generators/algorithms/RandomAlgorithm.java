@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
@@ -48,7 +50,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 	@Override
 	public void initialize(List<List<E>> input,
 						   IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) {
+						   IEcfProgressMonitor generatorProgressMonitor) {
 
 		if (input.size() == 0) {
 			GeneratorExceptionHelper.reportException("The method contains no parameters.");
@@ -104,7 +106,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 	}
 
 	protected List<List<E>> getCandidates() {
-		Set<List<E>> candidates = new HashSet<List<E>>();
+		Set<List<E>> candidates = new HashSet<>();
 
 		int idleCounter = 0;
 		int idleCounterMax = 100;
@@ -125,59 +127,72 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 			}
 		}
 
-		return new ArrayList<List<E>>(candidates);
+		return new ArrayList<>(candidates);
 	}
 
 	protected List<E> getCandidate() {
 	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
-		List<Integer> random = randomVector(getInput());
+		List<Integer> random = randomVectorAbstract(getInput());
 		List<Integer> result = fCartesianAlgorithm.getNext(random);
-		if(result == null){
+		if (result == null) {
 			result = fCartesianAlgorithm.getNext(null);
-		};
+		}
 	//	fCartesianAlgorithm.removeConstraint(blackList);  //TODO: removeConstraint goes away from IAlgorithm
 		return instance(result);
 	}
 
 	protected List<E> getOptimalCandidate(List<List<E>> candidates, List<List<E>> history) {
-		if(candidates.size() == 0) return null;
-		if(candidates.size() == 1) return candidates.get(0);
+
+		if (candidates.size() == 0) {
+			return null;
+		}
+
+		if (candidates.size() == 1) {
+			return candidates.get(0);
+		}
 
 		List<E> optimalCandidate = null;
 		int optimalCandidateMinDistance = 0;
-		for(List<E> candidate : candidates){
+
+		for(List<E> candidate : candidates) {
 			int candidateMinDistance = Integer.MAX_VALUE;
-			for(List<E> event : history){
+
+			for (List<E> event : history) {
 				int distance = distance(candidate, event);
 				candidateMinDistance = Math.min(distance, candidateMinDistance);
 			}
-			if(candidateMinDistance >= optimalCandidateMinDistance){
+
+			if (candidateMinDistance > optimalCandidateMinDistance) {
 				optimalCandidate = candidate;
 				optimalCandidateMinDistance = candidateMinDistance;
 			}
 		}
+
 		return optimalCandidate;
 	}
 
 	protected int distance(List<E> vector1, List<E> vector2) {
-		if(vector1.size() != vector2.size()){
+
+		if (vector1.size() != vector2.size()) {
 			return Integer.MAX_VALUE;
 		}
+
 		int distance = 0;
-		for(int i = 0; i < vector1.size(); i++){
-			if(!vector1.get(i).equals(vector2.get(i))){
+
+		for (int i = 0 ; i < vector1.size() ; i++) {
+			if (!vector1.get(i).equals(vector2.get(i))) {
 				++distance;
 			}
 		}
+
 		return distance;
 	}
 
-	protected List<Integer> randomVector(List<? extends List<E>> input) {
-		List<Integer> result = new ArrayList<Integer>();
-		Random random = new Random();
-		for(int i = 0; i < input.size(); i++){
-			result.add(random.nextInt(input.get(i).size()));
-		}
-		return result;
+	protected List<Integer> randomVectorAbstract(List<? extends List<E>> input) {
+
+		return input.stream()
+				.map(List::size)							// Get the number of choices for each parameter.
+				.map(ThreadLocalRandom.current()::nextInt)	// Select a choice at random.
+				.collect(Collectors.toList());
 	}
 }
