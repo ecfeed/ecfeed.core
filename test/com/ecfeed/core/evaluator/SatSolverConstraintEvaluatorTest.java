@@ -183,12 +183,12 @@ public class SatSolverConstraintEvaluatorTest {
     }
 
     @Test
-    public void TestRandomAlgorithmAdaptive() {
+    public void TestRandomAlgorithmLimitAdaptive() {
         assertEquals(2 * 2, countGeneratedTestCases(xmlRandomGenerator, new RandomAlgorithm<>(100, false, true)));
     }
 
     @Test
-    public void TestRandomAlgorithm() {
+    public void TestRandomAlgorithmLimit() {
         assertEquals(2 * 2, countGeneratedTestCases(xmlRandomGenerator, new RandomAlgorithm<>(100, false, false)));
     }
 

@@ -34,7 +34,7 @@ public class RandomGeneratorTest {
 	@Test
 	public void initializeTest(){
 		try {
-			RandomGenerator<String> generator = new RandomGenerator<String>();
+			RandomGenerator<String> generator = new RandomGenerator<>();
 			List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3, 3);
 			List<IGeneratorValue> arguments = new ArrayList<>();
 
@@ -48,7 +48,6 @@ public class RandomGeneratorTest {
 			assertEquals(100, ((RandomAlgorithm<String>)algorithm).getLength());
 			
 			try{
-
 				GeneratorValue generatorArgumentDuplicates = new GeneratorValue(generator.getDefinitionDuplicates(), "true");
 				arguments.add(generatorArgumentDuplicates);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());

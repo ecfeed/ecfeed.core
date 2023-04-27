@@ -10,11 +10,7 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -24,27 +20,27 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
-	static final int NUMBER_OF_CANDIDATES = 100;
+	private static final int NUMBER_OF_CANDIDATES = 100;
+	private static final int IDLE_COUNTER = 100;
+
 	private final int fCandidatesSize;
 	private final int fLength;
+	private final boolean fAdaptive;
 	private final boolean fDuplicates;
-	
-	private CartesianProductAlgorithm<E> fCartesianAlgorithm;
 
-	private List<List<E>> fHistory;
+	private final CartesianProductAlgorithm<E> fCartesianAlgorithm;
+	private final List<List<E>> fHistory;
 
 
 	public RandomAlgorithm(int length, boolean duplicates, boolean adaptive) {
-		if(adaptive) {
-			fCandidatesSize = NUMBER_OF_CANDIDATES;
-		} else {
-			fCandidatesSize = 1;
-		}
-		fLength = length;
 		fDuplicates = duplicates;
+		fAdaptive = adaptive;
+		fLength = length;
 
-		fHistory = new ArrayList<List<E>>();
-		fCartesianAlgorithm = new CartesianProductAlgorithm<E>();
+		fCandidatesSize = fAdaptive ? NUMBER_OF_CANDIDATES : 1;
+
+		fCartesianAlgorithm = new CartesianProductAlgorithm<>();
+		fHistory = new ArrayList<>();
 	}
 
 	@Override
@@ -53,15 +49,16 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 						   IEcfProgressMonitor generatorProgressMonitor) {
 
 		if (input.size() == 0) {
-			GeneratorExceptionHelper.reportException("The method contains no parameters.");
+			GeneratorExceptionHelper.reportException("The method contains no parameters!");
 		} 
-		
-		if(fDuplicates == false){
-			for(List<E> assignment : fHistory)
-				getConstraintEvaluator().excludeAssignment(assignment);
+
+		// To avoid duplicates, we need to add all history results as 'exclusion constraints'.
+		if (!fDuplicates) {
+			fHistory.forEach(e -> getConstraintEvaluator().excludeAssignment(e));
 		}
 
 		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
+
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 
 		setTaskBegin(fLength);
@@ -69,109 +66,124 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 
 	@Override
 	public List<E> getNext() {
-		if(fHistory.size() >= fLength){
+
+		if (fHistory.size() >= fLength) {
 			return null;
 		}
-		if(!fHistory.isEmpty() && fDuplicates == false)
-			getConstraintEvaluator().excludeAssignment(fHistory.get(fHistory.size()-1));
+
+		// To avoid duplicates, we need to add the most recent result to the list of 'exclusion constraints'.
+		if (!fHistory.isEmpty() && !fDuplicates) {
+			getConstraintEvaluator().excludeAssignment(fHistory.get(fHistory.size() - 1));
+		}
+
 		List<List<E>> candidates = getCandidates();
-		List<E> optimalCandidate = getOptimalCandidate(candidates, fHistory);
-		if(optimalCandidate == null && fDuplicates == false)
+		Optional<List<E>> optimalCandidate = getOptimalCandidate(candidates);
+
+		if (!optimalCandidate.isPresent()) {
 			return null;
-		fHistory.add(optimalCandidate);
+		}
+
+		fHistory.add(optimalCandidate.get());
+
 		incrementProgress(1);
-		return optimalCandidate;
+
+		return optimalCandidate.get();
 	}
 
 	@Override
-	public void reset(){
-		fHistory.clear();
+	public void reset() {
 		super.reset();
+
+		fHistory.clear();
 	}
 
-	public int getLength(){
+	public int getLength() {
+
 		return fLength;
 	}
 
-	public boolean getDuplicates(){
+	public boolean getDuplicates() {
+
 		return fDuplicates;
-	}
-
-	public int getCandidatesSize(){
-		return fCandidatesSize;
-	}
-
-	public List<List<E>> getHistory(){
-		return fHistory;
 	}
 
 	protected List<List<E>> getCandidates() {
 		Set<List<E>> candidates = new HashSet<>();
-
 		int idleCounter = 0;
-		int idleCounterMax = 100;
 
-		while (candidates.size() < fCandidatesSize && idleCounter < idleCounterMax) {
+		while (candidates.size() < fCandidatesSize && idleCounter < IDLE_COUNTER) {
 			List<E> candidate = getCandidate();
 
 			if (candidate == null) {
 				break;
 			}
 
-			boolean conclusion = candidates.add(candidate);
+			boolean duplicate = candidates.add(candidate);
 
-			if (conclusion) {
-				idleCounter = 0;
-			} else {
-				idleCounter++;
-			}
+			idleCounter = duplicate ? 0 : idleCounter + 1;
 		}
 
 		return new ArrayList<>(candidates);
 	}
 
 	protected List<E> getCandidate() {
-	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
 		List<Integer> random = randomVectorAbstract(getInput());
 		List<Integer> result = fCartesianAlgorithm.getNext(random);
+
 		if (result == null) {
 			result = fCartesianAlgorithm.getNext(null);
 		}
-	//	fCartesianAlgorithm.removeConstraint(blackList);  //TODO: removeConstraint goes away from IAlgorithm
+
 		return instance(result);
 	}
 
-	protected List<E> getOptimalCandidate(List<List<E>> candidates, List<List<E>> history) {
+	private Optional<List<E>> getOptimalCandidate(List<List<E>> candidates) {
 
-		if (candidates.size() == 0) {
-			return null;
+		if (candidates == null || candidates.size() == 0) {
+			return Optional.empty();
 		}
 
 		if (candidates.size() == 1) {
-			return candidates.get(0);
+			return getOptimalCandidateSimple(candidates);
 		}
 
-		List<E> optimalCandidate = null;
-		int optimalCandidateMinDistance = 0;
+		return getOptimalCandidateAdaptive(candidates);
 
-		for(List<E> candidate : candidates) {
-			int candidateMinDistance = Integer.MAX_VALUE;
-
-			for (List<E> event : history) {
-				int distance = distance(candidate, event);
-				candidateMinDistance = Math.min(distance, candidateMinDistance);
-			}
-
-			if (candidateMinDistance > optimalCandidateMinDistance) {
-				optimalCandidate = candidate;
-				optimalCandidateMinDistance = candidateMinDistance;
-			}
-		}
-
-		return optimalCandidate;
 	}
 
-	protected int distance(List<E> vector1, List<E> vector2) {
+	private Optional<List<E>> getOptimalCandidateSimple(List<List<E>> candidates) {
+
+		return Optional.ofNullable(candidates.get(0));
+	}
+
+	private Optional<List<E>> getOptimalCandidateAdaptive(List<List<E>> candidates) {
+
+		List<E> optimalCandidate = null;
+		int optimalCandidateDistance = 0;
+
+		for (List<E> candidate : candidates) {
+			int candidateMinDistance = distanceAgainstHistory(candidate);
+
+			if (candidateMinDistance > optimalCandidateDistance) {
+				optimalCandidate = candidate;
+				optimalCandidateDistance = candidateMinDistance;
+			}
+		}
+
+		return Optional.ofNullable(optimalCandidate);
+	}
+
+	private int distanceAgainstHistory(List<E> vector) {
+		int distance = Integer.MAX_VALUE;
+
+		for (List<E> event : fHistory) {
+			distance = Math.min(distance(vector, event), distance);
+		}
+
+		return distance;
+	}
+
+	private int distance(List<E> vector1, List<E> vector2) {
 
 		if (vector1.size() != vector2.size()) {
 			return Integer.MAX_VALUE;
@@ -188,7 +200,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 		return distance;
 	}
 
-	protected List<Integer> randomVectorAbstract(List<? extends List<E>> input) {
+	private List<Integer> randomVectorAbstract(List<? extends List<E>> input) {
 
 		return input.stream()
 				.map(List::size)							// Get the number of choices for each parameter.
