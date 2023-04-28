@@ -68,10 +68,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateFile(path);
+
         initializeDataFile(path);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -81,10 +85,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateText(data);
+
         initializeDataText(data);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -130,9 +138,11 @@ abstract class ModelDataAbstract implements ModelData {
         this.body = new ArrayList<>();
 
         for (int i = 0 ; i < this.header.size() ; i++) {
-        	this.body.add(new HashSet<String>());
+        	this.body.add(new HashSet<>());
         }
     }
+
+    protected abstract void updateProperties();
 
     protected abstract void initializeHeader();
 
