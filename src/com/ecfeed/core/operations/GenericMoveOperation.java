@@ -48,9 +48,9 @@ public class GenericMoveOperation extends CompositeOperation {
 		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguageManager);
 
 		Set<MethodNode> methodsInvolved = new HashSet<>();
+		
 		try {
-			//all nodes have parents other than newParent
-			if(externalNodes(moved, newParent)){
+			if(allNodesHaveParentDifferentThan(moved, newParent)){
 				for(IAbstractNode node : moved){
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
@@ -92,9 +92,11 @@ public class GenericMoveOperation extends CompositeOperation {
 						addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 					}
 				}
-			}
-			else if(internalNodes(moved, newParent)){
-				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex, extLanguageManager);
+			} else if (allNodesHaveThisParent(moved, newParent)) {
+				
+				GenericShiftOperation operation = 
+						FactoryShiftOperation.getShiftOperation(moved, newIndex, extLanguageManager);
+				
 				addOperation(operation);
 			}
 		} catch (Exception e) {
@@ -151,21 +153,27 @@ public class GenericMoveOperation extends CompositeOperation {
 			}
 	}
 
-	protected boolean externalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
-		for(IAbstractNode node : moved){
-			if(node.getParent() == newParent){
+	protected boolean allNodesHaveParentDifferentThan(List<? extends IAbstractNode> nodes, IAbstractNode parent) {
+		
+		for (IAbstractNode node : nodes) {
+			
+			if (node.getParent() == parent) {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 
-	protected boolean internalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
-		for(IAbstractNode node : moved){
-			if(node.getParent() != newParent){
+	protected boolean allNodesHaveThisParent(List<? extends IAbstractNode> nodes, IAbstractNode parent) {
+		
+		for (IAbstractNode node : nodes) {
+			
+			if (node.getParent() != parent) {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 

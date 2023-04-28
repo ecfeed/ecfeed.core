@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.model.utils.ParametersLister;
+import com.ecfeed.core.model.utils.ParametersWithContextLister;
 import com.ecfeed.core.model.utils.TestCasesHolder;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -26,8 +26,8 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
-	private ParametersLister fParametersHolder;
-	private ParametersLister fDeployedParametersHolder;
+	private ParametersWithContextLister fParametersHolder;
+	private ParametersWithContextLister fDeployedParametersHolder;
 	private TestCasesHolder fTestCasesHolder;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
@@ -42,7 +42,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		fParametersHolder = new ParametersLister(modelChangeRegistrator);
+		fParametersHolder = new ParametersWithContextLister(modelChangeRegistrator);
 		fDeployedParametersHolder = null;
 		fTestCasesHolder = new TestCasesHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
@@ -810,7 +810,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void setDeployedParameters(List<BasicParameterNode> parameters) { // TODO MO-RE remove ? - deployed parameter should have linking contexts even if null 
 
 		if (fDeployedParametersHolder == null) {
-			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
+			fDeployedParametersHolder = new ParametersWithContextLister(getModelChangeRegistrator());
 		} 
 
 		fDeployedParametersHolder.setBasicParameters(parameters, this);
@@ -819,7 +819,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void setDeployedParametersWithContexts(List<ParameterWithLinkingContext> deployedParametersWithContexts) {
 
 		if (fDeployedParametersHolder == null) {
-			fDeployedParametersHolder = new ParametersLister(getModelChangeRegistrator());
+			fDeployedParametersHolder = new ParametersWithContextLister(getModelChangeRegistrator());
 		} 
 
 		fDeployedParametersHolder.setParametersWithLinkingContexts(deployedParametersWithContexts);
