@@ -24,7 +24,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
 
-	private ParametersLister fParametersHolder; 
+	private ParametersLister fParametersLister; 
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	public CompositeParameterNode(
@@ -45,7 +45,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		setLinkToGlobalParameter(link);
 
-		fParametersHolder = new ParametersLister(modelChangeRegistrator);
+		fParametersLister = new ParametersLister(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
@@ -76,7 +76,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
 
 		cloneParameters(copyOfCompositeParameter, nodeMapper);
-		
+
 		cloneConstraints(copyOfCompositeParameter, nodeMapper);
 
 		copyOfCompositeParameter.setProperties(getProperties());
@@ -90,27 +90,27 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	}
 
 	private void cloneParameters(CompositeParameterNode copyOfCompositeParameter, Optional<NodeMapper> nodeMapper) {
-		
+
 		for (AbstractParameterNode parameter : getParameters()) {
-			
+
 			copyOfCompositeParameter.addParameter((AbstractParameterNode) parameter.makeClone(nodeMapper));
 		}
 	}
-	
+
 	private void cloneConstraints(CompositeParameterNode clonedCompositeParameterNode, Optional<NodeMapper> nodeMapper) {
 
 		ConstraintNodeListHolder clonedConstraintHolder = 
 				fConstraintNodeListHolder.makeClone(clonedCompositeParameterNode, nodeMapper);
-		
+
 		clonedCompositeParameterNode.fConstraintNodeListHolder = clonedConstraintHolder;
 	}
-	
+
 	@Override
 	public List<IAbstractNode> getChildren() {
 
 		List<IAbstractNode> children = new ArrayList<>();
 
-		List<AbstractParameterNode> parameters = fParametersHolder.getParameters();
+		List<AbstractParameterNode> parameters = fParametersLister.getReferenceToParameters();
 		children.addAll(parameters);
 
 		List<ConstraintNode> constraintNodes = fConstraintNodeListHolder.getConstraintNodes();
@@ -132,7 +132,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 			return false;
 		}
 
-		if (!fParametersHolder.isMatch(otherComposite.fParametersHolder)) {
+		if (!fParametersLister.isMatch(otherComposite.fParametersLister)) {
 			return false;
 		}
 
@@ -161,7 +161,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public int getChildrenCount() {
 
-		return fParametersHolder.getParametersCount();
+		return fParametersLister.getParametersCount();
 	}
 
 	@Override
@@ -172,90 +172,91 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
 
-		fParametersHolder.addParameter(parameter, this);
+		fParametersLister.addParameter(parameter, this);
 	}
 
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext) {
+			AbstractParameterNode linkingContext // TODO MO-RE remove linking context from upper class/interface
+			) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersLister.addParameter(parameter, this);
 	}
 
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext,
+			AbstractParameterNode linkingContext,  // TODO MO-RE remove linking context from upper class/interface
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersLister.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersLister.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.addParameters(parameters, this);
+		fParametersLister.addParameters(parameters, this);
 	}
 
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
 
-		return fParametersHolder.removeParameter(parameter);
+		return fParametersLister.removeParameter(parameter);
 	}
 
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters, this);
+		fParametersLister.replaceParameters(parameters, this);
 	}
 
 	@Override
 	public int getParametersCount() {
 
-		return fParametersHolder.getParametersCount();
+		return fParametersLister.getParametersCount();
 	}
 
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParametersHolder.getParameters();
+		return fParametersLister.getReferenceToParameters();
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		return fParametersHolder.getParameter(parameterIndex);
+		return fParametersLister.getParameter(parameterIndex);
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterName) {
 
-		return fParametersHolder.findParameter(parameterName);
+		return fParametersLister.findParameter(parameterName);
 	}
 
 	@Override
 	public int getParameterIndex(String parameterName) {
 
-		return fParametersHolder.getParameterIndex(parameterName);
+		return fParametersLister.getParameterIndex(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(String parameterName) {
 
-		return fParametersHolder.parameterExists(parameterName);
+		return fParametersLister.parameterExists(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
 
-		return fParametersHolder.parameterExists(abstractParameterNode);
+		return fParametersLister.parameterExists(abstractParameterNode);
 	}
 
 	@Override
@@ -266,13 +267,13 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public List<String> getParametersNames() {
 
-		return fParametersHolder.getParametersNames();
+		return fParametersLister.getParametersNames();
 	}
 
 	@Override
 	public String generateNewParameterName(String startParameterName) {
 
-		return fParametersHolder.generateNewParameterName(startParameterName);
+		return fParametersLister.generateNewParameterName(startParameterName);
 	}
 
 	@Override

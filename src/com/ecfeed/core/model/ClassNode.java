@@ -23,7 +23,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends AbstractNode implements IParametersParentNode {
 
-	ParametersLister fParametersHolder;
+	ParametersLister fParametersLister;
 	private List<MethodNode> fMethods;
 
 	public ClassNode(String qualifiedName) {
@@ -36,7 +36,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
 
-		fParametersHolder = new ParametersLister(modelChangeRegistrator);
+		fParametersLister = new ParametersLister(modelChangeRegistrator);
 		fMethods = new ArrayList<MethodNode>();
 	}
 
@@ -45,7 +45,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		List<IAbstractNode> children = new ArrayList<>();
 
-		children.addAll(fParametersHolder.getParameters());
+		children.addAll(fParametersLister.getReferenceToParameters());
 		children.addAll(fMethods);
 
 		return children;
@@ -54,7 +54,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public int getChildrenCount() {
 
-		int parametetersSize = fParametersHolder.getParametersCount(); 
+		int parametetersSize = fParametersLister.getParametersCount(); 
 		int methodsSize = fMethods.size();
 
 		return parametetersSize + methodsSize;
@@ -221,7 +221,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		ClassNode otherClassNode = (ClassNode)other;
 
-		if (!fParametersHolder.isMatch(otherClassNode.fParametersHolder)) {
+		if (!fParametersLister.isMatch(otherClassNode.fParametersLister)) {
 			return false;
 		}
 
@@ -277,7 +277,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
 
-		fParametersHolder.addParameter(parameter, this);
+		fParametersLister.addParameter(parameter, this);
 	}
 
 	@Override
@@ -285,13 +285,13 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersLister.addParameter(parameter, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersLister.addParameter(parameter, index, this);
 	}
 
 	@Override
@@ -300,85 +300,85 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 			AbstractParameterNode linkingContext,
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersLister.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.addParameters(parameters, this);
+		fParametersLister.addParameters(parameters, this);
 	}
 
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
 
-		return fParametersHolder.removeParameter(parameter);
+		return fParametersLister.removeParameter(parameter);
 	}
 
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.replaceParameters(parameters, this);
+		fParametersLister.replaceParameters(parameters, this);
 	}
 
 	@Override
 	public int getParametersCount() {
 
-		return fParametersHolder.getParametersCount();
+		return fParametersLister.getParametersCount();
 	}
 
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParametersHolder.getParameters();
+		return fParametersLister.getReferenceToParameters();
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		return fParametersHolder.getParameter(parameterIndex);
+		return fParametersLister.getParameter(parameterIndex);
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
-		return fParametersHolder.findParameter(parameterNameToFind);
+		return fParametersLister.findParameter(parameterNameToFind);
 	}
 
 	@Override
 	public int getParameterIndex(String parameterName) {
 
-		return fParametersHolder.getParameterIndex(parameterName);
+		return fParametersLister.getParameterIndex(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(String parameterName) {
 
-		return fParametersHolder.parameterExists(parameterName);
+		return fParametersLister.parameterExists(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
 
-		return fParametersHolder.parameterExists(abstractParameterNode);
+		return fParametersLister.parameterExists(abstractParameterNode);
 	}
 
 	@Override
 	public List<String> getParameterTypes() {
 
-		return fParametersHolder.getParameterTypes();
+		return fParametersLister.getParameterTypes();
 	}
 
 	@Override
 	public List<String> getParametersNames() {
 
-		return fParametersHolder.getParametersNames();
+		return fParametersLister.getParametersNames();
 	}
 
 	@Override
 	public String generateNewParameterName(String startParameterName) {
 
-		return fParametersHolder.generateNewParameterName(startParameterName);
+		return fParametersLister.generateNewParameterName(startParameterName);
 	}
 
 	public List<BasicParameterNode> getGlobalBasicParameters() {

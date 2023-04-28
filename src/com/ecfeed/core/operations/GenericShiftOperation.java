@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
-	private List<IAbstractNode> fToBeShifted;
+	private List<IAbstractNode> fNodesToBeShifted;
 	private int fShiftSize;
 	private List<? extends IAbstractNode> fCollection;
 
@@ -40,7 +40,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	public GenericShiftOperation(List<? extends IAbstractNode> collection, List<? extends IAbstractNode> shifted, int shift, IExtLanguageManager extLanguageManager){
 		super(OperationNames.MOVE, extLanguageManager);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
-		fToBeShifted = new ArrayList<>(shifted);
+		fNodesToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;
 		fShiftSize = shift;
 	}
@@ -49,13 +49,16 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	public void execute() {
 
 		setNodesToSelect();
-		shiftElements(fCollection, indices(fCollection, fToBeShifted), fShiftSize);
+		
+		List<Integer> indices = calculateIndices(fCollection, fNodesToBeShifted);
+		shiftElements(fCollection, indices, fShiftSize);
+		
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize, getExtLanguageManager());
+		return new GenericShiftOperation(fCollection, fNodesToBeShifted, -fShiftSize, getExtLanguageManager());
 	}
 
 	public int getShift(){
@@ -67,7 +70,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	}
 
 	protected List<? extends IAbstractNode> getShiftedElements(){
-		return fToBeShifted;
+		return fNodesToBeShifted;
 	}
 
 	protected void setShift(int shift){
@@ -105,7 +108,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 		return shift < 0 ? minIndexNode(nodes) : maxIndexNode(nodes);
 	}
 
-	protected List<Integer> indices(List<?> collection, List<?> elements){
+	protected List<Integer> calculateIndices(List<?> collection, List<?> elements){
 		List<Integer> indices = new ArrayList<>();
 		for(Object element : elements){
 			indices.add(collection.indexOf(element));
@@ -167,7 +170,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private void setNodesToSelect() {
 		
 
-		setNodesToSelect(fToBeShifted);
+		setNodesToSelect(fNodesToBeShifted);
 	}
 
 }

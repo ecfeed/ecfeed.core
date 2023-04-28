@@ -70,7 +70,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 					ClassNodeHelper.createMethodNameDuplicateMessage(
 							method.getClassNode(),  method, false, getExtLanguageManager()));
 		}
-		List<Integer> indices = indices(fParameters, getShiftedElements());
+		List<Integer> indices = calculateIndices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());
 		for(TestCaseNode testCase : method.getTestCases()){
 			shiftElements(testCase.getTestData(), indices, getShift());
@@ -90,7 +90,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 		List<String> parameterTypes = ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());
-		List<Integer> indices = indices(method.getParameters(), shifted);
+		List<Integer> indices = calculateIndices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
