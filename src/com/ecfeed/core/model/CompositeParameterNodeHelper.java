@@ -263,6 +263,31 @@ public class CompositeParameterNodeHelper {
 
 		return null;
 	}
+	
+	public static List<CompositeParameterNode> getChildCompositeParameterNodes(IParametersParentNode parentNode) {
+		
+		List<AbstractParameterNode> childAbstractParameterNodes = parentNode.getParameters();
+		
+		List<CompositeParameterNode> childCompositeParameterNodes = 
+				filterCompositeParameterNodes(childAbstractParameterNodes);
+		
+		return childCompositeParameterNodes;
+	}
+
+	public static List<CompositeParameterNode> filterCompositeParameterNodes(
+			List<AbstractParameterNode> abstractParameterNodes) {
+		
+		List<CompositeParameterNode> compositeParameterNodes = new ArrayList<>();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				compositeParameterNodes.add((CompositeParameterNode) abstractParameterNode);
+			}
+		}
+		
+		return compositeParameterNodes;
+	}
 
 	public static void compareParameters(
 			CompositeParameterNode compositeParameterNode1,

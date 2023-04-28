@@ -42,7 +42,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public List<IAbstractNode> getChildren(){
 		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
-		children.addAll(fParametersHolder.getParameters());
+		children.addAll(fParametersHolder.getReferenceToParameters());
 		children.addAll(fClasses);
 		return children;
 	}
@@ -73,7 +73,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		}
 
 		cloneOfRootNode.setParent(this.getParent());
-		
+
 		return cloneOfRootNode;
 	}
 
@@ -119,6 +119,12 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 	public List<ClassNode> getClasses() {
 		return fClasses;
+	}
+
+	public List<CompositeParameterNode> getCompositeParameterNodes() {
+
+		List<CompositeParameterNode> nodes = CompositeParameterNodeHelper.getChildCompositeParameterNodes(this);
+		return nodes;
 	}
 
 	public int getModelVersion() {
@@ -204,9 +210,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext) {
+			AbstractParameterNode linkingContext
+			) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
@@ -215,13 +222,13 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 			AbstractParameterNode linkingContext,
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
@@ -251,7 +258,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParametersHolder.getParameters();
+		return fParametersHolder.getReferenceToParameters();
 	}
 
 	@Override
