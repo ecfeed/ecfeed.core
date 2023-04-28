@@ -201,7 +201,7 @@ public class ParametersLister {
 
 		parameter.setParent(null);
 
-		// XYX rewrite in ParametersLister
+		// TODO MO-RE rewrite in ParametersLister
 		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.equals(parameter));
 		fElementLister.registerChange();
 
@@ -215,7 +215,7 @@ public class ParametersLister {
 
 	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
-		// XYX rewrite in ParametersLister
+		// TODO MO-RE rewrite in ParametersLister
 		fElementLister.clear();
 		addParameters(parameters, parent);
 

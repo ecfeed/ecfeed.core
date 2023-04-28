@@ -32,7 +32,7 @@ public class ElementLister<TypeOfElement> {
 		if (elementExists(element)) {
 			reportErrorElementExists(element);
 		}
-		
+
 		fElements.add(element);
 		registerChange();
 	}
@@ -65,7 +65,7 @@ public class ElementLister<TypeOfElement> {
 
 		ExceptionHelper.reportRuntimeException("Element: " + parameter.toString() + " already exists.");
 	}
-	
+
 	public void clear() {
 
 		fElements.clear();
@@ -377,7 +377,7 @@ public class ElementLister<TypeOfElement> {
 		return fElements.size();
 	}
 
-	public void registerChange() { // XYX make private
+	public void registerChange() { // TODO MO-RE make private
 
 		if (fModelChangeRegistrator == null) {
 			return;

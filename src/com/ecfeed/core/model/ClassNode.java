@@ -283,8 +283,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext // XYX
-			) {
+			AbstractParameterNode linkingContext) {
 
 		fParametersLister.addParameter(parameter, this);
 	}
@@ -298,7 +297,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext, // XYX
+			AbstractParameterNode linkingContext,
 			int index) {
 
 		fParametersLister.addParameter(parameter, index, this);

@@ -266,7 +266,7 @@ public class ParametersWithContextLister {
 
 		parameter.setParent(null);
 
-		// XYX rewrite in ParametersLister
+		// TODO MO-RE rewrite in ParametersLister
 		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.getParameter().equals(parameter));
 		fElementLister.registerChange();
 

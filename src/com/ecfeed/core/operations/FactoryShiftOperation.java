@@ -118,13 +118,13 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			
+
 			IAbstractNode firstShiftedNode = fShifted.get(0);
 
 			if(firstShiftedNode instanceof AbstractParameterNode){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
-			
+
 			if(firstShiftedNode instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
 			}
@@ -176,21 +176,21 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(RootNode rootNode) throws Exception {
-			
+
 			if (fShifted.get(0) instanceof ClassNode) {
 				return new GenericShiftOperation(rootNode.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
 
-//			if (fShifted.get(0) instanceof CompositeParameterNode) { // XYX
-//				return new GenericShiftOperation(
-//						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
-//			}
-			
+			//			if (fShifted.get(0) instanceof CompositeParameterNode) {
+			//				return new GenericShiftOperation(
+			//						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
+			//			}
+
 			IAbstractNode abstractNode = fShifted.get(0);
 
 			if (abstractNode instanceof AbstractParameterNode 
 					&& ((AbstractParameterNode)abstractNode).isGlobalParameter()) {
-				
+
 				List<AbstractParameterNode> parameters = rootNode.getParameters();
 				return new GenericShiftOperation(parameters, fShifted, fShift, fExtLanguageManager);
 			}
@@ -199,7 +199,7 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(ClassNode node) throws Exception { // XYX
+		public Object visit(ClassNode node) throws Exception {
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fShift, fExtLanguageManager);
 			}

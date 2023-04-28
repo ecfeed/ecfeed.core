@@ -73,7 +73,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		}
 
 		cloneOfRootNode.setParent(this.getParent());
-		
+
 		return cloneOfRootNode;
 	}
 
@@ -122,11 +122,11 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	public List<CompositeParameterNode> getCompositeParameterNodes() {
-		
+
 		List<CompositeParameterNode> nodes = CompositeParameterNodeHelper.getChildCompositeParameterNodes(this);
 		return nodes;
 	}
-	
+
 	public int getModelVersion() {
 		return fModelVersion;
 	}
@@ -210,7 +210,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext // XYX
+			AbstractParameterNode linkingContext
 			) {
 
 		fParametersHolder.addParameter(parameter, this);
@@ -219,7 +219,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext,// XYX
+			AbstractParameterNode linkingContext,
 			int index) {
 
 		fParametersHolder.addParameter(parameter, index, this);
