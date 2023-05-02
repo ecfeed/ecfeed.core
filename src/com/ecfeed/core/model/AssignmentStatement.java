@@ -195,11 +195,11 @@ public class AssignmentStatement extends RelationStatement {
 		return EMathRelation.ASSIGN;
 	}
 
-	@Override
-	public AssignmentStatement makeClone() {
-
-		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
-	}
+	//	@Override
+	//	public AssignmentStatement makeClone() {
+	//
+	//		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
+	//	}
 
 	@Override
 	public AssignmentStatement createCopy(NodeMapper mapper) {

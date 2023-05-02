@@ -36,7 +36,7 @@ public interface IStatementCondition {
 	public void derandomize();
 	public void convert(ParameterConversionItem parameterConversionItem);
 	public String getLabel(BasicParameterNode methodParameterNode);
-	public IStatementCondition makeClone();
+	//public IStatementCondition makeClone();
 	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper); // TODO MO-RE obsolete
 	IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper);
 	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);

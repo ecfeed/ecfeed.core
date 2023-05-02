@@ -62,22 +62,22 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public ChoiceCondition makeClone(
 			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
-		
+
 		if (nodeMapper.isPresent()) {
-			
+
 			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
-			
+
 			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
 		}
 
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
-	
-	@Override
-	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
-		// choices are not cloned
-		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
-	}
+
+	//	@Override
+	//	public ChoiceCondition makeClone() {
+	//		// choices are not cloned
+	//		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	//	}
 
 	@Override
 	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) { // TODO MO-RE obsolete
@@ -86,7 +86,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
-		
+
 		ChoiceNode node;
 
 		if (isSourceLinked()) {
