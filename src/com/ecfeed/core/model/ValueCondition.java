@@ -126,16 +126,16 @@ public class ValueCondition implements IStatementCondition {
 
 	@Override
 	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
-
+		
 		return new ValueCondition(fRightValue, statement);
 	}
 
+	
+	@Override
+	public ValueCondition makeClone() {
 
-	//	@Override
-	//	public ValueCondition makeClone() {
-	//
-	//		return new ValueCondition(fRightValue, fParentRelationStatement);
-	//	}
+		return new ValueCondition(fRightValue, fParentRelationStatement);
+	}
 
 	@Override
 	public ValueCondition createCopy(RelationStatement statement, NodeMapper mapper) {

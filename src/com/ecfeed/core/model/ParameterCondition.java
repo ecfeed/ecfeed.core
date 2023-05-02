@@ -186,12 +186,12 @@ public class ParameterCondition implements IStatementCondition {
 		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
 	}
 
-	//	@Override
-	//	public ParameterCondition makeClone() {
-	//
-	//		// parameters are not cloned
-	//		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
-	//	}
+	@Override
+	public ParameterCondition makeClone() {
+
+		// parameters are not cloned
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
+	}
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {

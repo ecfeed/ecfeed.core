@@ -254,10 +254,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		}
 		
 		RelationStatement relationStatement = new RelationStatement(
-				fLeftParameter, 
-				fLeftParameterLinkingContext, 
-				fRelation, 
-				fRightCondition.makeClone(this, Optional.empty()));
+				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
 		
 		return relationStatement;
 	}
@@ -267,10 +264,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		return 
 				new RelationStatement(
-						fLeftParameter, 
-						fLeftParameterLinkingContext, 
-						fRelation, 
-						fRightCondition.makeClone(this, Optional.empty()));
+						fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
 	}
 
 	@Override

@@ -94,14 +94,14 @@ public class LabelCondition implements IStatementCondition {
 
 	@Override
 	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
-
+		
 		return new LabelCondition(fRightLabel, statement);
 	}
 
-	//	@Override
-	//	public LabelCondition makeClone() {
-	//		return new LabelCondition(fRightLabel, fParentRelationStatement);
-	//	}
+	@Override
+	public LabelCondition makeClone() {
+		return new LabelCondition(fRightLabel, fParentRelationStatement);
+	}
 
 	@Override
 	public LabelCondition createCopy(RelationStatement statement, NodeMapper mapper) {
