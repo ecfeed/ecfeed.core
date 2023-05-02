@@ -48,6 +48,26 @@ public abstract class AbstractParameterSignatureHelper {
 		YES
 	}
 
+	public static String createSignatureOldStandard(
+			AbstractParameterNode parameter,
+			IExtLanguageManager extLanguageManager) {
+
+		String signature = createSignatureWithLinkNewStandard(
+				parameter,
+				ExtendedName.NAME_ONLY,
+				TypeOfLink.IRRELEVANT,
+				null,
+				ExtendedName.IRRELEVANT,
+				Decorations.NO,
+				TypeIncluded.YES,
+				extLanguageManager);
+
+		signature = signature.replaceAll(" ", "");
+		String[] elements = signature.split(":");
+
+		return elements[1] + " " + elements[0];
+	}
+
 	public static String createSignatureNewStandard(
 			AbstractParameterNode parameter,
 			ExtendedName extendedNameTypeOfParameter,
@@ -404,7 +424,7 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead 
+	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
 
 		printObsoleteInfo();
 
@@ -693,7 +713,7 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	private static void printObsoleteInfo() {
-		System.out.println("OBSOLETE FUNCTION");
+//		System.out.println("OBSOLETE FUNCTION");
 	}
 
 }

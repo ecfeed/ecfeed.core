@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -85,6 +86,14 @@ public class MethodNodeHelper {
 
 		return signature;
 
+	}
+
+	public static String createSignatureOldStandard(MethodNode method, IExtLanguageManager manager) {
+
+		List<String> parameterNames = method.getParameters().stream().map(e -> AbstractParameterSignatureHelper.createSignatureOldStandard(e, manager)).collect(Collectors.toList());
+		String methodName = method.getName();
+
+		return methodName + "(" + String.join(", ", parameterNames) + ")";
 	}
 
 	public static String createSignatureNewStandard(
