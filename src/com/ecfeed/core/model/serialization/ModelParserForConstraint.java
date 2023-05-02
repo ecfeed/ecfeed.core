@@ -117,7 +117,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			constraintType = ConstraintType.parseCode(type);
 		} catch (Exception e) {
 			errorList.add("Cannot parse constraint type.");
-			ParserException.create();
+			ParserException.reportException();
 		}
 
 		return constraintType;
