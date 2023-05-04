@@ -299,10 +299,15 @@ public class FactoryShiftOperation {
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
-	private static GenericShiftOperation getShiftOperation(IAbstractNode parent, List<? extends IAbstractNode> shifted, IModelVisitor provider) {
-		if(parent == null || haveTheSameType(shifted) == false){
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+	private static GenericShiftOperation getShiftOperation(
+			IAbstractNode parent, 
+			List<? extends IAbstractNode> shifted, 
+			IModelVisitor provider) {
+		
+		if (parent == null || haveTheSameType(shifted) == false) {
+			return null;
 		}
+		
 		try{
 			return (GenericShiftOperation)parent.accept(provider);
 		}
