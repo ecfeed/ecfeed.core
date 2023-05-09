@@ -91,7 +91,7 @@ public class RelationStatementTest {
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter, null, EMathRelation.EQUAL, choice);
-		
+
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithLabelCondition(
 						parameter, null, EMathRelation.EQUAL, "label");
@@ -102,63 +102,91 @@ public class RelationStatementTest {
 		assertTrue(statement1.isEqualTo(copy1));
 		assertTrue(statement2.isEqualTo(copy2));
 	}
-	
+
 	@Test
-	public void isConsistent1() {
+	public void isConsistentWithLocalParameter() {
 
 		MethodNode methodNode1 = new MethodNode("method1");
-		
+
 		BasicParameterNode basicParameterNode1 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
-		
+
 		ChoiceNode choice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode1, "choice", "1", false, true, null);
-		
+
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						basicParameterNode1, null, EMathRelation.EQUAL, choice1);
-		
+
 		MethodNode methodNode2 = new MethodNode("method2");
-		
+
 		BasicParameterNode basicParameterNode2 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
-		
+
 		ChoiceNode choice2 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode2, "choice", "1", false, true, null);
-		
+
 		assertTrue(statement1.isConsistent(methodNode1));
-		
+
 		// method mismatched with parameter
-		
+
 		assertFalse(statement1.isConsistent(methodNode2));
 
 		// choice mismatched
-		
+
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						basicParameterNode1, null, EMathRelation.EQUAL, choice2);
-		
+
 		assertFalse(statement2.isConsistent(methodNode1));
-		
+
 		// hanging choice
 
 		ChoiceNode hangingChoice = new ChoiceNode("X", "1");
-		
+
 		RelationStatement statement3 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						basicParameterNode1, null, EMathRelation.EQUAL, hangingChoice);
-		
+
 		assertFalse(statement3.isConsistent(methodNode1));
-		
+
 		// hanging parameter
-		
+
 		BasicParameterNode hangingParameter =
 				new BasicParameterNode("p", "int", "0", false, null);
 
 		RelationStatement statement4 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						hangingParameter, null, EMathRelation.EQUAL, choice1);
-		
+
 		assertFalse(statement4.isConsistent(methodNode1));		
 	}
+
+	@Test
+	public void isConsistentWithGlobalParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		BasicParameterNode globalBasicParameter = 
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp", "String", null);
+
+		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameter, "choice", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+
+		basicParameterNode1.setLinkToGlobalParameter(globalBasicParameter);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, globalChoice1);
+
+		assertTrue(statement1.isConsistent(methodNode1));		
+	}
+
 }

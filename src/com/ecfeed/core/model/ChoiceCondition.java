@@ -398,6 +398,19 @@ public class ChoiceCondition implements IStatementCondition {
 		
 		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
 		
+		AbstractParameterNode linkToGlobalParameter = leftBasicParameterNode.getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter instanceof BasicParameterNode) {
+			
+			BasicParameterNode linkAsBasicParameter = (BasicParameterNode) linkToGlobalParameter;
+
+			if (BasicParameterNodeHelper.choiceNodeExists(linkAsBasicParameter, fRightChoice)) {
+				return true;
+			}
+			
+			return false;
+		}
+		
 		if (BasicParameterNodeHelper.choiceNodeExists(leftBasicParameterNode, fRightChoice)) {
 			return true;
 		}
