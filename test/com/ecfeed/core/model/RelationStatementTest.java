@@ -104,7 +104,7 @@ public class RelationStatementTest {
 	}
 
 	@Test
-	public void isConsistentWithLocalParameter() {
+	public void isConsistentChoiceConditionWithLocalParameter() {
 
 		MethodNode methodNode1 = new MethodNode("method1");
 
@@ -163,7 +163,7 @@ public class RelationStatementTest {
 	}
 
 	@Test
-	public void isConsistentWithGlobalParameter() {
+	public void isConsistentChoiceConditionWithGlobalParameter() {
 
 		RootNode rootNode = new RootNode("root", null);
 
@@ -186,7 +186,18 @@ public class RelationStatementTest {
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						basicParameterNode1, null, EMathRelation.EQUAL, globalChoice1);
 
-		assertTrue(statement1.isConsistent(methodNode1));		
+		assertTrue(statement1.isConsistent(methodNode1));	
+		
+		// hanging choice
+
+		ChoiceNode hangingChoice = new ChoiceNode("X", "1");
+
+		RelationStatement statement3 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, hangingChoice);
+
+		assertFalse(statement3.isConsistent(methodNode1));
 	}
 
+	// XYX TODO parameter condition, label condition, value condition 
 }
