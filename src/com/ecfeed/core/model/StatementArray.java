@@ -165,7 +165,7 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public AbstractStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {
@@ -175,7 +175,7 @@ public class StatementArray extends AbstractStatement {
 		return copy;
 	}
 
-	
+
 	@Override
 	public StatementArray makeClone() {
 
@@ -455,6 +455,18 @@ public class StatementArray extends AbstractStatement {
 	@Override
 	public CompositeParameterNode getLeftParameterLinkingContext() {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(MethodNode parentMethodNode) {
+
+		for (AbstractStatement abstractStatement : fStatements) {
+			if (!abstractStatement.isConsistent(parentMethodNode)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	//	@Override

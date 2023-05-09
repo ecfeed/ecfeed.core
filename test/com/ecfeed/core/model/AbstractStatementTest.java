@@ -127,6 +127,12 @@ public class AbstractStatementTest {
 			return null;
 		}
 
+		@Override
+		public boolean isConsistent(MethodNode parentMethodNode) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 	}
 
 	@Test

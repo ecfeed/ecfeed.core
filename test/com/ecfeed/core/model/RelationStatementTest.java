@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.EMathRelation;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -102,4 +103,42 @@ public class RelationStatementTest {
 		assertTrue(statement2.isEqualTo(copy2));
 	}
 	
+	@Test
+	public void isConsistent1() {
+
+		MethodNode methodNode1 = new MethodNode("method1");
+		
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+		
+		ChoiceNode choice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode1, "choice", "1", false, true, null);
+		
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, choice1);
+		
+		MethodNode methodNode2 = new MethodNode("method2");
+		
+		BasicParameterNode basicParameterNode2 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+		
+		ChoiceNode choice2 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode2, "choice", "1", false, true, null);
+		
+		assertTrue(statement1.isConsistent(methodNode1));
+		
+		// method mismatched with parameter
+		
+		assertFalse(statement1.isConsistent(methodNode2));
+
+		// choice mismatched
+		
+//		RelationStatement statement2 = 
+//				RelationStatement.createRelationStatementWithChoiceCondition(
+//						basicParameterNode1, null, EMathRelation.EQUAL, choice2);
+//		
+//		assertFalse(statement2.isConsistent(methodNode1));
+		
+	}
 }

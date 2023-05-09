@@ -1,14 +1,18 @@
 package com.ecfeed.core.parser;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.parser.model.ModelData;
-import com.ecfeed.core.parser.model.ModelDataFactory;
-import org.junit.Assert;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Set;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ModelChangeRegistrator;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.parser.model.ModelData;
+import com.ecfeed.core.parser.model.ModelDataFactory;
 
 public class ModelParserTest {
 

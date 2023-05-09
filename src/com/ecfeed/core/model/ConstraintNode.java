@@ -12,11 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode {
 
@@ -237,189 +235,293 @@ public class ConstraintNode extends AbstractNode {
 
 	public boolean isConsistent() {
 
-		if (!areParametersConsistent()) {
+		IAbstractNode parent = getParent();
+
+		if (!(parent instanceof MethodNode)) {
 			return false;
 		}
 
-		if (!areChoicesConsistent()) {
-			return false;
-		}
+		MethodNode parentMethodNode = (MethodNode) parent;
 
-		if (!constraintsConsistent()) {
-			return false;
-		}
+		Constraint constraint = getConstraint();
 
-		return true;
-	}
-
-	private boolean areParametersConsistent() {
-
-		final Set<BasicParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-
-		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
-
-		final List<AbstractParameterNode> parametersOfParent = parametersParentNode.getParameters();
-
-		for (BasicParameterNode referencedParameter : referencedParameters) {
-			if (!isParameterConsistent(referencedParameter, parametersOfParent)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private boolean isParameterConsistent(
-
-			BasicParameterNode argParameter,
-			List<AbstractParameterNode> methodParameters) {
-
-		for (AbstractParameterNode param : methodParameters) {
-
-			if (param instanceof BasicParameterNode) {
-				BasicParameterNode methodParam = (BasicParameterNode) param;
-
-				if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
-					return true;
-				}
-			} 			
-		}
-
-		if (!methodParameters.contains(argParameter)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private boolean areChoicesConsistent() {
-
-		Set<ChoiceNode> referencedChoices = getConstraint().getReferencedChoices();
-
-		for (ChoiceNode choiceNode : referencedChoices) {
-
-			if (!isChoiceConsistent(choiceNode)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private boolean isChoiceConsistent(ChoiceNode choiceNode) {
-
-		if (choiceNode.getQualifiedName() == null) {
-			return false;
-		}
-
-		if (!isOkForExpectedParameter(choiceNode)) {
-			return false;
-		}
-
-		BasicParameterNode parameter = choiceNode.getParameter();
-		List<MethodNode> parameterMethods = parameter.getMethods();
-
-		if (parameterMethods == null) {
-			return false;
-		}
-
-		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
-
-		if (!parameterMethods.contains(parametersParentNode)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private static boolean isOkForExpectedParameter(ChoiceNode choiceNode) {
-
-		BasicParameterNode parameter = choiceNode.getParameter();
-
-		if (parameter == null && !isMethodParameterNodeExpected(parameter)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private static boolean isMethodParameterNodeExpected(BasicParameterNode parameter) {
-
-		if (!(parameter instanceof BasicParameterNode)) {
-			return false;
-		}
-
-		if (((BasicParameterNode)parameter).isExpected()) {
+		if (constraint.isConsistent(parentMethodNode)) {
 			return true;
 		}
 
 		return false;
+
+		//		if (!areParametersConsistent()) {
+		//			return false;
+		//		}
+		//
+		//		if (!areChoicesConsistent()) {
+		//			return false;
+		//		}
+		//
+		//		if (!constraintsConsistent()) {
+		//			return false;
+		//		}
+		//
+		//		return true;
 	}
 
-	private boolean constraintsConsistent() {
+	// XYX
+	//	private boolean areParametersConsistent() {
+	//
+	//		final Set<BasicParameterNode> parametersUsedInConstraint = getConstraint().getReferencedParameters();
+	//
+	//		IParametersParentNode parentOfConstraint = (IParametersParentNode) getParent();
+	//
+	//		for (BasicParameterNode basicParameterNode : parametersUsedInConstraint) {
+	//
+	//			if (!isParameterConsistent(basicParameterNode, parentOfConstraint)) {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		//		final List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
+	//		//
+	//		//		for (BasicParameterNode referencedParameter : referencedParameters) {
+	//		//			if (!isParameterConsistentOld(referencedParameter, parametersOfParent)) {
+	//		//				return false;
+	//		//			}
+	//		//		}
+	//
+	//		return true;
+	//	}
 
-		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
+	// XYX
+	//	private boolean isParameterConsistent(
+	//			BasicParameterNode basicParameterNode, IParametersParentNode parentOfConstraint) {
+	//
+	//		IParametersParentNode parentOfParameter = basicParameterNode.getParent();
+	//
+	//		if (parentOfParameter == parentOfConstraint) {
+	//
+	//			return parentOfConstraintContainsBasicParameter(parentOfConstraint, basicParameterNode);
+	//		}
+	//
+	//		CompositeParameterNode topCompositeOfBasicParameter = 
+	//				AbstractParameterNodeHelper.getTopComposite(basicParameterNode);
+	//
+	//		if (topCompositeOfBasicParameter != null) {
+	//
+	//			return parentOfConstraintContainsLinkToCompositeParameter(
+	//					parentOfConstraint, topCompositeOfBasicParameter);
+	//		}
+	//
+	//		return parentOfConstraintContainsLinkToBasicParameter(parentOfConstraint, basicParameterNode);
+	//	}
 
-		for (AbstractParameterNode abstractParameterNode : parametersParentNode.getParameters()) {
 
-			if (!(abstractParameterNode instanceof BasicParameterNode)) {
-				continue;
-			}
+	// XYX
+	//	private boolean parentOfConstraintContainsBasicParameter(IParametersParentNode parentOfConstraint,
+	//			BasicParameterNode basicParameterNode) {
+	//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
+	//
+	//		if (parametersOfParent.contains(basicParameterNode)) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+	// XYX
+	//	private boolean parentOfConstraintContainsLinkToCompositeParameter(
+	//			IParametersParentNode parentOfConstraint,
+	//			CompositeParameterNode topCompositeOfBasicParameter) {
+	//
+	//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : parametersOfParent) {
+	//
+	//			AbstractParameterNode linkToGlobalParameter = abstractParameterNode.getLinkToGlobalParameter();
+	//
+	//			if (linkToGlobalParameter.equals(topCompositeOfBasicParameter)) {
+	//				return true;
+	//			}
+	//		}
+	//
+	//		return false;
+	//	}
 
-			if (!isConsistentForParameter(basicParameterNode)) {
-				return false;
-			}
-		}
 
-		return true;
-	}
+	// XYX
+//	private boolean parentOfConstraintContainsLinkToBasicParameter(
+//			IParametersParentNode parentOfConstraint,
+//			BasicParameterNode topCompositeOfBasicParameter) {
+//
+//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
+//
+//		for (AbstractParameterNode abstractParameterNode : parametersOfParent) {
+//
+//			if (abstractParameterNode.getLinkToGlobalParameter().equals(topCompositeOfBasicParameter)) {
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
-	private boolean isConsistentForParameter(BasicParameterNode parameter) {
+	//	private boolean isParameterConsistentOld(
+	//			BasicParameterNode argParameter,
+	//			List<AbstractParameterNode> methodParameters) {
+	//
+	//		for (AbstractParameterNode param : methodParameters) {
+	//
+	//			if (param instanceof BasicParameterNode) {
+	//				BasicParameterNode methodParam = (BasicParameterNode) param;
+	//
+	//				if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
+	//					return true;
+	//				}
+	//			} 			
+	//		}
+	//
+	//		if (methodParameters.contains(argParameter)) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-		String typeName = parameter.getType();
+	// XYX
+	//	private boolean areChoicesConsistent() {
+	//
+	//		Set<ChoiceNode> referencedChoices = getConstraint().getReferencedChoices();
+	//
+	//		for (ChoiceNode choiceNode : referencedChoices) {
+	//
+	//			if (!isChoiceConsistent(choiceNode)) {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		return true;
+	//	}
 
-		if (parameter.isExpected()) {
-			return true;
-		}
+	// XYX
+	//	private boolean isChoiceConsistent(ChoiceNode choiceNode) {
+	//
+	//		if (choiceNode.getQualifiedName() == null) {
+	//			return false;
+	//		}
+	//
+	//		if (!isOkForExpectedParameter(choiceNode)) {
+	//			return false;
+	//		}
+	//
+	//		BasicParameterNode parameter = choiceNode.getParameter();
+	//		List<MethodNode> parameterMethods = parameter.getMethods();
+	//
+	//		if (parameterMethods == null) {
+	//			return false;
+	//		}
+	//
+	//		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
+	//
+	//		if (!parameterMethods.contains(parametersParentNode)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
-		if (isForbiddenTypeForOrderRelations(typeName)) {
+	// XYX
+	//	private static boolean isOkForExpectedParameter(ChoiceNode choiceNode) {
+	//
+	//		BasicParameterNode parameter = choiceNode.getParameter();
+	//
+	//		if (parameter == null && !isMethodParameterNodeExpected(parameter)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
-			if (fConstraint.mentionsParameterAndOrderRelation(parameter)) {
-				return false;
-			}
-		}
+	// XYX
+	//	private static boolean isMethodParameterNodeExpected(BasicParameterNode parameter) {
+	//
+	//		if (!(parameter instanceof BasicParameterNode)) {
+	//			return false;
+	//		}
+	//
+	//		if (((BasicParameterNode)parameter).isExpected()) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-		if (!checkLabels(parameter)) {
-			return false;
-		}
+	// XYX
+	//	private boolean constraintsConsistent() {
+	//
+	//		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : parametersParentNode.getParameters()) {
+	//
+	//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+	//				continue;
+	//			}
+	//
+	//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+	//
+	//			if (!isConsistentForParameter(basicParameterNode)) {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		return true;
+	//	}
 
-		return true;
-	}
+	// XYX	
+	//	private boolean isConsistentForParameter(BasicParameterNode parameter) {
+	//
+	//		String typeName = parameter.getType();
+	//
+	//		if (parameter.isExpected()) {
+	//			return true;
+	//		}
+	//
+	//		if (isForbiddenTypeForOrderRelations(typeName)) {
+	//
+	//			if (fConstraint.mentionsParameterAndOrderRelation(parameter)) {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		if (!checkLabels(parameter)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
-	private boolean isForbiddenTypeForOrderRelations(String typeName) {
+	// XYX
+	//	private boolean isForbiddenTypeForOrderRelations(String typeName) {
+	//
+	//		if (JavaLanguageHelper.isUserType(typeName)) {
+	//			return true;
+	//		}
+	//
+	//		if (JavaLanguageHelper.isBooleanTypeName(typeName)) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-		if (JavaLanguageHelper.isUserType(typeName)) {
-			return true;
-		}
-
-		if (JavaLanguageHelper.isBooleanTypeName(typeName)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private boolean checkLabels(BasicParameterNode parameter) {
-
-		for (String label : getConstraint().getReferencedLabels(parameter)) {
-			if (!parameter.getLeafLabels().contains(label)) {
-				return false;
-			}
-		}
-		return true;
-	}
+	// XYX
+	//	private boolean checkLabels(BasicParameterNode parameter) {
+	//
+	//		for (String label : getConstraint().getReferencedLabels(parameter)) {
+	//			if (!parameter.getLeafLabels().contains(label)) {
+	//				return false;
+	//			}
+	//		}
+	//		return true;
+	//	}
 
 
 	@Override

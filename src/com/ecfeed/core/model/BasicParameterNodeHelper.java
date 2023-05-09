@@ -521,4 +521,19 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
+	public static boolean isParameterConsistent(BasicParameterNode basicParameterNode, MethodNode parentMethodNode) {
+		
+		IParametersParentNode parent = basicParameterNode.getParent();
+		
+		if (!(parent instanceof MethodNode)) {
+			return false;
+		}
+		
+		if (!parent.equals(parentMethodNode)) {
+			return false;
+		}
+		
+		return true;
+	}
+
 }

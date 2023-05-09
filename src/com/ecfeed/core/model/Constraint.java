@@ -1044,4 +1044,21 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 	}
+
+	public boolean isConsistent(MethodNode parentMethodNode) {
+		
+		AbstractStatement precondition = getPrecondition();
+		
+		if (!precondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
+
+		AbstractStatement postcondition = getPostcondition();
+		
+		if (!postcondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
+		
+		return true;
+	}
 }

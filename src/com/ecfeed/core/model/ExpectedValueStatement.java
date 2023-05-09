@@ -286,6 +286,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return new ArrayList<>();
 	}
 
+	@Override
+	public boolean isConsistent(MethodNode parentMethodNode) {
+		
+		// XYX
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	//	@Override
 	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
 	//

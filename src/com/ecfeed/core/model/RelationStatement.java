@@ -606,6 +606,17 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return result;
 	}
 
+	@Override
+	public boolean isConsistent(MethodNode parentMethodNode) {
+		
+		if (!BasicParameterNodeHelper.isParameterConsistent(fLeftParameter, parentMethodNode)) {
+			return false;
+		}
+		
+		// XYX
+		return true;
+	}
+
 	//	@Override
 	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
 	//
