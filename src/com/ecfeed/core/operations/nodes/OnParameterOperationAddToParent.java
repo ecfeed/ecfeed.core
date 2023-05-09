@@ -96,7 +96,11 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 
 		@Override
 		public void execute() {
-			fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
+			
+			if (fTestCasesParentNode != null) {
+				fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
+			}
+			
 			super.execute();
 		}
 

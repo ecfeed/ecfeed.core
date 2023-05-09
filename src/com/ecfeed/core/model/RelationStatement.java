@@ -190,7 +190,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						linkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						leftParameter,
 						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM, buf statement editor requires full path 
 						Decorations.NO,
@@ -218,7 +218,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						leftParameterLinkingCondition,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						leftBasicParameterNode,
 						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
 						Decorations.NO,

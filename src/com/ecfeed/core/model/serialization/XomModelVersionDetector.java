@@ -20,7 +20,7 @@ public class XomModelVersionDetector {
 		String qualifiedName = element.getQualifiedName(); 
 
 		if(qualifiedName.equals(ROOT_NODE_NAME) == false){
-			ParserException.report("Unexpected root node name: " + qualifiedName);
+			ParserException.reportException("Unexpected root node name: " + qualifiedName);
 		}
 
 		String versionStr = element.getAttributeValue(VERSION_ATTRIBUTE);
@@ -46,6 +46,6 @@ public class XomModelVersionDetector {
 	}
 
 	private static void reportInvalidVersionException() throws ParserException {
-		ParserException.report("Invalid version of model.");
+		ParserException.reportException("Invalid version of model.");
 	}
 }
