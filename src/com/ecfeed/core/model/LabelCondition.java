@@ -203,6 +203,12 @@ public class LabelCondition implements IStatementCondition {
 		return null;
 	}
 
+	@Override
+	public boolean isConsistent(MethodNode parentMethodNode) {
+		// TODO XYX
+		return false;
+	}
+
 	//	@Override
 	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
 	//

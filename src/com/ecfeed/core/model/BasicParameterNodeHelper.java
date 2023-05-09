@@ -520,6 +520,24 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
+	
+	public static boolean choiceNodeExists(BasicParameterNode basicParameterNode, ChoiceNode choiceNodeToFind) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.equals(choiceNodeToFind)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 
 	public static boolean isParameterConsistent(BasicParameterNode basicParameterNode, MethodNode parentMethodNode) {
 		

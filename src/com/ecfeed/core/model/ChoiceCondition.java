@@ -391,6 +391,21 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 	}
 
+	@Override
+	public boolean isConsistent(MethodNode parentMethodNode) {
+		
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+		
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+		
+		if (BasicParameterNodeHelper.choiceNodeExists(leftBasicParameterNode, fRightChoice)) {
+			return true;
+		}
+		
+		// TODO XYX
+		return false;
+	}
+
 	//	@Override
 	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
 	//

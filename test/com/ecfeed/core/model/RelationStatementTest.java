@@ -134,11 +134,21 @@ public class RelationStatementTest {
 
 		// choice mismatched
 		
-//		RelationStatement statement2 = 
-//				RelationStatement.createRelationStatementWithChoiceCondition(
-//						basicParameterNode1, null, EMathRelation.EQUAL, choice2);
-//		
-//		assertFalse(statement2.isConsistent(methodNode1));
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, choice2);
+		
+		assertFalse(statement2.isConsistent(methodNode1));
+		
+		// hanging choice
+
+		ChoiceNode hangingChoice = new ChoiceNode("X", "1");
+		
+		RelationStatement statement3 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, hangingChoice);
+		
+		assertFalse(statement3.isConsistent(methodNode1));
 		
 	}
 }

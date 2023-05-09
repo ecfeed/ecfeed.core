@@ -613,6 +613,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			return false;
 		}
 		
+		if (!fRightCondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
 		// XYX
 		return true;
 	}
