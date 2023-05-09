@@ -150,5 +150,15 @@ public class RelationStatementTest {
 		
 		assertFalse(statement3.isConsistent(methodNode1));
 		
+		// hanging parameter
+		
+		BasicParameterNode hangingParameter =
+				new BasicParameterNode("p", "int", "0", false, null);
+
+		RelationStatement statement4 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						hangingParameter, null, EMathRelation.EQUAL, choice1);
+		
+		assertFalse(statement4.isConsistent(methodNode1));		
 	}
 }
