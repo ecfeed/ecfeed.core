@@ -213,7 +213,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftBasicParameterNode = getLeftParameter();
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
-		
+
 		String signatureNew = 
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						leftParameterLinkingCondition,
@@ -240,7 +240,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		if (mapper.isPresent()) {
 			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
 
@@ -252,13 +252,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			return clonedStatement;
 		}
-		
+
 		RelationStatement relationStatement = new RelationStatement(
 				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
-		
+
 		return relationStatement;
 	}
-	
+
 	@Override  // TODO MO-RE obsolete
 	public RelationStatement makeClone() {
 
@@ -608,15 +608,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
-		
-		if (!BasicParameterNodeHelper.isParameterConsistent(fLeftParameter, parentMethodNode)) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(fLeftParameter, parentMethodNode)) {
 			return false;
 		}
-		
+
 		if (!fRightCondition.isConsistent(parentMethodNode)) {
 			return false;
 		}
-		// XYX
+
 		return true;
 	}
 

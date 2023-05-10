@@ -199,5 +199,38 @@ public class RelationStatementTest {
 		assertFalse(statement3.isConsistent(methodNode1));
 	}
 
+	@Test
+	public void isConsistentChoiceConditionWithGlobalStructure() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		CompositeParameterNode globalCompositeParamter = 
+				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+		
+		BasicParameterNode globalBasicParameter = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParamter,"gp", "String", "", false, null);
+		
+		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameter, "choice", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		CompositeParameterNode localCompositeParamter = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
+
+		localCompositeParamter.setLinkToGlobalParameter(globalCompositeParamter);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameter, localCompositeParamter, EMathRelation.EQUAL, globalChoice1);
+
+		assertTrue(statement1.isConsistent(methodNode1));	
+	}
+	
+	// XYX TODO test with local structure
+	
 	// XYX TODO parameter condition, label condition, value condition 
 }

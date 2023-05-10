@@ -199,7 +199,7 @@ public abstract class AbstractParameterNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode getTopComposite(IAbstractNode abstractNode) {
+	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
 
 		IAbstractNode currentNode = abstractNode;
 

@@ -209,7 +209,7 @@ public class BasicParameterNodeHelper {
 			BasicParameterNode basicParameterNode) {
 
 		CompositeParameterNode compositeParameterNode =
-				AbstractParameterNodeHelper.getTopComposite(basicParameterNode);
+				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
 
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
@@ -520,7 +520,7 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static boolean choiceNodeExists(BasicParameterNode basicParameterNode, ChoiceNode choiceNodeToFind) {
 
 		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
@@ -537,21 +537,91 @@ public class BasicParameterNodeHelper {
 
 		return false;
 	}
-	
 
-	public static boolean isParameterConsistent(BasicParameterNode basicParameterNode, MethodNode parentMethodNode) {
-		
+	public static boolean isParameterOfConstraintConsistent(
+			BasicParameterNode basicParameterNode, 
+			MethodNode parentMethodNodeOfConstraint) {
+
+		if (basicParameterNode.isGlobalParameter()) {
+
+			if (isGlobalParameterConsistent(basicParameterNode, parentMethodNodeOfConstraint)) {
+				return true;
+			}
+			
+			return false;
+
+		} else {
+
+			if (isLocalParameterConsistent(basicParameterNode, parentMethodNodeOfConstraint)) {
+				return true;
+			}
+			
+			return false;
+		}
+	}
+
+	private static boolean isGlobalParameterConsistent(
+			BasicParameterNode globalBasicParameterNode, 
+			MethodNode parentMethodNodeOfConstraint) {
+
+		CompositeParameterNode globalTopCompositeParameterNode = 
+				AbstractParameterNodeHelper.findTopComposite(globalBasicParameterNode);
+
+		if (globalTopCompositeParameterNode == null) {
+			return isGlobalBasicParameterLinkedByParameterConsistent(globalBasicParameterNode, parentMethodNodeOfConstraint);
+		}
+
+		return isGlobalTopCompositeConsistent(
+				globalTopCompositeParameterNode, 
+				parentMethodNodeOfConstraint);
+	}
+
+	private static boolean isGlobalTopCompositeConsistent(
+			CompositeParameterNode globalTopCompositeParameterNode,
+			MethodNode parentMethodNodeOfConstraint) {
+
+		List<AbstractParameterNode> childParameters = parentMethodNodeOfConstraint.getParameters();
+
+		for (AbstractParameterNode childParameter : childParameters) {
+
+			if (childParameter instanceof BasicParameterNode) {
+				continue;
+			}
+
+			AbstractParameterNode link = childParameter.getLinkToGlobalParameter();
+
+			if (link.equals(globalTopCompositeParameterNode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean isGlobalBasicParameterLinkedByParameterConsistent(BasicParameterNode basicParameterNode,
+			MethodNode parentMethodNode) {
+
+		ExceptionHelper.reportRuntimeException("XYX");
+		return false;
+	}
+
+
+	private static boolean isLocalParameterConsistent(
+			BasicParameterNode basicParameterNode,
+			MethodNode parentMethodNodeOfConstraint) {
+
 		IParametersParentNode parent = basicParameterNode.getParent();
 		
-		if (!(parent instanceof MethodNode)) {
+		if (parent == null) {
 			return false;
 		}
-		
-		if (!parent.equals(parentMethodNode)) {
-			return false;
+
+		if (parent.equals(parentMethodNodeOfConstraint)) {
+			return true;
 		}
-		
-		return true;
+
+		return false;
 	}
+
 
 }
