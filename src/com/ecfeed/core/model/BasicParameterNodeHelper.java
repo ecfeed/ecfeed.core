@@ -547,7 +547,7 @@ public class BasicParameterNodeHelper {
 			if (isGlobalParameterConsistent(basicParameterNode, parentMethodNodeOfConstraint)) {
 				return true;
 			}
-			
+
 			return false;
 
 		} else {
@@ -555,7 +555,7 @@ public class BasicParameterNodeHelper {
 			if (isLocalParameterConsistent(basicParameterNode, parentMethodNodeOfConstraint)) {
 				return true;
 			}
-			
+
 			return false;
 		}
 	}
@@ -605,23 +605,36 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
-
 	private static boolean isLocalParameterConsistent(
 			BasicParameterNode basicParameterNode,
 			MethodNode parentMethodNodeOfConstraint) {
 
-		IParametersParentNode parent = basicParameterNode.getParent();
-		
-		if (parent == null) {
-			return false;
-		}
+		CompositeParameterNode topComposite = 
+				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
 
-		if (parent.equals(parentMethodNodeOfConstraint)) {
-			return true;
+		if (topComposite == null) {
+
+			IParametersParentNode parent = basicParameterNode.getParent();
+
+			if (parent == null) {
+				return false;
+			}
+
+			if (parent.equals(parentMethodNodeOfConstraint)) {
+				return true;
+			}
+		}
+		
+		List<AbstractParameterNode> childParameters = parentMethodNodeOfConstraint.getParameters();
+		
+		for (AbstractParameterNode childParameter : childParameters) {
+			
+			if (childParameter.equals(topComposite)) {
+				return true;
+			}
 		}
 
 		return false;
 	}
-
 
 }

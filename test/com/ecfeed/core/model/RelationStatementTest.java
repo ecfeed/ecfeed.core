@@ -187,7 +187,7 @@ public class RelationStatementTest {
 						basicParameterNode1, null, EMathRelation.EQUAL, globalChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));	
-		
+
 		// hanging choice
 
 		ChoiceNode hangingChoice = new ChoiceNode("X", "1");
@@ -203,14 +203,14 @@ public class RelationStatementTest {
 	public void isConsistentChoiceConditionWithGlobalStructure() {
 
 		RootNode rootNode = new RootNode("root", null);
-		
+
 		CompositeParameterNode globalCompositeParamter = 
 				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
-		
+
 		BasicParameterNode globalBasicParameter = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
 						globalCompositeParamter,"gp", "String", "", false, null);
-		
+
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
 
@@ -228,9 +228,39 @@ public class RelationStatementTest {
 						globalBasicParameter, localCompositeParamter, EMathRelation.EQUAL, globalChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));	
+
+		// XYX add use cases for inconsistent statements
 	}
-	
-	// XYX TODO test with local structure
-	
+
+	@Test
+	public void isConsistentChoiceConditionWithLocalStructure() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		CompositeParameterNode localCompositeParamter = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
+
+		BasicParameterNode localBasicParameter = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParamter,"lp", "String", "", false, null);
+
+		ChoiceNode localChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				localBasicParameter, "choice", "1", false, true, null);
+
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameter, localCompositeParamter, EMathRelation.EQUAL, localChoice1);
+
+		assertTrue(statement1.isConsistent(methodNode1));
+
+		// XYX add use cases for inconsistent statements
+	}
+
+
 	// XYX TODO parameter condition, label condition, value condition 
 }
