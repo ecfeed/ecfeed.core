@@ -204,12 +204,12 @@ public class RelationStatementTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		CompositeParameterNode globalCompositeParamter = 
+		CompositeParameterNode globalCompositeParameter = 
 				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-						globalCompositeParamter,"gp", "String", "", false, null);
+						globalCompositeParameter,"gp", "String", "", false, null);
 
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
@@ -218,18 +218,48 @@ public class RelationStatementTest {
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
-		CompositeParameterNode localCompositeParamter = 
+		CompositeParameterNode localCompositeParameter = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
 
-		localCompositeParamter.setLinkToGlobalParameter(globalCompositeParamter);
+		localCompositeParameter.setLinkToGlobalParameter(globalCompositeParameter);
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						globalBasicParameter, localCompositeParamter, EMathRelation.EQUAL, globalChoice1);
+						globalBasicParameter, localCompositeParameter, EMathRelation.EQUAL, globalChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));	
 
-		// XYX add use cases for inconsistent statements
+		// hanging choice
+		
+		ChoiceNode hangingChoiceNode = new ChoiceNode("hc", "0");
+		
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameter, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
+		
+		assertFalse(statement2.isConsistent(methodNode1));
+		
+		// choice form other parameter
+		
+		BasicParameterNode localBasicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "String", "X", true, null);
+		
+		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				localBasicParameterNode, "lchoice", "1", false, true, null);
+
+		RelationStatement statement3 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameter, localCompositeParameter, EMathRelation.EQUAL, localChoice);
+		
+		assertFalse(statement3.isConsistent(methodNode1));
+		
+		// other parameter
+
+		RelationStatement statement4 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameterNode, localCompositeParameter, EMathRelation.EQUAL, globalChoice1);
+		
+		assertFalse(statement3.isConsistent(methodNode1));
 	}
 
 	@Test
@@ -241,12 +271,12 @@ public class RelationStatementTest {
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
-		CompositeParameterNode localCompositeParamter = 
+		CompositeParameterNode localCompositeParameter = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
 
 		BasicParameterNode localBasicParameter = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-						localCompositeParamter,"lp", "String", "", false, null);
+						localCompositeParameter,"lp", "String", "", false, null);
 
 		ChoiceNode localChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				localBasicParameter, "choice", "1", false, true, null);
@@ -254,7 +284,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter, localCompositeParamter, EMathRelation.EQUAL, localChoice1);
+						localBasicParameter, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));
 
