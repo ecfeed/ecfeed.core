@@ -230,36 +230,36 @@ public class RelationStatementTest {
 		assertTrue(statement1.isConsistent(methodNode1));	
 
 		// hanging choice
-		
+
 		ChoiceNode hangingChoiceNode = new ChoiceNode("hc", "0");
-		
+
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						globalBasicParameter, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
-		
+
 		assertFalse(statement2.isConsistent(methodNode1));
-		
+
 		// choice form other parameter
-		
+
 		BasicParameterNode localBasicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "String", "X", true, null);
-		
+
 		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				localBasicParameterNode, "lchoice", "1", false, true, null);
 
 		RelationStatement statement3 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						globalBasicParameter, localCompositeParameter, EMathRelation.EQUAL, localChoice);
-		
+
 		assertFalse(statement3.isConsistent(methodNode1));
-		
+
 		// other parameter
 
 		RelationStatement statement4 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						localBasicParameterNode, localCompositeParameter, EMathRelation.EQUAL, globalChoice1);
-		
-		assertFalse(statement3.isConsistent(methodNode1));
+
+		assertFalse(statement4.isConsistent(methodNode1));
 	}
 
 	@Test
@@ -274,23 +274,42 @@ public class RelationStatementTest {
 		CompositeParameterNode localCompositeParameter = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
 
-		BasicParameterNode localBasicParameter = 
+		BasicParameterNode localBasicParameter1 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-						localCompositeParameter,"lp", "String", "", false, null);
+						localCompositeParameter,"lp1", "String", "", false, null);
 
 		ChoiceNode localChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-				localBasicParameter, "choice", "1", false, true, null);
+				localBasicParameter1, "choice", "1", false, true, null);
 
+
+		BasicParameterNode localBasicParameter2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParameter,"lp2", "String", "", false, null);
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
+						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));
 
-		// XYX add use cases for inconsistent statements
-	}
+		// hanging choice
 
+		ChoiceNode hangingChoiceNode = new ChoiceNode("h", "A");
+
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
+
+		assertFalse(statement2.isConsistent(methodNode1));
+
+		// other parameter
+
+		RelationStatement statement3 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
+
+		assertFalse(statement3.isConsistent(methodNode1));		
+	}
 
 	// XYX TODO parameter condition, label condition, value condition 
 }

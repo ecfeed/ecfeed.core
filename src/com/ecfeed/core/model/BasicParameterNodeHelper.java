@@ -623,6 +623,8 @@ public class BasicParameterNodeHelper {
 			if (parent.equals(parentMethodNodeOfConstraint)) {
 				return true;
 			}
+			
+			return false;
 		}
 		
 		List<AbstractParameterNode> childParameters = parentMethodNodeOfConstraint.getParameters();
