@@ -351,5 +351,82 @@ public class RelationStatementTest {
 		assertFalse(statement2.isConsistent(methodNode1));		
 	}
 
+	@Test
+	public void isConsistentParameterConditionWithGlobalStructure() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		// the first global structure with parameter
+
+		CompositeParameterNode globalCompositeParameter1 = 
+				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+
+		BasicParameterNode globalBasicParameter11 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameter1,"gp1", "String", "", false, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameter11, "choice", "1", false, true, null);
+
+		// the second global structure with parameter
+
+		CompositeParameterNode globalCompositeParameter2 = 
+				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+
+		BasicParameterNode globalBasicParameter21 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameter2,"gp2", "String", "", false, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameter21, "choice", "1", false, true, null);
+		
+		// class and method
+		
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
+
+		// linked parameter 1
+		
+		CompositeParameterNode localCompositeParameter11 = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls11", true, null);
+
+		localCompositeParameter11.setLinkToGlobalParameter(globalCompositeParameter1);
+
+		// linked parameter 2
+		
+		CompositeParameterNode localCompositeParameter12 = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls12", true, null);
+
+		localCompositeParameter12.setLinkToGlobalParameter(globalCompositeParameter2);
+		
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						globalBasicParameter11, localCompositeParameter11, 
+						EMathRelation.EQUAL, 
+						globalBasicParameter21, localCompositeParameter12);
+						
+		assertTrue(statement1.isConsistent(methodNode1));	
+
+		// the second method
+		
+		MethodNode methodNode2 = ClassNodeHelper.addNewMethodToClass(classNode, "method2", true, null);
+		
+		CompositeParameterNode localCompositeParameter21 = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode2, "ls", true, null);
+
+		localCompositeParameter21.setLinkToGlobalParameter(globalCompositeParameter1);
+
+		// right parameter from another method
+		
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						globalBasicParameter11, localCompositeParameter11, 
+						EMathRelation.EQUAL, 
+						globalBasicParameter21, localCompositeParameter21);
+		
+		assertFalse(statement2.isConsistent(methodNode1));		
+	}
+	
 	// XYX TODO parameter condition, label condition, value condition 
 }

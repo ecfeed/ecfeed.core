@@ -609,7 +609,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
 
-		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(fLeftParameter, parentMethodNode)) {
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameter, fLeftParameterLinkingContext, parentMethodNode)) {
+			
 			return false;
 		}
 
