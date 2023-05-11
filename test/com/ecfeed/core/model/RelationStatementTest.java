@@ -478,5 +478,37 @@ public class RelationStatementTest {
 		assertFalse(statement2.isConsistent(methodNode1));		
 	}
 
-	// XYX TODO parameter condition, label condition, value condition 
+	@Test
+	public void isConsistentLabelConditionWithLocalParameter() {
+
+		MethodNode methodNode1 = new MethodNode("method1");
+
+		BasicParameterNode basicParameterNode11 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
+
+		ChoiceNode choiceNode11 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode11, "choice11", "1", false, true, null);
+		
+		choiceNode11.addLabel("label1");
+
+		BasicParameterNode basicParameterNode12 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par12", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode12, "choice12", "1", false, true, null);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithLabelCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, "label1");
+
+		assertTrue(statement1.isConsistent(methodNode1));
+
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithLabelCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, "label2");
+		
+		assertFalse(statement2.isConsistent(methodNode1));
+	}
+
+	// XYX TODO value condition 
 }

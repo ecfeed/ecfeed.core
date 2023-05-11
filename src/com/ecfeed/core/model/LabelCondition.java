@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -205,8 +206,36 @@ public class LabelCondition implements IStatementCondition {
 
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
-		// TODO XYX
+		
+		BasicParameterNode basicParameterNode = getParmameterWhichKeepsChoices();
+		
+		if (basicParameterNode == null) {
+			return false;
+		}
+		
+		Set<String> labels = basicParameterNode.getAllLabels();
+		
+		if (labels.contains(fRightLabel)) {
+			return true;
+		}
+		
 		return false;
+	}
+
+	private BasicParameterNode getParmameterWhichKeepsChoices() {
+		
+		BasicParameterNode basicParameterNode = fParentRelationStatement.getLeftParameter();
+		AbstractParameterNode linkingContext = fParentRelationStatement.getLeftParameterLinkingContext();
+		
+		if (linkingContext == null) {
+			return basicParameterNode;
+		}
+		
+		if (linkingContext instanceof BasicParameterNode) {
+			return (BasicParameterNode) linkingContext;
+		}
+		
+		return null;
 	}
 
 	//	@Override
