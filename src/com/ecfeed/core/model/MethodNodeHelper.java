@@ -488,7 +488,7 @@ public class MethodNodeHelper {
 			basicParameterNode.setParent(methodNode);
 		}
 
-		methodNode.addParameter(basicParameterNode);
+		methodNode.addParameter(basicParameterNode, false);
 
 		return basicParameterNode;
 	}

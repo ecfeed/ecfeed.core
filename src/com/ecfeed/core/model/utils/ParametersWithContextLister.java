@@ -36,9 +36,10 @@ public class ParametersWithContextLister {
 
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			IAbstractNode parent) {
+			IAbstractNode parent,
+			boolean checkName) {
 
-		if (parameterExists(parameter.getName())) {
+		if (checkName && parameterExists(parameter.getName())) {
 			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
 		}
 
@@ -53,9 +54,10 @@ public class ParametersWithContextLister {
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext, 
-			IAbstractNode parent) {
+			IAbstractNode parent,
+			boolean checkName) {
 
-		if (parameterExists(parameter.getName())) {
+		if (checkName && parameterExists(parameter.getName())) {
 			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
 		}
 
@@ -71,9 +73,10 @@ public class ParametersWithContextLister {
 			AbstractParameterNode parameter,
 			AbstractParameterNode linkingContext,			
 			int index, 
-			IAbstractNode parent) {
+			IAbstractNode parent,
+			boolean checkName) {
 
-		if (parameterExists(parameter.getName())) {
+		if (checkName && parameterExists(parameter.getName())) {
 			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
 		}
 
@@ -85,10 +88,10 @@ public class ParametersWithContextLister {
 		fElementLister.addElement(parameterWithLinkingContext, index);
 	}
 
-	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
+	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent, boolean checkNames) {
 
 		for (AbstractParameterNode methodParameterNode : parameters) {
-			addParameter(methodParameterNode, parent);
+			addParameter(methodParameterNode, parent, checkNames);
 		}
 	}
 
@@ -294,7 +297,7 @@ public class ParametersWithContextLister {
 	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
 		fElementLister.clear();
-		addParameters(parameters, parent);
+		addParameters(parameters, parent, false);
 	}
 
 	public String generateNewParameterName(String startParameterName) {

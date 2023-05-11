@@ -408,8 +408,12 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
-		// TODO XYX
-		return false;
+		
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(fRightParameterNode, parentMethodNode)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	//	@Override

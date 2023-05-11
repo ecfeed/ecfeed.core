@@ -306,9 +306,49 @@ public class RelationStatementTest {
 
 		RelationStatement statement3 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
+						localBasicParameter2, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
 
 		assertFalse(statement3.isConsistent(methodNode1));		
+	}
+
+	@Test
+	public void isConsistentParameterConditionWithLocalParameter() {
+
+		MethodNode methodNode1 = new MethodNode("method1");
+
+		BasicParameterNode basicParameterNode11 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode11, "choice11", "1", false, true, null);
+
+		BasicParameterNode basicParameterNode12 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par12", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode12, "choice12", "1", false, true, null);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12);
+
+		assertTrue(statement1.isConsistent(methodNode1));
+
+		// the second method with parameter
+
+		MethodNode methodNode2 = new MethodNode("method2");
+
+		BasicParameterNode basicParameterNode21 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode2, "par21", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode21, "choice21", "1", false, true, null);
+
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21);
+
+		assertFalse(statement2.isConsistent(methodNode1));		
 	}
 
 	// XYX TODO parameter condition, label condition, value condition 
