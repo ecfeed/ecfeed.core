@@ -26,6 +26,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersWithContextLister {
 
+	private static final String PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS = "Parameter with the same name already exists.";
 	private ElementLister<ParameterWithLinkingContext> fElementLister;
 
 	public ParametersWithContextLister(IModelChangeRegistrator modelChangeRegistrator) {
@@ -37,19 +38,26 @@ public class ParametersWithContextLister {
 			AbstractParameterNode parameter, 
 			IAbstractNode parent) {
 
+		if (parameterExists(parameter.getName())) {
+			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
+		}
+
 		parameter.setParent(parent);
 
 		ParameterWithLinkingContext parameterWithLinkingContext = 
 				new ParameterWithLinkingContext(parameter, null);
 
 		fElementLister.addElement(parameterWithLinkingContext);
-
 	}
 
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext, 
 			IAbstractNode parent) {
+
+		if (parameterExists(parameter.getName())) {
+			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
+		}
 
 		parameter.setParent(parent);
 
@@ -64,6 +72,10 @@ public class ParametersWithContextLister {
 			AbstractParameterNode linkingContext,			
 			int index, 
 			IAbstractNode parent) {
+
+		if (parameterExists(parameter.getName())) {
+			ExceptionHelper.reportRuntimeException(PARAMETER_WITH_THE_SAME_NAME_ALREADY_EXISTS);
+		}
 
 		parameter.setParent(parent);
 

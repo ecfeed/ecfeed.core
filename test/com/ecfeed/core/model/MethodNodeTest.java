@@ -28,6 +28,7 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.TestHelper;
 
 public class MethodNodeTest {
 
@@ -78,6 +79,22 @@ public class MethodNodeTest {
 		assertEquals(2, method.getParameterTypes().size());
 		assertTrue(method.getParameterTypes().contains("type1"));
 		assertTrue(method.getParameterTypes().contains("type2"));
+	}
+
+	@Test
+	public void addTwoParametersWithTheSameName() {
+
+		MethodNode methodNode1 = new MethodNode("method1");
+
+		MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+
+		try { 
+			MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+			fail();
+
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "Parameter with the same name already exists.");
+		}
 	}
 
 	@Test
