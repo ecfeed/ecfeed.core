@@ -394,30 +394,19 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
 
-		/// XYX use: BasicParameterNodeHelper.getParameterWithChoices(basicParameterNode, linkingContext);
-
 		RelationStatement parentRelationStatement = getParentRelationStatement();
 
 		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
 
-		AbstractParameterNode linkToGlobalParameter = leftBasicParameterNode.getLinkToGlobalParameter();
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
 
-		if (linkToGlobalParameter instanceof BasicParameterNode) {
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
 
-			BasicParameterNode linkAsBasicParameter = (BasicParameterNode) linkToGlobalParameter;
-
-			if (BasicParameterNodeHelper.choiceNodeExists(linkAsBasicParameter, fRightChoice)) {
-				return true;
-			}
-
-			return false;
-		}
-
-		if (BasicParameterNodeHelper.choiceNodeExists(leftBasicParameterNode, fRightChoice)) {
+		if (BasicParameterNodeHelper.choiceNodeExists(parameterWithChoices, fRightChoice)) {
 			return true;
 		}
 
-		// TODO XYX
 		return false;
 	}
 

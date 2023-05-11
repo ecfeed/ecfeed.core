@@ -288,7 +288,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
+						localBasicParameter1, null, EMathRelation.EQUAL, localChoice1);
 
 		assertTrue(statement1.isConsistent(methodNode1));
 
@@ -298,7 +298,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter1, localCompositeParameter, EMathRelation.EQUAL, hangingChoiceNode);
+						localBasicParameter1, null, EMathRelation.EQUAL, hangingChoiceNode);
 
 		assertFalse(statement2.isConsistent(methodNode1));
 
@@ -306,7 +306,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement3 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						localBasicParameter2, localCompositeParameter, EMathRelation.EQUAL, localChoice1);
+						localBasicParameter2, null, EMathRelation.EQUAL, localChoice1);
 
 		assertFalse(statement3.isConsistent(methodNode1));		
 	}

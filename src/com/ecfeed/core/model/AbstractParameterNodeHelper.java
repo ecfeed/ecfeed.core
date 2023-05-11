@@ -204,6 +204,10 @@ public abstract class AbstractParameterNodeHelper {
 		IAbstractNode currentNode = abstractNode;
 
 		CompositeParameterNode topCompositeParameterNode = null;
+		
+		if (abstractNode instanceof CompositeParameterNode) {
+			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
+		}
 
 		for (;;) {
 

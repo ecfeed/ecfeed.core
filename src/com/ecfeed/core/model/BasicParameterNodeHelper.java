@@ -537,7 +537,7 @@ public class BasicParameterNodeHelper {
 
 		return false;
 	}
-	
+
 	public static boolean valueOfChoiceNodeExists(BasicParameterNode basicParameterNode, String value) {
 
 		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
@@ -548,7 +548,7 @@ public class BasicParameterNodeHelper {
 			ChoiceNode choiceNode = it.next();
 
 			String valueString = choiceNode.getValueString();
-			
+
 			if (valueString.equals(value)) {
 				return true;
 			}
@@ -650,7 +650,7 @@ public class BasicParameterNodeHelper {
 
 	private static boolean isLocalParameterConsistent(
 			BasicParameterNode basicParameterNode,
-			AbstractParameterNode parameterLinkingContext, // XYX
+			AbstractParameterNode parameterLinkingContext,
 			MethodNode parentMethodNodeOfConstraint) {
 
 		CompositeParameterNode topComposite = 
@@ -658,17 +658,27 @@ public class BasicParameterNodeHelper {
 
 		if (topComposite == null) {
 
-			IParametersParentNode parent = basicParameterNode.getParent();
+			IParametersParentNode parentOfParameter = basicParameterNode.getParent();
 
-			if (parent == null) {
+			if (parentOfParameter == null) {
 				return false;
 			}
 
-			if (parent.equals(parentMethodNodeOfConstraint)) {
-				return true;
+			if (!parentOfParameter.equals(parentMethodNodeOfConstraint)) {
+				return false;
 			}
 
-			return false;
+			if (parameterLinkingContext != null) {
+				
+				CompositeParameterNode topComposite2 = 
+						AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
+
+				if (topComposite2 != null && parentOfParameter.equals(topComposite2.getParent())) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		List<AbstractParameterNode> childParameters = parentMethodNodeOfConstraint.getParameters();
@@ -684,17 +694,27 @@ public class BasicParameterNodeHelper {
 	}
 
 	public static BasicParameterNode findParameterWithChoices(
-				BasicParameterNode basicParameterNode, AbstractParameterNode linkingContext) {
-		
+			BasicParameterNode basicParameterNode, AbstractParameterNode linkingContext) {
+
+		if (basicParameterNode.isGlobalParameter()) {
+			return basicParameterNode;
+		}
+
 		if (linkingContext == null) {
 			return basicParameterNode;
 		}
-		
+
+		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
+
+		if (link != null) {
+			return link;
+		}
+
 		if (linkingContext instanceof BasicParameterNode) {
 			return (BasicParameterNode) linkingContext;
 		}
-		
+
 		return null;
 	}
-	
+
 }
