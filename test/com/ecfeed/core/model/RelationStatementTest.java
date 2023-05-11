@@ -488,7 +488,7 @@ public class RelationStatementTest {
 
 		ChoiceNode choiceNode11 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				basicParameterNode11, "choice11", "1", false, true, null);
-		
+
 		choiceNode11.addLabel("label1");
 
 		BasicParameterNode basicParameterNode12 = 
@@ -506,9 +506,32 @@ public class RelationStatementTest {
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithLabelCondition(
 						basicParameterNode11, null, EMathRelation.EQUAL, "label2");
-		
+
 		assertFalse(statement2.isConsistent(methodNode1));
 	}
 
-	// XYX TODO value condition 
+	@Test
+	public void isConsistentValueConditionWithLocalParameter() {
+
+		MethodNode methodNode1 = new MethodNode("method1");
+
+		BasicParameterNode basicParameterNode11 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode11, "choice11", "11", false, true, null);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, "11");
+
+		assertTrue(statement1.isConsistent(methodNode1));
+
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, "AB");
+
+		assertFalse(statement2.isConsistent(methodNode1));
+	}
+
 }

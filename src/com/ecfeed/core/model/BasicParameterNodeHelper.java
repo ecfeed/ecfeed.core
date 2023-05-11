@@ -537,6 +537,25 @@ public class BasicParameterNodeHelper {
 
 		return false;
 	}
+	
+	public static boolean valueOfChoiceNodeExists(BasicParameterNode basicParameterNode, String value) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			String valueString = choiceNode.getValueString();
+			
+			if (valueString.equals(value)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	public static boolean isParameterOfConstraintConsistent(
 			BasicParameterNode basicParameterNode, 
@@ -664,4 +683,18 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
+	public static BasicParameterNode findParameterWithChoices(
+				BasicParameterNode basicParameterNode, AbstractParameterNode linkingContext) {
+		
+		if (linkingContext == null) {
+			return basicParameterNode;
+		}
+		
+		if (linkingContext instanceof BasicParameterNode) {
+			return (BasicParameterNode) linkingContext;
+		}
+		
+		return null;
+	}
+	
 }

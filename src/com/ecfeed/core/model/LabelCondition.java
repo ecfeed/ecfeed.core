@@ -207,7 +207,7 @@ public class LabelCondition implements IStatementCondition {
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
 		
-		BasicParameterNode basicParameterNode = getParmameterWhichKeepsChoices();
+		BasicParameterNode basicParameterNode = getParameterWhichKeepsChoices();
 		
 		if (basicParameterNode == null) {
 			return false;
@@ -222,21 +222,17 @@ public class LabelCondition implements IStatementCondition {
 		return false;
 	}
 
-	private BasicParameterNode getParmameterWhichKeepsChoices() {
+	private BasicParameterNode getParameterWhichKeepsChoices() {
 		
 		BasicParameterNode basicParameterNode = fParentRelationStatement.getLeftParameter();
 		AbstractParameterNode linkingContext = fParentRelationStatement.getLeftParameterLinkingContext();
 		
-		if (linkingContext == null) {
-			return basicParameterNode;
-		}
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(basicParameterNode, linkingContext);
 		
-		if (linkingContext instanceof BasicParameterNode) {
-			return (BasicParameterNode) linkingContext;
-		}
-		
-		return null;
+		return parameterWithChoices;
 	}
+
 
 	//	@Override
 	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {

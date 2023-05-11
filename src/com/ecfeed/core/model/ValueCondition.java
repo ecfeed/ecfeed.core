@@ -246,7 +246,19 @@ public class ValueCondition implements IStatementCondition {
 
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
-		// TODO XYX
+		
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+		
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (BasicParameterNodeHelper.valueOfChoiceNodeExists(parameterWithChoices, fRightValue)) {
+			return true;
+		}
+
 		return false;
 	}
 
