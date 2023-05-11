@@ -352,10 +352,60 @@ public class RelationStatementTest {
 	}
 
 	@Test
+	public void isConsistentParameterConditionWithGlobalParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		BasicParameterNode globalBasicParameter1 = 
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp1", "String", null);
+
+		BasicParameterNode globalBasicParameter2 = 
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp2", "String", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
+
+		BasicParameterNode basicParameterNode11 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
+
+		basicParameterNode11.setLinkToGlobalParameter(globalBasicParameter1);
+
+		BasicParameterNode basicParameterNode12 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode1, "par12", "int", "0", true, null);
+
+		basicParameterNode12.setLinkToGlobalParameter(globalBasicParameter2);
+
+		// consistent statement 
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12);
+
+		assertTrue(statement1.isConsistent(methodNode1));
+
+		// parameter from other method
+
+		MethodNode methodNode2 = ClassNodeHelper.addNewMethodToClass(classNode, "method2", true, null);
+
+		BasicParameterNode basicParameterNode21 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode2, "par21", "int", "0", true, null);
+
+		basicParameterNode21.setLinkToGlobalParameter(globalBasicParameter1);
+
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21);
+
+		assertFalse(statement2.isConsistent(methodNode1));
+		assertFalse(statement2.isConsistent(methodNode2));
+	}
+
+	@Test
 	public void isConsistentParameterConditionWithGlobalStructure() {
 
 		RootNode rootNode = new RootNode("root", null);
-		
+
 		// the first global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter1 = 
@@ -379,54 +429,54 @@ public class RelationStatementTest {
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter21, "choice", "1", false, true, null);
-		
+
 		// class and method
-		
+
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
 
 		// linked parameter 1
-		
+
 		CompositeParameterNode localCompositeParameter11 = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls11", true, null);
 
 		localCompositeParameter11.setLinkToGlobalParameter(globalCompositeParameter1);
 
 		// linked parameter 2
-		
+
 		CompositeParameterNode localCompositeParameter12 = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls12", true, null);
 
 		localCompositeParameter12.setLinkToGlobalParameter(globalCompositeParameter2);
-		
+
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
 						globalBasicParameter11, localCompositeParameter11, 
 						EMathRelation.EQUAL, 
 						globalBasicParameter21, localCompositeParameter12);
-						
+
 		assertTrue(statement1.isConsistent(methodNode1));	
 
 		// the second method
-		
+
 		MethodNode methodNode2 = ClassNodeHelper.addNewMethodToClass(classNode, "method2", true, null);
-		
+
 		CompositeParameterNode localCompositeParameter21 = 
 				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode2, "ls", true, null);
 
 		localCompositeParameter21.setLinkToGlobalParameter(globalCompositeParameter1);
 
 		// right parameter from another method
-		
+
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
 						globalBasicParameter11, localCompositeParameter11, 
 						EMathRelation.EQUAL, 
 						globalBasicParameter21, localCompositeParameter21);
-		
+
 		assertFalse(statement2.isConsistent(methodNode1));		
 	}
-	
+
 	// XYX TODO parameter condition, label condition, value condition 
 }
