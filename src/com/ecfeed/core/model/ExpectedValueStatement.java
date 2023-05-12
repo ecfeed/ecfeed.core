@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
+public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement { // TODO MO-RE do we need it as there is assignment statement?
 
 	private BasicParameterNode fLeftParameterNode;
 	private CompositeParameterNode fLeftParameterLinkingContext;
@@ -176,18 +176,18 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		if (mapper.isPresent()) {
 			BasicParameterNode parameter = mapper.get().getDestinationNode(fLeftParameterNode); 
 			ChoiceNode choice = mapper.get().getDestinationNode(fChoiceNode);
-	
+
 			return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 		}
-		
+
 		return new ExpectedValueStatement(
 				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(mapper), fPredicate);
 	}
-	
+
 	@Override
 	public ExpectedValueStatement makeClone(){ // TODO MO-RE obsolete ?
 		return new ExpectedValueStatement(
@@ -288,10 +288,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public boolean isConsistent(MethodNode parentMethodNode) {
-		
-		// XYX
-		// TODO Auto-generated method stub
-		return false;
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameterNode, fLeftParameterLinkingContext, parentMethodNode)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	//	@Override

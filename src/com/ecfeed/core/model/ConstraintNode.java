@@ -266,7 +266,6 @@ public class ConstraintNode extends AbstractNode {
 		//		return true;
 	}
 
-	// XYX
 	//	private boolean areParametersConsistent() {
 	//
 	//		final Set<BasicParameterNode> parametersUsedInConstraint = getConstraint().getReferencedParameters();
@@ -291,7 +290,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX
 	//	private boolean isParameterConsistent(
 	//			BasicParameterNode basicParameterNode, IParametersParentNode parentOfConstraint) {
 	//
@@ -315,7 +313,6 @@ public class ConstraintNode extends AbstractNode {
 	//	}
 
 
-	// XYX
 	//	private boolean parentOfConstraintContainsBasicParameter(IParametersParentNode parentOfConstraint,
 	//			BasicParameterNode basicParameterNode) {
 	//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
@@ -327,7 +324,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	// XYX
 	//	private boolean parentOfConstraintContainsLinkToCompositeParameter(
 	//			IParametersParentNode parentOfConstraint,
 	//			CompositeParameterNode topCompositeOfBasicParameter) {
@@ -347,22 +343,21 @@ public class ConstraintNode extends AbstractNode {
 	//	}
 
 
-	// XYX
-//	private boolean parentOfConstraintContainsLinkToBasicParameter(
-//			IParametersParentNode parentOfConstraint,
-//			BasicParameterNode topCompositeOfBasicParameter) {
-//
-//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
-//
-//		for (AbstractParameterNode abstractParameterNode : parametersOfParent) {
-//
-//			if (abstractParameterNode.getLinkToGlobalParameter().equals(topCompositeOfBasicParameter)) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
+	//	private boolean parentOfConstraintContainsLinkToBasicParameter(
+	//			IParametersParentNode parentOfConstraint,
+	//			BasicParameterNode topCompositeOfBasicParameter) {
+	//
+	//		List<AbstractParameterNode> parametersOfParent = parentOfConstraint.getParameters();
+	//
+	//		for (AbstractParameterNode abstractParameterNode : parametersOfParent) {
+	//
+	//			if (abstractParameterNode.getLinkToGlobalParameter().equals(topCompositeOfBasicParameter)) {
+	//				return true;
+	//			}
+	//		}
+	//
+	//		return false;
+	//	}
 
 	//	private boolean isParameterConsistentOld(
 	//			BasicParameterNode argParameter,
