@@ -300,9 +300,9 @@ public class GenericRemoveNodesOperationTest {
 	//		assertEquals(2, methodNode.getDeployedParameters().size());
 	//	}
 
-	// XYX - uncomment
+	// XYX
 	//	@Test
-	//	public void basicParameterRemoveFromLocalComposite() {
+	//	public void AAbasicParameterRemoveFromLocalComposite() {
 	//
 	//		RootNode rootNode = new RootNode("Root", null);
 	//
@@ -330,6 +330,8 @@ public class GenericRemoveNodesOperationTest {
 	//		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
 	//		basicParameterNode1.addChoice(choiceNode1);
 	//
+	//		// basic parameter 2
+	//		
 	//		BasicParameterNode basicParameterNode2 = 
 	//				new BasicParameterNode(
 	//						"BasicParam2", "String", "", false, null);
@@ -346,7 +348,7 @@ public class GenericRemoveNodesOperationTest {
 	//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
 	//		compositeParameterNode1.addConstraint(constraintNode2);
 	//
-	//		// basic parameter 2 of method
+	//		// composite parameter 2 of method
 	//
 	//		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode("S2", null);
 	//		methodNode.addParameter(compositeParameterNode2);

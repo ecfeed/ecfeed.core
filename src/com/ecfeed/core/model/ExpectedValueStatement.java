@@ -287,7 +287,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean isConsistent(MethodNode parentMethodNode) {
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 
 		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
 				fLeftParameterNode, fLeftParameterLinkingContext, parentMethodNode)) {

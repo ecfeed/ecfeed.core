@@ -185,7 +185,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isConsistent(MethodNode parentMethodNode) {
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 		return true;
 	}
 

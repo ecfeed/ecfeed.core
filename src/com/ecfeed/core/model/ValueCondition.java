@@ -245,7 +245,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isConsistent(MethodNode parentMethodNode) {
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 		
 		RelationStatement parentRelationStatement = getParentRelationStatement();
 		

@@ -237,7 +237,7 @@ public class ConstraintNode extends AbstractNode {
 
 		IAbstractNode parent = getParent();
 
-		if (!(parent instanceof MethodNode)) {
+		if (!(parent instanceof IConstraintsParentNode)) {
 			return false;
 		}
 

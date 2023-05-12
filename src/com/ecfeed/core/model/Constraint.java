@@ -1045,7 +1045,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public boolean isConsistent(MethodNode parentMethodNode) {
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 		
 		AbstractStatement precondition = getPrecondition();
 		

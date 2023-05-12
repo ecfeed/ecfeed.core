@@ -40,6 +40,6 @@ public interface IStatementCondition {
 	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper); // TODO MO-RE obsolete
 	IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper);
 	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
-	public boolean isConsistent(MethodNode parentMethodNode);
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode);
 }
 

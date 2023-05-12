@@ -407,7 +407,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isConsistent(MethodNode parentMethodNode) {
+	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 		
 		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
 				fRightParameterNode, fRightParameterLinkingContext, parentMethodNode)) {

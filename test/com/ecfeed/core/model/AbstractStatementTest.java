@@ -36,7 +36,7 @@ public class AbstractStatementTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public AbstractStatement makeClone(){
 			return null;
@@ -46,7 +46,7 @@ public class AbstractStatementTest {
 		public AbstractStatement makeClone(Optional<NodeMapper> nodeMapper) {
 			return null;
 		}
-		
+
 		@Override
 		public AbstractStatement createCopy(NodeMapper mapper) {
 			return null;
@@ -117,19 +117,16 @@ public class AbstractStatementTest {
 
 		@Override
 		public String getLeftOperandName() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public BasicParameterNode getLeftParameter() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public boolean isConsistent(MethodNode parentMethodNode) {
-			// TODO Auto-generated method stub
+		public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
 			return false;
 		}
 
