@@ -205,7 +205,7 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalCompositeParameter = 
-				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -409,7 +409,7 @@ public class RelationStatementTest {
 		// the first global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter1 = 
-				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter11 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -421,7 +421,7 @@ public class RelationStatementTest {
 		// the second global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter2 = 
-				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter21 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -534,4 +534,40 @@ public class RelationStatementTest {
 		assertFalse(statement2.isConsistent(methodNode1));
 	}
 
+	@Test
+	public void isConsistentChoiceConditionWithGlobalStructureAndConstraintUnderStructure() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		CompositeParameterNode globalCompositeParameter = 
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+		
+		BasicParameterNode globalBasicParameter1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameter,"gp1", "String", "", false, null);
+
+		ChoiceNode globalChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameter1, "gc1", "1", false, true, null);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameter1, null, EMathRelation.EQUAL, globalChoice);
+		
+		// valid parameter
+
+		assertTrue(statement1.isConsistent(globalCompositeParameter));
+
+		// invalid parameter
+		
+		BasicParameterNode globalBasicParameter2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameter,"lp2", "String", "", false, null);
+		
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameter2, null, EMathRelation.EQUAL, globalChoice);
+
+		assertFalse(statement2.isConsistent(globalCompositeParameter));
+	}
+	
 }

@@ -458,7 +458,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
 
 		for (AbstractStatement abstractStatement : fStatements) {
 			if (!abstractStatement.isConsistent(parentMethodNode)) {

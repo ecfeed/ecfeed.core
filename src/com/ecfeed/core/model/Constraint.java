@@ -1045,17 +1045,17 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
 		
 		AbstractStatement precondition = getPrecondition();
 		
-		if (!precondition.isConsistent(parentMethodNode)) {
+		if (!precondition.isConsistent(topParentNode)) {
 			return false;
 		}
 
 		AbstractStatement postcondition = getPostcondition();
 		
-		if (!postcondition.isConsistent(parentMethodNode)) {
+		if (!postcondition.isConsistent(topParentNode)) {
 			return false;
 		}
 		

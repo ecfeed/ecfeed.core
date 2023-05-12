@@ -126,7 +126,7 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
+		public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
 			return false;
 		}
 

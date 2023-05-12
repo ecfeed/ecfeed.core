@@ -205,7 +205,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
 		
 		BasicParameterNode basicParameterNode = getParameterWhichKeepsChoices();
 		

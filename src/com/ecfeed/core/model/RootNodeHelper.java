@@ -50,7 +50,7 @@ public class RootNodeHelper {
 		return compositeParameterNode;
 	}
 
-	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
+	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
 			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);

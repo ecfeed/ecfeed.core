@@ -36,5 +36,5 @@ public interface IStatement{
 	BasicParameterNode getLeftParameter();
 	CompositeParameterNode getLeftParameterLinkingContext();
 	boolean mentions(int methodParameterIndex);
-	boolean isConsistent(IConstraintsParentNode parentMethodNode);
+	boolean isConsistent(IParametersAndConstraintsParentNode topParentNode);
 }

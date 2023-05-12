@@ -392,7 +392,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isConsistent(IConstraintsParentNode parentMethodNode) {
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
 
 		RelationStatement parentRelationStatement = getParentRelationStatement();
 
