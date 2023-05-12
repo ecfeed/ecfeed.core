@@ -381,7 +381,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	// XYX
 	//	private boolean areChoicesConsistent() {
 	//
 	//		Set<ChoiceNode> referencedChoices = getConstraint().getReferencedChoices();
@@ -396,7 +395,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX
 	//	private boolean isChoiceConsistent(ChoiceNode choiceNode) {
 	//
 	//		if (choiceNode.getQualifiedName() == null) {
@@ -423,7 +421,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX
 	//	private static boolean isOkForExpectedParameter(ChoiceNode choiceNode) {
 	//
 	//		BasicParameterNode parameter = choiceNode.getParameter();
@@ -435,7 +432,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX
 	//	private static boolean isMethodParameterNodeExpected(BasicParameterNode parameter) {
 	//
 	//		if (!(parameter instanceof BasicParameterNode)) {
@@ -449,7 +445,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	// XYX
 	//	private boolean constraintsConsistent() {
 	//
 	//		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
@@ -470,7 +465,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX	
 	//	private boolean isConsistentForParameter(BasicParameterNode parameter) {
 	//
 	//		String typeName = parameter.getType();
@@ -493,7 +487,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return true;
 	//	}
 
-	// XYX
 	//	private boolean isForbiddenTypeForOrderRelations(String typeName) {
 	//
 	//		if (JavaLanguageHelper.isUserType(typeName)) {
@@ -507,7 +500,6 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	// XYX
 	//	private boolean checkLabels(BasicParameterNode parameter) {
 	//
 	//		for (String label : getConstraint().getReferencedLabels(parameter)) {

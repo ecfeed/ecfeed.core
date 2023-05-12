@@ -589,7 +589,7 @@ public class BasicParameterNodeHelper {
 				AbstractParameterNodeHelper.findTopComposite(globalBasicParameterNode);
 
 		if (globalTopCompositeParameterNode == null) {
-			return isGlobalBasicParameterLinkedByParameterConsistent(globalBasicParameterNode, parentMethodNodeOfConstraint);
+			return false;
 		}
 
 		if (!isGlobalTopCompositeConsistent(globalTopCompositeParameterNode, parentMethodNodeOfConstraint)) {
@@ -641,13 +641,6 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
-	private static boolean isGlobalBasicParameterLinkedByParameterConsistent(BasicParameterNode basicParameterNode,
-			MethodNode parentMethodNode) {
-
-		ExceptionHelper.reportRuntimeException("XYX");
-		return false;
-	}
-
 	private static boolean isLocalParameterConsistent(
 			BasicParameterNode basicParameterNode,
 			AbstractParameterNode parameterLinkingContext,
@@ -669,7 +662,7 @@ public class BasicParameterNodeHelper {
 			}
 
 			if (parameterLinkingContext != null) {
-				
+
 				CompositeParameterNode topComposite2 = 
 						AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
 
