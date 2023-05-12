@@ -237,15 +237,17 @@ public class ConstraintNode extends AbstractNode {
 
 		IAbstractNode parent = getParent();
 
-		if (!(parent instanceof IConstraintsParentNode)) {
+		if (!(parent instanceof IParametersAndConstraintsParentNode)) {
 			return false;
 		}
 
-		MethodNode parentMethodNode = (MethodNode) parent;
+		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode =
+				(IParametersAndConstraintsParentNode) parent; 
+				
 
 		Constraint constraint = getConstraint();
 
-		if (constraint.isConsistent(parentMethodNode)) {
+		if (constraint.isConsistent(parametersAndConstraintsParentNode)) {
 			return true;
 		}
 
