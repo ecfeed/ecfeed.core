@@ -570,4 +570,44 @@ public class RelationStatementTest {
 		assertFalse(statement2.isConsistent(globalCompositeParameter));
 	}
 	
+	@Test
+	public void isConsistentChoiceConditionWithLocalStructureAndConstraintUnderStructure() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		
+		CompositeParameterNode localCompositeParameter = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "ls", true, null);
+		
+		BasicParameterNode localBasicParameter1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParameter,"gp1", "String", "", false, null);
+
+		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				localBasicParameter1, "gc1", "1", false, true, null);
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameter1, null, EMathRelation.EQUAL, localChoice);
+		
+		// valid parameter
+
+		assertTrue(statement1.isConsistent(localCompositeParameter));
+
+		// invalid parameter
+		
+		BasicParameterNode localBasicParameter2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParameter,"lp2", "String", "", false, null);
+		
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						localBasicParameter2, null, EMathRelation.EQUAL, localChoice);
+
+		assertFalse(statement2.isConsistent(localCompositeParameter));
+	}
+	
 }

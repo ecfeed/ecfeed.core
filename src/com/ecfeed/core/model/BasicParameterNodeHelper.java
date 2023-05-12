@@ -606,7 +606,7 @@ public class BasicParameterNodeHelper {
 	private static boolean isLinkingContextConsistent(
 			AbstractParameterNode linkingContext,
 			IParametersAndConstraintsParentNode topParentNode) {
-		
+
 		if (linkingContext == null) {
 			return true;
 		}
@@ -652,48 +652,28 @@ public class BasicParameterNodeHelper {
 	private static boolean isLocalParameterConsistent(
 			BasicParameterNode basicParameterNode,
 			AbstractParameterNode parameterLinkingContext,
-			IConstraintsParentNode parentOfConstraint) {
+			IParametersAndConstraintsParentNode topParentNode) {
 
 		CompositeParameterNode topComposite = 
 				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
 
 		if (topComposite == null) {
 
-			IParametersParentNode parentOfParameter = basicParameterNode.getParent();
-
-			if (parentOfParameter == null) {
-				return false;
-			}
-
-			if (parentOfConstraint instanceof MethodNode) {
-
-				MethodNode methodNode = (MethodNode) parentOfConstraint;
-
-				if (!parentOfParameter.equals(methodNode)) {
-					return false;
-				}
-			}
-
-			if (parameterLinkingContext != null) {
-
-				CompositeParameterNode topComposite2 = 
-						AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
-
-				if (topComposite2 != null && parentOfParameter.equals(topComposite2.getParent())) {
-					return false;
-				}
-			}
-
-			return true;
+			return isLocalParameterConsistenWhenNoTopComposite(
+					basicParameterNode, parameterLinkingContext,topParentNode);
 		}
 
-		if (parentOfConstraint instanceof MethodNode) {
+		List<AbstractParameterNode> childParameters = topParentNode.getParameters();
 
-			MethodNode methodNode = (MethodNode) parentOfConstraint;
-			List<AbstractParameterNode> childParameters = methodNode.getParameters();
+		for (AbstractParameterNode childParameter : childParameters) {
 
-			for (AbstractParameterNode childParameter : childParameters) {
+			if (childParameter instanceof BasicParameterNode) {
+				if (childParameter.equals(basicParameterNode)) {
+					return true;
+				}
+			}
 
+			if (childParameter instanceof CompositeParameterNode) {
 				if (childParameter.equals(topComposite)) {
 					return true;
 				}
@@ -701,6 +681,36 @@ public class BasicParameterNodeHelper {
 		}
 
 		return false;
+	}
+
+	private static boolean isLocalParameterConsistenWhenNoTopComposite(BasicParameterNode basicParameterNode,
+			AbstractParameterNode parameterLinkingContext, IParametersAndConstraintsParentNode topParentNode) {
+		IParametersParentNode parentOfParameter = basicParameterNode.getParent();
+
+		if (parentOfParameter == null) {
+			return false;
+		}
+
+		if (topParentNode instanceof MethodNode) {
+
+			MethodNode methodNode = (MethodNode) topParentNode;
+
+			if (!parentOfParameter.equals(methodNode)) {
+				return false;
+			}
+		}
+
+		if (parameterLinkingContext != null) {
+
+			CompositeParameterNode topComposite2 = 
+					AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
+
+			if (topComposite2 != null && parentOfParameter.equals(topComposite2.getParent())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public static BasicParameterNode findParameterWithChoices(
