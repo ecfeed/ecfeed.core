@@ -22,14 +22,17 @@ public class ParserException extends Exception {
 	private ParserException(String message) {
 		super(message);
 	}
-	
-	public static void create() throws ParserException { // TODO MO-RE rename to throw
+
+	public static void reportException() throws ParserException {
+
 		throw new ParserException("");
 	}
-	
-	public static void report(String message) throws ParserException {
+
+	public static void reportException(String message) throws ParserException {
+
 		LogHelperCore.logThrow(message);
+
 		throw new ParserException(message);
 	}
-	
+
 }

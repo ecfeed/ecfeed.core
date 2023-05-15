@@ -66,7 +66,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 
 			return createOperationAddClass(rootNode);
 		} 
-		
+
 		if (fChild instanceof AbstractParameterNode) {
 
 			return createOperationAddParameterToRootNode(rootNode);
@@ -80,18 +80,32 @@ public class AddChildOperationCreator implements IModelVisitor {
 	@Override
 	public Object visit(ClassNode node) throws Exception {
 
-		if(fChild instanceof MethodNode){
-			if(fIndex == -1){
-				return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fExtLanguageManager);
-			}
+		if (fChild instanceof MethodNode) {
+
+			//			if (fIndex == -1) {
+			//				return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fExtLanguageManager);
+			//			}
+
 			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
-		}else if(fChild instanceof BasicParameterNode){
+		}
+
+		if (fChild instanceof BasicParameterNode) {
+
 			BasicParameterNode globalParameter = 
 					((BasicParameterNode)fChild).makeClone(Optional.empty());
-			//					new BasicParameterNode((BasicParameterNode)fChild);
-			if(fIndex == -1){
-				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
-			}
+
+			//			if (fIndex == -1) {
+			//				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
+			//			}
+
+			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguageManager);
+		}
+
+		if (fChild instanceof CompositeParameterNode) {
+
+			CompositeParameterNode globalParameter = 
+					((CompositeParameterNode)fChild).makeClone(Optional.empty());
+
 			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguageManager);
 		}
 
@@ -161,7 +175,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 			return new OnConstraintOperationAdd
 					(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
-		
+
 		reportOperationNotSupportedException();
 		return null;
 	}

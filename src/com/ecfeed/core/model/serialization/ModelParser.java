@@ -75,11 +75,11 @@ public class ModelParser {
 			return rootNode;
 			
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -92,7 +92,7 @@ public class ModelParser {
 
 	private XomAnalyser getXomAnalyser() throws ParserException {
 		if (fXomAnalyser == null) {
-			ParserException.report("XomAnalyzer must not be null.");
+			ParserException.reportException("XomAnalyzer must not be null.");
 		}
 		return fXomAnalyser;
 	}
@@ -108,10 +108,10 @@ public class ModelParser {
 					document.getRootElement(), null, outErrorList).get();
 			
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -126,10 +126,10 @@ public class ModelParser {
 			
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -152,10 +152,10 @@ public class ModelParser {
 					outErrorList).get();
 			
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -167,10 +167,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForMethodParameter().parseMethodParameter(document.getRootElement(), method, method, outErrorList).get();
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -184,12 +184,12 @@ public class ModelParser {
 
 		} catch (ParsingException e) {
 
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 
 		} catch (IOException e) {
 
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -201,10 +201,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForTestCase().parseTestCase(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -216,10 +216,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseConstraint(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -231,10 +231,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStatement(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -246,10 +246,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -261,10 +261,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseChoiceStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return null;
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return null;
 		}
 	}
@@ -276,10 +276,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return new ExpectedValueStatement(null, null, null, null);
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return new ExpectedValueStatement(null, null, null, null);
 		}
 	}
@@ -291,10 +291,10 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStatementArray(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
-			ParserException.report(Messages.PARSING_EXCEPTION(e));
+			ParserException.reportException(Messages.PARSING_EXCEPTION(e));
 			return new StatementArray(null, method.getModelChangeRegistrator());
 		} catch (IOException e) {
-			ParserException.report(Messages.IO_EXCEPTION(e));
+			ParserException.reportException(Messages.IO_EXCEPTION(e));
 			return new StatementArray(null, method.getModelChangeRegistrator());
 		}
 	}

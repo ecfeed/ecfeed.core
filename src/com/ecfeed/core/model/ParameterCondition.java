@@ -269,7 +269,7 @@ public class ParameterCondition implements IStatementCondition {
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						fRightParameterLinkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						fRightParameterNode,
 						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
 						Decorations.NO,
