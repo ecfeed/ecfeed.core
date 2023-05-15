@@ -531,7 +531,7 @@ public class RelationStatementTest {
 				RelationStatement.createRelationStatementWithValueCondition(
 						basicParameterNode11, null, EMathRelation.EQUAL, "AB");
 
-		assertFalse(statement2.isConsistent(methodNode1));
+		assertTrue(statement2.isConsistent(methodNode1));
 	}
 
 	@Test

@@ -142,10 +142,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints
 
-		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		methodNode.addConstraint(constraintNode1);
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		methodNode.addConstraint(constraintNode2);
 
 		// test case
@@ -344,10 +344,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints of composite
 
-		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		compositeParameterNode1.addConstraint(constraintNode1);
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		compositeParameterNode1.addConstraint(constraintNode2);
 
 		// composite parameter 2 of method
@@ -357,10 +357,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints of method node use basic parameters form composite 1
 
-		ConstraintNode constraintNode1m = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode1m = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		methodNode.addConstraint(constraintNode1m);
 
-		ConstraintNode constraintNode2m = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2m = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		methodNode.addConstraint(constraintNode2m);
 
 		// test case
@@ -448,7 +448,7 @@ public class GenericRemoveNodesOperationTest {
 		// constraint of composite parameter node 11
 
 		ConstraintNode constraintNodeOnGlobalS11 =
-				createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"GS11");
+				createConstraintNodeWithValueCondition("constraint", basicParameterNode1OfGlobalComposite,"GS11");
 
 		globalCompositeParameterNode11.addConstraint(constraintNodeOnGlobalS11);
 
@@ -479,12 +479,14 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraint of method
 
-		ConstraintNode constraintNodeOnMethod = createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"M1");
+		ConstraintNode constraintNodeOnMethod = 
+				createConstraintNodeWithValueCondition("constraint", basicParameterNode1OfGlobalComposite,"M1");
 		methodNode.addConstraint(constraintNodeOnMethod);
 
 		// constraint of composite parameter node 1
 
-		ConstraintNode constraintNodeOnS1 = createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"S1");
+		ConstraintNode constraintNodeOnS1 = 
+				createConstraintNodeWithValueCondition("constraint", basicParameterNode1OfGlobalComposite,"S1");
 		compositeParameterNode1.addConstraint(constraintNodeOnS1);
 
 		// test case
@@ -881,10 +883,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints
 
-		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		compositeParameterNode2.addConstraint(constraintNode1);
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		compositeParameterNode2.addConstraint(constraintNode2);
 
 		// test case
@@ -978,10 +980,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints
 
-		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		methodNode.addConstraint(constraintNode1);
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		methodNode.addConstraint(constraintNode2);
 
 		// test case
@@ -1112,12 +1114,12 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraint 1 of composite parameter node 11
 
-		ConstraintNode constraint1NodeOnGlobalS11 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraint1NodeOnGlobalS11 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		globalCompositeParameterNode11.addConstraint(constraint1NodeOnGlobalS11);
 
 		// constraint 2 of composite parameter node 11
 
-		ConstraintNode constraint2NodeOnGlobalS11 = createConstraintNodeWithValueCondition(basicParameterNode2,"1");
+		ConstraintNode constraint2NodeOnGlobalS11 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"1");
 		globalCompositeParameterNode11.addConstraint(constraint2NodeOnGlobalS11);
 
 		// class node
@@ -1148,22 +1150,22 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraint 1 of method
 
-		ConstraintNode constraint1NodeOnMethod = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraint1NodeOnMethod = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		methodNode.addConstraint(constraint1NodeOnMethod);
 
 		// constraint 2 of method
 
-		ConstraintNode constraint2NodeOnMethod = createConstraintNodeWithValueCondition(basicParameterNode2,"1");
+		ConstraintNode constraint2NodeOnMethod = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"1");
 		methodNode.addConstraint(constraint2NodeOnMethod);
 
 		// constraint 1of composite parameter node 1
 
-		ConstraintNode constraint1NodeOnS1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraint1NodeOnS1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		compositeParameterNode1.addConstraint(constraint1NodeOnS1);
 
 		// constraint of composite parameter node 1
 
-		ConstraintNode constraint2NodeOnS1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraint2NodeOnS1 = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		compositeParameterNode1.addConstraint(constraint2NodeOnS1);
 
 		// test case
@@ -1260,93 +1262,93 @@ public class GenericRemoveNodesOperationTest {
 	// TODO MO-RE add test for parameter condition P1 = P2
 	// TODO MO-RE add test when all choices from parameter are deleted but parameter remains
 
-	// XYX - uncomment
-	//	@Test
-	//	public void choiceNodeRemoveFromMethodBasicParameter() {
-	//
-	//		RootNode rootNode = new RootNode("Root", null);
-	//
-	//		// class node 
-	//		ClassNode classNode = new ClassNode("Class", null);
-	//		rootNode.addClass(classNode);
-	//
-	//		// method node
-	//
-	//		MethodNode methodNode = new MethodNode("Method");
-	//		classNode.addMethod(methodNode);
-	//
-	//		// basic parameters and choices 
-	//
-	//		BasicParameterNode basicParameterNode1 = 
-	//				new BasicParameterNode(
-	//						"BasicParam1", "String", "", false, null);
-	//		methodNode.addParameter(basicParameterNode1);
-	//
-	//		ChoiceNode choiceNode11 = new ChoiceNode("Choice11", "11");
-	//		basicParameterNode1.addChoice(choiceNode11);
-	//
-	//		ChoiceNode choiceNode12 = new ChoiceNode("Choice12", "12");
-	//		basicParameterNode1.addChoice(choiceNode12);
-	//
-	//		BasicParameterNode basicParameterNode2 = 
-	//				new BasicParameterNode(
-	//						"BasicParam2", "String", "", false, null);
-	//		methodNode.addParameter(basicParameterNode2);
-	//
-	//		ChoiceNode choiceNode21 = new ChoiceNode("Choice21", "21");
-	//		basicParameterNode2.addChoice(choiceNode21);
-	//
-	//		// constraints
-	//
-	//		ConstraintNode constraintNode1 = createConstraintNodeWithChoiceCondition(basicParameterNode1, choiceNode11);
-	//		methodNode.addConstraint(constraintNode1);
-	//
-	//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
-	//		methodNode.addConstraint(constraintNode2);
-	//
-	//		// test case
-	//
-	//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-	//		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
-	//
-	//		// copy parameters to deployed parameters
-	//
-	//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-	//		deployedParameters.add(basicParameterNode1);
-	//		deployedParameters.add(basicParameterNode2);
-	//		methodNode.setDeployedParameters(deployedParameters);
-	//
-	//		// list of nodes to delete
-	//
-	//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-	//		nodesToDelete.add(choiceNode11);
-	//
-	//		// remove
-	//
-	//		GenericRemoveNodesOperation genericRemoveNodesOperation = 
-	//				createRemovingNodesOperation(nodesToDelete, rootNode);
-	//		genericRemoveNodesOperation.execute();
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//		assertEquals(1, basicParameterNode1.getChoiceCount());
-	//
-	//		assertEquals(1, methodNode.getConstraintNodes().size());
-	//		assertEquals(0, methodNode.getTestCases().size());
-	//		assertEquals(2, methodNode.getDeployedParameters().size());
-	//
-	//		// reverse operation
-	//
-	//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
-	//		reverseOperation.execute();
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//		assertEquals(2, basicParameterNode1.getChoiceCount());
-	//
-	//		assertEquals(2, methodNode.getConstraintNodes().size());
-	//
-	//		assertEquals(1, methodNode.getTestCases().size());
-	//		assertEquals(2, methodNode.getDeployedParameters().size());
-	//	}
+	@Test
+	public void choiceNodeRemoveFromMethodBasicParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// method node
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		// basic parameters and choices 
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
+
+		ChoiceNode choiceNode11 = new ChoiceNode("Choice11", "11");
+		basicParameterNode1.addChoice(choiceNode11);
+
+		ChoiceNode choiceNode12 = new ChoiceNode("Choice12", "12");
+		basicParameterNode1.addChoice(choiceNode12);
+
+		BasicParameterNode basicParameterNode2 = 
+				new BasicParameterNode(
+						"BasicParam2", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode2);
+
+		ChoiceNode choiceNode21 = new ChoiceNode("Choice21", "21");
+		basicParameterNode2.addChoice(choiceNode21);
+
+		// constraints
+
+		ConstraintNode constraintNode1 = createConstraintNodeWithChoiceCondition(basicParameterNode1, choiceNode11);
+		methodNode.addConstraint(constraintNode1);
+
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint2", basicParameterNode2,"2");
+		methodNode.addConstraint(constraintNode2);
+
+		// test case
+
+		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
+		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(choiceNode11);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
+
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(1, basicParameterNode1.getChoiceCount());
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes(); 
+		assertEquals(1, constraintNodes.size());
+		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
+
+		// reverse operation
+
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(2, basicParameterNode1.getChoiceCount());
+
+		assertEquals(2, methodNode.getConstraintNodes().size());
+
+		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedParameters().size());
+	}
 
 	@Test
 	public void choiceNodeRemoveFromCompositeParameter() {
@@ -1393,7 +1395,7 @@ public class GenericRemoveNodesOperationTest {
 		ConstraintNode constraintNode1 = createConstraintNodeWithChoiceCondition(basicParameterNode1, choiceNode11);
 		methodNode.addConstraint(constraintNode1);
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition("constraint", basicParameterNode2,"2");
 		methodNode.addConstraint(constraintNode2);
 
 		// test case
@@ -1468,7 +1470,7 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraints
 
-		ConstraintNode constraintNode = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		ConstraintNode constraintNode = createConstraintNodeWithValueCondition("constraint", basicParameterNode1,"1");
 		methodNode.addConstraint(constraintNode);
 
 		// list of nodes to delete
@@ -1629,8 +1631,11 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getDeployedParameters().size());
 	}
 
-	private ConstraintNode createConstraintNodeWithValueCondition(
-			BasicParameterNode basicParameterNode, String value) {
+	private ConstraintNode 
+	createConstraintNodeWithValueCondition(
+			String constraintName,
+			BasicParameterNode basicParameterNode, 
+			String value) {
 
 		StaticStatement staticStatement = new StaticStatement(EvaluationResult.TRUE);
 
@@ -1639,13 +1644,13 @@ public class GenericRemoveNodesOperationTest {
 						basicParameterNode, null, EMathRelation.EQUAL, value); // TODO MO-RE leftParameterLinkingContext
 
 		Constraint constraint = new Constraint(
-				"constraint", 
+				constraintName, 
 				ConstraintType.EXTENDED_FILTER, 
 				staticStatement, 
 				relationStatement2, 
 				null);
 
-		ConstraintNode constraintNode = new ConstraintNode("constraintNode", constraint, null);
+		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
 		return constraintNode;
 	}
 
