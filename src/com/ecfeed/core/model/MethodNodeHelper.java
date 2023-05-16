@@ -657,4 +657,8 @@ public class MethodNodeHelper {
 		return null;
 	}
 
+	public static boolean containsStructures(MethodNode methodNode) {
+
+		return methodNode.getNestedCompositeParameters(true).size() > 0;
+	}
 }

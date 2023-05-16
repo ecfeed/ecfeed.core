@@ -255,16 +255,21 @@ public class StringHelper {
 				.replaceAll("public", "")
 				.replaceAll("void", "");
 
-		String simplifiedSignature;
+		String signatureSimplified;
 
 		if (signatureWithoutModifiers.contains("(")) {
-			simplifiedSignature = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
+			signatureSimplified = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
 		} else {
-			simplifiedSignature = signatureWithoutModifiers;
+			signatureSimplified = signatureWithoutModifiers;
 		}
 
-		String packageWithClass = simplifiedSignature
-				.substring(0, simplifiedSignature.lastIndexOf('.'));
+		String packageWithClass;
+
+		if (signatureSimplified.contains(".")) {
+			packageWithClass = signatureSimplified.substring(0, signatureSimplified.lastIndexOf('.'));
+		} else {
+			packageWithClass = "";
+		}
 
 		return packageWithClass.trim();
 	}
