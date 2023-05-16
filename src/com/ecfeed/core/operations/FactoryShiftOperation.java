@@ -118,13 +118,13 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			
+
 			IAbstractNode firstShiftedNode = fShifted.get(0);
 
 			if(firstShiftedNode instanceof AbstractParameterNode){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
-			
+
 			if(firstShiftedNode instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
 			}
@@ -175,15 +175,24 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(RootNode node) throws Exception {
-			if(fShifted.get(0) instanceof ClassNode){
-				return new GenericShiftOperation(node.getClasses(), fShifted, fShift, fExtLanguageManager);
+		public Object visit(RootNode rootNode) throws Exception {
+
+			if (fShifted.get(0) instanceof ClassNode) {
+				return new GenericShiftOperation(rootNode.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
+
+			//			if (fShifted.get(0) instanceof CompositeParameterNode) {
+			//				return new GenericShiftOperation(
+			//						rootNode.getCompositeParameterNodes(), fShifted, fShift, fExtLanguageManager);
+			//			}
 
 			IAbstractNode abstractNode = fShifted.get(0);
 
-			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
-				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
+			if (abstractNode instanceof AbstractParameterNode 
+					&& ((AbstractParameterNode)abstractNode).isGlobalParameter()) {
+
+				List<AbstractParameterNode> parameters = rootNode.getParameters();
+				return new GenericShiftOperation(parameters, fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
@@ -290,10 +299,15 @@ public class FactoryShiftOperation {
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
-	private static GenericShiftOperation getShiftOperation(IAbstractNode parent, List<? extends IAbstractNode> shifted, IModelVisitor provider) {
-		if(parent == null || haveTheSameType(shifted) == false){
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+	private static GenericShiftOperation getShiftOperation(
+			IAbstractNode parent, 
+			List<? extends IAbstractNode> shifted, 
+			IModelVisitor provider) {
+		
+		if (parent == null || haveTheSameType(shifted) == false) {
+			return null;
 		}
+		
 		try{
 			return (GenericShiftOperation)parent.accept(provider);
 		}

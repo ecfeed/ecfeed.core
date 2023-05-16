@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.EMathRelation;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class RelationStatementTest {
@@ -79,4 +80,26 @@ public class RelationStatementTest {
 		}
 	}
 
+	@Test
+	public void choiceStatementTest(){
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "65", false, null);
+		ChoiceNode choice = new ChoiceNode("choice", "876", null);
+		parameter.addChoice(choice);
+		choice.addLabel("label");
+
+		RelationStatement statement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, choice);
+		
+		RelationStatement statement2 = 
+				RelationStatement.createRelationStatementWithLabelCondition(
+						parameter, null, EMathRelation.EQUAL, "label");
+
+		RelationStatement copy1 = statement1.makeClone();
+		RelationStatement copy2 = statement2.makeClone();
+
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
+	}
+	
 }

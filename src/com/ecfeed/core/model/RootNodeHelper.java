@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -50,11 +51,16 @@ public class RootNodeHelper {
 	}
 
 	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
-			RootNode rootNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+		
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
+		
 		rootNode.addParameter(globalParameterNode);
-
+		
 		return globalParameterNode;
 	}
 
@@ -92,18 +98,18 @@ public class RootNodeHelper {
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 
 		String newName = RootNodeHelper.generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
-		
+
 		return newName;
 	}
 
 	public static String generateUniqueClassNameFromClassNameCore(RootNode rootNode, String startClassNameCore) {
-		
+
 		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
 		for (int i = 1;   ; i++) {
-			
+
 			String newClassName = startClassNameCore + String.valueOf(i);
-			
+
 			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
 
 			if (validatedNewClassName.isPresent()) {
@@ -160,4 +166,21 @@ public class RootNodeHelper {
 
 		return null;
 	}
+
+	public static void compareRootNodes(RootNode rootNode1, RootNode rootNode2) {
+
+		NameHelper.compareNames(rootNode1.getName(), rootNode2.getName());
+
+		AbstractNodeHelper.compareSizes(rootNode1.getClasses(), rootNode2.getClasses(), "Number of classes differs.");
+
+		for (int i = 0; i < rootNode1.getClasses().size(); ++i) {
+
+			ClassNode classNode1 = rootNode1.getClasses().get(i);
+			ClassNode classNode2 = rootNode2.getClasses().get(i);
+
+			AbstractNodeHelper.compareParents(classNode1, rootNode1, classNode2, rootNode2);
+			ClassNodeHelper.compareClasses(classNode1, classNode2);
+		}
+	}
+
 }

@@ -8,26 +8,20 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.utils;
+package com.ecfeed.core.model;
 
-public class BooleanHelper {
+import com.ecfeed.core.utils.StringHelper;
 
-	public static String toString(boolean boolSimple) {
-		Boolean boolWrapped = boolSimple;
-		return boolWrapped.toString();
+public class ExpectedValueStatementHelper {
+
+
+	public static void compareExpectedValueStatements(
+			ExpectedValueStatement statement1,
+			ExpectedValueStatement statement2) {
+
+		AbstractParameterNodeHelper.compareParameters(statement1.getLeftMethodParameterNode(), statement2.getLeftMethodParameterNode());
+		StringHelper.compareStrings(statement1.getChoice().getValueString(), statement2.getChoice().getValueString(), "Conditions differ.");
 	}
 
-	public static boolean parseBoolean(String str) {
-		return Boolean.parseBoolean(str);
-	}
-
-	public static void assertIsTrue(boolean b, String message) {
-
-		if (b == true) {
-			return;
-		}
-
-		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
-	}
-
+	
 }

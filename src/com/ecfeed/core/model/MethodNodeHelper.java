@@ -18,12 +18,15 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class MethodNodeHelper {
 
@@ -456,7 +459,7 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameterToMethod(
 			MethodNode methodNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
@@ -660,5 +663,107 @@ public class MethodNodeHelper {
 	public static boolean containsStructures(MethodNode methodNode) {
 
 		return methodNode.getNestedCompositeParameters(true).size() > 0;
+	}
+
+	public static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
+
+		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
+		List<ParameterWithLinkingContext> deployedParametersWithContexts2 = method2.getDeployedParametersWithLinkingContexts();
+
+		if (deployedParametersWithContexts1.size() != deployedParametersWithContexts2.size()) {
+			ExceptionHelper.reportRuntimeException("Length of deployed parameters in two method differs.");
+		}
+
+		int size = deployedParametersWithContexts1.size();
+
+		for (int i = 0; i < size; ++i) {
+
+			ParameterWithLinkingContext parameterWithContext1 = deployedParametersWithContexts1.get(i);
+			ParameterWithLinkingContext parameterWithContext2 = deployedParametersWithContexts2.get(i);
+
+			ParameterWithLinkingContextHelper.compareParametersWithLinkingContexts(parameterWithContext1,parameterWithContext2);
+		}
+	}
+
+	public static void compareMethodParameters(
+			BasicParameterNode methodParameterNode1, 
+			BasicParameterNode methodParameterNode2) {
+
+		NameHelper.compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
+
+		TypeHelper.compareIntegers(
+				methodParameterNode1.getChoices().size(), methodParameterNode2.getChoices().size(), "Length of choices list differs.");
+
+		for(int i = 0; i < methodParameterNode1.getChoices().size(); i++){
+			ChoiceNodeHelper.compareChoices(methodParameterNode1.getChoices().get(i), methodParameterNode2.getChoices().get(i));
+		}
+	}
+
+	public static void compareTestCases(MethodNode methodNode1, MethodNode methodNode2) {
+
+		AbstractNodeHelper.compareSizes(
+				methodNode1.getTestCases(), methodNode2.getTestCases(), "Number of test cases differs.");
+
+		for (int i =0; i < methodNode1.getTestCases().size(); ++i) {
+
+			TestCaseNode testCaseNode1 = methodNode1.getTestCases().get(i);
+			TestCaseNode testCaseNode2 = methodNode2.getTestCases().get(i);
+
+			AbstractNodeHelper.compareParents(testCaseNode1, methodNode1, testCaseNode2, methodNode2);
+			TestCaseNodeHelper.compareTestCases(testCaseNode1, testCaseNode2);
+		}
+	}
+
+	public static void compareMethodParameters(MethodNode methodNode1, MethodNode methodNode2) {
+
+		List<AbstractParameterNode> parameters1 = methodNode1.getParameters();
+		List<AbstractParameterNode> parameters2 = methodNode2.getParameters();
+
+		AbstractNodeHelper.compareSizes(parameters1, parameters2, "Number of parameters differs.");
+
+		for (int i =0; i < parameters1.size(); ++i) {
+
+			AbstractParameterNode abstractParameterNode1 = parameters1.get(i);
+			AbstractParameterNode abstractParameterNode2 = parameters2.get(i);
+
+			AbstractNodeHelper.compareParents(abstractParameterNode1, methodNode1, abstractParameterNode2, methodNode2);
+			AbstractParameterNodeHelper.compareParameters(abstractParameterNode1, abstractParameterNode2);
+		}
+	}
+
+	public static void compareMethodConstraints(MethodNode methodNode1, MethodNode methodNode2) {
+
+		List<ConstraintNode> constraintNodes1 = methodNode1.getConstraintNodes();
+		List<ConstraintNode> constraintNodes2 = methodNode2.getConstraintNodes();
+
+		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
+
+		for (int i =0; i < constraintNodes1.size(); ++i) {
+
+			ConstraintNode constraintNode1 = constraintNodes1.get(i);
+
+			ConstraintNode constraintNode2 = constraintNodes2.get(i);
+
+			AbstractNodeHelper.compareParents(constraintNode1, methodNode1, constraintNode2, methodNode2);
+			ConstraintNodeHelper.compareConstraintNodes(constraintNode1, constraintNode2);
+		}
+	}
+
+	public static void compareMethods(MethodNode method1, MethodNode method2) {
+
+		if (method1 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 1.");
+		}
+
+		if (method2 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 2.");
+		}
+
+		NameHelper.compareNames(method1.getName(), method2.getName());
+
+		MethodNodeHelper.compareMethodParameters(method1, method2);
+		MethodNodeHelper.compareDeployedParameters(method1, method2);
+		MethodNodeHelper.compareMethodConstraints(method1, method2);
+		MethodNodeHelper.compareTestCases(method1, method2);
 	}
 }

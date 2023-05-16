@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
@@ -20,6 +21,17 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 public class ConstraintNode extends AbstractNode {
 
 	private Constraint fConstraint;
+
+	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
+
+		super(name, modelChangeRegistrator);
+		fConstraint = constraint;
+	}
+
+	public ConstraintNode(String name, Constraint constraint) {
+
+		this(name, constraint, null);
+	}
 
 	@Override
 	public String getNonQualifiedName() {
@@ -66,15 +78,17 @@ public class ConstraintNode extends AbstractNode {
 		return 0;
 	}
 
-	@Override
-	public ConstraintNode makeClone() {
+	//	@Override
+	//	public ConstraintNode makeClone() {
+	//
+	//		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
+	//		copy.setProperties(getProperties());
+	//		
+	//		return copy;
+	//	}
 
-		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
-		copy.setProperties(getProperties());
-		return copy;
-	}
+	public ConstraintNode createCopy(NodeMapper mapper) {// TODO MO-RE obsolete
 
-	public ConstraintNode createCopy(NodeMapper mapper) {
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
 
 		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
@@ -84,15 +98,16 @@ public class ConstraintNode extends AbstractNode {
 		return copyOfConstraintNode;
 	}
 
-	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
+	@Override
+	public ConstraintNode makeClone(Optional<NodeMapper> mapper) {
 
-		super(name, modelChangeRegistrator);
-		fConstraint = constraint;
-	}
+		Constraint copyOfConstraint = fConstraint.makeClone(mapper);
 
-	public ConstraintNode(String name, Constraint constraint) {
+		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
 
-		this(name, constraint, null);
+		copyOfConstraintNode.setProperties(getProperties());
+
+		return copyOfConstraintNode;
 	}
 
 	public Constraint getConstraint() {
@@ -183,9 +198,9 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
+	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) { // TODO MO-RE obsolete
 
-		ConstraintNode copy = makeClone();
+		ConstraintNode copy = makeClone(Optional.empty());
 		return copy;
 
 		//		if (copy.updateReferences(parent))

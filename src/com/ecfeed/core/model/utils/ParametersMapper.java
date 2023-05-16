@@ -204,16 +204,18 @@ public class ParametersMapper {
 			Map<String, BasicParameterWithLinkingContext> inOutParametersDescriptions,
 			IExtLanguageManager extLanguageManager) {
 
-		ExtendedName extendedNameOfParameter = 
-				(parameterNodeWhichHasLink == null ? 
-						ExtendedName.PATH_TO_TOP_CONTAINTER : 
-							ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM); 
+//		ExtendedName extendedNameOfParameter = 
+//				(parameterNodeWhichHasLink == null ? 
+//						ExtendedName.PATH_TO_TOP_CONTAINTER : 
+//							ExtendedName.PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM); 
+
+		ExtendedName extendedNameOfParameter = ExtendedName.PATH_TO_TOP_CONTAINTER; 
 		
 		String signatureNew = 
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						parameterNodeWhichHasLink,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						basicParameterNode,
 						extendedNameOfParameter,
 						Decorations.NO,

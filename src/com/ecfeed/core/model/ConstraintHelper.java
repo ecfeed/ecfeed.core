@@ -22,7 +22,7 @@ public class ConstraintHelper {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		IConstraintsParentNode constraintParentNode = (IConstraintsParentNode) basicParameterNode.getParent();
-		
+
 		String oldType = basicParameterNode.getType();
 
 		List<Constraint> constraints = constraintParentNode.getConstraints();
@@ -47,7 +47,7 @@ public class ConstraintHelper {
 			constraint.convertValues(basicParameterNode, parameterConversionDefinition);
 		}
 	}
-	
+
 	public static Map<Integer, String> getOriginalConstraintValues(IConstraintsParentNode parametersParentNode) {
 
 		Map<Integer, String> resultValues = new HashMap<>();
@@ -231,4 +231,13 @@ public class ConstraintHelper {
 		return visitor.getMethods();
 	}
 
+	public static void compareConstraints(Constraint constraint1, Constraint constraint2) {
+
+		if (constraint1.getType() != constraint2.getType()) {
+			ExceptionHelper.reportRuntimeException("Constraint types different.");
+		}
+
+		AbstractStatementHelper.compareStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
+		AbstractStatementHelper.compareStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
+	}
 }

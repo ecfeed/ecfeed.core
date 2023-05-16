@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
@@ -47,9 +48,9 @@ public class GenericMoveOperation extends CompositeOperation {
 		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguageManager);
 
 		Set<MethodNode> methodsInvolved = new HashSet<>();
+		
 		try {
-			//all nodes have parents other than newParent
-			if(externalNodes(moved, newParent)){
+			if(allNodesHaveParentDifferentThan(moved, newParent)){
 				for(IAbstractNode node : moved){
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
@@ -79,21 +80,23 @@ public class GenericMoveOperation extends CompositeOperation {
 					if(newIndex != -1){
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new FactoryAddChildOperation(node, newIndex, false, extLanguageManager)));
+										new AddChildOperationCreator(node, newIndex, false, extLanguageManager)));
 					}
 					else{
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new FactoryAddChildOperation(node, false, extLanguageManager)));
+										new AddChildOperationCreator(node, false, extLanguageManager)));
 					}
 					
 					for(MethodNode method : methodsInvolved){
 						addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 					}
 				}
-			}
-			else if(internalNodes(moved, newParent)){
-				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex, extLanguageManager);
+			} else if (allNodesHaveThisParent(moved, newParent)) {
+				
+				GenericShiftOperation operation = 
+						FactoryShiftOperation.getShiftOperation(moved, newIndex, extLanguageManager);
+				
 				addOperation(operation);
 			}
 		} catch (Exception e) {
@@ -104,52 +107,73 @@ public class GenericMoveOperation extends CompositeOperation {
 	}
 	
 	private void processTestCaseNode(TestCaseNode node, TestSuiteNode newParent) throws Exception {
+		
 			Collection<TestCaseNode> element = new ArrayList<>();
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
 				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
-				TestCaseNode nodeCopy = node.makeClone();
+				TestCaseNode nodeCopy = node.makeClone(Optional.empty());
 				element.add(nodeCopy);
 				
-				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, false, getExtLanguageManager())));
+				addOperation(
+						new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
+				
+				addOperation(
+						(IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)newParent.getParent().accept(
+								new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
 			}
 	}
 	
-	private void processTestSuiteNode(TestSuiteNode node, MethodNode newParent) throws Exception {
+	private void processTestSuiteNode(
+			TestSuiteNode node, MethodNode newParent) throws Exception {
 			
 			if (node.getParent() == newParent) {
 				return;
 			} else {
 				Collection<TestCaseNode> element = new ArrayList<>();
 				
-				TestSuiteNode nodeCopy = node.makeClone();
+				TestSuiteNode nodeCopy = node.makeClone(Optional.empty());
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
 				addOperation(new OnTestCasesOperationRename(element, node.getSuiteName(), getExtLanguageManager()));
-				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
-				addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, false, getExtLanguageManager())));
+				
+				addOperation((
+						IModelOperation)node.getParent().accept(
+								new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+				
+				addOperation(
+						(IModelOperation)newParent.accept(
+								new AddChildOperationCreator(nodeCopy, false, getExtLanguageManager())));
 			}
 	}
 
-	protected boolean externalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
-		for(IAbstractNode node : moved){
-			if(node.getParent() == newParent){
+	protected boolean allNodesHaveParentDifferentThan(List<? extends IAbstractNode> nodes, IAbstractNode parent) {
+		
+		for (IAbstractNode node : nodes) {
+			
+			if (node.getParent() == parent) {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 
-	protected boolean internalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
-		for(IAbstractNode node : moved){
-			if(node.getParent() != newParent){
+	protected boolean allNodesHaveThisParent(List<? extends IAbstractNode> nodes, IAbstractNode parent) {
+		
+		for (IAbstractNode node : nodes) {
+			
+			if (node.getParent() != parent) {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 

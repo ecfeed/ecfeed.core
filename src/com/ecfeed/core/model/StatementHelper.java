@@ -8,26 +8,27 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.utils;
+package com.ecfeed.core.model;
 
-public class BooleanHelper {
+import java.util.Collection;
 
-	public static String toString(boolean boolSimple) {
-		Boolean boolWrapped = boolSimple;
-		return boolWrapped.toString();
-	}
+import com.ecfeed.core.utils.ExceptionHelper;
 
-	public static boolean parseBoolean(String str) {
-		return Boolean.parseBoolean(str);
-	}
+public class StatementHelper{
+	
+	public static void compareSizes(
+			Collection<? extends IStatement> collection1, 
+			Collection<? extends IStatement> collection2, 
+			String errorMessage) {
 
-	public static void assertIsTrue(boolean b, String message) {
+		int size1 = collection1.size();
 
-		if (b == true) {
-			return;
+		int size2 = collection2.size();
+
+		if (size1 != size2) {
+			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
 		}
-
-		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
 	}
 
+	
 }

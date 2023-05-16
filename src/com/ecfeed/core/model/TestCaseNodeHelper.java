@@ -19,6 +19,8 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.NameHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class TestCaseNodeHelper {
 
@@ -100,20 +102,20 @@ public class TestCaseNodeHelper {
 		if (basicParameterNode.isExpected()) {
 			String valueString = ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 			return valueString;
-			
+
 		} else {
 			String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 			return choiceQualifiedName;
 		}
 	}
-	
+
 	private static String getShortTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
 
-		
-		
-		
+
+
+
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
@@ -376,5 +378,26 @@ public class TestCaseNodeHelper {
 
 		return result;
 	}
+
+	public static void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
+
+		NameHelper.compareNames(testCase1.getName(), testCase2.getName());
+
+		AbstractNodeHelper.compareSizes(testCase1.getTestData(), testCase2.getTestData(), "Number of choices differs.");
+
+		for(int i = 0; i < testCase1.getTestData().size(); i++){
+
+			ChoiceNode choiceNode1 = testCase1.getTestData().get(i);
+			ChoiceNode choiceNode2 = testCase2.getTestData().get(i);
+
+			if(choiceNode1.getParameter() instanceof BasicParameterNode){
+				StringHelper.compareStrings(choiceNode1.getValueString(), choiceNode2.getValueString(), "Choice values differ.");
+			}
+			else{
+				ChoiceNodeHelper.compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
+			}
+		}
+	}
+
 
 }

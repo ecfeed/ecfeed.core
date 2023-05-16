@@ -17,6 +17,7 @@ import java.util.Set;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.TypeHelper;
@@ -274,4 +275,37 @@ public abstract class AbstractParameterNodeHelper {
 		return null;
 	}
 
+	public static void compareParameters(
+			AbstractParameterNode abstractParameter1, 
+			AbstractParameterNode abstractParameter2) {
+
+		if (abstractParameter1 == null && abstractParameter2 == null) {
+			return;
+		}
+
+		AbstractParameterNodeHelper.compareParameterTypes(abstractParameter1, abstractParameter2);
+
+		NameHelper.compareNames(abstractParameter1.getName(), abstractParameter2.getName());
+
+		if ((abstractParameter1 instanceof BasicParameterNode) && (abstractParameter2 instanceof BasicParameterNode)) {
+
+			BasicParameterNode basicParameterNode1 = (BasicParameterNode) abstractParameter1;
+			BasicParameterNode basicParameterNode2 = (BasicParameterNode) abstractParameter2;
+
+			BasicParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
+		}
+
+		if ((abstractParameter1 instanceof CompositeParameterNode) && (abstractParameter2 instanceof CompositeParameterNode)) {
+
+			CompositeParameterNode basicParameterNode1 = (CompositeParameterNode) abstractParameter1;
+			CompositeParameterNode basicParameterNode2 = (CompositeParameterNode) abstractParameter2;
+
+			CompositeParameterNodeHelper.compareParameters(basicParameterNode1, basicParameterNode2);
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
+	}
+	
 }

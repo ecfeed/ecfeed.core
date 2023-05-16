@@ -19,6 +19,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 
 public class TestCaseNode extends AbstractNode {
+
 	List<ChoiceNode> fTestData;
 
 	@Override
@@ -76,15 +77,34 @@ public class TestCaseNode extends AbstractNode {
 		return 0;
 	}
 
+	//	@Override
+	//	public TestCaseNode makeClone(){
+	//		List<ChoiceNode> testdata = new ArrayList<>();
+	//		for(ChoiceNode choice : fTestData){
+	//			testdata.add(choice);
+	//		}
+	//		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
+	//		copy.setProperties(getProperties());
+	//		return copy;
+	//	}
+
 	@Override
-	public TestCaseNode makeClone(){
+	public TestCaseNode makeClone(Optional<NodeMapper> nodeMapper) {
+
 		List<ChoiceNode> testdata = new ArrayList<>();
-		for(ChoiceNode choice : fTestData){
+
+		for (ChoiceNode choice : fTestData) {
 			testdata.add(choice);
 		}
+
 		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
+
 		return copy;
+	}
+
+	public List<ChoiceNode> getChoices() { 
+		return fTestData;
 	}
 
 	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
@@ -170,7 +190,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCaseNode getCopy(MethodNode method){
-		TestCaseNode tcase = makeClone();
+		TestCaseNode tcase = makeClone(Optional.empty());
 		if(tcase.correctTestCase(method)){
 			tcase.setParent(method);
 			return tcase;

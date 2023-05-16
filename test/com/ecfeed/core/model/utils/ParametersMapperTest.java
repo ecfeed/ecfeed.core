@@ -110,7 +110,7 @@ public class ParametersMapperTest {
 		// composite parameter 1
 
 		CompositeParameterNode compositeParameterNode1 = 
-				MethodNodeHelper.addCompositeParameter(methodNode, "S1", true, null);
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
 
 		// parameter 1 of composite 1
 
@@ -390,12 +390,12 @@ public class ParametersMapperTest {
 
 		assertEquals(1, parameterNames.size());
 
-		assertEquals("S1:GP1", parameterNames.get(0));
+		assertEquals("S1->GS1:GP1", parameterNames.get(0));
 
-		BasicParameterNode resultParameter1 = parametersContainer.findBasicParameter("S1:GP1");
+		BasicParameterNode resultParameter1 = parametersContainer.findBasicParameter("S1->GS1:GP1");
 		assertEquals(rootParameterNode1, resultParameter1);
 
-		AbstractParameterNode linkingParameter = parametersContainer.findLinkingParameter("S1:GP1");
+		AbstractParameterNode linkingParameter = parametersContainer.findLinkingParameter("S1->GS1:GP1");
 		assertEquals(localCompositeParameterNode, linkingParameter);
 	}
 

@@ -17,20 +17,20 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.api.IGeneratorValue;
-import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
+import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public class RandomGeneratorTest {
 	@Test
 	public void initializeTest(){
 		try {
-			RandomGenerator<String> generator = new RandomGenerator<String>();
+			RandomGenerator<String> generator = new RandomGenerator<>();
 			List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3, 3);
 			List<IGeneratorValue> arguments = new ArrayList<>();
 
@@ -44,7 +44,6 @@ public class RandomGeneratorTest {
 			assertEquals(100, ((RandomAlgorithm<String>)algorithm).getLength());
 			
 			try{
-
 				GeneratorValue generatorArgumentDuplicates = new GeneratorValue(generator.getDefinitionDuplicates(), "true");
 				arguments.add(generatorArgumentDuplicates);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
@@ -56,5 +55,4 @@ public class RandomGeneratorTest {
 			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
-
 }

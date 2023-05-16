@@ -22,13 +22,18 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintNodeHelper;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
@@ -36,6 +41,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestCaseNodeHelper;
 import com.ecfeed.core.model.serialization.IModelParserForClass;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
@@ -116,7 +122,7 @@ public class XomParserTest {
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
 			
-			ModelComparator.compareClasses(classNode, parsedClass.get());
+			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
 			
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -149,7 +155,7 @@ public class XomParserTest {
 				
 				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				
-				ModelComparator.compareMethods(methodNode, parsedMethodNode.get());
+				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -179,7 +185,7 @@ public class XomParserTest {
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
 							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, methodNode, new ListOfStrings());
 					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
-					ModelComparator.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
+					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
 			catch (Exception e) {
@@ -208,7 +214,7 @@ public class XomParserTest {
 					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					// assertElementsEqual(testCaseNode, tc1.get());
-					ModelComparator.compareTestCases(testCaseNode, tc1.get());
+					TestCaseNodeHelper.compareTestCases(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
 				}
@@ -236,7 +242,7 @@ public class XomParserTest {
 
 					Optional<ConstraintNode> c1 = new ModelParserForConstraint().parseConstraint(element, m, new ListOfStrings());
 					//assertElementsEqual(c, c1.get());
-					ModelComparator.compareConstraintNodes(c, c1.get());
+					ConstraintNodeHelper.compareConstraintNodes(c, c1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
 				}
@@ -263,7 +269,7 @@ public class XomParserTest {
 
 				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
 				//assertElementsEqual(p, p1.get());
-				ModelComparator.compareChoices(p, p1.get());
+				ChoiceNodeHelper.compareChoices(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}

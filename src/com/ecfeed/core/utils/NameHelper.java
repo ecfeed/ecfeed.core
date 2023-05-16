@@ -10,24 +10,12 @@
 
 package com.ecfeed.core.utils;
 
-public class BooleanHelper {
+public class NameHelper {
 
-	public static String toString(boolean boolSimple) {
-		Boolean boolWrapped = boolSimple;
-		return boolWrapped.toString();
-	}
-
-	public static boolean parseBoolean(String str) {
-		return Boolean.parseBoolean(str);
-	}
-
-	public static void assertIsTrue(boolean b, String message) {
-
-		if (b == true) {
-			return;
+	public static void compareNames(String name, String name2) {
+		if(name.equals(name2) == false){
+			ExceptionHelper.reportRuntimeException("Different names: " + name + ", " + name2);
 		}
-
-		ExceptionHelper.reportRuntimeException("True boolean value expected." + " " + message);
 	}
 
 }

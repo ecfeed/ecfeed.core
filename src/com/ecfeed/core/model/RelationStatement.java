@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -189,7 +190,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						linkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						leftParameter,
 						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM, buf statement editor requires full path 
 						Decorations.NO,
@@ -217,7 +218,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						leftParameterLinkingCondition,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
-						TypeOfLink.SHORTENED,
+						TypeOfLink.NORMAL,
 						leftBasicParameterNode,
 						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
 						Decorations.NO,
@@ -238,6 +239,27 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
+	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
+		
+		if (mapper.isPresent()) {
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
+
+			RelationStatement clonedStatement = 
+					new RelationStatement(clonedParameter, fLeftParameterLinkingContext, fRelation, null);
+
+			IStatementCondition clonedCondition = fRightCondition.makeClone(clonedStatement, mapper);
+			clonedStatement.setCondition(clonedCondition);
+
+			return clonedStatement;
+		}
+		
+		RelationStatement relationStatement = new RelationStatement(
+				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
+		
+		return relationStatement;
+	}
+	
+	@Override  // TODO MO-RE obsolete
 	public RelationStatement makeClone() {
 
 		return 
@@ -246,9 +268,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(NodeMapper mapper) {
+	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
 
-		BasicParameterNode parameter = mapper.getDeployedNode(fLeftParameter);
+		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
 
 		RelationStatement statement = 
 				new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);

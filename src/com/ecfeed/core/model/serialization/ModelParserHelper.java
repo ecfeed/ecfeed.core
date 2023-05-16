@@ -107,7 +107,7 @@ public class ModelParserHelper  {
 
 		if (qualifiedName.equals(expectedName) == false) {
 			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
-			ParserException.create();
+			ParserException.reportException();
 		}
 
 	}
@@ -164,7 +164,7 @@ public class ModelParserHelper  {
 
 		if (name == null) {
 			errorList.add(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
-			ParserException.create();
+			ParserException.reportException();
 		}
 
 		return WhiteCharConverter.getInstance().decode(name);
@@ -177,7 +177,7 @@ public class ModelParserHelper  {
 
 		if (value == null) {
 			errorList.add(Messages.MISSING_ATTRIBUTE(element, attributeName));
-			ParserException.create();
+			ParserException.reportException();
 		}
 
 		return WhiteCharConverter.getInstance().decode(value);
@@ -210,7 +210,7 @@ public class ModelParserHelper  {
 
 		if (relation == null) {
 			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
-			ParserException.report(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
+			ParserException.reportException(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 		}
 
 		return relation;
