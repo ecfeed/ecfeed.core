@@ -432,6 +432,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
+		
 		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
@@ -461,10 +462,16 @@ public abstract class XomBuilder implements IModelVisitor {
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLinkToGlobalParameter() != null) {
-			String qualifiedName = 
-					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter != null) {
+//			String qualifiedName = 
+//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+//							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+
+			String qualifiedName = AbstractParameterSignatureHelper.createPathToRootNewStandard(linkToGlobalParameter, new ExtLanguageManagerForJava());
+					//node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+			
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
 					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, qualifiedName), 
@@ -475,6 +482,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetMethodCompositeParameterElement(CompositeParameterNode node) {
+		
 		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
