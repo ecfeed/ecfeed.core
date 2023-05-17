@@ -33,26 +33,27 @@ public abstract class MethodDeployer {
 		deployParameters(sourceMethodNode, targetMethodNode, nodeMapper);
 		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
-		somethingsomething(targetMethodNode);
+		copyChoices(targetMethodNode);
 
 		return targetMethodNode;
 	}
 
-	public static void somethingsomething(MethodNode targetMethodNode) {
+	public static void copyChoices(MethodNode targetMethodNode) {
+		List<BasicParameterNode> parameters = targetMethodNode.getNestedBasicParameters(false);
 
-		for (BasicParameterNode parameter : targetMethodNode.getNestedBasicParameters(false)) {
-			if (parameter.isLinked()) {
-				BasicParameterNode linked = parameter.getLinkDestination();
-				List<ChoiceNode> linkedChoices = linked.getChoices();
+		parameters.stream()
+				.filter(BasicParameterNode::isLinked)
+				.forEach(MethodDeployer::copyChoicesMove);
+	}
 
-				parameter.setLinkToGlobalParameter(null);
+	private static void copyChoicesMove(BasicParameterNode parameter) {
+		List<ChoiceNode> choices = parameter.getLinkDestination().getChoices();
 
-				for (ChoiceNode choice : linkedChoices) {
-					parameter.addChoice(choice.makeClone());
-				}
-			}
+		choices.stream()
+				.map(ChoiceNode::makeCloneUnlink)
+				.forEach(parameter::addChoice);
 
-		}
+		parameter.setLinkToGlobalParameter(null);
 	}
 
 	public static boolean isMatchFoDeployedParameters(

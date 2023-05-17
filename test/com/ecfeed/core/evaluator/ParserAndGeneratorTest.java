@@ -36,7 +36,7 @@ public class ParserAndGeneratorTest {
 
     @Test
     public void linkTwoMethodParametersToGlobalIntRandomParameter() {
-        assertEquals(1, countGeneratedTestCases(xmlAccessParameterInNestedStructureFromMethod));
+        assertEquals(1, countGeneratedTestCases(xmlLinkTwoMethodParametersToGlobalIntRandomParameter));
     }
 
     @Test
