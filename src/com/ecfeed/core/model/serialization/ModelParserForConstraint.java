@@ -498,6 +498,10 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		//		String parameterContextName = ModelParserHelper.getAttributeValue(element, attributeName);
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
+		
+		if (pathToParameter == null) {
+			return null;
+		}
 
 		AbstractParameterNode context = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
 
