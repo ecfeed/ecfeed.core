@@ -33,7 +33,26 @@ public abstract class MethodDeployer {
 		deployParameters(sourceMethodNode, targetMethodNode, nodeMapper);
 		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
+		somethingsomething(targetMethodNode);
+
 		return targetMethodNode;
+	}
+
+	public static void somethingsomething(MethodNode targetMethodNode) {
+
+		for (BasicParameterNode parameter : targetMethodNode.getNestedBasicParameters(false)) {
+			if (parameter.isLinked()) {
+				BasicParameterNode linked = parameter.getLinkDestination();
+				List<ChoiceNode> linkedChoices = linked.getChoices();
+
+				parameter.setLinkToGlobalParameter(null);
+
+				for (ChoiceNode choice : linkedChoices) {
+					parameter.addChoice(choice.makeClone());
+				}
+			}
+
+		}
 	}
 
 	public static boolean isMatchFoDeployedParameters(
