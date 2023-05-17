@@ -467,26 +467,26 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
-	public static BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
-
-		if (parameterParent == null || parameterName == null) {
-			return null;
-		}
-
-		List<BasicParameterNode> parameters = new ArrayList<>();
-
-		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
-
-		for (BasicParameterNode parameter : parameters) {
-			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
-
-			if (name.equals(parameterName)) {
-				return parameter;
-			}
-		}
-
-		return null;
-	}
+	//	public static BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) { // TODO MO-RE use AbstractParameterNodeHelper.findParameter instead
+	//
+	//		if (parameterParent == null || parameterName == null) {
+	//			return null;
+	//		}
+	//
+	//		List<BasicParameterNode> parameters = new ArrayList<>();
+	//
+	//		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
+	//
+	//		for (BasicParameterNode parameter : parameters) {
+	//			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+	//
+	//			if (name.equals(parameterName)) {
+	//				return parameter;
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
 	public static BasicParameterNode findBasicParameter(ChoiceNode globalChoiceNode) {
 

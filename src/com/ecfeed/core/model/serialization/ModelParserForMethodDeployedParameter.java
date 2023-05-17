@@ -17,17 +17,12 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -70,7 +65,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 			return null;
 		}
 
-		AbstractParameterNode foundParameter = findParameterByPath(methodNode, path);
+		AbstractParameterNode foundParameter = AbstractParameterNodeHelper.findParameter(path, methodNode);
 
 		if (foundParameter == null) {
 			errorList.add("Original parameter not found by path: " + path);
@@ -84,22 +79,29 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		return foundParameter;
 	}
 
-	private AbstractParameterNode findParameterByPath(MethodNode methodNode, String path) {
-
-		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
-
-			AbstractParameterNode abstractParameterNode = MethodNodeHelper.findParameterByPath(path, methodNode);
-			return abstractParameterNode;
-		}
-
-		IAbstractNode topNode = AbstractNodeHelper.findTopNode(methodNode);
-
-		if (!(topNode instanceof RootNode)) {
-			ExceptionHelper.reportRuntimeException("Root node not found.");
-		}
-
-		return AbstractParameterNodeHelper.findParameterByAbsolutePath(path, (RootNode) topNode);
-	}
+	//	// XYX remove
+	//	private AbstractParameterNode findParameterByPath(MethodNode methodNode, String path) {
+	//
+	//		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+	//
+	//			AbstractParameterNode abstractParameterNode = MethodNodeHelper.findParameterByPath(path, methodNode);
+	//			return abstractParameterNode;
+	//		}
+	//
+	//		IAbstractNode topNode = AbstractNodeHelper.findTopNode(methodNode);
+	//
+	//		if (!(topNode instanceof RootNode)) {
+	//			ExceptionHelper.reportRuntimeException("Root node not found.");
+	//		}
+	//
+	//		AbstractParameterNode parameter = 
+	//				AbstractParameterNodeHelper.findParameterByRelativePath(
+	//						path, 
+	//						AbstractParameterNodeHelper.ParameterPathType.PATH_CONTAINTS_TOP_NODE,
+	//						(RootNode) topNode);
+	//		
+	//		return parameter;
+	//	}
 
 	//	public Optional<BasicParameterNode> parseMethodDeployedParameter(
 	//			Element element, MethodNode method, ListOfStrings errors) {

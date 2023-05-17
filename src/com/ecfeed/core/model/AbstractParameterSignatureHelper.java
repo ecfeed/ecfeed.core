@@ -68,7 +68,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return elements[1] + " " + elements[0];
 	}
 
-	public static String createSignatureNewStandard(
+	public static String createSignatureNewStandard( // TODO MO-RE rename createSignatureOfParameterNewStandard
 			AbstractParameterNode parameter,
 			ExtendedName extendedNameTypeOfParameter,
 			Decorations decorations,
@@ -88,7 +88,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-	public static String createSignatureWithLinkNewStandard(
+	public static String createSignatureWithLinkNewStandard( // TODO MO-RE rename createSignatureOfParameterWithLinkNewStandard
 			AbstractParameterNode parameterWhichHasLink, // may be parameter with link or linking context
 			ExtendedName extendedNameTypeOfParameter,
 			TypeOfLink typeOfLink,
@@ -190,6 +190,24 @@ public abstract class AbstractParameterSignatureHelper {
 		return qualifiedName;
 	}
 
+	public static String createSignatureOfLocalOrGlobalParameter(AbstractParameterNode parameter) {
+
+		String signature;
+
+		if (parameter.isGlobalParameter()) {
+
+			signature = createPathToRootNewStandard(parameter, new ExtLanguageManagerForJava());
+
+		} else {
+
+			signature = createSignatureNewStandard(
+					parameter, ExtendedName.PATH_TO_TOP_CONTAINTER, Decorations.NO, TypeIncluded.NO, 
+					new ExtLanguageManagerForJava());
+
+		}
+
+		return signature;
+	}
 
 	private static String createSignatureOfParameterNameNewStandard(
 			AbstractParameterNode parameterWhichHasLink,
@@ -713,7 +731,7 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	private static void printObsoleteInfo() {
-//		System.out.println("OBSOLETE FUNCTION");
+		//		System.out.println("OBSOLETE FUNCTION");
 	}
 
 }

@@ -19,7 +19,23 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -28,7 +44,7 @@ import nu.xom.Element;
 
 public class ModelParserForConstraint implements IModelParserForConstraint {
 
-	private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
+	//private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
 
 	public ModelParserForConstraint() {
 	}
@@ -229,8 +245,17 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
-		CompositeParameterNode parameterContext = getParameterContext(element, parent, true);
-		BasicParameterNode parameterNode = getParameter(element, parent, parameterContext, true, errorList);
+		System.out.println("XYX");
+		CompositeParameterNode parameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+
+		BasicParameterNode parameterNode = 
+				getParameter(
+						element, 
+						SerializationHelperVersion1.getStatementParameterAttributeName(), 
+						parent, 
+						parameterContext, 
+						errorList);
 
 		if (parameterNode == null) {
 			return null;
@@ -267,13 +292,21 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
-		CompositeParameterNode parameterContext = getParameterContext(element, parent, true);
-		BasicParameterNode parameterNode = getParameter(element, parent, parameterContext, true, errorList);
+		CompositeParameterNode parameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+
+		BasicParameterNode parameterNode = 
+				getParameter(
+						element, 
+						SerializationHelperVersion1.getStatementParameterAttributeName(), 
+						parent, 
+						parameterContext, 
+						errorList);
 
 		if (parameterNode == null) {
 			return null;
 		}
-		
+
 		String relationName = ModelParserHelper.getAttributeValue(
 				element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 
@@ -283,8 +316,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			return null;
 		}
 
-		CompositeParameterNode rightParameterContext = getParameterContext(element, parent, false);
-		BasicParameterNode rightParameterNode = getParameter(element, parent, rightParameterContext, false, errorList);
+		CompositeParameterNode rightParameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT);
+
+		BasicParameterNode rightParameterNode = 
+				getParameter(
+						element, 
+						SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, 
+						parent, 
+						rightParameterContext, 
+						errorList);
 
 		if (rightParameterNode == null) {
 			return null;
@@ -304,8 +345,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
-		CompositeParameterNode parameterContext = getParameterContext(element, parent, true);
-		BasicParameterNode parameterNode = getParameter(element, parent, parameterContext, true, errorList);
+		CompositeParameterNode parameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+
+		BasicParameterNode parameterNode = 
+				getParameter(
+						element, 
+						SerializationHelperVersion1.getStatementParameterAttributeName(), 
+						parent, 
+						parameterContext, 
+						errorList);
 
 		if (parameterNode == null) {
 			return null;
@@ -359,8 +408,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
-		CompositeParameterNode parameterContext = getParameterContext(element, parent, true);
-		BasicParameterNode parameterNode = getParameter(element, parent, parameterContext, true, errorList);
+		CompositeParameterNode parameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+
+		BasicParameterNode parameterNode = 
+				getParameter(
+						element, 
+						SerializationHelperVersion1.getStatementParameterAttributeName(), 
+						parent, 
+						parameterContext, 
+						errorList);
 
 		if (parameterNode == null) {
 			return null;
@@ -390,8 +447,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
-		CompositeParameterNode parameterContext = getParameterContext(element, parent, true);
-		BasicParameterNode parameterNode = getParameter(element, parent, parameterContext, true, errorList);
+		CompositeParameterNode parameterContext = 
+				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+
+		BasicParameterNode parameterNode = 
+				getParameter(
+						element, 
+						SerializationHelperVersion1.getStatementParameterAttributeName(), 
+						parent, 
+						parameterContext, 
+						errorList);
 
 		if (parameterNode == null) {
 			return null;
@@ -415,56 +480,84 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				parameterNode, parameterContext, condition, new JavaPrimitiveTypePredicate());
 	}
 
-//-----------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------
 
 	private CompositeParameterNode getParameterContext(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
-			boolean primary) throws ParserException {
+			String elementName) throws ParserException {
 
-		String serialization;
-		if (primary) {
-			serialization = SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT;
-		} else {
-			serialization = SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT;
-		}
+		//		String attributeName;
+		//		
+		//		if (primary) {
+		//			attributeName = SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT;
+		//		} else {
+		//			attributeName = SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT;
+		//		}
+		//
+		//		String parameterContextName = ModelParserHelper.getAttributeValue(element, attributeName);
 
-		String parameterContextName = ModelParserHelper.getAttributeValue(element, serialization);
+		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
 
-		return CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
+		AbstractParameterNode context = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
+
+		return (CompositeParameterNode) context;
+
+		//return CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName); XYX
 	}
+
+
+	//	private IParametersParentNode calculateParentOfParameter(String path, IParametersParentNode initialParent) {
+	//
+	//		IParametersParentNode calculatedParentNode = initialParent;
+	//
+	//		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+	//
+	//			IAbstractNode topNode = AbstractNodeHelper.findTopNode(initialParent);
+	//
+	//			if (!(topNode instanceof RootNode)) {
+	//				ExceptionHelper.reportRuntimeException("Cannot find root node.");
+	//			}
+	//
+	//			calculatedParentNode = (IParametersParentNode) topNode;
+	//		}
+	//		return calculatedParentNode;
+	//	}
 
 	private BasicParameterNode getParameter(
 			Element element,
+			String attributeName,
 			IParametersAndConstraintsParentNode parent,
 			CompositeParameterNode parameterContext,
-			boolean primary,
+			//			boolean primary,
 			ListOfStrings errorList) throws ParserException {
 
-		String serialization;
-		if (primary) {
-			serialization = SerializationHelperVersion1.getStatementParameterAttributeName();
-		} else {
-			serialization = SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
-		}
+		//		String serialization;
+		//		if (primary) {
+		//			serialization = SerializationHelperVersion1.getStatementParameterAttributeName();
+		//		} else {
+		//			serialization = SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
+		//		}
 
-		String parameterName =	ModelParserHelper.getAttributeValue(element, serialization, errorList);
+		String pathToParameter = ModelParserHelper.getAttributeValue(element, attributeName, errorList);
 
-		BasicParameterNode parameter;
-		if (parameterContext != null) {
-			parameter = BasicParameterNodeHelper.getParameterFromPath(parameterContext, parameterName);
-		} else {
-			parameter = BasicParameterNodeHelper.getParameterFromPath(parent, parameterName);
-		}
+		//		BasicParameterNode parameter;
+		//		if (parameterContext != null) {
+		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parameterContext, parameterName);
+		//		} else {
+		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parent, parameterName);
+		//		}
+
+		AbstractParameterNode parameter = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
 
 		if (parameter == null) {
-			if (primary) {
-				errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
-			} else {
-				errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
-			}
+			errorList.add("Cannot find parameter: " + pathToParameter + "for attribute: " + attributeName + ".");
 		}
 
-		return parameter;
+		if (!(parameter instanceof BasicParameterNode)) {
+			errorList.add("Parameter type is invalid. Expected basic parameter.");
+		}
+
+		return (BasicParameterNode) parameter;
 	}
 }

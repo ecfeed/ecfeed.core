@@ -20,7 +20,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT;
-import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME;
@@ -36,10 +35,8 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
@@ -48,6 +45,7 @@ import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.ValueCondition;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -57,7 +55,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private String fStatementParameterAttributeName;
 	private String fStatementChoiceAttributeName;
-	private IAbstractNode fConstraintParent;
+	//private IAbstractNode fConstraintParent;
 
 	public XomStatementBuilder(String statementParameterAttributeName, String statementChoiceAttributeName) {
 
@@ -68,7 +66,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		fStatementParameterAttributeName = statementParameterAttributeName; 
 		fStatementChoiceAttributeName = statementChoiceAttributeName;
-		fConstraintParent = constraintParent;
+		//fConstraintParent = constraintParent;
 	}
 
 	@Override
@@ -139,72 +137,109 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
-		BasicParameterNode parameter = statement.getLeftParameter();
+		Element resultRelationStatementElement = createElementWithStatementCondition(statement);
 
-		String parameterName = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+		Attribute parameterAttribute = createParameterAtrribute(statement);
+		XomBuilder.encodeAndAddAttribute(resultRelationStatementElement, parameterAttribute, fWhiteCharConverter);
 
-		Attribute parameterAttribute =
-				new Attribute(fStatementParameterAttributeName, parameterName);
+		Attribute linkingContextAttribute = createLinkingContextAttribute(statement);
+		if (linkingContextAttribute != null) {
+			XomBuilder.encodeAndAddAttribute(resultRelationStatementElement, linkingContextAttribute, fWhiteCharConverter);
+		}
 
-		Attribute relationAttribute =
-				new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().getName());
+		Attribute relationAttribute = new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().getName());
+		XomBuilder.encodeAndAddAttribute(resultRelationStatementElement, relationAttribute, fWhiteCharConverter);
 
+		//		BasicParameterNode parameterRight = getRightParameter(statement.getCondition());
+
+		//		String parameterContext = getParameterContext(parameter);
+		//
+		//		if (parameterContext != null) {
+		//			Attribute linkingContext = new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, parameterContext);
+		//			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
+		//		}
+		//
+		//		String rightParameterContext = getParameterContext(parameterRight);
+		//
+		//		if (rightParameterContext != null) {
+		//			Attribute linkingContext = new Attribute(STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, rightParameterContext);
+		//			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
+		//		}
+		//
+		return resultRelationStatementElement;
+	}
+
+	private Element createElementWithStatementCondition(RelationStatement statement) throws Exception {
 		IStatementCondition condition = statement.getCondition();
 		Element targetStatementElement = (Element) condition.accept(this);
-
-		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
-		XomBuilder.encodeAndAddAttribute(targetStatementElement, relationAttribute, fWhiteCharConverter);
-
-		BasicParameterNode parameterRight = getRightParameter(condition);
-
-		String parameterContext = getParameterContext(parameter);
-
-		if (parameterContext != null) {
-			Attribute linkingContext = new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, parameterContext);
-			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
-		}
-
-		String rightParameterContext = getParameterContext(parameterRight);
-
-		if (rightParameterContext != null) {
-			Attribute linkingContext = new Attribute(STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, rightParameterContext);
-			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
-		}
-
 		return targetStatementElement;
 	}
 
-	private BasicParameterNode getRightParameter(IStatementCondition condition) {
+	private Attribute createLinkingContextAttribute(RelationStatement statement) {
 
-		if (condition instanceof ChoiceCondition) {
-			return ((ChoiceCondition) condition).getRightChoice().getParameter();
-		} else if (condition instanceof ParameterCondition) {
-			return ((ParameterCondition) condition).getRightParameterNode();
+		AbstractParameterNode linkingContext = statement.getLeftParameterLinkingContext();
+
+		if (linkingContext == null) {
+			return null;
 		}
 
-		return null;
+		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameter(linkingContext);
+
+		// XYX
+		//				AbstractParameterSignatureHelper.createSignatureNewStandard(
+		//						linkingContext, ExtendedName.PATH_TO_TOP_CONTAINTER, Decorations.NO, TypeIncluded.NO, 
+		//						new ExtLanguageManagerForJava());
+
+		return new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, signature); // XYX
 	}
 
-	private String getParameterContext(BasicParameterNode parameter) {
+	private Attribute createParameterAtrribute(RelationStatement statement) {
 
-		if (parameter != null && parameter.getParent() instanceof  CompositeParameterNode) {
+		BasicParameterNode parameter = statement.getLeftParameter();
 
-			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
-
-			// parameterLoop: //TODO MO-RE check unused label
-			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
-				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
-					if (candidateComposite.isLinked()) {
-						if (candidateParameter == parameter) {
-							return AbstractParameterSignatureHelper.getQualifiedName(candidateComposite);
-						}
-					}
-				}
-			}
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Cannot serialize relation statement without left parameter.");
 		}
 
-		return null;
+		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameter(parameter);
+
+		Attribute parameterAttribute =
+				new Attribute(fStatementParameterAttributeName, signature);
+
+		return parameterAttribute;
 	}
+
+	//	private BasicParameterNode getRightParameter(IStatementCondition condition) {
+	//
+	//		if (condition instanceof ChoiceCondition) {
+	//			return ((ChoiceCondition) condition).getRightChoice().getParameter();
+	//		} else if (condition instanceof ParameterCondition) {
+	//			return ((ParameterCondition) condition).getRightParameterNode();
+	//		}
+	//
+	//		return null;
+	//	}
+
+	//	private String getParameterContext(BasicParameterNode parameter) {
+	//
+	//		if (parameter != null && parameter.getParent() instanceof  CompositeParameterNode) {
+	//
+	//			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
+	//
+	//			// parameterLoop: //TODO MO-RE check unused label
+	//			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
+	//				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
+	//					if (candidateComposite.isLinked()) {
+	//						if (candidateParameter == parameter) {
+	//							return AbstractParameterSignatureHelper.getQualifiedName(candidateComposite);
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
 	@Override
 	public Object visit(LabelCondition condition) throws Exception {

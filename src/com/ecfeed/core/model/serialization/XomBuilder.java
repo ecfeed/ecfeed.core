@@ -160,7 +160,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		Element deployedParametersElement = createDeployedParametersElement(methodNode);
-		
+
 		if (deployedParametersElement != null) {
 			targetMethodElement.appendChild(deployedParametersElement);
 		}
@@ -249,32 +249,55 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ConstraintNode node) throws Exception{
+
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
 		ConstraintType constraintType = node.getConstraint().getType();
 		addConstraintTypeAttribute(constraintType, targetConstraintElement);
 
-		AbstractStatement precondition = node.getConstraint().getPrecondition();
-		AbstractStatement postcondition = node.getConstraint().getPostcondition();
-
-		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
-		preconditionElement.appendChild((Element)precondition.accept(
-				new XomStatementBuilder(
-						node.getParent(),
-						getStatementParameterAttributeName(),
-						getStatementChoiceAttributeName())));
-
-		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
-		postconditionElement.appendChild((Element)postcondition.accept(
-				new XomStatementBuilder(
-						node.getParent(),
-						getStatementParameterAttributeName(),
-						getStatementChoiceAttributeName())));
-
+		Element preconditionElement = createPreconditionElement(node);
 		targetConstraintElement.appendChild(preconditionElement);
+
+		Element postconditionElement = createPostconditionElement(node);
 		targetConstraintElement.appendChild(postconditionElement);
 
 		return targetConstraintElement;
+	}
+
+	private Element createPostconditionElement(ConstraintNode constraintNode) throws Exception {
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		XomStatementBuilder statementBuildingVisitor = new XomStatementBuilder(
+				constraintNode.getParent(),
+				getStatementParameterAttributeName(),
+				getStatementChoiceAttributeName());
+
+		Element statementElementOfPostcondition = 
+				(Element)postcondition.accept(statementBuildingVisitor);
+
+		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);		
+		postconditionElement.appendChild(statementElementOfPostcondition);
+
+		return postconditionElement;
+	}
+
+	private Element createPreconditionElement(ConstraintNode constraintNode) throws Exception {
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		XomStatementBuilder statementBuildingVisitor = new XomStatementBuilder(
+				constraintNode.getParent(),
+				getStatementParameterAttributeName(),
+				getStatementChoiceAttributeName());
+
+		Element statementElementOfPrecondition = (Element)precondition.accept(
+				statementBuildingVisitor);
+
+		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
+		preconditionElement.appendChild(statementElementOfPrecondition);
+
+		return preconditionElement;
 	}
 
 	@Override
@@ -335,9 +358,9 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetDeployedParameterElement(ParameterWithLinkingContext parameterWithLinkingContext) {
-		
+
 		BasicParameterNode parameter = (BasicParameterNode) parameterWithLinkingContext.getParameter();
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Unexpected empty parameter.");
 		}
@@ -352,9 +375,9 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 
 		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
-		
+
 		if (linkingContext != null) {
-			
+
 			String pathOfContext = createPath(linkingContext);
 
 			encodeAndAddAttribute(
@@ -554,11 +577,11 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createDeployedParametersElement(MethodNode methodNode) {
 
 		List<ParameterWithLinkingContext> deployedParameters = methodNode.getDeployedParametersWithLinkingContexts();
-		
+
 		if (deployedParameters.size() == 0) {
 			return null;
 		}
-		
+
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_TAG);
 
 		for (ParameterWithLinkingContext parameterWithContext : deployedParameters) {
