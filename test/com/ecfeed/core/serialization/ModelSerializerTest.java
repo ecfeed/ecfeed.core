@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -31,6 +32,7 @@ import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ConstraintsParentNodeHelper;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
@@ -42,13 +44,88 @@ import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
+import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ListOfStrings;
 
-public class ModelSerializerTest {
+public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndParserTest
+	
+	@Test 
+	public void shouldSerializeAndParseLinkedStructureAndConstraint() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		CompositeParameterNode globalCompositeParameterNode1 = 
+				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
+
+		BasicParameterNode globalBasicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameterNode1, "GP", "int", "o", true, null);
+		
+		ChoiceNode choice1 = 
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+						globalBasicParameterNode, "choice1", "0", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		CompositeParameterNode localCompositeParameterNode1 = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+
+		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
+		
+		RelationStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						globalBasicParameterNode, localCompositeParameterNode1, EMathRelation.EQUAL, choice1);
+		
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+		
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+		
+		// XYX
+
+		// root
+		//   GS1
+		//     GP
+		//   class
+		//     method
+		//       LS1->GS
+		//		 constraint: gp1==choice1=>true
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			String xml = ostream.toString();
+			
+			String lineToCheckSerializationOfParameterAndContext =
+					"<Statement choice=\"choice1\" "
+					+ "parameter=\"@root:GS1:GP\" parameterContext=\"LS1\" "
+					+ "relation=\"equal\"/>";
+			
+			if (!xml.contains(lineToCheckSerializationOfParameterAndContext)) {
+				fail();
+			}
+			
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 
 	@Test 
 	public void shouldSerializeDeployedLinkedParametersWithConflictingNamesAndMultipleLinks() {
