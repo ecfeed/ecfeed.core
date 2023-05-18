@@ -559,7 +559,7 @@ public class ChoiceConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftParam, null, EMathRelation.EQUAL, rightParam);
+						leftParam, null, EMathRelation.EQUAL, rightParam, null);
 
 		RelationStatement copy = statement.makeClone();
 

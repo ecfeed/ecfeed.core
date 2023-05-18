@@ -69,14 +69,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}
 
-	public static RelationStatement createRelationStatementWithParameterCondition(
-			BasicParameterNode leftParameter,
-			CompositeParameterNode leftParameterLinkingContext,
-			EMathRelation relation,
-			BasicParameterNode rightParameter) {
-
-		return createRelationStatementWithParameterCondition(leftParameter, leftParameterLinkingContext, relation, rightParameter, null);
-	}
+	// XYX REMOVE and use with explicit null as right linking context
+//	public static RelationStatement createRelationStatementWithParameterCondition(
+//			BasicParameterNode leftParameter,
+//			CompositeParameterNode leftParameterLinkingContext,
+//			EMathRelation relation,
+//			BasicParameterNode rightParameter) {
+//
+//		return createRelationStatementWithParameterCondition(leftParameter, leftParameterLinkingContext, relation, rightParameter, null);
+//	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
 			BasicParameterNode leftParameter,

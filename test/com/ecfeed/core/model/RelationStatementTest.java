@@ -68,13 +68,15 @@ public class RelationStatementTest {
 
 		if (okExpected) {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
+				RelationStatement.createRelationStatementWithParameterCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);  // TODO MO-RE leftParameterLinkingContext
 			} catch (Exception e) {
 				fail();
 			}
 		} else {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
+				RelationStatement.createRelationStatementWithParameterCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);  // TODO MO-RE leftParameterLinkingContext
 				fail();
 			} catch (Exception e) {
 			}
@@ -168,7 +170,7 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp", "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp", "String", true, null);
 
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
@@ -330,7 +332,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12);
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12, null);
 
 		assertTrue(statement1.isConsistent(methodNode1));
 
@@ -346,7 +348,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21);
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21, null);
 
 		assertFalse(statement2.isConsistent(methodNode1));		
 	}
@@ -357,10 +359,10 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter1 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp1", "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp1", "String", true, null);
 
 		BasicParameterNode globalBasicParameter2 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp2", "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp2", "String", true, null);
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
@@ -380,7 +382,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement1 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12);
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode12, null);
 
 		assertTrue(statement1.isConsistent(methodNode1));
 
@@ -395,7 +397,7 @@ public class RelationStatementTest {
 
 		RelationStatement statement2 = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21);
+						basicParameterNode11, null, EMathRelation.EQUAL, basicParameterNode21, null);
 
 		assertFalse(statement2.isConsistent(methodNode1));
 		assertFalse(statement2.isConsistent(methodNode2));

@@ -72,7 +72,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
@@ -206,7 +206,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
@@ -344,7 +344,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
@@ -481,7 +481,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		ChoiceNode globalChoiceNode = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
@@ -618,7 +618,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		ChoiceNode globalChoiceNodeOfRoot = 
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
@@ -751,7 +751,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for root
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", false, true, null);
@@ -1240,7 +1240,7 @@ public class ParameterTransformerTest {
 		final String parameterType = "String";
 
 		BasicParameterNode globalParameterNodeOfRoot1 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", parameterType, null);
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", parameterType, true, null);
 
 		final String choiceValueString = "1";
 

@@ -27,10 +27,15 @@ public class RootNodeHelper {
 			RootNode rootNode, 
 			String name, 
 			String type,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
 				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+		
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
 
 		rootNode.addParameter(globalParameterNode);
 

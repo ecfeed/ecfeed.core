@@ -783,7 +783,7 @@ public class MethodNodeTest {
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
 
 		RelationStatement postcondition = RelationStatement.createRelationStatementWithParameterCondition(
-				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2);
+				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2, null);
 
 		Constraint constraint = 
 				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
