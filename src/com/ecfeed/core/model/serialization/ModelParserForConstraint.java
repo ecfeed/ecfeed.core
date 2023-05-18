@@ -245,7 +245,6 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
-		System.out.println("XYX");
 		CompositeParameterNode parameterContext = 
 				getParameterContext(element, parent, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
 

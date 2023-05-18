@@ -87,7 +87,8 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				return Optional.empty();
 			}
 
-			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			//AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, method);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
