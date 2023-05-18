@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
@@ -241,7 +242,7 @@ public abstract class AbstractParameterNodeHelper {
 
 	}
 
-	public enum ParameterPathType {
+	private enum ParameterPathType {
 		PATH_CONTAINTS_TOP_NODE,
 		PATH_WITHOUT_TOP_NODE
 	}
@@ -288,47 +289,29 @@ public abstract class AbstractParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Invalid path. Path with root marker expected.");
 		}
 
-		String formattedPath = formatSearchPath(path);
-
-		String[] pathElements = formattedPath.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-		int initialIndex = (parameterPathType == ParameterPathType.PATH_WITHOUT_TOP_NODE ? 0 : 1);
-
-		int pathSize = pathElements.length;
-
-		IParametersParentNode currentParametersParent = topNode;
-
-		for (int pathIndex = initialIndex; pathIndex < pathSize; pathIndex++) {
-
-			String pathElement = pathElements[pathIndex];
-
-			AbstractParameterNode foundParameter = currentParametersParent.findParameter(pathElement);
-
-			if (foundParameter == null) {
-				return null;
-			}
-
-			if (pathIndex == pathSize - 1) {
-				return foundParameter;
-			}
-
-			if (!(foundParameter instanceof CompositeParameterNode)) {
-				ExceptionHelper.reportRuntimeException("Current parameter is not a composite.");
-			}
-
-			currentParametersParent = (IParametersParentNode) foundParameter;
+		String formattedPath = formatSearchPath(path, parameterPathType);
+		
+		IAbstractNode foundAbstractNode = topNode.getChild(formattedPath);
+		
+		if (!(foundAbstractNode instanceof AbstractParameterNode)) {
+			return null;
 		}
-
-		ExceptionHelper.reportRuntimeException("Parameter not found");
-		return null;
+		
+		return (AbstractParameterNode) foundAbstractNode;
 	}
 
-	private static String formatSearchPath(String path) {
+	private static String formatSearchPath(String path, ParameterPathType parameterPathType) {
+		
 		String formattedPath = path;
 
 		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			formattedPath = path.substring(1);
 		}
+		
+		if (parameterPathType == ParameterPathType.PATH_CONTAINTS_TOP_NODE) {
+			formattedPath = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, formattedPath);
+		}
+		
 		return formattedPath;
 	}
 

@@ -110,11 +110,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		
 		for (Element classElement : childClassElements) {
 			
-			Optional<ClassNode> node = fModelParserForClass.parseClass(classElement, targetRootNode, outErrorList);
-			
-			if (node.isPresent()) {
-				targetRootNode.addClass(node.get());
-			}
+			Optional<ClassNode> node = fModelParserForClass.parseAndAddClass(classElement, targetRootNode, outErrorList);
 		}
 	}
 

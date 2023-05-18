@@ -253,7 +253,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='arg1' type='int'>");
@@ -279,7 +279,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='arg1' type='int'>");
@@ -338,8 +338,8 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
-		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1:arg11'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg01'/>");
+		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:com.example.test.TestClass1:arg11'/>");
 		sb.append("        </Method>");
 		sb.append("        <Parameter name='arg11' type='int'>");
 		sb.append("            <Choice name='choice111' value='0' isRandomized='false'/>");
@@ -371,8 +371,8 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
-		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1:arg11'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg01'/>");
+		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:com.example.test.TestClass1:arg11'/>");
 		sb.append("        </Method>");
 		sb.append("        <Parameter name='arg11' type='int'>");
 		sb.append("            <Choice name='choice111' value='0' isRandomized='false'/>");
@@ -801,7 +801,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'>");
 		sb.append("                <Choice name='choice11' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
 		sb.append("        </Method>");
@@ -831,7 +831,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='globalArg1' type='int'>");
@@ -886,7 +886,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'>");
 		sb.append("                <Choice name='choice11' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint'>");
@@ -919,7 +919,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'/>");
 		sb.append("            <Constraint name='constraint' type=\"EF\">");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='equal'/>");

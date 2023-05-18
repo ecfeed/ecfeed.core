@@ -104,7 +104,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-			return modelParserForClass.parseClass(
+			return modelParserForClass.parseAndAddClass(
 					document.getRootElement(), null, outErrorList).get();
 			
 		} catch (ParsingException e) {

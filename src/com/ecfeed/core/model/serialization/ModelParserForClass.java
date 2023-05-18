@@ -42,8 +42,8 @@ public class ModelParserForClass implements IModelParserForClass {
 		fModelParserForMethod = modelParserForMethod;
 	}
 
-	public Optional<ClassNode> parseClass(
-			Element classElement, RootNode parent, ListOfStrings errorList) throws ParserException {
+	public Optional<ClassNode> parseAndAddClass(
+			Element classElement, RootNode rootNode, ListOfStrings errorList) throws ParserException {
 
 		String name;
 
@@ -54,17 +54,19 @@ public class ModelParserForClass implements IModelParserForClass {
 			return Optional.empty();
 		}
 
-		ClassNode targetClassNode = new ClassNode(name, parent.getModelChangeRegistrator());
+		ClassNode classNode = new ClassNode(name, rootNode.getModelChangeRegistrator());
+		classNode.setParent(rootNode);
+		rootNode.addClass(classNode);
 
-		targetClassNode.setDescription(ModelParserHelper.parseComments(classElement));
+		classNode.setDescription(ModelParserHelper.parseComments(classElement));
 		//we need to do it here, so the backward search for global parameters will work
-		targetClassNode.setParent(parent);
+		classNode.setParent(rootNode);
 
-		parseClassParameters(classElement, targetClassNode, errorList);
+		parseClassParameters(classElement, classNode, errorList);
 
-		parseMethods(classElement, targetClassNode, errorList);
+		parseMethods(classElement, classNode, errorList);
 
-		return Optional.ofNullable(targetClassNode);
+		return Optional.ofNullable(classNode);
 	}
 
 	private void parseClassParameters(Element classElement, ClassNode targetClassNode, ListOfStrings errorList) {

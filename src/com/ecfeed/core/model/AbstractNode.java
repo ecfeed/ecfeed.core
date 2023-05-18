@@ -199,7 +199,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public IAbstractNode getChild(String qualifiedName) {
+	public IAbstractNode getChild(String qualifiedName) { // TODO MO-RE rename to find child and move to helper
 
 		String[] tokens = qualifiedName.split(":");
 		if(tokens.length == 0){
