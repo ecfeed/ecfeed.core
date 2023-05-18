@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
@@ -88,7 +89,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			}
 
 			//AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
-			AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, method);
+			AbstractParameterNode link = findLink(linkPath, method);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
@@ -120,6 +121,16 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		}
 
 		return Optional.ofNullable(targetMethodParameterNode);
+	}
+
+	private AbstractParameterNode findLink(String linkPath, MethodNode method) {
+		
+		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+			return AbstractParameterNodeHelper.findParameter(linkPath, method);
+		}
+		
+		// old convention - to be removed in next release when all models would be converted to new convention
+		return method.getClassNode().findGlobalParameter(linkPath); 
 	}
 
 	private String getParameterNodeName() {
