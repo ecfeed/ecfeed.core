@@ -54,101 +54,91 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndParserTest
 
-	// XYX uncomment
-	//	@Test 
-	//	public void shouldSerializeAndParseLinkedParametersAndConstraintWithParameterCondition() {
-	//
-	//		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
-	//
-	//		// global parameter1 with choice
-	//
-	//		BasicParameterNode globalBasicParameterNode1 = 
-	//				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP1", "int", true, null);
-	//
-	//		ChoiceNode choice11 = 
-	//				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-	//						globalBasicParameterNode1, "GC11", "0", false, true, null);
-	//
-	//		// global parameter2 with choice
-	//
-	//		BasicParameterNode globalBasicParameterNode2 = 
-	//				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP2", "int", true, null);
-	//
-	//		ChoiceNode choice21 = 
-	//				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-	//						globalBasicParameterNode2, "GC21", "0", false, true, null);
-	//
-	//		// class and method
-	//
-	//		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
-	//
-	//		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
-	//
-	//		// local parameter1
-	//
-	//		BasicParameterNode basicParameterNode1 = 
-	//				MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "int", "0", true, null);
-	//
-	//		basicParameterNode1.setLinkToGlobalParameter(globalBasicParameterNode1);
-	//
-	//		// local parameter2
-	//
-	//		BasicParameterNode basicParameterNode2 = 
-	//				MethodNodeHelper.addNewBasicParameter(methodNode, "P2", "int", "0", true, null);
-	//
-	//		basicParameterNode2.setLinkToGlobalParameter(globalBasicParameterNode2);
-	//
-	//		RelationStatement precondition =
-	//				RelationStatement.createRelationStatementWithParameterCondition(
-	//						basicParameterNode1, null, 
-	//						EMathRelation.EQUAL, 
-	//						basicParameterNode2, null);
-	//
-	//
-	//		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
-	//
-	//		Constraint constraint = new Constraint(
-	//				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
-	//
-	//		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
-	//
-	//		// root
-	//		// 	 GP1
-	//		//     GC11
-	//		//   GP2
-	//		//     GC21
-	//		//   class
-	//		//     method
-	//		//       P1->GP1
-	//		//       P2->GP2
-	//		//		 constraint: P1==P2=>true
-	//
-	//		try {
-	//			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-	//			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
-	//
-	//			serializer.serialize(rootNode);
-	//			String xml = ostream.toString();
-	//
-	//			//			String lineToCheckSerializationOfParameterAndContext =
-	//			//					"<Statement choice=\"choice1\" "
-	//			//					+ "parameter=\"@root:GS1:GP\" parameterContext=\"LS1\" "
-	//			//					+ "relation=\"equal\"/>";
-	//			//			
-	//			//			if (!xml.contains(lineToCheckSerializationOfParameterAndContext)) {
-	//			//				fail();
-	//			//			}
-	//
-	//			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-	//			ModelParser parser = new ModelParser();
-	//			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
-	//
-	//			ModelComparator.compareRootNodes(rootNode, parsedModel);
-	//
-	//		} catch (Exception e) {
-	//			fail("Unexpected exception: " + e.getMessage());
-	//		}
-	//	}
+	@Test 
+	public void shouldSerializeAndParseLinkedParametersAndConstraintWithParameterCondition() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		// global parameter1 with choice
+
+		BasicParameterNode globalBasicParameterNode1 = 
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP1", "int", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameterNode1, "GC11", "0", false, true, null);
+
+		// global parameter2 with choice
+
+		BasicParameterNode globalBasicParameterNode2 = 
+				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP2", "int", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameterNode2, "GC21", "0", false, true, null);
+
+		// class and method
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		// local parameter1
+
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "int", "0", true, null);
+
+		basicParameterNode1.setLinkToGlobalParameter(globalBasicParameterNode1);
+
+		// local parameter2
+
+		BasicParameterNode basicParameterNode2 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "P2", "int", "0", true, null);
+
+		basicParameterNode2.setLinkToGlobalParameter(globalBasicParameterNode2);
+
+		// constraint with parameter condition
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode1, null, 
+						EMathRelation.EQUAL, 
+						basicParameterNode2, null);
+
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+
+		// root
+		// 	 GP1
+		//     GC11
+		//   GP2
+		//     GC21
+		//   class
+		//     method
+		//       P1->GP1
+		//       P2->GP2
+		//		 constraint: P1==P2=>true
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			// String xml = ostream.toString();
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 
 	@Test 
 	public void shouldSerializeAndParseLinkedStructureAndConstraint() {
