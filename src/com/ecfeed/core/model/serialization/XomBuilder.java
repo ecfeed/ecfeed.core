@@ -296,7 +296,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
 		
-		String signature = precondition.createSignature(new ExtLanguageManagerForJava());
+		//String signature = precondition.createSignature(new ExtLanguageManagerForJava());
 
 		XomStatementBuilder statementBuildingVisitor = 
 				new XomStatementBuilder(
