@@ -294,6 +294,11 @@ public class ParameterCondition implements IStatementCondition {
 		return fRightParameterNode;
 	}
 
+	public AbstractParameterNode getRightParameterLinkingContext() {
+		
+		return fRightParameterLinkingContext;
+	}
+	
 	@Override
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 

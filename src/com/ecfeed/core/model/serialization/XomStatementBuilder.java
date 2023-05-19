@@ -183,7 +183,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 			return null;
 		}
 
-		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameter(linkingContext);
+		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameterNewStandard(linkingContext);
 
 		// XYX
 		//				AbstractParameterSignatureHelper.createSignatureNewStandard(
@@ -201,7 +201,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 			ExceptionHelper.reportRuntimeException("Cannot serialize relation statement without left parameter.");
 		}
 
-		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameter(parameter);
+		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameterNewStandard(parameter);
 
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, signature);
@@ -270,19 +270,40 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 	@Override
 	public Object visit(ParameterCondition condition) throws Exception {
+		
+		Element parameterConditionElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
+		
 
 		BasicParameterNode rightMethodParameterNode = condition.getRightParameterNode();
 
-		String relativeName = AbstractParameterSignatureHelper.getQualifiedName(rightMethodParameterNode);
-
-		Element targetParameterElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
+		String signatureOfRightParameter = 
+				AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameterNewStandard(
+						rightMethodParameterNode);
 
 		XomBuilder.encodeAndAddAttribute(
-				targetParameterElement, 
-				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, relativeName),
+				parameterConditionElement, 
+				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, signatureOfRightParameter),
 				fWhiteCharConverter);
 
-		return targetParameterElement;
+		
+		AbstractParameterNode rightParameterLinkingContext = condition.getRightParameterLinkingContext();
+		
+		if (rightParameterLinkingContext != null) {
+
+			String signatureOfRightLinkingContext = 
+					AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameterNewStandard(
+							rightParameterLinkingContext);
+			
+			Attribute linkingContextAttribute = 
+					new Attribute(
+							SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, 
+							signatureOfRightLinkingContext);
+			
+			XomBuilder.encodeAndAddAttribute(parameterConditionElement, linkingContextAttribute, fWhiteCharConverter);
+		}
+
+
+		return parameterConditionElement;
 	}
 
 	@Override

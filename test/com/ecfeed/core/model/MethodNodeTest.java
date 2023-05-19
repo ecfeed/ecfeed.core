@@ -862,7 +862,7 @@ public class MethodNodeTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalComposite = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(

@@ -204,7 +204,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return createSignature(new ExtLanguageManagerForJava());
 	}
 
 	@Override

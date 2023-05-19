@@ -170,7 +170,7 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp", "String", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp", "String", "", true, null);
 
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
@@ -207,7 +207,7 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalCompositeParameter = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -359,10 +359,10 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter1 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp1", "String", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp1", "String", "", true, null);
 
 		BasicParameterNode globalBasicParameter2 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "gp2", "String", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp2", "String", "", true, null);
 
 		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
 
@@ -411,7 +411,7 @@ public class RelationStatementTest {
 		// the first global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter1 = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter11 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -423,7 +423,7 @@ public class RelationStatementTest {
 		// the second global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter2 = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter21 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -542,7 +542,7 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 		
 		CompositeParameterNode globalCompositeParameter = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
 		
 		BasicParameterNode globalBasicParameter1 = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(

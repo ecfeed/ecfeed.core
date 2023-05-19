@@ -155,7 +155,7 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", "String", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, "RC11", "100", false, false, null);
@@ -786,7 +786,7 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", "String", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
 
 		String globalChoiceNodeName = "RC11";
 

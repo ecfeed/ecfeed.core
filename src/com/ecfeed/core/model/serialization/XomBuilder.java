@@ -94,19 +94,22 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(RootNode rootNode) throws Exception {
+
 		Element targetRootElement = createTargetRootElement(rootNode);
 
 		for (ClassNode classNode : rootNode.getClasses()) {
 
 			if (shouldSerializeNode(classNode)) {
-				targetRootElement.appendChild((Element) visit(classNode));
+				Element classElement = (Element) visit(classNode);
+				targetRootElement.appendChild(classElement);
 			}
 		}
 
 		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetRootElement.appendChild(createTargetParameterElement(parameterNode));
+				Element parameterElement = createTargetParameterElement(parameterNode);
+				targetRootElement.appendChild(parameterElement);
 			}
 		}
 
@@ -115,19 +118,22 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ClassNode classNode) throws Exception {
+
 		Element targetClassElement = createTargetClassElement(classNode);
 
 		for (MethodNode methodNode : classNode.getMethods()) {
 
 			if (shouldSerializeNode(methodNode)) {
-				targetClassElement.appendChild((Element) visit(methodNode));
+				Element methodElement = (Element) visit(methodNode);
+				targetClassElement.appendChild(methodElement);
 			}
 		}
 
 		for (AbstractParameterNode parameterNode : classNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetClassElement.appendChild(createTargetParameterElement(parameterNode));
+				Element parameterElement = createTargetParameterElement(parameterNode);
+				targetClassElement.appendChild(parameterElement);
 			}
 		}
 
@@ -136,26 +142,30 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(MethodNode methodNode) throws Exception {
+
 		Element targetMethodElement = createTargetMethodElement(methodNode);
 
 		for (AbstractParameterNode parameterNode : methodNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetMethodElement.appendChild((Element) parameterNode.accept(this));
+				Element parameterElement = (Element) parameterNode.accept(this);
+				targetMethodElement.appendChild(parameterElement);
 			}
 		}
 
 		for (ConstraintNode constraintNode : methodNode.getConstraintNodes()) {
 
 			if (shouldSerializeNode(constraintNode)) {
-				targetMethodElement.appendChild((Element) constraintNode.accept(this));
+				Element constraintElement = (Element) constraintNode.accept(this);
+				targetMethodElement.appendChild(constraintElement);
 			}
 		}
 
 		for (TestCaseNode testCaseNode : methodNode.getTestCases()) {
 
 			if (shouldSerializeNode(testCaseNode)) {
-				targetMethodElement.appendChild((Element)testCaseNode.accept(this));
+				Element testCaseElement = (Element)testCaseNode.accept(this);
+				targetMethodElement.appendChild(testCaseElement);
 			}
 		}
 
@@ -165,38 +175,34 @@ public abstract class XomBuilder implements IModelVisitor {
 			targetMethodElement.appendChild(deployedParametersElement);
 		}
 
-		//		if (methodNode.isDeployed()) {
-		//			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
-		//
-		//				targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
-		//			} else {
-		//				LogHelperCore.logError("The number of deployed parameters is inconsistent.");
-		//			}
-		//		}
-
 		return targetMethodElement;
 	}
 
 	@Override
 	public Object visit(BasicParameterNode parameterNode)  throws Exception {
+
 		Element targetParamElement;
 
 		if (parameterNode.isGlobalParameter()) {
+
 			targetParamElement = createTargetGlobalBasicParameterElement(parameterNode);
 
 			for (ChoiceNode choiceNode : parameterNode.getChoices()) {
 
 				if (shouldSerializeNode(choiceNode)) {
-					targetParamElement.appendChild((Element) choiceNode.accept(this));
+					Element choiceElement = (Element) choiceNode.accept(this);
+					targetParamElement.appendChild(choiceElement);
 				}
 			}
 		} else {
+
 			targetParamElement = createTargetBasicMethodParameterElement(parameterNode);
 
 			for (ChoiceNode choiceNode : parameterNode.getRealChoices()) {
 
 				if (shouldSerializeNode(choiceNode)) {
-					targetParamElement.appendChild((Element)choiceNode.accept(this));
+					Element choiceElement = (Element)choiceNode.accept(this);
+					targetParamElement.appendChild(choiceElement);
 				}
 			}
 		}
@@ -206,6 +212,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(CompositeParameterNode parameterNode)  throws Exception {
+
 		Element targetParamElement;
 
 		if (parameterNode.isGlobalParameter()) {
@@ -215,12 +222,14 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
-			targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
+			Element parameterElement = createTargetParameterElement(parameterParsed);
+			targetParamElement.appendChild(parameterElement);
 		}
 
 		for (ConstraintNode constraintNode : parameterNode.getConstraintNodes()) {
 			if (shouldSerializeNode(constraintNode)) {
-				targetParamElement.appendChild((Element) constraintNode.accept(this));
+				Element constraintElement = (Element) constraintNode.accept(this);
+				targetParamElement.appendChild(constraintElement);
 			}
 		}
 
@@ -235,6 +244,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
+
 		Element targetTestCaseElement = createTargetTestCaseElement(node);
 
 		for (ChoiceNode choiceNode : node.getTestData()) {
@@ -248,17 +258,17 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	@Override
-	public Object visit(ConstraintNode node) throws Exception{
+	public Object visit(ConstraintNode constraintNode) throws Exception{
 
-		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
+		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, constraintNode);
 
-		ConstraintType constraintType = node.getConstraint().getType();
+		ConstraintType constraintType = constraintNode.getConstraint().getType();
 		addConstraintTypeAttribute(constraintType, targetConstraintElement);
 
-		Element preconditionElement = createPreconditionElement(node);
+		Element preconditionElement = createPreconditionElement(constraintNode);
 		targetConstraintElement.appendChild(preconditionElement);
 
-		Element postconditionElement = createPostconditionElement(node);
+		Element postconditionElement = createPostconditionElement(constraintNode);
 		targetConstraintElement.appendChild(postconditionElement);
 
 		return targetConstraintElement;
@@ -285,14 +295,18 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createPreconditionElement(ConstraintNode constraintNode) throws Exception {
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+		
+		String signature = precondition.createSignature(new ExtLanguageManagerForJava());
 
-		XomStatementBuilder statementBuildingVisitor = new XomStatementBuilder(
-				constraintNode.getParent(),
-				getStatementParameterAttributeName(),
-				getStatementChoiceAttributeName());
+		XomStatementBuilder statementBuildingVisitor = 
+				new XomStatementBuilder(
+						constraintNode.getParent(),
+						getStatementParameterAttributeName(),
+						getStatementChoiceAttributeName());
 
-		Element statementElementOfPrecondition = (Element)precondition.accept(
-				statementBuildingVisitor);
+		Element statementElementOfPrecondition = 
+				(Element)precondition.accept(
+						statementBuildingVisitor);
 
 		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
 		preconditionElement.appendChild(statementElementOfPrecondition);
@@ -432,7 +446,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
-		
+
 		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
@@ -463,15 +477,15 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 
 		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
-		
+
 		if (linkToGlobalParameter != null) {
-//			String qualifiedName = 
-//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-//							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+			//			String qualifiedName = 
+			//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+			//							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
 
 			String qualifiedName = AbstractParameterSignatureHelper.createPathToRootNewStandard(linkToGlobalParameter, new ExtLanguageManagerForJava());
-					//node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
-			
+			//node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
 					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, qualifiedName), 
@@ -482,7 +496,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetMethodCompositeParameterElement(CompositeParameterNode node) {
-		
+
 		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {

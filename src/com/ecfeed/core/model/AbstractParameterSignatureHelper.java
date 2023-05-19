@@ -190,7 +190,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return qualifiedName;
 	}
 
-	public static String createSignatureOfLocalOrGlobalParameter(AbstractParameterNode parameter) {
+	public static String createSignatureOfLocalOrGlobalParameterNewStandard(AbstractParameterNode parameter) {
 
 		String signature;
 

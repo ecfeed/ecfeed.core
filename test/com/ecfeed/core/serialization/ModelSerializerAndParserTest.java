@@ -52,7 +52,100 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ListOfStrings;
 
-public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndParserTest
+public class ModelSerializerAndParserTest {
+
+	@Test 
+	public void shouldSerializeAndParseLinkedStructureAndConstraintWithParameterCondition() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		CompositeParameterNode globalCompositeParameterNode = 
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS", true, null);
+
+		// global parameter1 with choice
+
+		BasicParameterNode globalBasicParameterNode1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameterNode, "GP1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameterNode1, "GC11", "0", false, true, null);
+
+
+		// global parameter2 with choice
+
+		BasicParameterNode globalBasicParameterNode2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						globalCompositeParameterNode, "GP2", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				globalBasicParameterNode2, "GC21", "0", false, true, null);
+
+		// class and method
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		// local structure
+
+		CompositeParameterNode localCompositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
+
+		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
+
+
+		// constraint with parameter condition
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						globalBasicParameterNode1, localCompositeParameterNode, 
+						EMathRelation.EQUAL, 
+						globalBasicParameterNode2, localCompositeParameterNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+
+		// root
+		//   GS
+		// 	   GP1
+		//       GC11
+		//     GP2
+		//       GC21
+		//   class
+		//     method
+		//       LS->GS
+		//		 constraint: LS->GS:P1=LS->GS:GP2=>true
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			String xml = ostream.toString();
+
+			String lineToCheck =
+					"<ParameterStatement rightParameter=\"@root:GS:GP2\" rightParameterContext=\"LS\" "
+							+ "parameter=\"@root:GS:GP1\" parameterContext=\"LS\" relation=\"equal\"/>";
+
+			if (!xml.contains(lineToCheck)) {
+				fail();
+			}
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 
 	@Test 
 	public void shouldSerializeAndParseLinkedParametersAndConstraintWithParameterCondition() {
@@ -62,7 +155,7 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 		// global parameter1 with choice
 
 		BasicParameterNode globalBasicParameterNode1 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP1", "int", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "GP1", "int", "0", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameterNode1, "GC11", "0", false, true, null);
@@ -70,7 +163,7 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 		// global parameter2 with choice
 
 		BasicParameterNode globalBasicParameterNode2 = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "GP2", "int", true, null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "GP2", "int", "0", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameterNode2, "GC21", "0", false, true, null);
@@ -146,7 +239,7 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -217,7 +310,7 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				RootNodeHelper.addNewGlobalCompositeParameterToRoot(rootNode, "GS1", null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		// BasicParameterNode globalBasicParameterNode1 = 
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
@@ -321,14 +414,6 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
-			// check original parameter
-
-			//			ClassNode orgClass = rootNode.getClasses().get(0);
-			//			MethodNode orgMethodNode = orgClass.getMethods().get(0);
-			//			List<ParameterWithLinkingContext> orgDeployedParams = 
-			//					orgMethodNode.getDeployedParametersWithLinkingContexs();
-			//			ParameterWithLinkingContext orgDeployedParam2 = orgDeployedParams.get(1);
-
 			// check parsed deployed parameter 1
 
 			ClassNode parsedClass = parsedModel.getClasses().get(0);
@@ -363,7 +448,8 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 		}
 	}
 
-	private void modelSerializerTest(int version) { 
+	private void modelSerializerTest(int version) {
+		
 		RootNode model = new RootNode("model", null, version);
 
 		model.addClass(new ClassNode("com.example.TestClass1", null));
@@ -440,7 +526,6 @@ public class ModelSerializerTest { // TODO MO-RE rename to ModelSerializerAndPar
 			parser.parseClass(istream, new ListOfStrings());
 			fail("Exception expected");
 		} catch (Exception e) {
-			//			System.out.println("Exception caught: " + e.getMessage());
 		}
 	}
 
