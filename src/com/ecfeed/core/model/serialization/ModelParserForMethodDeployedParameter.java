@@ -72,36 +72,8 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 			return null;
 		}
 
-		//		if (!(foundParameter instanceof BasicParameterNode)) {
-		//			ExceptionHelper.reportRuntimeException("Found original parameter is not basic parameter.");
-		//		}
-
 		return foundParameter;
 	}
-
-	//	// XYX remove
-	//	private AbstractParameterNode findParameterByPath(MethodNode methodNode, String path) {
-	//
-	//		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
-	//
-	//			AbstractParameterNode abstractParameterNode = MethodNodeHelper.findParameterByPath(path, methodNode);
-	//			return abstractParameterNode;
-	//		}
-	//
-	//		IAbstractNode topNode = AbstractNodeHelper.findTopNode(methodNode);
-	//
-	//		if (!(topNode instanceof RootNode)) {
-	//			ExceptionHelper.reportRuntimeException("Root node not found.");
-	//		}
-	//
-	//		AbstractParameterNode parameter = 
-	//				AbstractParameterNodeHelper.findParameterByRelativePath(
-	//						path, 
-	//						AbstractParameterNodeHelper.ParameterPathType.PATH_CONTAINTS_TOP_NODE,
-	//						(RootNode) topNode);
-	//		
-	//		return parameter;
-	//	}
 
 	//	public Optional<BasicParameterNode> parseMethodDeployedParameter(
 	//			Element element, MethodNode method, ListOfStrings errors) {

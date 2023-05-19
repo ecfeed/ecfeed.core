@@ -486,16 +486,6 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			IParametersAndConstraintsParentNode parent,
 			String elementName) throws ParserException {
 
-		//		String attributeName;
-		//		
-		//		if (primary) {
-		//			attributeName = SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT;
-		//		} else {
-		//			attributeName = SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT;
-		//		}
-		//
-		//		String parameterContextName = ModelParserHelper.getAttributeValue(element, attributeName);
-
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
 		
 		if (pathToParameter == null) {
@@ -505,10 +495,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		AbstractParameterNode context = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
 
 		return (CompositeParameterNode) context;
-
-		//return CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName); XYX
 	}
-
 
 	//	private IParametersParentNode calculateParentOfParameter(String path, IParametersParentNode initialParent) {
 	//

@@ -185,12 +185,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		String signature = AbstractParameterSignatureHelper.createSignatureOfLocalOrGlobalParameterNewStandard(linkingContext);
 
-		// XYX
-		//				AbstractParameterSignatureHelper.createSignatureNewStandard(
-		//						linkingContext, ExtendedName.PATH_TO_TOP_CONTAINTER, Decorations.NO, TypeIncluded.NO, 
-		//						new ExtLanguageManagerForJava());
-
-		return new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, signature); // XYX
+		return new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, signature);
 	}
 
 	private Attribute createParameterAtrribute(RelationStatement statement) {
