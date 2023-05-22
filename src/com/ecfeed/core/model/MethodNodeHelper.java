@@ -660,6 +660,11 @@ public class MethodNodeHelper {
 		return null;
 	}
 
+	public static boolean containsStructures(MethodNode methodNode) {
+
+		return methodNode.getNestedCompositeParameters(true).size() > 0;
+	}
+
 	public static void compareDeployedParameters(MethodNode method1, MethodNode method2) {
 
 		List<ParameterWithLinkingContext> deployedParametersWithContexts1 = method1.getDeployedParametersWithLinkingContexts();
@@ -761,5 +766,4 @@ public class MethodNodeHelper {
 		MethodNodeHelper.compareMethodConstraints(method1, method2);
 		MethodNodeHelper.compareTestCases(method1, method2);
 	}
-
 }

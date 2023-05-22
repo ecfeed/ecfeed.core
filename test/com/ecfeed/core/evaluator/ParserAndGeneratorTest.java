@@ -35,6 +35,11 @@ public class ParserAndGeneratorTest {
     }
 
     @Test
+    public void linkTwoMethodParametersToGlobalIntRandomParameter() {
+        assertEquals(1, countGeneratedTestCases(xmlLinkTwoMethodParametersToGlobalIntRandomParameter));
+    }
+
+    @Test
     public void accessParameterInNestedStructureFromMethod() {
         assertEquals(1, countGeneratedTestCases(xmlAccessParameterInNestedStructureFromMethod));
     }
@@ -63,6 +68,43 @@ public class ParserAndGeneratorTest {
     public void accessParameterInNestedStructureFromStructureLinkedToClass() {
         assertEquals(1, countGeneratedTestCases(xmlAccessParameterInNestedStructureFromStructureLinkedToClass));
     }
+
+    private String xmlLinkTwoMethodParametersToGlobalIntRandomParameter = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"TestModel11\" version=\"5\">\n" +
+            "    <Class name=\"TestClass\">\n" +
+            "        <Method name=\"testMethod\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"source1\" type=\"int\" isExpected=\"false\" expected=\"\" linked=\"true\" link=\"target\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"source2\" type=\"int\" isExpected=\"false\" expected=\"\" linked=\"true\" link=\"target\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "            </Parameter>\n" +
+            "            <Deployment>\n" +
+            "                <Parameter PathOfParameter=\"source1\"/>\n" +
+            "                <Parameter PathOfParameter=\"source2\"/>\n" +
+            "            </Deployment>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "    <Parameter name=\"target\" type=\"int\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Comments>\n" +
+            "            <TypeComments/>\n" +
+            "        </Comments>\n" +
+            "        <Choice name=\"choice1\" value=\"0:100\" isRandomized=\"true\"/>\n" +
+            "    </Parameter>\n" +
+            "</Model>";
 
     private String xmlAccessParameterInNestedStructureFromMethodLinkedToRoot = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<Model name=\"TestModel11\" version=\"5\">\n" +

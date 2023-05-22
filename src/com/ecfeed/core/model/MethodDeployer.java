@@ -135,7 +135,7 @@ public abstract class MethodDeployer {
 		List<ParameterWithLinkingContext> nestedBasicParameters = 
 				MethodNodeHelper.getNestedBasicParametersWithLinkingContexts(methodSource);
 
-		nestedBasicParameters.stream().forEach(e -> deployBasicParameter(e, methodTarget, nodeMapper));
+		nestedBasicParameters.forEach(e -> deployBasicParameter(e, methodTarget, nodeMapper));
 	}
 
 	private static void deployBasicParameter(
