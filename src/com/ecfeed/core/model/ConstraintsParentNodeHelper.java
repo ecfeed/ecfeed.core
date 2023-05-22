@@ -20,7 +20,7 @@ public abstract class ConstraintsParentNodeHelper {
 			boolean setParent, 
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
+		ConstraintNode constraintNode = new ConstraintNode(constraint.getName(), constraint, null);
 
 		if (setParent) {
 			constraintNode.setParent(parameterParentNode);
