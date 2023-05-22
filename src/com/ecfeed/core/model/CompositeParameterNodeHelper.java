@@ -302,7 +302,10 @@ public class CompositeParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Composite parameter names do not match.");
 		}
 
-		if (compositeParameterNode1.getParametersCount() != compositeParameterNode2.getParametersCount()) {
+		int parametersCount1 = compositeParameterNode1.getParametersCount();
+		int parametersCount2 = compositeParameterNode2.getParametersCount();
+		
+		if (parametersCount1 != parametersCount2) {
 			ExceptionHelper.reportRuntimeException("Count of parameters does not match.");
 		}
 
@@ -320,6 +323,8 @@ public class CompositeParameterNodeHelper {
 
 		List<ConstraintNode> constraintNodes1 = compositeParameterNode1.getConstraintNodes();
 		List<ConstraintNode> constraintNodes2 = compositeParameterNode2.getConstraintNodes();
+		
+		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
 
 		for (int i =0; i < constraintNodes1.size(); ++i) {
 

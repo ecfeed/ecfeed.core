@@ -36,9 +36,14 @@ public class BasicParameterNodeHelper {
 		}
 
 		TypeHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		AbstractNodeHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
-		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
-			ChoiceNodeHelper.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
+		
+		List<ChoiceNode> choices1 = basicParameterNode1.getChoices();
+		List<ChoiceNode> choices2 = basicParameterNode2.getChoices();
+		
+		AbstractNodeHelper.compareSizes(choices1, choices2, "Number of choices differ.");
+		
+		for(int i = 0; i < choices1.size(); ++i){
+			ChoiceNodeHelper.compareChoices(choices1.get(i), choices2.get(i));
 		}
 
 	}
