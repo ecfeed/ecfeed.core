@@ -28,13 +28,18 @@ public class CompositeParameterNodeHelper {
 		return basicParameterNode;
 	}
 
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameter(
 			CompositeParameterNode parentCompositeParameterNode, 
-			String childCompositeName, 
+			String childCompositeName,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode childCompositeParameterNode = 
 				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
+		
+		if (setParent) {
+			childCompositeParameterNode.setParent(parentCompositeParameterNode);
+		}
 
 		parentCompositeParameterNode.addParameter(childCompositeParameterNode);
 
