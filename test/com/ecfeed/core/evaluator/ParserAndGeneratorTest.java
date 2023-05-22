@@ -4,30 +4,35 @@ import com.ecfeed.core.generators.algorithms.AbstractAlgorithm;
 import com.ecfeed.core.generators.algorithms.GeneratorHelper;
 import com.ecfeed.core.generators.algorithms.NWiseAwesomeAlgorithm;
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParserAndGeneratorTest {
+public class ParserAndGeneratorTest { // TODO MO-RE separate tests of serialization from tests of generation 
 
 	@Test
-	public void accessParameterInNestedStructureFromMethod() { // OK
+	public void accessParameterInNestedStructureFromMethod() {
 
 		RootNode model = ModelTestHelper.createModel(xmlAccessParameterInNestedStructureFromMethod);
 
 		assertEquals(1, countGeneratedTestCases(model));
 	}
 
-	// XYX
-	//    @Test
-	//    public void accessParameterInNestedStructureFromStructure() { // ERR
-	//    	
-	//    	RootNode model = ModelTestHelper.createModel(xmlAccessParameterInNestedStructureFromStructure);
-	//    	
-	//        assertEquals(1, countGeneratedTestCases(model));
-	//    }
+	@Test
+	public void accessParameterInNestedStructureFromStructure() {
+
+		RootNode rootNodeXml = ModelTestHelper.createModel(xmlAccessParameterInNestedStructureFromStructure);
+		RootNode rootNode = createModelAccessParameterInNestedStructureFromStructure();
+		
+		ModelComparator.compareRootNodes(rootNodeXml, rootNode);
+		
+		assertEquals(1, countGeneratedTestCases(rootNodeXml));
+	}
 
 	// XYX
 	//    @Test
@@ -405,6 +410,106 @@ public class ParserAndGeneratorTest {
 			"    </Structure>\n" +
 			"</Model>";
 
+	private RootNode createModelAccessParameterInNestedStructureFromStructure() {
+		
+		RootNode rootNode = new RootNode("TestModel11", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "C1", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
+
+		CompositeParameterNode s1 = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
+
+		CompositeParameterNode s2 = CompositeParameterNodeHelper.addNewCompositeParameter(s1, "S2", true, null);
+		
+		// composite s3 under s2
+
+		CompositeParameterNode s3 = CompositeParameterNodeHelper.addNewCompositeParameter(s2, "S3", true, null);
+		
+		BasicParameterNode par1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s3, "par1", "int", "", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice1", "0", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice2", "1", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice3", "2", false, true, null);
+		
+		// parameter under s2
+		
+		BasicParameterNode ref = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s2, "ref", "int", "", true, null);
+		
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref, "choice1", "1", false, true, null);
+		
+		// parameter under S1
+
+		BasicParameterNode ref2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s1, "ref", "int", "", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref2, "choice1", "1", false, true, null);
+
+		// constraint under S1
+
+		StaticStatement precondition1 = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition1 =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						ref, null, 
+						EMathRelation.GREATER_THAN, 
+						par1, null);
+
+		Constraint constraint1 = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition1, postcondition1, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(s1, constraint1, true, null);
+
+		// constraint under S2
+
+		StaticStatement precondition2 = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition2 =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						par1, null, 
+						EMathRelation.NOT_EQUAL, 
+						ref, null);
+
+		Constraint constraint2 = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition2, postcondition2, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(s1, constraint2, true, null);
+
+		// structure C1 under class with parameter cs1 and choices
+
+		CompositeParameterNode c1 = ClassNodeHelper.addNewCompositeParameter(classNode, "CS1", true, null);
+
+		BasicParameterNode cs1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(c1, "cs1", "int", "0", true, null);
+
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice1", "0", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice2", "1", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice3", "2", false, true, null);
+
+		// structure GS1 under root node
+		
+		CompositeParameterNode gs1 = RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+		
+		BasicParameterNode parGs1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(gs1, "gs1", "int", "0", true, null);
+		
+		
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice1", "0", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice2", "1", false, true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice3", "2", false, true, null);
+		
+		return rootNode;
+	}
+	
 	private String xmlAccessParameterInNestedStructureFromStructure = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<Model name=\"TestModel11\" version=\"5\">\n" +
 			"    <Class name=\"C1\">\n" +
@@ -463,7 +568,7 @@ public class ParserAndGeneratorTest {
 			"                        <StaticStatement value=\"true\"/>\n" +
 			"                    </Premise>\n" +
 			"                    <Consequence>\n" +
-			"                        <ParameterStatement rightParameter=\"S1:S2:S3:par1\" parameter=\"S1:S2:ref\" relation=\"greaterthan\"/>\n" +
+			"                        <ParameterStatement rightParameter=\"S2:S3:par1\" parameter=\"S2:ref\" relation=\"greaterthan\"/>\n" +
 			"                    </Consequence>\n" +
 			"                </Constraint>\n" +
 			"                <Constraint name=\"constraint\" type=\"BF\">\n" +
@@ -471,7 +576,7 @@ public class ParserAndGeneratorTest {
 			"                        <StaticStatement value=\"true\"/>\n" +
 			"                    </Premise>\n" +
 			"                    <Consequence>\n" +
-			"                        <ParameterStatement rightParameter=\"S1:S2:ref\" parameter=\"S1:S2:S3:par1\" relation=\"notequal\"/>\n" +
+			"                        <ParameterStatement rightParameter=\"S2:ref\" parameter=\"S2:S3:par1\" relation=\"notequal\"/>\n" +
 			"                    </Consequence>\n" +
 			"                </Constraint>\n" +
 			"            </Structure>\n" +
