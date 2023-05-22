@@ -55,6 +55,95 @@ import com.ecfeed.core.utils.ListOfStrings;
 public class ModelSerializerAndParserTest {
 
 	@Test 
+	public void shouldSerializeAndParseNestedStructures() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		// class and method
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		// local structure 1
+
+		CompositeParameterNode localCompositeParameterNode1 = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+
+		// local structure 2
+
+		CompositeParameterNode localCompositeParameterNode2 = 
+				CompositeParameterNodeHelper.addNewCompositeParameter(
+						localCompositeParameterNode1, "LS2", true, null);
+
+		// local parameter1 with choice
+
+		BasicParameterNode localBasicParameterNode1 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParameterNode2, "LP1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				localBasicParameterNode1, "GC11", "0", false, true, null);
+
+		// local parameter2 with choice
+
+		BasicParameterNode localBasicParameterNode2 = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						localCompositeParameterNode2, "LP2", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				localBasicParameterNode2, "GC21", "0", false, true, null);
+
+		// constraint with parameter condition
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						localBasicParameterNode1, null, 
+						EMathRelation.EQUAL, 
+						localBasicParameterNode1, null);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+
+		// root
+		//   class
+		//     method
+		//       LS1
+		//         LS2
+		//           LP1
+		//           LP2
+		//		 constraint: LS1:LS2:LP1 = LS1:LS2:LP2 => true
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			String xml = ostream.toString();
+
+			String lineToCheck =
+					"<ParameterStatement rightParameter=\"LS1:LS2:LP1\" parameter=\"LS1:LS2:LP1\" relation=\"equal\"/>";
+
+			if (!xml.contains(lineToCheck)) {
+				fail();
+			}
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
+
+	@Test 
 	public void shouldSerializeAndParseLinkedStructureAndConstraintWithParameterCondition() {
 
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
@@ -158,8 +247,8 @@ public class ModelSerializerAndParserTest {
 				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
-				CompositeParameterNodeHelper.addCompositeParameter(
-						globalCompositeParameterNode1, "GS2", null);
+				CompositeParameterNodeHelper.addNewCompositeParameter(
+						globalCompositeParameterNode1, "GS2", true, null);
 
 		// global parameter1 with choice
 
