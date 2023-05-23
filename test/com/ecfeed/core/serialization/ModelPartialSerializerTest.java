@@ -35,50 +35,54 @@ import com.ecfeed.core.utils.XmlComparator;
 
 public class ModelPartialSerializerTest {
 
-	// XYX uncomment
-	//	@Test
-	//	public void AAshouldSerializePartially1() throws Exception {
-	//
-	//		String xml = prepareSourceXml1();
-	//
-	//		RootNode rootNode = ModelTestHelper.createModel(xml);
-	//		ClassNode classNode = rootNode.getClasses().get(0);
-	//		MethodNode methodNode = classNode.getMethods().get(0);
-	//		BasicParameterNode methodParameterNode = (BasicParameterNode) methodNode.getMethodParameter(0);
-	//		ChoiceNode choiceNode = methodParameterNode.getChoices().get(0);
-	//
-	//		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
-	//		allowedChoices.add(choiceNode);
-	//		List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
-	//		domain.add(allowedChoices);
-	//
-	//		OutputStream outputStream = new ByteArrayOutputStream();
-	//
-	//		ModelPartialSerializer modelPartialSerializer = 
-	//				new ModelPartialSerializer(
-	//						outputStream, 
-	//						ModelVersionDistributor.getCurrentSoftwareVersion());
-	//
-	//		modelPartialSerializer.serializeModelPartForGenerator(methodNode, domain, null, false, false);
-	//
-	//		String resultXml = outputStream.toString();
-	//		String expectedResultXml = prepareExpectedResultXml1();
-	//
-	//		assertTrue(XmlComparator.areXmlsEqual(expectedResultXml, resultXml));
-	//	}
+		@Test
+		public void shouldSerializePartially1() throws Exception {
+	
+			String xml = prepareSourceXml1();
+	
+			RootNode rootNode = ModelTestHelper.createModel(xml);
+			ClassNode classNode = rootNode.getClasses().get(0);
+			MethodNode methodNode = classNode.getMethods().get(0);
+			BasicParameterNode methodParameterNode = (BasicParameterNode) methodNode.getMethodParameter(0);
+			ChoiceNode choiceNode = methodParameterNode.getChoices().get(0);
+	
+			List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
+			allowedChoices.add(choiceNode);
+			List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
+			domain.add(allowedChoices);
+	
+			OutputStream outputStream = new ByteArrayOutputStream();
+	
+			ModelPartialSerializer modelPartialSerializer = 
+					new ModelPartialSerializer(
+							outputStream, 
+							ModelVersionDistributor.getCurrentSoftwareVersion());
+	
+			modelPartialSerializer.serializeModelPartForGenerator(methodNode, domain, null, false, false);
+	
+			String resultXml = outputStream.toString();
+			String expectedResultXml = prepareExpectedResultXml1();
+	
+			assertTrue(XmlComparator.areXmlsEqual(expectedResultXml, resultXml));
+		}
 
 	private String prepareSourceXml1() {
 
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>\n");
-		sb.append("<Model name='PartialSerializerTest' version='5'>\n");
+		sb.append("<Model name='PartialSerializerTest' version='3'>\n");
 		sb.append("    <Class name='com.example.test.TestClass1'>\n");
 		sb.append("        <Method name='testMethod1'>\n");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>\n");
 		sb.append("                <Choice name='localChoice1' value='1' isRandomized='false'/>\n");
 		sb.append("                <Choice name='localChoice2' value='2' isRandomized='false'/>\n");
 		sb.append("            </Parameter>\n");
+		
+		sb.append("            <Deployment>\n");
+		sb.append("                <Parameter pathOfParameter='arg1'/>\n");
+		sb.append("            </Deployment>\n");
+		
 		sb.append("            <TestCase testSuite='default suite'>\n");
 		sb.append("                <TestParameter choice='localChoice1'/>\n");
 		sb.append("            </TestCase>\n");
@@ -108,6 +112,11 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='localChoice1' value='1' isRandomized='false'/>");
 		sb.append("            </Parameter>");
+		
+		sb.append("            <Deployment>\n");
+		sb.append("                <Parameter pathOfParameter='arg1'/>\n");
+		sb.append("            </Deployment>\n");
+		
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("</Model>");

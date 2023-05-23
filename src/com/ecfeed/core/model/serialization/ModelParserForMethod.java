@@ -217,7 +217,14 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
-			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); // XYX add error handling inOutErrorList.add
+			//			if (parameterWithLinkingContext.isPresent()) {
+			//				inOutParametersWithContexts.add(parameterWithLinkingContext.get());
+			//			} else {
+			//				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
+			//			}
+
+			// XYX error checking
+			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); 
 		}
 	}
 
