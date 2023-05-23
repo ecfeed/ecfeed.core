@@ -13,7 +13,7 @@ package com.ecfeed.core.serialization;
 //
 //import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
 
-public class ModelSerializerWithConstraintsTest {
+public class ModelSerializerWithConstraintsTest { // XYX
 
 	// TODO MO-RE remove? test with constraints are ModelSerializerAndParserTest.java
 	// create tests for individual types of constraints / statements / conditions in ModelSerializerAndParserTest.java 

@@ -512,10 +512,16 @@ public abstract class XomBuilder implements IModelVisitor {
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLinkToGlobalParameter() != null) {
+		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter != null) { // XYX
+//			String path = 
+//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+//							linkToGlobalParameter, new ExtLanguageManagerForJava());
+			
 			String path = 
-					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+					AbstractParameterSignatureHelper.createPathToRootNewStandard(
+							linkToGlobalParameter, new ExtLanguageManagerForJava());
 
 			encodeAndAddAttribute(
 					targetCompositeParameterElement,

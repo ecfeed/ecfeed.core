@@ -225,7 +225,7 @@ public class ModelSerializerAndParserTest {
 			String xml = ostream.toString();
 
 			String tags1 =
-					"<Structure name=\"LS\" linked=\"true\" link=\"GS\">";
+					"<Structure name=\"LS\" linked=\"true\" link=\"@root:GS\">";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
@@ -330,7 +330,19 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags =
+			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+				fail();
+			}
+
+			String tags2 = "<Structure name=\"LS2\" linked=\"true\" link=\"@root:GS1\">";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
+				fail();
+			}
+
+			String tags3 =
 					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
 							"  <Premise>\n" + 
 							"    <ParameterStatement rightParameter=\"@root:GS1:GS2:GP1\" rightParameterContext=\"LS2\" parameter=\"@root:GS1:GS2:GP1\" parameterContext=\"LS1\" relation=\"equal\"/>\n" + 
@@ -340,7 +352,7 @@ public class ModelSerializerAndParserTest {
 							"  </Consequence>\n" + 
 							"</Constraint>";
 
-			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags3)) {
 				fail();
 			}
 
@@ -439,6 +451,14 @@ public class ModelSerializerAndParserTest {
 			}
 
 			String tags2 =
+					"<Parameter name=\"P2\" type=\"int\" isExpected=\"false\" "
+							+ "expected=\"0\" linked=\"true\" link=\"@root:GP2\">";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
+				fail();
+			}
+
+			String tags3 =
 					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
 							"  <Premise>\n" + 
 							"    <ParameterStatement rightParameter=\"P2\" parameter=\"P1\" relation=\"equal\"/>\n" + 
@@ -448,7 +468,7 @@ public class ModelSerializerAndParserTest {
 							"  </Consequence>\n" + 
 							"</Constraint>";
 
-			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags3)) {
 				fail();
 			}
 
@@ -514,13 +534,12 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			// XYX TODO
-			//			String tags1 =
-			//					"<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
-			//			
-			//			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
-			//				fail();
-			//			}
+			String tags1 =
+					"<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+				fail();
+			}
 
 			String tags2 =
 					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
@@ -737,7 +756,7 @@ public class ModelSerializerAndParserTest {
 	}
 
 	@Test
-	public void AAclassSerializerTestWithoutAndroidBaseRunner(){
+	public void classSerializerTestWithoutAndroidBaseRunner(){
 		classSerializerTest(false, null, 1);
 	}
 

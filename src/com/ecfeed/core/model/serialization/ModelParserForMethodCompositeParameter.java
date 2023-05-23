@@ -35,7 +35,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 	public Optional<CompositeParameterNode> parseMethodCompositeParameter(
 			Element element,
 			MethodNode method,
-			IAbstractNode parent,
+			IParametersParentNode parent,
 			ListOfStrings errorList) {
 
 		String name;
@@ -77,6 +77,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		}
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
+			
 			String linkPath;
 
 			try {
@@ -85,20 +86,10 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 				return Optional.empty();
 			}
 
-			IAbstractNode linkValue = method.getRoot();
-
-			for (String segment : linkPath.split(":")) {
-				linkValue = linkValue.getChild(segment);
-
-				if (linkValue == null) {
-					if (method.getParent().getName().equals(segment)) {
-						linkValue = method.getParent();
-					}
-				}
-			}
-
-			if (linkValue != null) {
-				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) linkValue);
+			AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
+			
+			if (link != null) {
+				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
 			}
 		}
 
