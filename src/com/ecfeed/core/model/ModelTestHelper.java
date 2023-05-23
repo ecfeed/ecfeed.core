@@ -29,7 +29,14 @@ public class ModelTestHelper {
 			ModelParser parser = new ModelParser();
 			ByteArrayInputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
-			return parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings listOfErrors = new ListOfStrings();
+			RootNode rootNode = parser.parseModel(istream, null, listOfErrors);
+			
+			if (!listOfErrors.isEmpty()) {
+				String firstError = listOfErrors.getFirstString();
+				ExceptionHelper.reportRuntimeException(firstError);
+			}
+			return rootNode;
 
 		} catch(ParserException e) {
 			ExceptionHelper.reportRuntimeException(e.getMessage());
