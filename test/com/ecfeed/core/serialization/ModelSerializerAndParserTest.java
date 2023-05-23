@@ -51,6 +51,7 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.XmlComparator;
 
 public class ModelSerializerAndParserTest {
 
@@ -125,10 +126,17 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String lineToCheck =
-					"<ParameterStatement rightParameter=\"LS1:LS2:LP1\" parameter=\"LS1:LS2:LP1\" relation=\"equal\"/>";
+			String tags =
+					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+							"  <Premise>\n" + 
+							"    <ParameterStatement rightParameter=\"LS1:LS2:LP1\" parameter=\"LS1:LS2:LP1\" relation=\"equal\"/>\n" + 
+							"  </Premise>\n" + 
+							"  <Consequence>\n" + 
+							"    <StaticStatement value=\"true\"/>\n" + 
+							"  </Consequence>\n" + 
+							"</Constraint>";
 
-			if (!xml.contains(lineToCheck)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
 				fail();
 			}
 
@@ -183,7 +191,6 @@ public class ModelSerializerAndParserTest {
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
 
-
 		// constraint with parameter condition
 
 		RelationStatement precondition =
@@ -217,11 +224,24 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String lineToCheck =
-					"<ParameterStatement rightParameter=\"@root:GS:GP2\" rightParameterContext=\"LS\" "
-							+ "parameter=\"@root:GS:GP1\" parameterContext=\"LS\" relation=\"equal\"/>";
+			String tags1 =
+					"<Structure name=\"LS\" linked=\"true\" link=\"GS\">";
 
-			if (!xml.contains(lineToCheck)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+				fail();
+			}
+
+			String tags2 =
+					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+							"  <Premise>\n" + 
+							"    <ParameterStatement rightParameter=\"@root:GS:GP2\" rightParameterContext=\"LS\" parameter=\"@root:GS:GP1\" parameterContext=\"LS\" relation=\"equal\"/>\n" + 
+							"  </Premise>\n" + 
+							"  <Consequence>\n" + 
+							"    <StaticStatement value=\"true\"/>\n" + 
+							"  </Consequence>\n" + 
+							"</Constraint>\n"; 
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
 			}
 
@@ -310,14 +330,17 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String lineToCheck =
-					"<ParameterStatement rightParameter=\"@root:GS1:GS2:GP1\" "
-							+ "rightParameterContext=\"LS2\" "
-							+ "parameter=\"@root:GS1:GS2:GP1\" "
-							+ "parameterContext=\"LS1\" "
-							+ "relation=\"equal\"/>";
+			String tags =
+					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+							"  <Premise>\n" + 
+							"    <ParameterStatement rightParameter=\"@root:GS1:GS2:GP1\" rightParameterContext=\"LS2\" parameter=\"@root:GS1:GS2:GP1\" parameterContext=\"LS1\" relation=\"equal\"/>\n" + 
+							"  </Premise>\n" + 
+							"  <Consequence>\n" + 
+							"    <StaticStatement value=\"true\"/>\n" + 
+							"  </Consequence>\n" + 
+							"</Constraint>";
 
-			if (!xml.contains(lineToCheck)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
 				fail();
 			}
 
@@ -405,7 +428,29 @@ public class ModelSerializerAndParserTest {
 			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 			serializer.serialize(rootNode);
-			// String xml = ostream.toString();
+			String xml = ostream.toString();
+
+			String tags1 =
+					"<Parameter name=\"P1\" type=\"int\" isExpected=\"false\" "
+							+ "expected=\"0\" linked=\"true\" link=\"@root:GP1\">";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+				fail();
+			}
+
+			String tags2 =
+					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+							"  <Premise>\n" + 
+							"    <ParameterStatement rightParameter=\"P2\" parameter=\"P1\" relation=\"equal\"/>\n" + 
+							"  </Premise>\n" + 
+							"  <Consequence>\n" + 
+							"    <StaticStatement value=\"true\"/>\n" + 
+							"  </Consequence>\n" + 
+							"</Constraint>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
+				fail();
+			}
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
@@ -469,12 +514,25 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String lineToCheckSerializationOfParameterAndContext =
-					"<Statement choice=\"choice1\" "
-							+ "parameter=\"@root:GS1:GP\" parameterContext=\"LS1\" "
-							+ "relation=\"equal\"/>";
+			// XYX TODO
+			//			String tags1 =
+			//					"<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
+			//			
+			//			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+			//				fail();
+			//			}
 
-			if (!xml.contains(lineToCheckSerializationOfParameterAndContext)) {
+			String tags2 =
+					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+							"  <Premise>\n" + 
+							"    <Statement choice=\"choice1\" parameter=\"@root:GS1:GP\" parameterContext=\"LS1\" relation=\"equal\"/>\n" + 
+							"  </Premise>\n" + 
+							"  <Consequence>\n" + 
+							"    <StaticStatement value=\"true\"/>\n" + 
+							"  </Consequence>\n" + 
+							"</Constraint>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
 			}
 
@@ -546,7 +604,19 @@ public class ModelSerializerAndParserTest {
 			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 			serializer.serialize(rootNode);
-			//String xml = ostream.toString();
+			String xml = ostream.toString();
+
+			String tags = 
+					"<Deployment>\n" + 
+							"  <Parameter pathOfParameter=\"@root:GS1:GP\" pathOfContext=\"LS1\"/>\n" + 
+							"  <Parameter pathOfParameter=\"@root:GS1:GS2:GP\" pathOfContext=\"LS1\"/>\n" + 
+							"  <Parameter pathOfParameter=\"@root:GS1:GP\" pathOfContext=\"LS2\"/>\n" + 
+							"  <Parameter pathOfParameter=\"@root:GS1:GS2:GP\" pathOfContext=\"LS2\"/>\n" + 
+							"</Deployment>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+				fail();
+			}
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
@@ -593,7 +663,16 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 
 			String xml = ostream.toString();
-			System.out.println(xml);
+
+			String tags =
+					"<Deployment>\n" + 
+							"  <Parameter pathOfParameter=\"LP\"/>\n" + 
+							"  <Parameter pathOfParameter=\"LS:LP\"/>\n" + 
+							"</Deployment>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+				fail();
+			}
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
