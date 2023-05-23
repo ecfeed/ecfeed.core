@@ -56,10 +56,10 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForMethodParameter.parseMethodParameter(child, method, targetCompositeParameterNode, errorList)
-				.ifPresent(targetCompositeParameterNode::addParameter);
+				.ifPresent(targetCompositeParameterNode::addParameter); // XYX add error checking
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList)
-				.ifPresent(targetCompositeParameterNode::addParameter);
+				.ifPresent(targetCompositeParameterNode::addParameter); // XYX add error checking
 			}
 		}
 
@@ -69,7 +69,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 				try {
 					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)
-					.ifPresent(targetCompositeParameterNode::addConstraint);
+					.ifPresent(targetCompositeParameterNode::addConstraint); // XYX add error checking
 				} catch (Exception e) {
 					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
 				}

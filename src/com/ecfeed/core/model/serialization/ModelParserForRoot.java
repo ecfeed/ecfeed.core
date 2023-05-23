@@ -83,7 +83,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
 							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			
-			globalBasicParameter.ifPresent(targetRootNode::addParameter);
+			globalBasicParameter.ifPresent(targetRootNode::addParameter); // XYX add error checking
 			return;
 		} 
 		
@@ -96,7 +96,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
 							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			
-			globalCompositeParameter.ifPresent(targetRootNode::addParameter);
+			globalCompositeParameter.ifPresent(targetRootNode::addParameter); // XYX add error checking
 			return;
 		}
 	}

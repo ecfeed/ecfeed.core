@@ -93,7 +93,7 @@ public class ModelParserForClass implements IModelParserForClass {
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
 							child, targetClassNode.getModelChangeRegistrator(), errorList);
 
-			globalBasicParameter.ifPresent(targetClassNode::addParameter);
+			globalBasicParameter.ifPresent(targetClassNode::addParameter); // XYX add error checking
 			return;
 		} 
 
@@ -107,7 +107,7 @@ public class ModelParserForClass implements IModelParserForClass {
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
 							child, targetClassNode.getModelChangeRegistrator(), errorList);
 
-			globalCompositeParameter.ifPresent(targetClassNode::addParameter);
+			globalCompositeParameter.ifPresent(targetClassNode::addParameter); // XYX add error checking
 		}
 	}
 

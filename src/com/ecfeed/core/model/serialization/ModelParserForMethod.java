@@ -223,8 +223,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			//				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
 			//			}
 
-			// XYX error checking
-			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); 
+			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); // XYX add error checking
 		}
 	}
 

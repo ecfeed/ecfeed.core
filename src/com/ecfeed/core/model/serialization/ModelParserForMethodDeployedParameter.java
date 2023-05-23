@@ -166,7 +166,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				method.getNestedBasicParameters(true).stream()
 				.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
 				.findAny()
-				.ifPresent(parameter::setLinkToGlobalParameter);
+				.ifPresent(parameter::setLinkToGlobalParameter); // XYX add error checking
 
 			} catch (ParserException e) {
 				return Optional.empty();
