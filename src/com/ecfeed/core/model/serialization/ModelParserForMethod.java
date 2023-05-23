@@ -125,7 +125,8 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodParameter.parseMethodParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
 
-			basicParameterNode.ifPresent(targetMethodNode::addParameter);
+			basicParameterNode.ifPresent(targetMethodNode::addParameter); // XYX add error handling inOutErrorList.add
+			// XYX add error handling in other files: ModelParser*
 			return;
 		} 
 
@@ -137,7 +138,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
 
-			compositeParameter.ifPresent(targetMethodNode::addParameter);
+			compositeParameter.ifPresent(targetMethodNode::addParameter);  // XYX add error handling inOutErrorList.add
 			return;
 		}
 
@@ -152,10 +153,14 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		for (Element constraintElement : constraintElements) {
 
-			Optional<ConstraintNode> constraint = 
+			Optional<ConstraintNode> constraintNode = 
 					fModelParserForConstraint.parseConstraint(constraintElement, targetMethodNode, inOutErrorList);
 
-			constraint.ifPresent(targetMethodNode::addConstraint);
+			if (constraintNode.isPresent()) {
+				targetMethodNode.addConstraint(constraintNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse constraint for method: " + targetMethodNode.getName() + ".");
+			}
 		}
 	}
 
@@ -171,7 +176,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 				Optional<TestCaseNode> testCase = 
 						fModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
 
-				testCase.ifPresent(targetMethodNode::addTestCase);
+				testCase.ifPresent(targetMethodNode::addTestCase); // XYX add error handling inOutErrorList.add
 
 			}
 		} catch (Exception e) {
@@ -212,7 +217,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
-			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add);
+			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); // XYX add error handling inOutErrorList.add
 		}
 	}
 
