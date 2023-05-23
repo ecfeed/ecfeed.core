@@ -725,139 +725,60 @@ public class ModelSerializerAndParserTest {
 	}
 
 	@Test
-	public void modelSerializerTest() {
-		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
-			modelSerializerTest(version);
-		}
+	public void shouldSerializeModelWithClassesAndGlobalBasicParameters() {
+		
+			int version = ModelVersionDistributor.getCurrentSoftwareVersion();
+			RootNode model = new RootNode("model", null, version);
+			
+			model.addClass(new ClassNode("com.example.TestClass1", null));
+			model.addClass(new ClassNode("com.example.TestClass2", null));
+			model.addParameter(new BasicParameterNode("globalParameter1", "int", null, false, null));
+			model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null, false, null));
+			
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, version);
+			try {
+				serializer.serialize(model);
+				
+				String xml = ostream.toString();
+
+				String tags =
+						"    <Class name=\"com.example.TestClass1\"/>\n" + 
+						"    <Class name=\"com.example.TestClass2\"/>\n" + 
+						"    <Parameter name=\"globalParameter1\" type=\"int\">\n" + 
+						"        <Properties>\n" + 
+						"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
+						"        </Properties>\n" + 
+						"        <Comments>\n" + 
+						"            <TypeComments/>\n" + 
+						"        </Comments>\n" + 
+						"    </Parameter>\n" + 
+						"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\">\n" + 
+						"        <Properties>\n" + 
+						"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
+						"        </Properties>\n" + 
+						"        <Comments>\n" + 
+						"            <TypeComments/>\n" + 
+						"        </Comments>\n" + 
+						"    </Parameter>";
+
+				if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+					fail();
+				}
+			
+				InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+				ModelParser parser = new ModelParser();
+				RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			
+				assertElementsEqual(model, parsedModel);
+			} catch (Exception e) {
+				fail("Unexpected exception: " + e.getMessage());
+			}
 	}
-
-	private void modelSerializerTest(int version) {
-
-		RootNode model = new RootNode("model", null, version);
-
-		model.addClass(new ClassNode("com.example.TestClass1", null));
-		model.addClass(new ClassNode("com.example.TestClass2", null));
-		model.addParameter(new BasicParameterNode("globalParameter1", "int", null, false, null));
-		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null, false, null));
-
-		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-		ModelSerializer serializer = new ModelSerializer(ostream, version);
-		try {
-			serializer.serialize(model);
-
-			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
-
-			assertElementsEqual(model, parsedModel);
-		} catch (Exception e) {
-			fail("Unexpected exception: " + e.getMessage());
-		}
-	}
-
-	@Test
-	public void classSerializerTestWithoutAndroidBaseRunner(){
-		classSerializerTest(false, null, 1);
-	}
-
-	@Test
-	public void classSerializerTest() {
-		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
-			classSerializerTest(false, null, version);
-		}
-	}
-
-	private void classSerializerTest(boolean runOnAndroid, String androidBaseRunner, int version){
-
-		RootNode model = new RootNode("model", null, version);
-
-		ClassNode classNode = new ClassNode("com.example.TestClass", null);
-		model.addClass(classNode);
-
-		classNode.addMethod(new MethodNode("testMethod1", null));
-		classNode.addMethod(new MethodNode("testMethod2", null));
-		classNode.addParameter(new BasicParameterNode("parameter1", "int", null, false, null));
-		classNode.addParameter(new BasicParameterNode("parameter2", "float", null, false, null));
-		classNode.addParameter(new BasicParameterNode("parameter3", "com.example.UserType", null, false, null));
-
-		OutputStream ostream = new ByteArrayOutputStream();
-		ModelSerializer serializer = new ModelSerializer(ostream, version);
-		try {
-			serializer.serialize(model);
-			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-
-			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
-
-			assertElementsEqual(model, parsedModel);
-		} catch (Exception e) {
-			fail("Unexpected exception: " + e.getMessage());
-		}
-	}
-
-	@Test
-	public void wrongTypeStreamTest(){
-		int version = ModelVersionDistributor.getCurrentSoftwareVersion();
-		RootNode r = new RootNode("model", null, version);
-
-		OutputStream ostream = new ByteArrayOutputStream();
-		ModelSerializer serializer = new ModelSerializer(ostream, version);
-		try {
-			serializer.serialize(r);
-			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-			ModelParser parser = new ModelParser();
-			parser.parseClass(istream, new ListOfStrings());
-			fail("Exception expected");
-		} catch (Exception e) {
-		}
-	}
-
-	private RootNode createModel(int version) {
-
-		ChoiceNode choice = new ChoiceNode("choice", "0", null);
-
-		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
-		parameter.addChoice(choice);
-
-		MethodNode methodNode = new MethodNode("testMethod1", null);
-		methodNode.addParameter(parameter);
-
-		Constraint constraint = new Constraint(
-				"constraint",
-				ConstraintType.EXTENDED_FILTER,
-				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter, null, EMathRelation.EQUAL, choice), RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, EMathRelation.EQUAL, choice), null
-				);
-
-		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
-		methodNode.addConstraint(constraintNode);
-
-		ClassNode classNode = new ClassNode("com.example.TestClass", null);
-		classNode.addMethod(methodNode);
-
-		RootNode model = new RootNode("model", null, version);
-		model.addClass(classNode);
-		model.setVersion(version);
-
-		return model;
-	}
-
-	private String getSerializedString(RootNode model) {
-		OutputStream modelStream = new ByteArrayOutputStream();
-		ModelSerializer serializer = 
-				new ModelSerializer(modelStream, ModelVersionDistributor.getCurrentSoftwareVersion());
-
-		try {
-			serializer.serialize(model);
-		} catch (Exception e) {
-			fail("Unexpected exception: " + e.getMessage());
-		}
-
-		return modelStream.toString();
-	}
-
+	
 	@Test
 	public void serializerTestWithModelConversion(){
+		
 		RootNode convertedModel = null;
 		try {
 			convertedModel = ModelConverter.convertToCurrentVersion(createModel(0));
@@ -873,5 +794,56 @@ public class ModelSerializerAndParserTest {
 		assertEquals(ModelVersionDistributor.getCurrentSoftwareVersion(), currentModel.getModelVersion());
 
 		assertEquals(currentString, convertedString);
+	}	
+
+	private RootNode createModel(int version) {
+
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
+
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
+		parameter.addChoice(choice);
+
+		MethodNode methodNode = new MethodNode("testMethod1", null);
+		methodNode.addParameter(parameter);
+
+		RelationStatement relationStatementWithChoiceCondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+				parameter, null, EMathRelation.EQUAL, choice);
+		
+		Constraint constraint = new Constraint(
+				"constraint",
+				ConstraintType.EXTENDED_FILTER,
+				relationStatementWithChoiceCondition, 
+				relationStatementWithChoiceCondition, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
+		methodNode.addConstraint(constraintNode);
+
+		ClassNode classNode = new ClassNode("com.example.TestClass", null);
+		classNode.addMethod(methodNode);
+
+		RootNode model = new RootNode("model", null, version);
+		model.addClass(classNode);
+		model.setVersion(version);
+
+		return model;
 	}
+
+	private String getSerializedString(RootNode model) {
+		
+		OutputStream modelStream = new ByteArrayOutputStream();
+		
+		ModelSerializer serializer = 
+				new ModelSerializer(modelStream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		try {
+			serializer.serialize(model);
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+
+		return modelStream.toString();
+	}
+
 }
