@@ -25,7 +25,6 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
-import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.TestHelper;
@@ -243,12 +242,12 @@ public class LanguageMethodParserTest {
 		
 		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature, language);
 
-		MethodNode methodNodeFromXml = parseXml(methodXml);
+		MethodNode methodNodeFromXml = parseXml(methodXml, new ListOfStrings());
 		
 		MethodNodeHelper.compareMethods(methodNodeFromSignature, methodNodeFromXml);
 	}
 
-	private MethodNode parseXml(String methodXml) {
+	private MethodNode parseXml(String methodXml, ListOfStrings outErrorList) {
 		
 		InputStream istream = new ByteArrayInputStream(methodXml.getBytes());
 		Builder builder = new Builder();
@@ -275,8 +274,8 @@ public class LanguageMethodParserTest {
 			optMethodNodeFromXml = 
 					modelParserForMethod.parseMethod(
 							element, classNode, errorList);
-		} catch (ParserException e) {
-			ExceptionHelper.reportRuntimeException(e.getMessage());
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 		}
 
 		if (!optMethodNodeFromXml.isPresent()) {

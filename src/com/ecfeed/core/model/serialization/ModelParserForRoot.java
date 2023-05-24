@@ -42,7 +42,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public RootNode parseRoot(Element element, ListOfStrings outErrorList) throws ParserException {
+	public RootNode parseRoot(Element element, ListOfStrings outErrorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
@@ -109,9 +109,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		}
 	}
 
-	private void parseClasses(
-			Element element, RootNode targetRootNode, ListOfStrings outErrorList)
-					throws ParserException {
+	private void parseClasses(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
 
 		List<Element> childClassElements = 
 				ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME);

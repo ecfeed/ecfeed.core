@@ -40,7 +40,8 @@ public class ModelParserForChoice implements IModelParserForChoice {
 			name = ModelParserHelper.getElementName(element, errorList);
 			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -55,6 +56,7 @@ public class ModelParserForChoice implements IModelParserForChoice {
 				if (node.isPresent()) {
 					choice.addChoice(node.get());
 				} else {
+					errorList.add("Cannot parse choice.");
 					return Optional.empty();
 				}
 			}

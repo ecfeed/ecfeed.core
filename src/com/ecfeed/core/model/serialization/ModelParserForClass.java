@@ -43,14 +43,15 @@ public class ModelParserForClass implements IModelParserForClass {
 	}
 
 	public Optional<ClassNode> parseAndAddClass(
-			Element classElement, RootNode rootNode, ListOfStrings errorList) throws ParserException {
+			Element classElement, RootNode rootNode, ListOfStrings errorList) {
 
 		String name;
 
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(classElement, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -122,8 +123,7 @@ public class ModelParserForClass implements IModelParserForClass {
 	}
 
 	private void parseMethods(
-			Element classElement, ClassNode targetClassNode, ListOfStrings errorList)
-					throws ParserException {
+			Element classElement, ClassNode targetClassNode, ListOfStrings errorList) {
 
 		List<Element> childrenMethodElements = 
 				ModelParserHelper.getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME);

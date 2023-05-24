@@ -49,14 +49,15 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public ModelParserForConstraint() {
 	}
 
-	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		String name;
 
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -119,7 +120,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return Optional.ofNullable(targetConstraint);
 	}
 
-	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
+	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) {
 
 		String type = element.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_TYPE);
 
@@ -132,8 +133,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		try {
 			constraintType = ConstraintType.parseCode(type);
 		} catch (Exception e) {
-			errorList.add("Cannot parse constraint type.");
-			ParserException.reportException();
+			errorList.add(e.getMessage());
 		}
 
 		return constraintType;
@@ -181,7 +181,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public StatementArray parseStatementArray(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
-			ListOfStrings errorList) throws ParserException {
+			ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME, errorList);
 
@@ -221,7 +221,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public StaticStatement parseStaticStatement(
 			Element element,
 			IModelChangeRegistrator modelChangeRegistrator,
-			ListOfStrings errorList) throws ParserException {
+			ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME, errorList);
 
@@ -241,7 +241,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	public AbstractStatement parseChoiceStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
@@ -287,7 +287,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	public AbstractStatement parseParameterStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
@@ -340,7 +340,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	public AbstractStatement parseValueStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
@@ -403,7 +403,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	public RelationStatement parseLabelStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
@@ -442,7 +442,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
+			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
@@ -484,7 +484,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	private CompositeParameterNode getParameterContext(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
-			String elementName) throws ParserException {
+			String elementName) {
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
 		
@@ -520,7 +520,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			IParametersAndConstraintsParentNode parent,
 			CompositeParameterNode parameterContext,
 			//			boolean primary,
-			ListOfStrings errorList) throws ParserException {
+			ListOfStrings errorList) {
 
 		//		String serialization;
 		//		if (primary) {

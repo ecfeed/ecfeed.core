@@ -103,13 +103,11 @@ public class ModelParserHelper  {
 	}
 	
 	public static void assertNameEqualsExpectedName(
-			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
+			String qualifiedName, String expectedName, ListOfStrings errorList) {
 
 		if (qualifiedName.equals(expectedName) == false) {
 			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
-			ParserException.reportException();
 		}
-
 	}
 
 	static List<Element> getIterableChildren(Element element) {
@@ -158,32 +156,31 @@ public class ModelParserHelper  {
 	}
 
 	static String getElementName(
-			Element element, ListOfStrings errorList) throws ParserException {
+			Element element, ListOfStrings errorList) {
 
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
 
 		if (name == null) {
 			errorList.add(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
-			ParserException.reportException();
+			return null;
 		}
 
 		return WhiteCharConverter.getInstance().decode(name);
 	}
 
 	static String getAttributeValue(
-			Element element, String attributeName, ListOfStrings errorList) throws ParserException {
+			Element element, String attributeName, ListOfStrings errorList) {
 
 		String value = element.getAttributeValue(attributeName);
 
 		if (value == null) {
 			errorList.add(Messages.MISSING_ATTRIBUTE(element, attributeName));
-			ParserException.reportException();
 		}
 
 		return WhiteCharConverter.getInstance().decode(value);
 	}
 
-	static String getAttributeValue(Element element, String attributeName) throws ParserException {
+	static String getAttributeValue(Element element, String attributeName) {
 		String value = element.getAttributeValue(attributeName);
 
 		if (value == null) {
@@ -193,7 +190,7 @@ public class ModelParserHelper  {
 		return WhiteCharConverter.getInstance().decode(value);
 	}
 
-	static boolean getIsRandomizedValue(Element element, String attributeName) throws ParserException {
+	static boolean getIsRandomizedValue(Element element, String attributeName) {
 		String isRandomizedValue = element.getAttributeValue(attributeName);
 
 		if (isRandomizedValue == null) {
@@ -204,13 +201,12 @@ public class ModelParserHelper  {
 	}
 
 	static EMathRelation parseRelationName(
-			String relationName, ListOfStrings errorList) throws ParserException {
+			String relationName, ListOfStrings errorList) {
 
 		EMathRelation relation = EMathRelation.parse(relationName);
 
 		if (relation == null) {
 			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
-			ParserException.reportException(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 		}
 
 		return relation;

@@ -28,30 +28,31 @@ import nu.xom.Element;
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings errorList) {
+			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings outErrorList) {
 
 		String name, type;
 		String defaultValue = null;
 		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(parameterElement, errorList);
-			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), outErrorList);
+			name = ModelParserHelper.getElementName(parameterElement, outErrorList);
+			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, outErrorList);
 
 			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
 				expected = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
+								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList);
 			}
 
 			if (parameterElement.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
 				defaultValue =
 						ModelParserHelper.getAttributeValue(
-								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
+								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
 			}
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -83,8 +84,9 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			try {
 				linkPath = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-			} catch (ParserException e) {
+								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
+			} catch (Exception e) {
+				outErrorList.add(e.getMessage());
 				return Optional.empty();
 			}
 
@@ -108,7 +110,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 						parameterElement, SerializationHelperVersion1.getChoiceNodeName());
 
 		for (Element child : children) {
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, errorList);
+			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, outErrorList);
 			if (node.isPresent()) {
 				targetMethodParameterNode.addChoice(node.get());
 			}

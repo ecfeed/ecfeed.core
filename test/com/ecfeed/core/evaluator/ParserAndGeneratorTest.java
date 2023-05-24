@@ -72,7 +72,7 @@ public class ParserAndGeneratorTest { // TODO MO-RE separate tests of serializat
 	//        assertEquals(1, countGeneratedTestCases(model));
 	//    }
 
-	private int countGeneratedTestCases(RootNode model) {
+	int countGeneratedTestCases(RootNode model) {
 
 		AbstractAlgorithm<ChoiceNode> algorithm = new NWiseAwesomeAlgorithm<>(2, 100);
 
@@ -410,7 +410,7 @@ public class ParserAndGeneratorTest { // TODO MO-RE separate tests of serializat
 	//		return rootNode;
 	//	}
 
-	private String xmlAccessParameterInNestedStructureFromMethodLinkedToRoot3 = 
+	String xmlAccessParameterInNestedStructureFromMethodLinkedToRoot3 = 
 			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 					"<Model name=\"TestModel11\" version=\"5\">\n" +
 					"    <Class name=\"C1\">\n" +

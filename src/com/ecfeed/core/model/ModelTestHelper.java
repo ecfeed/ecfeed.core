@@ -3,7 +3,6 @@ package com.ecfeed.core.model;
 import java.io.ByteArrayInputStream;
 
 import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -16,8 +15,8 @@ public class ModelTestHelper {
 			ByteArrayInputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
 			return parser.parseModel(istream, null, listOfErrors);
-		} catch(ParserException e) {
-			ExceptionHelper.reportRuntimeException(e.getMessage());
+		} catch(Exception e) {
+			listOfErrors.add(e.getMessage());
 		}
 
 		return null;
@@ -38,7 +37,7 @@ public class ModelTestHelper {
 			}
 			return rootNode;
 
-		} catch(ParserException e) {
+		} catch(Exception e) {
 			ExceptionHelper.reportRuntimeException(e.getMessage());
 		}
 

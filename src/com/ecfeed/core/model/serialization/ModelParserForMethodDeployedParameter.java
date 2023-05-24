@@ -118,7 +118,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 	//	}
 	//
 	public Optional<BasicParameterNode> parseMethodBasicParameter(
-			Element element, MethodNode method, ListOfStrings errors) {
+			Element element, MethodNode method, ListOfStrings outErrorList) {
 
 		String defaultValue = null;
 		String name, type;
@@ -127,23 +127,24 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(
 					element.getQualifiedName(), 
-					SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+					SerializationHelperVersion1.getBasicParameterNodeName(), outErrorList);
 
-			name = ModelParserHelper.getElementName(element, errors);
-			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
+			name = ModelParserHelper.getElementName(element, outErrorList);
+			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, outErrorList);
 
 			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
 				expected = 
 						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
+								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList));
 			}
 
 			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
 				defaultValue = 
-						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
+						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
 			}
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -158,7 +159,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
 			try {
-				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
+				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
 
 //				Optional<BasicParameterNode> basicParameterNode = 
 //						method.getNestedBasicParameters(true).stream()
@@ -170,10 +171,11 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				if (basicParameterNode != null) {
 					parameter.setLinkToGlobalParameter(basicParameterNode);
 				} else {
-					errors.add("Cannot parse link of parameter: " + parameter.getName() + ".");
+					outErrorList.add("Cannot parse link of parameter: " + parameter.getName() + ".");
 				}
 
-			} catch (ParserException e) {
+			} catch (Exception e) {
+				outErrorList.add(e.getMessage());
 				return Optional.empty();
 			}
 		}

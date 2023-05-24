@@ -43,7 +43,8 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -105,7 +106,8 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 			try {
 				linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-			} catch (ParserException e) {
+			} catch (Exception e) {
+				errorList.add(e.getMessage());
 				return Optional.empty();
 			}
 

@@ -24,8 +24,7 @@ public abstract class XomAnalyser {
 	}
 
 	public RootNode parseRoot(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) 
-					throws ParserException {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) {
 
 		IModelParserForRoot modelParserForRoot = 
 				ModelParserHelper.createStandardModelParserForRoot(getModelVersion(), modelChangeRegistrator);

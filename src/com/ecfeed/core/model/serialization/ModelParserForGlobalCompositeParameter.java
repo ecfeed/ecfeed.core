@@ -43,7 +43,7 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			return Optional.empty();
 		}
 

@@ -52,7 +52,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	}
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) throws ParserException {
+			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) {
 
 		MethodNode targetMethodNode = parseAndInitializeMethod(methodElement, classNode, inOutErrorList);
 
@@ -90,7 +90,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					methodElement.getQualifiedName(), METHOD_NODE_NAME, inOutErrorList);
 
 			name = ModelParserHelper.getElementName(methodElement, inOutErrorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			inOutErrorList.add("Cannot parse name of method.");
 			return null;
 		}
@@ -155,7 +155,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	}
 
 	private void parseConstraints(
-			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) throws ParserException {
+			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 
 		List<Element> constraintElements = 
 				ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME);

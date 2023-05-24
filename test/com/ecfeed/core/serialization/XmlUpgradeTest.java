@@ -10,17 +10,21 @@
 
 package com.ecfeed.core.serialization;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.model.serialization.ParserException;
-import com.ecfeed.core.utils.*;
-import org.junit.Test;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.ecfeed.core.model.ModelConverter;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.serialization.ModelParser;
+import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.StringHelper;
 
 public class XmlUpgradeTest {
 
@@ -164,7 +168,7 @@ public class XmlUpgradeTest {
 			// because method with non unique name cannot be added to class.
 
 			parsedModel = parser.parseModel(istream, null, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			fail();
 		}
 

@@ -17,7 +17,7 @@ public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
 	}
 
 //	@Override
-//	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
+//	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) {
 //
 //		return ConstraintType.EXTENDED_FILTER;
 //	}
