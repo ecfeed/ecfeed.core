@@ -125,8 +125,12 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodParameter.parseMethodParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
 
-			basicParameterNode.ifPresent(targetMethodNode::addParameter); // XYX add error handling inOutErrorList.add
-			// XYX add error handling in other files: ModelParser*
+			if (basicParameterNode.isPresent()) {
+				targetMethodNode.addParameter(basicParameterNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse parameter for method: " + targetMethodNode.getName() + ".");
+			}
+			
 			return;
 		} 
 
@@ -137,8 +141,13 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			Optional<CompositeParameterNode> compositeParameter = 
 					fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+			
+			if (compositeParameter.isPresent()) {
+				targetMethodNode.addParameter(compositeParameter.get());
+			} else {
+				inOutErrorList.add("Cannot parse structure for method: " + targetMethodNode.getName() + ".");
+			}
 
-			compositeParameter.ifPresent(targetMethodNode::addParameter);  // XYX add error handling inOutErrorList.add
 			return;
 		}
 
@@ -175,8 +184,12 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 				Optional<TestCaseNode> testCase = 
 						fModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
-
-				testCase.ifPresent(targetMethodNode::addTestCase); // XYX add error handling inOutErrorList.add
+				
+				if (testCase.isPresent()) {
+					targetMethodNode.addTestCase(testCase.get());
+				} else {
+					inOutErrorList.add("Cannot parse test case for method: " + targetMethodNode.getName() + ".");
+				}
 
 			}
 		} catch (Exception e) {
@@ -223,7 +236,6 @@ public class ModelParserForMethod implements IModelParserForMethod {
 				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
 			}
 
-			// parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add); // XYX add error checking
 		}
 	}
 
