@@ -154,8 +154,6 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				new BasicParameterNode(
 						lastSegment, type, defaultValue, expected, method.getModelChangeRegistrator());
 
-		//parameter.setNameWithoutChecks(name);
-
 		ModelParserHelper.parseParameterProperties(element, parameter);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
@@ -163,10 +161,18 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 			try {
 				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
 
-				method.getNestedBasicParameters(true).stream()
-				.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
-				.findAny()
-				.ifPresent(parameter::setLinkToGlobalParameter); // XYX add error checking
+//				Optional<BasicParameterNode> basicParameterNode = 
+//						method.getNestedBasicParameters(true).stream()
+//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+//						.findAny(); //use function from helper 
+				
+				AbstractParameterNode basicParameterNode = AbstractParameterNodeHelper.findParameter(linkPath, method);
+
+				if (basicParameterNode != null) {
+					parameter.setLinkToGlobalParameter(basicParameterNode);
+				} else {
+					errors.add("Cannot parse link of parameter: " + parameter.getName() + ".");
+				}
 
 			} catch (ParserException e) {
 				return Optional.empty();
