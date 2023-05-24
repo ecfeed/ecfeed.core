@@ -295,7 +295,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createPreconditionElement(ConstraintNode constraintNode) throws Exception {
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-		
+
 		//String signature = precondition.createSignature(new ExtLanguageManagerForJava());
 
 		XomStatementBuilder statementBuildingVisitor = 
@@ -513,12 +513,9 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 
 		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
-		
-		if (linkToGlobalParameter != null) { // XYX
-//			String path = 
-//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-//							linkToGlobalParameter, new ExtLanguageManagerForJava());
-			
+
+		if (linkToGlobalParameter != null) {
+
 			String path = 
 					AbstractParameterSignatureHelper.createPathToRootNewStandard(
 							linkToGlobalParameter, new ExtLanguageManagerForJava());

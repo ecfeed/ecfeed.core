@@ -12,7 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class ParserException extends Exception {
+public class ParserException extends Exception { // XYX remove class - add errors through errorList
 
 	/**
 	 * 

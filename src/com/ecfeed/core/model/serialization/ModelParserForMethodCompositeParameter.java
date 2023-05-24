@@ -55,11 +55,27 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForMethodParameter.parseMethodParameter(child, method, targetCompositeParameterNode, errorList)
-				.ifPresent(targetCompositeParameterNode::addParameter); // XYX add error checking
+
+				Optional<BasicParameterNode> methodParameter = 
+						fModelParserForMethodParameter.parseMethodParameter(
+								child, method, targetCompositeParameterNode, errorList);
+
+				if (methodParameter.isPresent()) {
+					targetCompositeParameterNode.addParameter(methodParameter.get());
+				} else {
+					errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
+				}
+
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList)
-				.ifPresent(targetCompositeParameterNode::addParameter); // XYX add error checking
+
+				Optional<CompositeParameterNode> compositeParameter = parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList);
+
+				if (compositeParameter.isPresent()) {
+					targetCompositeParameterNode.addParameter(compositeParameter.get());
+				} else {
+					errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
+				}
+
 			}
 		}
 
@@ -68,8 +84,15 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
-					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)
-					.ifPresent(targetCompositeParameterNode::addConstraint); // XYX add error checking
+					Optional<ConstraintNode> constraint = 
+							fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList);
+
+					if (constraint.isPresent()) {
+						targetCompositeParameterNode.addConstraint(constraint.get());
+					} else {
+						errorList.add("Cannot parse constraint of parent structure: " + targetCompositeParameterNode.getName() + ".");
+					}
+
 				} catch (Exception e) {
 					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
 				}
@@ -77,7 +100,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		}
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
-			
+
 			String linkPath;
 
 			try {
@@ -87,7 +110,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 			}
 
 			AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
-			
+
 			if (link != null) {
 				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
 			}
