@@ -59,12 +59,12 @@ public class ModelParserForRoot implements IModelParserForRoot {
 	}
 
 	private void parseGlobalParametersOfRoot(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
-		
+
 		List<Element> parameterElements = 
 				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
-		
+
 		for (Element parameterElement : parameterElements) {
-			
+
 			parseOneGlobalParameter(parameterElement, targetRootNode, outErrorList);
 		}
 	}
@@ -73,43 +73,51 @@ public class ModelParserForRoot implements IModelParserForRoot {
 			Element parameterElement, 
 			RootNode targetRootNode,
 			ListOfStrings outErrorList) {
-		
+
 		boolean isBasicParameterElement = 
 				ModelParserHelper.verifyElementName(
 						parameterElement, SerializationHelperVersion1.getBasicParameterNodeName());
-		
+
 		if (isBasicParameterElement) {
 			Optional<BasicParameterNode> globalBasicParameter = 
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
 							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			
-			globalBasicParameter.ifPresent(targetRootNode::addParameter); // XYX add error checking
+
+			if (globalBasicParameter.isPresent()) {
+				targetRootNode.addParameter(globalBasicParameter.get());
+			} else {
+				outErrorList.add("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
+			}
 			return;
 		} 
-		
+
 		boolean isCompositeParameterElement = 
 				ModelParserHelper.verifyElementName(
 						parameterElement, SerializationHelperVersion1.getCompositeParameterNodeName());
-		
+
 		if (isCompositeParameterElement) {
 			Optional<CompositeParameterNode> globalCompositeParameter = 
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
 							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			
-			globalCompositeParameter.ifPresent(targetRootNode::addParameter); // XYX add error checking
+
+			if (globalCompositeParameter.isPresent()) {
+				targetRootNode.addParameter(globalCompositeParameter.get());
+			} else {
+				outErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
+			}
 			return;
 		}
 	}
 
 	private void parseClasses(
 			Element element, RootNode targetRootNode, ListOfStrings outErrorList)
-			throws ParserException {
-		
+					throws ParserException {
+
 		List<Element> childClassElements = 
 				ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME);
-		
+
 		for (Element classElement : childClassElements) {
-			
+
 			fModelParserForClass.parseAndAddClass(classElement, targetRootNode, outErrorList);
 		}
 	}
