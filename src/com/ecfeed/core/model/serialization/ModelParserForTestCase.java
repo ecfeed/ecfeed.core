@@ -140,8 +140,8 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 					ModelParserHelper.getAttributeValue(
 							choiceElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, errorList);
 
-		} catch (ParserException e) {
-			errorList.add("Cannot parser expected parameter name.");
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -172,8 +172,8 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 			choiceQualifiedName = ModelParserHelper.getAttributeValue(
 					choiceElement, SerializationHelperVersion1.getChoiceAttributeName(), 
 					errorList);
-		} catch (ParserException e) {
-			errorList.add("Cannot get choice name.");
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -201,8 +201,8 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 			String name = ModelParserHelper.getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, errorList);
 			return name;
 
-		} catch (ParserException e) {
-			errorList.add("Cannot parse name of test case.");
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return null;
 		}
 	}

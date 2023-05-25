@@ -17,17 +17,11 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
-import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -70,35 +64,14 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 			return null;
 		}
 
-		AbstractParameterNode foundParameter = findParameterByPath(methodNode, path);
+		AbstractParameterNode foundParameter = AbstractParameterNodeHelper.findParameter(path, methodNode);
 
 		if (foundParameter == null) {
 			errorList.add("Original parameter not found by path: " + path);
 			return null;
 		}
 
-		//		if (!(foundParameter instanceof BasicParameterNode)) {
-		//			ExceptionHelper.reportRuntimeException("Found original parameter is not basic parameter.");
-		//		}
-
 		return foundParameter;
-	}
-
-	private AbstractParameterNode findParameterByPath(MethodNode methodNode, String path) {
-
-		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
-
-			AbstractParameterNode abstractParameterNode = MethodNodeHelper.findParameterByPath(path, methodNode);
-			return abstractParameterNode;
-		}
-
-		IAbstractNode topNode = AbstractNodeHelper.findTopNode(methodNode);
-
-		if (!(topNode instanceof RootNode)) {
-			ExceptionHelper.reportRuntimeException("Root node not found.");
-		}
-
-		return AbstractParameterNodeHelper.findParameterByAbsolutePath(path, (RootNode) topNode);
 	}
 
 	//	public Optional<BasicParameterNode> parseMethodDeployedParameter(
@@ -145,7 +118,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 	//	}
 	//
 	public Optional<BasicParameterNode> parseMethodBasicParameter(
-			Element element, MethodNode method, ListOfStrings errors) {
+			Element element, MethodNode method, ListOfStrings outErrorList) {
 
 		String defaultValue = null;
 		String name, type;
@@ -154,23 +127,24 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(
 					element.getQualifiedName(), 
-					SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+					SerializationHelperVersion1.getBasicParameterNodeName(), outErrorList);
 
-			name = ModelParserHelper.getElementName(element, errors);
-			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
+			name = ModelParserHelper.getElementName(element, outErrorList);
+			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, outErrorList);
 
 			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
 				expected = 
 						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
+								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList));
 			}
 
 			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
 				defaultValue = 
-						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
+						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
 			}
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -180,21 +154,28 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				new BasicParameterNode(
 						lastSegment, type, defaultValue, expected, method.getModelChangeRegistrator());
 
-		//parameter.setNameWithoutChecks(name);
-
 		ModelParserHelper.parseParameterProperties(element, parameter);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
 			try {
-				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
+				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
 
-				method.getNestedBasicParameters(true).stream()
-				.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
-				.findAny()
-				.ifPresent(parameter::setLinkToGlobalParameter);
+//				Optional<BasicParameterNode> basicParameterNode = 
+//						method.getNestedBasicParameters(true).stream()
+//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+//						.findAny(); //use function from helper 
+				
+				AbstractParameterNode basicParameterNode = AbstractParameterNodeHelper.findParameter(linkPath, method);
 
-			} catch (ParserException e) {
+				if (basicParameterNode != null) {
+					parameter.setLinkToGlobalParameter(basicParameterNode);
+				} else {
+					outErrorList.add("Cannot parse link of parameter: " + parameter.getName() + ".");
+				}
+
+			} catch (Exception e) {
+				outErrorList.add(e.getMessage());
 				return Optional.empty();
 			}
 		}

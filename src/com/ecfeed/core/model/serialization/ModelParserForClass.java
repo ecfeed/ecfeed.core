@@ -42,29 +42,32 @@ public class ModelParserForClass implements IModelParserForClass {
 		fModelParserForMethod = modelParserForMethod;
 	}
 
-	public Optional<ClassNode> parseClass(
-			Element classElement, RootNode parent, ListOfStrings errorList) throws ParserException {
+	public Optional<ClassNode> parseAndAddClass(
+			Element classElement, RootNode rootNode, ListOfStrings errorList) {
 
 		String name;
 
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(classElement, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
-		ClassNode targetClassNode = new ClassNode(name, parent.getModelChangeRegistrator());
+		ClassNode classNode = new ClassNode(name, rootNode.getModelChangeRegistrator());
+		classNode.setParent(rootNode);
+		rootNode.addClass(classNode);
 
-		targetClassNode.setDescription(ModelParserHelper.parseComments(classElement));
+		classNode.setDescription(ModelParserHelper.parseComments(classElement));
 		//we need to do it here, so the backward search for global parameters will work
-		targetClassNode.setParent(parent);
+		classNode.setParent(rootNode);
 
-		parseClassParameters(classElement, targetClassNode, errorList);
+		parseClassParameters(classElement, classNode, errorList);
 
-		parseMethods(classElement, targetClassNode, errorList);
+		parseMethods(classElement, classNode, errorList);
 
-		return Optional.ofNullable(targetClassNode);
+		return Optional.ofNullable(classNode);
 	}
 
 	private void parseClassParameters(Element classElement, ClassNode targetClassNode, ListOfStrings errorList) {
@@ -91,7 +94,12 @@ public class ModelParserForClass implements IModelParserForClass {
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
 							child, targetClassNode.getModelChangeRegistrator(), errorList);
 
-			globalBasicParameter.ifPresent(targetClassNode::addParameter);
+			if (globalBasicParameter.isPresent()) {
+				targetClassNode.addParameter(globalBasicParameter.get());
+			} else {
+				errorList.add("Cannot parse parameter for class: " + targetClassNode.getName() + ".");
+			}
+
 			return;
 		} 
 
@@ -105,13 +113,17 @@ public class ModelParserForClass implements IModelParserForClass {
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
 							child, targetClassNode.getModelChangeRegistrator(), errorList);
 
-			globalCompositeParameter.ifPresent(targetClassNode::addParameter);
+			if (globalCompositeParameter.isPresent()) {
+				targetClassNode.addParameter(globalCompositeParameter.get());
+			} else {
+				errorList.add("Cannot parse structure for class: " + targetClassNode.getName() + ".");
+			}
+
 		}
 	}
 
 	private void parseMethods(
-			Element classElement, ClassNode targetClassNode, ListOfStrings errorList)
-					throws ParserException {
+			Element classElement, ClassNode targetClassNode, ListOfStrings errorList) {
 
 		List<Element> childrenMethodElements = 
 				ModelParserHelper.getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME);

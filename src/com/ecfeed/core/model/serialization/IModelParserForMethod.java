@@ -21,6 +21,6 @@ import nu.xom.Element;
 public interface IModelParserForMethod {
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, ListOfStrings errorList) throws ParserException;
+			Element methodElement, ClassNode classNode, ListOfStrings errorList);
 
 }

@@ -13,7 +13,9 @@ package com.ecfeed.core.model.serialization;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -26,11 +28,11 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 	private IModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForGlobalCompositeParameter(IModelParserForGlobalParameter modelParserForGlobalParameter,
-												  IModelParserForConstraint modelParserForConstraint) {
+			IModelParserForConstraint modelParserForConstraint) {
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
-	
+
 	public Optional<CompositeParameterNode> parseGlobalCompositeParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrar,
@@ -41,7 +43,7 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			return Optional.empty();
 		}
 
@@ -52,16 +54,41 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForGlobalParameter.parseGlobalBasicParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
-						.ifPresent(targetCompositeParameterNode::addParameter);
+
+				Optional<BasicParameterNode> globalBasicParameter = 
+						fModelParserForGlobalParameter.parseGlobalBasicParameter(
+								child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
+
+				if (globalBasicParameter.isPresent()) {
+					targetCompositeParameterNode.addParameter(globalBasicParameter.get());
+				} else {
+					errorList.add("Cannot parse for parent structure: " + targetCompositeParameterNode.getName() + ".");
+				}
+
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
-						.ifPresent(targetCompositeParameterNode::addParameter);
+
+				Optional<CompositeParameterNode> globalCompositeParameter = 
+						parseGlobalCompositeParameter(
+								child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
+
+				if (globalCompositeParameter.isPresent()) {
+					targetCompositeParameterNode.addParameter(globalCompositeParameter.get());
+				} else {
+					errorList.add("Cannot parse structure for parent structure: " + targetCompositeParameterNode.getName() + ".");
+				}
+
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
-					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)
-							.ifPresent(targetCompositeParameterNode::addConstraint);
+					Optional<ConstraintNode> constraint = 
+							fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList);
+
+					if (constraint.isPresent()) {
+						targetCompositeParameterNode.addConstraint(constraint.get());
+					} else {
+						errorList.add("Cannot parse constraint for parent structure: " + targetCompositeParameterNode.getName() + ".");
+					}
+
 				} catch (Exception e) {
 					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
 				}

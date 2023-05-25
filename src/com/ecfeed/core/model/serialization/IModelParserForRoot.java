@@ -18,6 +18,6 @@ import nu.xom.Element;
 public interface IModelParserForRoot {
 
 	public RootNode parseRoot(
-			Element element, ListOfStrings outErrorList) throws ParserException;
+			Element element, ListOfStrings outErrorList);
 
 }

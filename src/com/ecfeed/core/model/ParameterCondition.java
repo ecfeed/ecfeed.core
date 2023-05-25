@@ -294,6 +294,11 @@ public class ParameterCondition implements IStatementCondition {
 		return fRightParameterNode;
 	}
 
+	public AbstractParameterNode getRightParameterLinkingContext() {
+		
+		return fRightParameterLinkingContext;
+	}
+	
 	@Override
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
@@ -404,6 +409,17 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fRightParameterNode, fRightParameterLinkingContext, topParentNode)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	//	@Override

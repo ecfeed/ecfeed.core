@@ -23,51 +23,59 @@ public class RootNodeHelper {
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
-	public static BasicParameterNode addNewGlobalBasicParameterToRoot(
+	public static BasicParameterNode addNewBasicParameterToRoot(
 			RootNode rootNode, 
 			String name, 
 			String type,
+			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
-				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
+
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
 
 		rootNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
 	}
 
-	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
-			RootNode rootNode, 
-			String name, 
-			IModelChangeRegistrator modelChangeRegistrator) {
+	//	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
+	//			RootNode rootNode, 
+	//			String name, 
+	//			IModelChangeRegistrator modelChangeRegistrator) {
+	//
+	//		CompositeParameterNode compositeParameterNode = 
+	//				new CompositeParameterNode(name, modelChangeRegistrator);
+	//
+	//		rootNode.addParameter(compositeParameterNode);
+	//
+	//		return compositeParameterNode;
+	//	}
 
-		CompositeParameterNode compositeParameterNode = 
-				new CompositeParameterNode(name, modelChangeRegistrator);
-
-		rootNode.addParameter(compositeParameterNode);
-
-		return compositeParameterNode;
-	}
-
-	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
+	public static CompositeParameterNode addNewCompositeParameterToRoot(
 			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			globalParameterNode.setParent(rootNode);
 		}
-		
+
 		rootNode.addParameter(globalParameterNode);
-		
+
 		return globalParameterNode;
 	}
 
 	public static ClassNode addNewClassNodeToRoot(
-			RootNode rootNode, String className, IModelChangeRegistrator modelChangeRegistrator) {
+			RootNode rootNode,
+			String className, 
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		ClassNode classNode = new ClassNode("Class1", modelChangeRegistrator);
+		ClassNode classNode = new ClassNode(className, modelChangeRegistrator);
 		rootNode.addClass(classNode);
 
 		return classNode;

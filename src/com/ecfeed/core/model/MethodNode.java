@@ -775,15 +775,20 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
 
-		fParametersHolder.addParameter(parameter, this);
+		fParametersHolder.addParameter(parameter, this, false);
 	}
 
+	public void addParameter(AbstractParameterNode parameter, boolean checkName) {
+
+		fParametersHolder.addParameter(parameter, this, checkName);
+	}
+	
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersHolder.addParameter(parameter, linkingContext, this, false);
 	}
 
 	@Override
@@ -792,19 +797,19 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			AbstractParameterNode linkingContext,
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersHolder.addParameter(parameter, linkingContext, index, this, false);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this, false);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.addParameters(parameters, this);
+		fParametersHolder.addParameters(parameters, this, false);
 	}
 
 	public void setDeployedParameters(List<BasicParameterNode> parameters) { // TODO MO-RE remove ? - deployed parameter should have linking contexts even if null 

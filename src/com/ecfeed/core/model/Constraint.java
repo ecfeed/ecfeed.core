@@ -1044,4 +1044,21 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 	}
+
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		
+		AbstractStatement precondition = getPrecondition();
+		
+		if (!precondition.isConsistent(topParentNode)) {
+			return false;
+		}
+
+		AbstractStatement postcondition = getPostcondition();
+		
+		if (!postcondition.isConsistent(topParentNode)) {
+			return false;
+		}
+		
+		return true;
+	}
 }

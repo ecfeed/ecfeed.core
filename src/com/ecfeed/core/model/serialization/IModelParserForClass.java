@@ -20,7 +20,7 @@ import nu.xom.Element;
 
 public interface IModelParserForClass {
 
-	public Optional<ClassNode> parseClass(
-			Element classElement, RootNode parent, ListOfStrings errorList) throws ParserException;
+	public Optional<ClassNode> parseAndAddClass(
+			Element classElement, RootNode parent, ListOfStrings errorList);
 
 }

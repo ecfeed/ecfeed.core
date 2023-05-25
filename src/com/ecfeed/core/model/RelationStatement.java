@@ -73,15 +73,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			BasicParameterNode leftParameter,
 			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
-			BasicParameterNode rightParameter) {
-
-		return createRelationStatementWithParameterCondition(leftParameter, leftParameterLinkingContext, relation, rightParameter, null);
-	}
-
-	public static RelationStatement createRelationStatementWithParameterCondition(
-			BasicParameterNode leftParameter,
-			CompositeParameterNode leftParameterLinkingContext,
-			EMathRelation relation,
 			BasicParameterNode rightParameter,
 			CompositeParameterNode rightParameterLinkingContext) {
 
@@ -203,7 +194,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return createSignature(new ExtLanguageManagerForJava());
 	}
 
 	@Override
@@ -213,7 +204,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftBasicParameterNode = getLeftParameter();
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
-		
+
 		String signatureNew = 
 				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
 						leftParameterLinkingCondition,
@@ -240,7 +231,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		if (mapper.isPresent()) {
 			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
 
@@ -252,13 +243,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			return clonedStatement;
 		}
-		
+
 		RelationStatement relationStatement = new RelationStatement(
 				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
-		
+
 		return relationStatement;
 	}
-	
+
 	@Override  // TODO MO-RE obsolete
 	public RelationStatement makeClone() {
 
@@ -604,6 +595,22 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		}
 
 		return result;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameter, fLeftParameterLinkingContext, parentMethodNode)) {
+
+			return false;
+		}
+
+		if (!fRightCondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	//	@Override

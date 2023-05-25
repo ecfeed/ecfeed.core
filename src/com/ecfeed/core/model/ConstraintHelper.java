@@ -237,7 +237,12 @@ public class ConstraintHelper {
 			ExceptionHelper.reportRuntimeException("Constraint types different.");
 		}
 
-		AbstractStatementHelper.compareStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
-		AbstractStatementHelper.compareStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
+		AbstractStatement precondition1 = constraint1.getPrecondition();
+		AbstractStatement precondition2 = constraint2.getPrecondition();
+		AbstractStatementHelper.compareStatements(precondition1, precondition2);
+		
+		AbstractStatement postcondition1 = constraint1.getPostcondition();
+		AbstractStatement postcondition2 = constraint2.getPostcondition();
+		AbstractStatementHelper.compareStatements(postcondition1, postcondition2);
 	}
 }

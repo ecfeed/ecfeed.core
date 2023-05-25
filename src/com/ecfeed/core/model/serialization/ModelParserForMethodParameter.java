@@ -21,36 +21,38 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings errorList) {
+			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings outErrorList) {
 
 		String name, type;
 		String defaultValue = null;
 		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(parameterElement, errorList);
-			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), outErrorList);
+			name = ModelParserHelper.getElementName(parameterElement, outErrorList);
+			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, outErrorList);
 
 			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
 				expected = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
+								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList);
 			}
 
 			if (parameterElement.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
 				defaultValue =
 						ModelParserHelper.getAttributeValue(
-								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
+								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
 			}
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -82,12 +84,14 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			try {
 				linkPath = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-			} catch (ParserException e) {
+								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
+			} catch (Exception e) {
+				outErrorList.add(e.getMessage());
 				return Optional.empty();
 			}
 
-			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			//AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = findLink(linkPath, method);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
@@ -106,7 +110,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 						parameterElement, SerializationHelperVersion1.getChoiceNodeName());
 
 		for (Element child : children) {
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, errorList);
+			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, outErrorList);
 			if (node.isPresent()) {
 				targetMethodParameterNode.addChoice(node.get());
 			}
@@ -119,6 +123,16 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		}
 
 		return Optional.ofNullable(targetMethodParameterNode);
+	}
+
+	private AbstractParameterNode findLink(String linkPath, MethodNode method) {
+		
+		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+			return AbstractParameterNodeHelper.findParameter(linkPath, method);
+		}
+		
+		// old convention - to be removed in next release when all models would be converted to new convention
+		return method.getClassNode().findGlobalParameter(linkPath); 
 	}
 
 	private String getParameterNodeName() {

@@ -15,8 +15,6 @@ public class SerializationConstants {
 	public static final String CLASS_NODE_NAME = "Class";
 	public static final String METHOD_NODE_NAME = "Method";
 	public static final String METHOD_DEPLOYED_PARAMETERS_TAG = "Deployment";
-	public static final String METHOD_DEPLOYED_PATH_OF_PARAMETER = "PathOfParameter";
-	public static final String METHOD_DEPLOYED_PATH_OF_CONTEXT = "PathOfContext";
 
 	public static final String EXPECTED_VALUE_PARAMETER_NODE_NAME = "ExpectedValueParameter";
 	public static final String LABEL_NODE_NAME = "Label";
@@ -52,8 +50,9 @@ public class SerializationConstants {
 	public static final String PARAMETER_IS_LINKED_ATTRIBUTE_NAME = "linked";
 	public static final String PARAMETER_LINK_ATTRIBUTE_NAME = "link";
 	public static final String VALUE_ATTRIBUTE = "value";
-
-
+	public static final String METHOD_DEPLOYED_PATH_OF_PARAMETER = "pathOfParameter";
+	public static final String METHOD_DEPLOYED_PATH_OF_CONTEXT = "pathOfContext";
+	
 	public static final String NULL_VALUE_STRING_REPRESENTATION = "/null";
 	public static final String TEST_SUITE_NAME_ATTRIBUTE = "testSuite";
 	public static final String LABEL_ATTRIBUTE_NAME = "label";

@@ -139,7 +139,8 @@ public class ParametersMapperTest {
 		// composite 2
 
 		CompositeParameterNode compositeParameterNode2 = 
-				CompositeParameterNodeHelper.addCompositeParameter(compositeParameterNode1, "S2", null);
+				CompositeParameterNodeHelper.addNewCompositeParameter(
+						compositeParameterNode1, "S2", true, null);
 
 		// parameter 1 of composite 1
 
