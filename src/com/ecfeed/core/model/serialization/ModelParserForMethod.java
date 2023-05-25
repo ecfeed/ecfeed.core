@@ -52,7 +52,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	}
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) throws ParserException {
+			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) {
 
 		MethodNode targetMethodNode = parseAndInitializeMethod(methodElement, classNode, inOutErrorList);
 
@@ -90,7 +90,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					methodElement.getQualifiedName(), METHOD_NODE_NAME, inOutErrorList);
 
 			name = ModelParserHelper.getElementName(methodElement, inOutErrorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			inOutErrorList.add("Cannot parse name of method.");
 			return null;
 		}
@@ -125,7 +125,12 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodParameter.parseMethodParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
 
-			basicParameterNode.ifPresent(targetMethodNode::addParameter);
+			if (basicParameterNode.isPresent()) {
+				targetMethodNode.addParameter(basicParameterNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse parameter for method: " + targetMethodNode.getName() + ".");
+			}
+			
 			return;
 		} 
 
@@ -136,8 +141,13 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			Optional<CompositeParameterNode> compositeParameter = 
 					fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+			
+			if (compositeParameter.isPresent()) {
+				targetMethodNode.addParameter(compositeParameter.get());
+			} else {
+				inOutErrorList.add("Cannot parse structure for method: " + targetMethodNode.getName() + ".");
+			}
 
-			compositeParameter.ifPresent(targetMethodNode::addParameter);
 			return;
 		}
 
@@ -145,17 +155,21 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	}
 
 	private void parseConstraints(
-			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) throws ParserException {
+			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 
 		List<Element> constraintElements = 
 				ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME);
 
 		for (Element constraintElement : constraintElements) {
 
-			Optional<ConstraintNode> constraint = 
+			Optional<ConstraintNode> constraintNode = 
 					fModelParserForConstraint.parseConstraint(constraintElement, targetMethodNode, inOutErrorList);
 
-			constraint.ifPresent(targetMethodNode::addConstraint);
+			if (constraintNode.isPresent()) {
+				targetMethodNode.addConstraint(constraintNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse constraint for method: " + targetMethodNode.getName() + ".");
+			}
 		}
 	}
 
@@ -170,8 +184,12 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 				Optional<TestCaseNode> testCase = 
 						fModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
-
-				testCase.ifPresent(targetMethodNode::addTestCase);
+				
+				if (testCase.isPresent()) {
+					targetMethodNode.addTestCase(testCase.get());
+				} else {
+					inOutErrorList.add("Cannot parse test case for method: " + targetMethodNode.getName() + ".");
+				}
 
 			}
 		} catch (Exception e) {
@@ -212,7 +230,12 @@ public class ModelParserForMethod implements IModelParserForMethod {
 					fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
-			parameterWithLinkingContext.ifPresent(inOutParametersWithContexts::add);
+			if (parameterWithLinkingContext.isPresent()) {
+				inOutParametersWithContexts.add(parameterWithLinkingContext.get());
+			} else {
+				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
+			}
+
 		}
 	}
 

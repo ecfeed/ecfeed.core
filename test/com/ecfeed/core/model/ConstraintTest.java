@@ -104,7 +104,7 @@ public class ConstraintTest {
 
 		relationStatement =
 				RelationStatement.createRelationStatementWithParameterCondition(
-						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);
 		
 		constraint.setPostcondition(relationStatement);
 
@@ -692,7 +692,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithParameterCondition(
-						parameter1, null, EMathRelation.EQUAL, parameter2);
+						parameter1, null, EMathRelation.EQUAL, parameter2, null);
 
 		return precondition;
 	}

@@ -29,6 +29,7 @@ import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
@@ -37,7 +38,6 @@ import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.NodeMapper;
@@ -49,7 +49,6 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
@@ -98,8 +97,6 @@ public class XmlParserSerializerTest {
 			}
 		} catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -218,8 +215,6 @@ public class XmlParserSerializerTest {
 		}
 		catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -325,7 +320,7 @@ public class XmlParserSerializerTest {
 
 		try {
 			parsedModel = parser.parseModel(istream, null, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -369,8 +364,6 @@ public class XmlParserSerializerTest {
 		}
 		catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}

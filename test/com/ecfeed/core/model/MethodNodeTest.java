@@ -80,6 +80,22 @@ public class MethodNodeTest {
 		assertTrue(method.getParameterTypes().contains("type2"));
 	}
 
+	//	@Test
+	//	public void addTwoParametersWithTheSameName() {
+	//
+	//		MethodNode methodNode1 = new MethodNode("method1");
+	//
+	//		MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+	//
+	//		try { 
+	//			MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+	//			fail();
+	//
+	//		} catch (Exception e) {
+	//			TestHelper.checkExceptionMessage(e, "Parameter with the same name already exists.");
+	//		}
+	//	}
+
 	@Test
 	public void addConstraint(){
 		MethodNode method = new MethodNode("name", null);
@@ -767,7 +783,7 @@ public class MethodNodeTest {
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
 
 		RelationStatement postcondition = RelationStatement.createRelationStatementWithParameterCondition(
-				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2);
+				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2, null);
 
 		Constraint constraint = 
 				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
@@ -846,7 +862,7 @@ public class MethodNodeTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalComposite = 
-				RootNodeHelper.addGlobalCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameterToComposite(

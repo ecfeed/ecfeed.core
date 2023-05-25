@@ -10,6 +10,10 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class XmlComparator {
 
 
@@ -59,5 +63,40 @@ public class XmlComparator {
 
 		return tag;
 	}
+
+	public static boolean containsConsecutiveTags(String xml, String stringWithTagsToFind) {
+
+		List<String> tagsFromXml = convertXmlToListOfTags(xml);
+		List<String> tagsToFind = convertXmlToListOfTags(stringWithTagsToFind);;
+
+		int indexOfSublist = Collections.indexOfSubList(tagsFromXml, tagsToFind);
+
+		if (indexOfSublist < 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private static List<String> convertXmlToListOfTags(String xml) {
+
+		List<String> result = new ArrayList<>();
+
+		IntegerHolder position = new IntegerHolder(0);
+
+		for(;;) {
+
+			String tag = getTag(xml, position);
+
+			if (tag == null) {
+				break;
+			}
+
+			result.add(tag);
+		}
+
+		return result;
+	}
+
 
 }

@@ -120,7 +120,7 @@ public class XomParserTest {
 			IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			Optional<ClassNode> parsedClass = 
-					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
+					modelParserForClass.parseAndAddClass(element, tmpRoot, new ListOfStrings());
 			
 			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
 			
@@ -440,14 +440,14 @@ public class XomParserTest {
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			try {
-				modelParserForClass.parseClass(classElement, rootNode, new ListOfStrings());
+				modelParserForClass.parseAndAddClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
 				ListOfStrings errorList = new ListOfStrings();
-				modelParserForClass.parseClass(rootElement, rootNode, errorList);
+				modelParserForClass.parseAndAddClass(rootElement, rootNode, errorList);
 				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {

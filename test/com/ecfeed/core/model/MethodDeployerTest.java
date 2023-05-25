@@ -155,7 +155,7 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", "String", null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
 
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, "RC11", "100", false, false, null);
@@ -601,9 +601,9 @@ public class MethodDeployerTest {
 		ms1.setLinkToGlobalParameter(gs1);
 
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(
-				mp1, null, EMathRelation.EQUAL, gs1p1);
+				mp1, null, EMathRelation.EQUAL, gs1p1, null);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(
-				gs1p1, null, EMathRelation.EQUAL, mp1);
+				gs1p1, null, EMathRelation.EQUAL, mp1, null);
 
 		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
 		ms1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
@@ -640,9 +640,9 @@ public class MethodDeployerTest {
 		ms1.setLinkToGlobalParameter(gs1);
 
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(
-				mp1, null, EMathRelation.EQUAL, gs1p1);
+				mp1, null, EMathRelation.EQUAL, gs1p1, null);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(
-				gs1p1, null, EMathRelation.EQUAL, mp1);
+				gs1p1, null, EMathRelation.EQUAL, mp1, null);
 
 		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
 		ms1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
@@ -677,7 +677,7 @@ public class MethodDeployerTest {
 		c1m1.addParameter(mp1);
 
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(
-				ms1p1, null, EMathRelation.EQUAL, ms2p1);
+				ms1p1, null, EMathRelation.EQUAL, ms2p1, null);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(
 				ms2p1, null, EMathRelation.EQUAL, ms2p1c1);
 
@@ -716,7 +716,7 @@ public class MethodDeployerTest {
 		c1m1.addParameter(mp1);
 
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(
-				ms1s1p1, null, EMathRelation.EQUAL, ms1s2p1);
+				ms1s1p1, null, EMathRelation.EQUAL, ms1s2p1, null);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(
 				ms1s2p1, null, EMathRelation.EQUAL, ms1s2p1c1);
 
@@ -786,7 +786,7 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewGlobalBasicParameterToRoot(rootNode, "RP1", "String", null);
+				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
 
 		String globalChoiceNodeName = "RC11";
 

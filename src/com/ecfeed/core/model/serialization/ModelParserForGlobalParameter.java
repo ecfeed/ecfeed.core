@@ -52,7 +52,8 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
 				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 			}
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 

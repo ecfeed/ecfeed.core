@@ -62,17 +62,17 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public ChoiceCondition makeClone(
 			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
-		
+
 		if (nodeMapper.isPresent()) {
-			
+
 			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
-			
+
 			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
 		}
 
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
-	
+
 	@Override
 	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
 		// choices are not cloned
@@ -86,7 +86,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
-		
+
 		ChoiceNode node;
 
 		if (isSourceLinked()) {
@@ -389,6 +389,25 @@ public class ChoiceCondition implements IStatementCondition {
 		if (fRightChoice == oldChoiceNode) {
 			fRightChoice = newChoiceNode;
 		}
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (BasicParameterNodeHelper.choiceNodeExists(parameterWithChoices, fRightChoice)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	//	@Override

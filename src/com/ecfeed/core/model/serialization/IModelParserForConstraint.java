@@ -20,6 +20,6 @@ import nu.xom.Element;
 
 public interface IModelParserForConstraint {
 
-	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException;
+	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList);
 
 }

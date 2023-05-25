@@ -126,11 +126,11 @@ public class ValueCondition implements IStatementCondition {
 
 	@Override
 	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
-		
+
 		return new ValueCondition(fRightValue, statement);
 	}
 
-	
+
 	@Override
 	public ValueCondition makeClone() {
 
@@ -242,6 +242,27 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (parameterWithChoices != null)
+			return true;
+
+		//		if (BasicParameterNodeHelper.valueOfChoiceNodeExists(parameterWithChoices, fRightValue)) {
+		//			return true;
+		//		}
+
+		return false;
 	}
 
 	//	@Override

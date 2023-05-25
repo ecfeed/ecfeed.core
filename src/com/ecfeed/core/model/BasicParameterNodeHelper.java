@@ -36,9 +36,14 @@ public class BasicParameterNodeHelper {
 		}
 
 		TypeHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		AbstractNodeHelper.compareSizes(basicParameterNode1.getChoices(), basicParameterNode2.getChoices(), "Number of choices differ.");
-		for(int i = 0; i < basicParameterNode1.getChoices().size(); ++i){
-			ChoiceNodeHelper.compareChoices(basicParameterNode1.getChoices().get(i), basicParameterNode2.getChoices().get(i));
+		
+		List<ChoiceNode> choices1 = basicParameterNode1.getChoices();
+		List<ChoiceNode> choices2 = basicParameterNode2.getChoices();
+		
+		AbstractNodeHelper.compareSizes(choices1, choices2, "Number of choices differ.");
+		
+		for(int i = 0; i < choices1.size(); ++i){
+			ChoiceNodeHelper.compareChoices(choices1.get(i), choices2.get(i));
 		}
 
 	}
@@ -209,7 +214,7 @@ public class BasicParameterNodeHelper {
 			BasicParameterNode basicParameterNode) {
 
 		CompositeParameterNode compositeParameterNode =
-				AbstractParameterNodeHelper.getTopComposite(basicParameterNode);
+				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
 
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
@@ -467,26 +472,26 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
-	public static BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
-
-		if (parameterParent == null || parameterName == null) {
-			return null;
-		}
-
-		List<BasicParameterNode> parameters = new ArrayList<>();
-
-		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
-
-		for (BasicParameterNode parameter : parameters) {
-			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
-
-			if (name.equals(parameterName)) {
-				return parameter;
-			}
-		}
-
-		return null;
-	}
+	//	public static BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) { // TODO MO-RE use AbstractParameterNodeHelper.findParameter instead
+	//
+	//		if (parameterParent == null || parameterName == null) {
+	//			return null;
+	//		}
+	//
+	//		List<BasicParameterNode> parameters = new ArrayList<>();
+	//
+	//		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
+	//
+	//		for (BasicParameterNode parameter : parameters) {
+	//			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+	//
+	//			if (name.equals(parameterName)) {
+	//				return parameter;
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
 	public static BasicParameterNode findBasicParameter(ChoiceNode globalChoiceNode) {
 
@@ -516,6 +521,222 @@ public class BasicParameterNodeHelper {
 			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
 				return choiceNode;
 			}
+		}
+
+		return null;
+	}
+
+	public static boolean choiceNodeExists(BasicParameterNode basicParameterNode, ChoiceNode choiceNodeToFind) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.equals(choiceNodeToFind)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean valueOfChoiceNodeExists(BasicParameterNode basicParameterNode, String value) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			String valueString = choiceNode.getValueString();
+
+			if (valueString.equals(value)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean isParameterOfConstraintConsistent(
+			BasicParameterNode basicParameterNode, 
+			AbstractParameterNode parameterLinkingContext,
+			IParametersAndConstraintsParentNode parentOfConstraint) {
+
+		if (basicParameterNode.isGlobalParameter()) {
+
+			if (isGlobalParameterConsistent(basicParameterNode, parameterLinkingContext, parentOfConstraint)) {
+				return true;
+			}
+
+			return false;
+
+		} else {
+
+			if (isLocalParameterConsistent(basicParameterNode, parameterLinkingContext, parentOfConstraint)) {
+				return true;
+			}
+
+			return false;
+		}
+	}
+
+	private static boolean isGlobalParameterConsistent(
+			BasicParameterNode globalBasicParameterNode, 
+			AbstractParameterNode linkingContext,
+			IParametersAndConstraintsParentNode parentMethodNodeOfConstraint) {
+
+		CompositeParameterNode globalTopCompositeParameterNode = 
+				AbstractParameterNodeHelper.findTopComposite(globalBasicParameterNode);
+
+		if (globalTopCompositeParameterNode == null) {
+			return false;
+		}
+
+		if (!isGlobalTopCompositeConsistent(globalTopCompositeParameterNode, parentMethodNodeOfConstraint)) {
+			return false;
+		}
+
+		if (!isLinkingContextConsistent(linkingContext, parentMethodNodeOfConstraint)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private static boolean isLinkingContextConsistent(
+			AbstractParameterNode linkingContext,
+			IParametersAndConstraintsParentNode topParentNode) {
+
+		if (linkingContext == null) {
+			return true;
+		}
+
+		List<AbstractParameterNode> parameters = topParentNode.getParameters();
+
+		for (AbstractParameterNode parameter : parameters) {
+
+			if (parameter.equals(linkingContext)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean isGlobalTopCompositeConsistent(
+			CompositeParameterNode globalTopCompositeParameterNode,
+			IParametersAndConstraintsParentNode parentOfConstraint) {
+
+		if (parentOfConstraint.equals(globalTopCompositeParameterNode)) {
+			return true;
+		}
+
+		List<AbstractParameterNode> childParameters = parentOfConstraint.getParameters();
+
+		for (AbstractParameterNode childParameter : childParameters) {
+
+			if (childParameter instanceof BasicParameterNode) {
+				continue;
+			}
+
+			AbstractParameterNode link = childParameter.getLinkToGlobalParameter();
+
+			if (link.equals(globalTopCompositeParameterNode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean isLocalParameterConsistent(
+			BasicParameterNode basicParameterNode,
+			AbstractParameterNode parameterLinkingContext,
+			IParametersAndConstraintsParentNode topParentNode) {
+
+		CompositeParameterNode topComposite = 
+				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
+
+		if (topComposite == null) {
+
+			return isLocalParameterConsistenWhenNoTopComposite(
+					basicParameterNode, parameterLinkingContext,topParentNode);
+		}
+
+		List<AbstractParameterNode> childParameters = topParentNode.getParameters();
+
+		for (AbstractParameterNode childParameter : childParameters) {
+
+			if (childParameter instanceof BasicParameterNode) {
+				if (childParameter.equals(basicParameterNode)) {
+					return true;
+				}
+			}
+
+			if (childParameter instanceof CompositeParameterNode) {
+				if (childParameter.equals(topComposite)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean isLocalParameterConsistenWhenNoTopComposite(BasicParameterNode basicParameterNode,
+			AbstractParameterNode parameterLinkingContext, IParametersAndConstraintsParentNode topParentNode) {
+		IParametersParentNode parentOfParameter = basicParameterNode.getParent();
+
+		if (parentOfParameter == null) {
+			return false;
+		}
+
+		if (topParentNode instanceof MethodNode) {
+
+			MethodNode methodNode = (MethodNode) topParentNode;
+
+			if (!parentOfParameter.equals(methodNode)) {
+				return false;
+			}
+		}
+
+		if (parameterLinkingContext != null) {
+
+			CompositeParameterNode topComposite2 = 
+					AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
+
+			if (topComposite2 != null && parentOfParameter.equals(topComposite2.getParent())) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static BasicParameterNode findParameterWithChoices(
+			BasicParameterNode basicParameterNode, AbstractParameterNode linkingContext) {
+
+		if (basicParameterNode.isGlobalParameter()) {
+			return basicParameterNode;
+		}
+
+		if (linkingContext == null) {
+			return basicParameterNode;
+		}
+
+		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
+
+		if (link != null) {
+			return link;
+		}
+
+		if (linkingContext instanceof BasicParameterNode) {
+			return (BasicParameterNode) linkingContext;
 		}
 
 		return null;

@@ -14,16 +14,33 @@ import com.ecfeed.core.utils.BooleanHolder;
 
 public abstract class ConstraintsParentNodeHelper {
 
+	public static ConstraintNode addNewConstraintNode(
+			IConstraintsParentNode parameterParentNode,
+			Constraint constraint, 
+			boolean setParent, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ConstraintNode constraintNode = new ConstraintNode(constraint.getName(), constraint, null);
+
+		if (setParent) {
+			constraintNode.setParent(parameterParentNode);
+		}
+
+		parameterParentNode.addConstraint(constraintNode);
+
+		return constraintNode;
+	}
+
 	public static void removeInconsistentConstraints(IConstraintsParentNode constraintsParentNode, BooleanHolder modelUpdated) {
-		
+
 		ConstraintNodeListHolder.ConstraintsItr constraintItr = constraintsParentNode.getIterator();
-		
+
 		while (constraintsParentNode.hasNextConstraint(constraintItr)) {
-			
+
 			ConstraintNode constraintNode = constraintsParentNode.getNextConstraint(constraintItr);
-			
+
 			if (!constraintNode.isConsistent()) {
-				
+
 				constraintsParentNode.removeConstraint(constraintItr);
 				modelUpdated.set(true);
 			}

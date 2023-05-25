@@ -240,4 +240,23 @@ public class ClassNodeHelper {
 		}
 	}
 
+	public static CompositeParameterNode addNewCompositeParameter(
+			ClassNode classNode, 
+			String childCompositeName, 
+			boolean setParent, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+		
+		
+		CompositeParameterNode childCompositeParameterNode = 
+				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
+		
+		if (setParent) {
+			childCompositeParameterNode.setParent(classNode);
+		}
+
+		classNode.addParameter(childCompositeParameterNode);
+
+		return childCompositeParameterNode;
+	}
+
 }

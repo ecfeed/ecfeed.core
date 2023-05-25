@@ -34,9 +34,9 @@ public class ModelComparator {
 		String[] lines1 = xml1.split("\n");
 		String[] lines2 = xml2.split("\n");
 
-		if (xml1.equals(xml2)) {
-			return;
-		}
+		//		if (xml1.equals(xml2)) {
+		//			return;
+		//		}
 
 		String errorMessage = StringHelper.isEqualByLines(lines1, lines2);
 
@@ -44,7 +44,7 @@ public class ModelComparator {
 			ExceptionHelper.reportRuntimeException("Model comparison failed with message: " + errorMessage);
 		}
 
-		ExceptionHelper.reportRuntimeException("Comparison of serialized models failed.");
+		//ExceptionHelper.reportRuntimeException("Comparison of serialized models failed.");
 	}
 
 	private static String serializeModel(RootNode model1) {

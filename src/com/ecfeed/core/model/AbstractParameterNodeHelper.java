@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
@@ -199,11 +200,15 @@ public abstract class AbstractParameterNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode getTopComposite(IAbstractNode abstractNode) {
+	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
 
 		IAbstractNode currentNode = abstractNode;
 
 		CompositeParameterNode topCompositeParameterNode = null;
+
+		if (abstractNode instanceof CompositeParameterNode) {
+			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
+		}
 
 		for (;;) {
 
@@ -237,42 +242,77 @@ public abstract class AbstractParameterNodeHelper {
 
 	}
 
-	public static AbstractParameterNode findParameterByAbsolutePath(String path, RootNode rootNode) {
+	private enum ParameterPathType {
+		PATH_CONTAINTS_TOP_NODE,
+		PATH_WITHOUT_TOP_NODE
+	}
 
-		if (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+	public static AbstractParameterNode findParameter(
+			String path, 
+			IParametersParentNode parent) {
+
+		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+
+			IAbstractNode topNode = AbstractNodeHelper.findTopNode(parent);
+
+			if (!(topNode instanceof RootNode)) {
+				ExceptionHelper.reportRuntimeException("Cannot find root node.");
+			}
+
+			AbstractParameterNode parameter = 
+					AbstractParameterNodeHelper.findParameterByRelativePath(
+							path, 
+							AbstractParameterNodeHelper.ParameterPathType.PATH_CONTAINTS_TOP_NODE, 
+							(RootNode)topNode);
+
+			return parameter;
+		}
+
+		AbstractParameterNode parameter = 
+				AbstractParameterNodeHelper.findParameterByRelativePath(
+						path, 
+						AbstractParameterNodeHelper.ParameterPathType.PATH_WITHOUT_TOP_NODE, 
+						parent);
+
+		return parameter;
+	}
+
+	public static AbstractParameterNode findParameterByRelativePath(  // TODO MO-RE old name findParameterByAbsolutePath
+			String path, ParameterPathType parameterPathType, IParametersParentNode topNode) {
+
+		if ((parameterPathType == ParameterPathType.PATH_WITHOUT_TOP_NODE) 
+				&& (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER))) {
+			ExceptionHelper.reportRuntimeException("Invalid path. Path with root marker not expected.");
+		}
+
+		if ((topNode instanceof RootNode) && (!path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER))) {
 			ExceptionHelper.reportRuntimeException("Invalid path. Path with root marker expected.");
 		}
 
-		String pathWithoutRootMarker = path.substring(1);
-		String[] pathElements = pathWithoutRootMarker.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-		int pathSize = pathElements.length;
-
-		IParametersParentNode currentParametersParent = rootNode;
-
-		for (int pathIndex = 1; pathIndex < pathSize; pathIndex++) {
-
-			String pathElement = pathElements[pathIndex];
-
-			AbstractParameterNode foundParameter = currentParametersParent.findParameter(pathElement);
-
-			if (foundParameter == null) {
-				return null;
-			}
-
-			if (pathIndex == pathSize - 1) {
-				return foundParameter;
-			}
-
-			if (!(foundParameter instanceof CompositeParameterNode)) {
-				ExceptionHelper.reportRuntimeException("Current parameter is not a composite.");
-			}
-
-			currentParametersParent = (IParametersParentNode) foundParameter;
+		String formattedPath = formatSearchPath(path, parameterPathType);
+		
+		IAbstractNode foundAbstractNode = topNode.getChild(formattedPath);
+		
+		if (!(foundAbstractNode instanceof AbstractParameterNode)) {
+			return null;
 		}
+		
+		return (AbstractParameterNode) foundAbstractNode;
+	}
 
-		ExceptionHelper.reportRuntimeException("Parameter not found");
-		return null;
+	private static String formatSearchPath(String path, ParameterPathType parameterPathType) {
+		
+		String formattedPath = path;
+
+		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+			formattedPath = path.substring(1);
+		}
+		
+		if (parameterPathType == ParameterPathType.PATH_CONTAINTS_TOP_NODE) {
+			formattedPath = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, formattedPath);
+		}
+		
+		return formattedPath;
 	}
 
 	public static void compareParameters(
@@ -307,5 +347,5 @@ public abstract class AbstractParameterNodeHelper {
 
 		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
 	}
-	
+
 }
