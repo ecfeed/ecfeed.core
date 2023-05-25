@@ -11,7 +11,6 @@
 package com.ecfeed.core.model.serialization;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -34,7 +33,6 @@ import com.ecfeed.core.utils.ListOfStrings;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
-import nu.xom.ParsingException;
 
 public class ModelParser {
 
