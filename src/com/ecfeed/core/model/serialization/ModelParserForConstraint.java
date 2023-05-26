@@ -541,7 +541,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		AbstractParameterNode parameter = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
 
 		if (parameter == null) {
-			errorList.add("Cannot find parameter: " + pathToParameter + "for attribute: " + attributeName + ".");
+			errorList.add("Cannot find parameter: " + pathToParameter + " for parsed attribute: " + attributeName + ".");
 		}
 
 		if (!(parameter instanceof BasicParameterNode)) {
