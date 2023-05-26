@@ -12,17 +12,31 @@ public class ProviderHelper {
             WebServiceResponse webServiceResponse,
             boolean isJsonFormat) {
 
-        String message = getErrorMessage(webServiceResponse);
+        String responseMessage = getErrorMessage(webServiceResponse);
+        int responseStatus = webServiceResponse.getResponseStatus();
 
-        if (!isJsonFormat) {
-            message =
-                    StringHelper.removeToPrefixAndFromPostfix(
-                            "{\"error\":\"", "\"}", message);
+        if (isJsonFormat) {
+            responseMessage = StringHelper.removeToPrefixAndFromPostfix("{\"error\":\"", "\"}", responseMessage);
+            responseMessage = responseMessage.replace("\\n", "\n");
+        } 
+
+        if (responseStatus >= 400 && responseStatus < 500) {
+             ExceptionHelper.reportRuntimeException(
+            		 "\nError code - " + responseStatus +
+            		 "\nThe error seems to have been caused by the client." +
+            		 "\nPlease make sure that generation options are correct." +
+                     "\n\nError message:\n" + responseMessage);
+        } else if (responseStatus >= 500 && responseStatus < 600) {
+        	ExceptionHelper.reportRuntimeException(
+        			"\nError code - " + responseStatus +
+           		 	"\nThe error has been caused by the server." +
+           		 	"\nPlease try again later." +
+                    "\n\nError message:\n" + responseMessage);
+        } else {
+        	ExceptionHelper.reportRuntimeException(
+        			"\nError code - " + responseStatus +
+                    "\n\nError message:\n" + responseMessage);
         }
-
-        ExceptionHelper.reportRuntimeException(
-                "Request failed. Response status: " + webServiceResponse.getResponseStatus() +
-                        ". Message: " + message);
     }
 
     private static String getErrorMessage(WebServiceResponse webServiceResponse) {
