@@ -16,6 +16,7 @@ import java.util.Optional;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.LogHelperCore;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
@@ -38,17 +39,17 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 			IParametersParentNode parent,
 			ListOfStrings errorList) {
 
-		String name;
+		String nameOfCompositeParameter;
 
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(element, errorList);
+			nameOfCompositeParameter = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
-		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, method.getModelChangeRegistrator());
+		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(nameOfCompositeParameter, method.getModelChangeRegistrator());
 		targetCompositeParameterNode.setParent(parent);
 
 		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
@@ -111,13 +112,43 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 				return Optional.empty();
 			}
 
-			AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
+			AbstractParameterNode link = findLink(linkPath, parent);
 
 			if (link != null) {
 				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
+			} else {
+				errorList.add("Cannot find link for parameter: " + nameOfCompositeParameter);
 			}
 		}
 
 		return Optional.ofNullable(targetCompositeParameterNode);
+	}
+
+	private AbstractParameterNode findLink(String linkPath, IParametersParentNode parent) {
+
+
+		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
+
+		if (link!=null) {
+			return link;
+		}
+
+		RootNode rootNode = RootNodeHelper.findRootNode(parent);
+
+		if (rootNode == null) {
+			return null;
+		}
+
+		String newLinkPath = 
+				SignatureHelper.SIGNATURE_ROOT_MARKER + rootNode.getName() + 
+				SignatureHelper.SIGNATURE_NAME_SEPARATOR + linkPath;
+
+		link = AbstractParameterNodeHelper.findParameter(newLinkPath, parent);
+
+		if (link == null) {
+			return null;
+		}
+
+		return link;
 	}
 }
