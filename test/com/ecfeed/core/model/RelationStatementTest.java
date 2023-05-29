@@ -175,7 +175,7 @@ public class RelationStatementTest {
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -216,7 +216,7 @@ public class RelationStatementTest {
 		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameter, "choice", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -269,7 +269,7 @@ public class RelationStatementTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -364,7 +364,7 @@ public class RelationStatementTest {
 		BasicParameterNode globalBasicParameter2 = 
 				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp2", "String", "", true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
 
@@ -434,7 +434,7 @@ public class RelationStatementTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
 
@@ -577,7 +577,7 @@ public class RelationStatementTest {
 
 		RootNode rootNode = new RootNode("root", null);
 		
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 		
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 		

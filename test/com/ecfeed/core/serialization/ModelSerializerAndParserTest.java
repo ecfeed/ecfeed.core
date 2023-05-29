@@ -62,7 +62,7 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -180,7 +180,7 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -281,7 +281,7 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -390,7 +390,7 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -499,7 +499,7 @@ public class ModelSerializerAndParserTest {
 				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalBasicParameterNode, "choice1", "0", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -586,7 +586,7 @@ public class ModelSerializerAndParserTest {
 		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
 				globalCompositeParameterNode2, "GP", "int", "o", true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
@@ -653,7 +653,7 @@ public class ModelSerializerAndParserTest {
 
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 

@@ -871,7 +871,7 @@ public class MethodNodeTest {
 		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalBasicParameterNode, "GC1", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "CLL1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "CLL1", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
 
