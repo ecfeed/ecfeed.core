@@ -79,7 +79,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 
@@ -213,7 +213,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 
@@ -351,7 +351,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 
@@ -491,7 +491,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 
@@ -626,7 +626,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 
@@ -758,7 +758,7 @@ public class ParameterTransformerTest {
 
 		// add class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class1", true, null);
 
 		// add global parameter and choice for class
 

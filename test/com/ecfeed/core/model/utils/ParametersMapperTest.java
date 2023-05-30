@@ -41,7 +41,7 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
 
 		// method node
 
@@ -87,7 +87,7 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
 
 		// method node
 
@@ -277,7 +277,7 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
 
 		// class parameter node 
 
@@ -361,7 +361,7 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
 
 		// method node
 
