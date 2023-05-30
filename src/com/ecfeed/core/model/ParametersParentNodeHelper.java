@@ -136,29 +136,18 @@ public class ParametersParentNodeHelper {
 	public static List<AbstractParameterNode> getNestedAbstractParameters(IParametersParentNode parent, boolean follow) {
 		List<AbstractParameterNode> nodes = new ArrayList<>();
 
-		if (parent instanceof AbstractParameterNode) {
-			AbstractParameterNode parsedParent = (AbstractParameterNode) parent;
+		for (AbstractParameterNode node : parent.getParameters()) {
+
+			AbstractParameterNode parsedNode = node;
 
 			if (follow) {
-				parsedParent = parsedParent.getLinkDestination();
+				 parsedNode = node.getLinkDestination();
 			}
 
-			for (AbstractParameterNode node : ((IParametersParentNode) parsedParent).getParameters()) {
+			nodes.add(parsedNode);
 
-				nodes.add(node);
-
-				if (node instanceof CompositeParameterNode) {
-					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
-				}
-			}
-		} else {
-			for (IAbstractNode node : parent.getChildren()) {
-
-				if (node instanceof BasicParameterNode) {
-					nodes.add((AbstractParameterNode) node);
-				} else if (node instanceof IParametersParentNode) {
-					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
-				}
+			if (parsedNode instanceof IParametersParentNode) {
+				getNestedCompositeParameters((IParametersParentNode) parsedNode, follow);
 			}
 		}
 
