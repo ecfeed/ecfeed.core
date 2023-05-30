@@ -73,9 +73,15 @@ public class RootNodeHelper {
 	public static ClassNode addNewClassNodeToRoot(
 			RootNode rootNode,
 			String className, 
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		ClassNode classNode = new ClassNode(className, modelChangeRegistrator);
+		
+		if (setParent) {
+			classNode.setParent(classNode);
+		}
+		
 		rootNode.addClass(classNode);
 
 		return classNode;
