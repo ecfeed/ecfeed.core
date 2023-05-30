@@ -45,7 +45,6 @@ public class EvaluatorHelper {
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
             choiceToSolverIdMappings.eqPut(basicParameterNode, choiceID);
-            return;
         }
 
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
