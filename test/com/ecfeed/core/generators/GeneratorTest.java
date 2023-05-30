@@ -24,50 +24,65 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class GeneratorTest {
-    @Test
-    public void generateWithParameterCondition() {
-        RootNode rootNode = createModel();
-        AbstractAlgorithm<ChoiceNode> algorithm = new NWiseAwesomeAlgorithm<>(2, 100);
 
-        MethodNode methodNode = rootNode.getClasses().get(0).getMethods().get(0);
+	@Test
+	public void generateWithParameterCondition() {
 
-        List<List<ChoiceNode>> tests = GeneratorHelper.generateTestCasesForMethod(methodNode, algorithm);
+		performTestWithParameterConditionForFixedParameterType("int");
+		performTestWithParameterConditionForFixedParameterType("String");
+	}
 
-        assertEquals(1, tests.size());
-    }
-    private RootNode createModel() {
+	private void performTestWithParameterConditionForFixedParameterType(String parameterType) {
 
-        RootNode rootNode = new RootNode("Root", null);
+		RootNode rootNode = createModel(parameterType);
 
-        ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class",  true, null);
+		AbstractAlgorithm<ChoiceNode> algorithm = new NWiseAwesomeAlgorithm<>(2, 100);
 
-        MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = rootNode.getClasses().get(0).getMethods().get(0);
 
-        // two basic parameters
+		List<List<ChoiceNode>> tests = GeneratorHelper.generateTestCasesForMethod(methodNode, algorithm);
 
-        BasicParameterNode basicParameterNode1 =
-                MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "0", true, null);
+		assertEquals(1, tests.size());
+	}
 
-        BasicParameterNodeHelper.addNewChoiceToBasicParameter(basicParameterNode1, "choice1", "test", false, true, null);
-        BasicParameterNode basicParameterNode2 =
-                MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "0", true, null);
+	private RootNode createModel(String parameterType) {
 
-        BasicParameterNodeHelper.addNewChoiceToBasicParameter(basicParameterNode2, "choice2", "test", false, true, null);
+		RootNode rootNode = new RootNode("Root", null);
 
-        // constraint with parameter condition
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class",  true, null);
 
-        StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 
-        RelationStatement postcondition =
-                RelationStatement.createRelationStatementWithParameterCondition(
-                        basicParameterNode1, null,
-                        EMathRelation.EQUAL,
-                        basicParameterNode2, null);
-        Constraint constraint = new Constraint(
-                "constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
-        ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+		// two basic parameters
 
-        return rootNode;
-    }
+		BasicParameterNode basicParameterNode1 =
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode1, "choice1", "test", false, true, null);
+
+		BasicParameterNode basicParameterNode2 =
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				basicParameterNode2, "choice2", "test", false, true, null);
+
+		// constraint with parameter condition
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition =
+				RelationStatement.createRelationStatementWithParameterCondition(
+						basicParameterNode1, null,
+						EMathRelation.EQUAL,
+						basicParameterNode2, null);
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
+
+		return rootNode;
+	}
 
 }
