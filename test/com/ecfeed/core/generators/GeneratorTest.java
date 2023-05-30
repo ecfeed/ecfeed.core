@@ -39,7 +39,7 @@ public class GeneratorTest {
 
         RootNode rootNode = new RootNode("Root", null);
 
-        ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class",  null);
+        ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class",  true, null);
 
         MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
 

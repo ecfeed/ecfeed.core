@@ -307,7 +307,7 @@ public class MethodDeployerTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
 
 		// method node
 
@@ -838,7 +838,7 @@ public class MethodDeployerTest {
 
 		RootNode rootNode = new RootNode("model", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", null);
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
 
 		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
 
