@@ -151,7 +151,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -366,7 +366,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -492,7 +492,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -672,7 +672,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case 
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -808,7 +808,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {globalChoiceNode});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// initial checks
 
@@ -892,7 +892,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -989,7 +989,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -1171,7 +1171,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		//		Root
 		//		GS11
@@ -1308,7 +1308,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
@@ -1401,7 +1401,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 

@@ -493,9 +493,10 @@ public class MethodNodeHelper {
 		return basicParameterNode;
 	}
 
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, String testCaseName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
+	public static TestCaseNode addNewTestCase(
+			MethodNode methodNode, String testSuiteName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
 
-		TestCaseNode testCaseNode = new TestCaseNode(testCaseName, null, choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
 		if (setParent) {
 			testCaseNode.setParent(methodNode);
@@ -503,12 +504,6 @@ public class MethodNodeHelper {
 
 		methodNode.addTestCase(testCaseNode);
 
-		return testCaseNode;
-	}
-
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
-
-		TestCaseNode testCaseNode = addNewTestCase(methodNode, "Test case", choicesOfTestCase, setParent);
 		return testCaseNode;
 	}
 
