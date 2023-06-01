@@ -16,6 +16,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestCaseNodeHelper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -44,7 +45,8 @@ public class OnTestSuiteOperationAddWithFiltering extends CompositeOperation {
 		for (TestCaseNode srcTestCaseNode : srcTestCaseNodes) {
 
 			boolean isTestCaseQualified = 
-					qualifyTestCaseNode(srcTestCaseNode, constraintNodes, testCasesFilteringDirection);
+					qualifyTestCaseNode(
+							srcTestCaseNode, constraintNodes, testCasesFilteringDirection, includeAmbiguousTestCases);
 
 			if (isTestCaseQualified) {
 				TestCaseNode destTestCaseNode = 
@@ -67,7 +69,17 @@ public class OnTestSuiteOperationAddWithFiltering extends CompositeOperation {
 	private boolean qualifyTestCaseNode(
 			TestCaseNode testCaseNode, 
 			List<ConstraintNode> constraintNodes,
-			TestCasesFilteringDirection testCasesFilteringDirection) {
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		if (TestCaseNodeHelper.isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
@@ -77,7 +89,8 @@ public class OnTestSuiteOperationAddWithFiltering extends CompositeOperation {
 				continue;
 			}
 
-			if (!qualifyTestCaseNodeByOneConstraint(testCaseNode, constraintNode, testCasesFilteringDirection)) {
+			if (!qualifyTestCaseNodeByOneConstraint(
+					testCaseNode, constraintNode, testCasesFilteringDirection, includeAmbiguousTestCases)) {
 				return false;
 			}
 		}
@@ -88,12 +101,18 @@ public class OnTestSuiteOperationAddWithFiltering extends CompositeOperation {
 	private boolean qualifyTestCaseNodeByOneConstraint(
 			TestCaseNode testCaseNode, 
 			ConstraintNode constraintNode,
-			TestCasesFilteringDirection testCasesFilteringDirection) {
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
 
 		EvaluationResult evaluationResult =  constraintNode.evaluate(testCaseNode.getTestData());
 
 		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
-			return true;
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		if (evaluationResult == EvaluationResult.TRUE 
