@@ -5,7 +5,7 @@
  * are made available under the terms of the Eclipse Public License v1.0         
  * which accompanies this distribution, and is available at                      
  * http://www.eclipse.org/legal/epl-v10.html 
- *  
+ *
  *******************************************************************************/
 
 package com.ecfeed.core.model;
@@ -90,7 +90,7 @@ public class ParametersParentNodeHelper {
 		if (parentName == null || rootName.equals(parentName)) {
 			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
 			return (BasicParameterNode)abstractParameterNode;
-		}			
+		}
 
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
 		return null;
@@ -137,32 +137,41 @@ public class ParametersParentNodeHelper {
 		List<AbstractParameterNode> nodes = new ArrayList<>();
 
 		if (parent instanceof AbstractParameterNode) {
-			AbstractParameterNode parsedParent = (AbstractParameterNode) parent;
-
-			if (follow) {
-				parsedParent = parsedParent.getLinkDestination();
-			}
-
-			for (AbstractParameterNode node : ((IParametersParentNode) parsedParent).getParameters()) {
-
-				nodes.add(node);
-
-				if (node instanceof CompositeParameterNode) {
-					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
-				}
-			}
+			getNestedAbstractParameterSourceParameter(parent, nodes, follow);
 		} else {
-			for (IAbstractNode node : parent.getChildren()) {
-
-				if (node instanceof BasicParameterNode) {
-					nodes.add((AbstractParameterNode) node);
-				} else if (node instanceof IParametersParentNode) {
-					nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
-				}
-			}
+			getNestedAbstractParameterSourceNode(parent, nodes, follow);
 		}
 
 		return nodes;
+	}
+
+	private static void getNestedAbstractParameterSourceParameter(IParametersParentNode parent, List<AbstractParameterNode> nodes, boolean follow) {
+		AbstractParameterNode parsedNode = (AbstractParameterNode) parent;
+
+		if (follow) {
+			parsedNode = parsedNode.getLinkDestination();
+		}
+
+		for (AbstractParameterNode node : ((IParametersParentNode) parsedNode).getParameters()) {
+
+			nodes.add(node);
+
+			if (node instanceof CompositeParameterNode) {
+				nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
+			}
+		}
+	}
+
+	private static void getNestedAbstractParameterSourceNode(IParametersParentNode parent, List<AbstractParameterNode> nodes, boolean follow) {
+
+		for (IAbstractNode node : parent.getChildren()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add((AbstractParameterNode) node);
+			} else if (node instanceof IParametersParentNode) {
+				nodes.addAll(getNestedAbstractParameters((IParametersParentNode) node, follow));
+			}
+		}
 	}
 
 	public static List<BasicParameterNode> getNestedBasicParameters(IParametersParentNode parent, boolean follow) {
