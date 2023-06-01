@@ -202,7 +202,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		ConstraintNodeListHolder clonedConstraintHolder = 
 				fConstraintNodeListHolder.makeClone(clonedMethodNode, nodeMapper);
-		
+
 		clonedMethodNode.fConstraintNodeListHolder = clonedConstraintHolder;
 	}
 
@@ -245,7 +245,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			}
 
 			AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
-			
+
 			AbstractParameterNode clonedLinkingContext = cloneLinkingContext(linkingContext, nodeMapper);
 
 			if (clonedLinkingContext != null) {
@@ -490,7 +490,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+	public List<TestCaseNode> getTestCases(String testSuiteName) {
 
 		return fTestCasesHolder.getTestCases(testSuiteName);
 	}
@@ -782,7 +782,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		fParametersHolder.addParameter(parameter, this, checkName);
 	}
-	
+
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
