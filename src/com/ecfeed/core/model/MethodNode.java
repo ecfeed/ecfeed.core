@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -475,6 +476,24 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		return fTestCasesHolder.getTestSuiteNodes();
 	}
+	
+	public List<String> getNamesOfTestSuites() {
+
+		Set<String> setOfNames = new HashSet<>();
+		
+		List<TestSuiteNode> testSuiteNodes = getTestSuites();
+		
+		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
+			setOfNames.add(testSuiteNode.getName());
+		}
+		
+		List<String> listOfNames = new ArrayList<>(setOfNames);
+		
+		Collections.sort(listOfNames);
+		
+		return listOfNames;
+	}
+	
 
 	public boolean hasParameters() {
 		if (getParameters().isEmpty()) {
