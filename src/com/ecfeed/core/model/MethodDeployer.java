@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -34,6 +35,18 @@ public abstract class MethodDeployer {
 		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
 		return targetMethodNode;
+	}
+
+	public static void deployTestCases(MethodNode srcMethodNode, MethodNode dstMethodNode, NodeMapper nodeMapper) {
+
+		List<TestCaseNode> srcTestCaseNodes = srcMethodNode.getTestCases();
+
+		for (TestCaseNode srcTestCaseNode : srcTestCaseNodes) {
+
+			TestCaseNode dstTestCaseNode = srcTestCaseNode.makeClone(Optional.of(nodeMapper));
+
+			dstMethodNode.addTestCase(dstTestCaseNode);
+		}
 	}
 
 	public static boolean isMatchFoDeployedParameters(
