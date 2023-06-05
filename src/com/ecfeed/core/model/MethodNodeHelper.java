@@ -19,9 +19,12 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
+import com.ecfeed.core.operations.nodes.OnTestSuiteOperationAddWithFiltering.TestCasesFilteringDirection;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
@@ -761,4 +764,100 @@ public class MethodNodeHelper {
 		MethodNodeHelper.compareMethodConstraints(method1, method2);
 		MethodNodeHelper.compareTestCases(method1, method2);
 	}
+
+	public static List<TestCaseNode> filterTestCases(
+			MethodNode methodNode, 
+			List<TestCaseNode> srcTestCaseNodes,
+			String dstTestSuiteName,
+			List<ConstraintNode> constraintNodes, 
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases, 
+			IntegerHolder outCountOfAddedTestCases) {
+
+		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<>();
+
+		for (TestCaseNode srcTestCaseNode : srcTestCaseNodes) {
+
+			boolean isTestCaseQualified = 
+					qualifyTestCaseNode(
+							srcTestCaseNode, constraintNodes, testCasesFilteringDirection, includeAmbiguousTestCases);
+
+			if (isTestCaseQualified) {
+				TestCaseNode dstTestCaseNode = 
+						new TestCaseNode(
+								dstTestSuiteName, 
+								methodNode.getModelChangeRegistrator(), 
+								srcTestCaseNode.getTestData());
+
+				filteredTestCaseNodes.add(dstTestCaseNode);
+
+				outCountOfAddedTestCases.increment();
+			}
+		}
+
+		return filteredTestCaseNodes;
+	}
+
+	private static boolean qualifyTestCaseNode(
+			TestCaseNode testCaseNode, 
+			List<ConstraintNode> constraintNodes,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		if (TestCaseNodeHelper.isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			ConstraintType constraintType = constraintNode.getConstraint().getType();
+
+			if (constraintType == ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			if (!qualifyTestCaseNodeByOneConstraint(
+					testCaseNode, constraintNode, testCasesFilteringDirection, includeAmbiguousTestCases)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static boolean qualifyTestCaseNodeByOneConstraint(
+			TestCaseNode testCaseNode, 
+			ConstraintNode constraintNode,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		EvaluationResult evaluationResult =  constraintNode.evaluate(testCaseNode.getTestData());
+
+		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		if (evaluationResult == EvaluationResult.TRUE 
+				&& testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE) {
+			return true;
+		}
+
+		if (evaluationResult == EvaluationResult.FALSE 
+				&& testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
