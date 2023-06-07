@@ -19,7 +19,6 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
-import com.ecfeed.core.operations.nodes.OnTestSuiteOperationAddWithFiltering.TestCasesFilteringDirection;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -29,6 +28,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.TestCasesFilteringDirection;
 import com.ecfeed.core.utils.TypeHelper;
 
 public class MethodNodeHelper {
@@ -769,7 +769,7 @@ public class MethodNodeHelper {
 			MethodNode methodNode, 
 			List<TestCaseNode> srcTestCaseNodes,
 			String dstTestSuiteName,
-			List<ConstraintNode> constraintNodes, 
+			List<Constraint> constraints, 
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases, 
 			IntegerHolder outCountOfAddedTestCases) {
@@ -780,7 +780,7 @@ public class MethodNodeHelper {
 
 			boolean isTestCaseQualified = 
 					qualifyTestCaseNode(
-							srcTestCaseNode, constraintNodes, testCasesFilteringDirection, includeAmbiguousTestCases);
+							srcTestCaseNode, constraints, testCasesFilteringDirection, includeAmbiguousTestCases);
 
 			if (isTestCaseQualified) {
 				TestCaseNode dstTestCaseNode = 
@@ -800,11 +800,11 @@ public class MethodNodeHelper {
 
 	private static boolean qualifyTestCaseNode(
 			TestCaseNode testCaseNode, 
-			List<ConstraintNode> constraintNodes,
+			List<Constraint> constraints,
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases) {
 
-		if (TestCaseNodeHelper.isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
+		if (TestCaseNodeHelper.isTestCaseNodeAmbiguousForListOfConstraints(testCaseNode, constraints)) {
 
 			if (includeAmbiguousTestCases) {
 				return true;
@@ -813,16 +813,16 @@ public class MethodNodeHelper {
 			}
 		}
 
-		for (ConstraintNode constraintNode : constraintNodes) {
+		for (Constraint constraint : constraints) {
 
-			ConstraintType constraintType = constraintNode.getConstraint().getType();
+			ConstraintType constraintType = constraint.getType();
 
 			if (constraintType == ConstraintType.ASSIGNMENT) {
 				continue;
 			}
 
 			if (!qualifyTestCaseNodeByOneConstraint(
-					testCaseNode, constraintNode, testCasesFilteringDirection, includeAmbiguousTestCases)) {
+					testCaseNode, constraint, testCasesFilteringDirection, includeAmbiguousTestCases)) {
 				return false;
 			}
 		}
@@ -832,11 +832,11 @@ public class MethodNodeHelper {
 
 	private static boolean qualifyTestCaseNodeByOneConstraint(
 			TestCaseNode testCaseNode, 
-			ConstraintNode constraintNode,
+			Constraint constraint,
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases) {
 
-		EvaluationResult evaluationResult =  constraintNode.evaluate(testCaseNode.getTestData());
+		EvaluationResult evaluationResult =  constraint.evaluate(testCaseNode.getTestData());
 
 		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 
