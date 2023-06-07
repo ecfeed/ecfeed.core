@@ -268,6 +268,17 @@ public class TestCaseNodeHelper {
 		return isAmbiguous;
 	}
 
+	public static boolean isTestCaseNodeAmbiguousForListOfConstraints(
+			TestCaseNode testCaseNode,
+			List<Constraint> constraints) {
+
+		TestCase testCase = testCaseNode.getTestCase();
+
+		boolean isAmbiguous = TestCaseHelper.isTestCaseAmbiguous(testCase, constraints);
+
+		return isAmbiguous;
+	}
+	
 	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
 
 		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
