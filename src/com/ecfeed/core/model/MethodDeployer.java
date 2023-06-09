@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -35,18 +34,6 @@ public abstract class MethodDeployer {
 		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
 		return targetMethodNode;
-	}
-
-	public static void deployTestCases(MethodNode srcMethodNode, MethodNode dstMethodNode, NodeMapper nodeMapper) {
-
-		List<TestCaseNode> srcTestCaseNodes = srcMethodNode.getTestCases();
-
-		for (TestCaseNode srcTestCaseNode : srcTestCaseNodes) {
-
-			TestCaseNode dstTestCaseNode = srcTestCaseNode.makeClone(Optional.of(nodeMapper));
-
-			dstMethodNode.addTestCase(dstTestCaseNode);
-		}
 	}
 
 	public static boolean isMatchFoDeployedParameters(
@@ -261,7 +248,45 @@ public abstract class MethodDeployer {
 		}
 	}
 
-	public static List<TestCase> revertToOriginalTestCases(List<TestCase> deployedTestCases, NodeMapper nodeMapper) {
+	public static List<TestCase> createListOfDeployedTestCases(
+			List<TestCase> notDeployedTestCases, NodeMapper nodeMapper) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase notDeployedTestCase : notDeployedTestCases) {
+
+			TestCase deployedTestCase = createDeployedTestCase(notDeployedTestCase, nodeMapper);
+
+			result.add(deployedTestCase);
+		}
+
+		return result;
+	}
+	
+	private static TestCase createDeployedTestCase(TestCase notDeployedTestCase, NodeMapper nodeMapper) {
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		List<ChoiceNode> notDeployedChoices = notDeployedTestCase.getListOfChoiceNodes();
+
+		for (ChoiceNode notDeployedChoiceNode : notDeployedChoices) {
+
+			ChoiceNode deployedChoiceNode = nodeMapper.getDestinationNode(notDeployedChoiceNode);
+			
+			AbstractNode notDeployedParent = (AbstractNode) notDeployedChoiceNode.getParent();
+			IAbstractNode deployedParent = nodeMapper.getDestinationNode(notDeployedParent);
+			
+			deployedChoiceNode.setParent(deployedParent);
+			
+
+			result.add(deployedChoiceNode);
+		}
+
+		return new TestCase(result);
+	}
+	
+	public static List<TestCase> createListOfOriginalTestCases(
+			List<TestCase> deployedTestCases, NodeMapper nodeMapper) {
 
 		List<TestCase> result = new ArrayList<>();
 
@@ -283,9 +308,14 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = nodeMapper.getSourceNode(deployedChoiceNode);
+			ChoiceNode revertedChoiceNode = nodeMapper.getSourceNode(deployedChoiceNode);
+			
+			AbstractNode deployedParent = (AbstractNode) deployedChoiceNode.getParent();
+			IAbstractNode revertedParent = nodeMapper.getSourceNode(deployedParent);
+			
+			revertedChoiceNode.setParent(revertedParent);
 
-			revertedChoices.add(originalChoiceNode);
+			revertedChoices.add(revertedChoiceNode);
 		}
 
 		return new TestCase(revertedChoices);
