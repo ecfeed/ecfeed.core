@@ -12,7 +12,8 @@ public class ChoiceNodeComparator implements Comparator<ChoiceNode> {
     public int compare(ChoiceNode leftArg, ChoiceNode rightArg) {
 
         if (leftArg.isRandomizedValue() || rightArg.isRandomizedValue()) {
-            ExceptionHelper.reportRuntimeException("Randomized values should not be compared!");
+            return 0;
+//          ExceptionHelper.reportRuntimeException("Randomized values should not be compared!");
         }
 
         String commonType = JavaLanguageHelper.getSubstituteType(leftArg.getParameter().getType(), rightArg.getParameter().getType());
