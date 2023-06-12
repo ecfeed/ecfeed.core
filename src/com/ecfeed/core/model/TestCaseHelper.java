@@ -18,6 +18,18 @@ import java.util.List;
 
 public class TestCaseHelper {
 
+	public static List<TestCase> createListOfTestCases(List<TestCaseNode> testCasesNodes) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCaseNode testCaseNode : testCasesNodes) {
+
+			TestCase testCase = testCaseNode.getTestCase();
+			result.add(testCase);
+		}
+
+		return result;
+	}
 
 	public static TestCase createTestCase(TestCaseNode testCaseNode) {
 

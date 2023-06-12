@@ -765,31 +765,25 @@ public class MethodNodeHelper {
 		MethodNodeHelper.compareTestCases(method1, method2);
 	}
 
-	public static List<TestCaseNode> filterTestCases(
+	public static List<TestCase> filterTestCases(
 			MethodNode methodNode, 
-			List<TestCaseNode> srcTestCaseNodes,
+			List<TestCase> srcTestCases,
 			String dstTestSuiteName,
 			List<Constraint> constraints, 
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases, 
 			IntegerHolder outCountOfAddedTestCases) {
 
-		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<>();
+		List<TestCase> filteredTestCaseNodes = new ArrayList<>();
 
-		for (TestCaseNode srcTestCaseNode : srcTestCaseNodes) {
+		for (TestCase srcTestCase : srcTestCases) {
 
 			boolean isTestCaseQualified = 
 					qualifyTestCaseNode(
-							srcTestCaseNode, constraints, testCasesFilteringDirection, includeAmbiguousTestCases);
+							srcTestCase, constraints, testCasesFilteringDirection, includeAmbiguousTestCases);
 
 			if (isTestCaseQualified) {
-				TestCaseNode dstTestCaseNode = 
-						new TestCaseNode(
-								dstTestSuiteName, 
-								methodNode.getModelChangeRegistrator(), 
-								srcTestCaseNode.getTestData());
-
-				filteredTestCaseNodes.add(dstTestCaseNode);
+				filteredTestCaseNodes.add(srcTestCase);
 
 				outCountOfAddedTestCases.increment();
 			}
@@ -798,13 +792,13 @@ public class MethodNodeHelper {
 		return filteredTestCaseNodes;
 	}
 
-	private static boolean qualifyTestCaseNode(
-			TestCaseNode testCaseNode, 
+	private static boolean qualifyTestCaseNode( // XYX move to test case helper
+			TestCase testCase, 
 			List<Constraint> constraints,
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases) {
 
-		if (TestCaseNodeHelper.isTestCaseNodeAmbiguousForListOfConstraints(testCaseNode, constraints)) {
+		if (TestCaseHelper.isTestCaseAmbiguous(testCase, constraints)) {
 
 			if (includeAmbiguousTestCases) {
 				return true;
@@ -822,7 +816,7 @@ public class MethodNodeHelper {
 			}
 
 			if (!qualifyTestCaseNodeByOneConstraint(
-					testCaseNode, constraint, testCasesFilteringDirection, includeAmbiguousTestCases)) {
+					testCase, constraint, testCasesFilteringDirection, includeAmbiguousTestCases)) {
 				return false;
 			}
 		}
@@ -831,12 +825,12 @@ public class MethodNodeHelper {
 	}
 
 	private static boolean qualifyTestCaseNodeByOneConstraint(
-			TestCaseNode testCaseNode, 
+			TestCase testCase, 
 			Constraint constraint,
 			TestCasesFilteringDirection testCasesFilteringDirection,
 			boolean includeAmbiguousTestCases) {
 
-		EvaluationResult evaluationResult =  constraint.evaluate(testCaseNode.getTestData());
+		EvaluationResult evaluationResult =  constraint.evaluate(testCase.getListOfChoiceNodes());
 
 		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 
