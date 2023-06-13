@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -205,7 +206,7 @@ public abstract class MethodDeployer {
 			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper nodeMapper) {
 
 		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
-		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(nodeMapper)));
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.makeClone(Optional.of(nodeMapper))));
 
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
