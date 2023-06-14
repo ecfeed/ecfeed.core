@@ -807,6 +807,22 @@ public class MethodNodeHelper {
 			}
 		}
 
+		boolean result = qualifyTestCaseByConstraints(testCase, constraints);
+
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE	&& result == true) {
+			return true;
+		}
+
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE	&& result == false) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean qualifyTestCaseByConstraints(
+			TestCase testCase, List<Constraint> constraints) {
+
 		for (Constraint constraint : constraints) {
 
 			ConstraintType constraintType = constraint.getType();
@@ -815,8 +831,7 @@ public class MethodNodeHelper {
 				continue;
 			}
 
-			if (!qualifyTestCaseNodeByOneConstraint(
-					testCase, constraint, testCasesFilteringDirection, includeAmbiguousTestCases)) {
+			if (!qualifyTestCaseNodeByOneConstraint(testCase, constraint)) {
 				return false;
 			}
 		}
@@ -825,29 +840,11 @@ public class MethodNodeHelper {
 	}
 
 	private static boolean qualifyTestCaseNodeByOneConstraint(
-			TestCase testCase, 
-			Constraint constraint,
-			TestCasesFilteringDirection testCasesFilteringDirection,
-			boolean includeAmbiguousTestCases) {
+			TestCase testCase, Constraint constraint) {
 
 		EvaluationResult evaluationResult =  constraint.evaluate(testCase.getListOfChoiceNodes());
 
-		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
-
-			if (includeAmbiguousTestCases) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		if (evaluationResult == EvaluationResult.TRUE 
-				&& testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE) {
-			return true;
-		}
-
-		if (evaluationResult == EvaluationResult.FALSE 
-				&& testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE) {
+		if (evaluationResult == EvaluationResult.TRUE) {
 			return true;
 		}
 
