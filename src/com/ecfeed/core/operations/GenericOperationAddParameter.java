@@ -10,9 +10,15 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.List;
+
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
+import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.MethodsWithTestCasesContainer;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -22,6 +28,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	private AbstractParameterNode fAbstractParameterNode;
 	private int fNewIndex;
 	private boolean fGenerateUniqueName;
+	private MethodsWithTestCasesContainer fMethodsWithTestCasesContainer;
 
 	public GenericOperationAddParameter(
 			IParametersParentNode target, 
@@ -35,6 +42,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		fAbstractParameterNode = parameter;
 		fNewIndex = (index == -1)? target.getParameters().size() : index;
 		fGenerateUniqueName = generateUniqueName;
+		fMethodsWithTestCasesContainer = new MethodsWithTestCasesContainer();
 	}
 
 	public GenericOperationAddParameter(
@@ -42,6 +50,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			BasicParameterNode parameter, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
+		
 		this(target, parameter, -1, generateUniqueName, extLanguageManager);
 	}
 
@@ -66,8 +75,38 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
+		fMethodsWithTestCasesContainer = saveMentioningMethodsAndTestCases(fParametersParentNode);
+		
+		deleteTestCasesForMentioningMethods(fMethodsWithTestCasesContainer.getMethods());
+		
 		fParametersParentNode.addParameter(fAbstractParameterNode, fNewIndex);
 		markModelUpdated();
+	}
+
+	private void deleteTestCasesForMentioningMethods(List<MethodNode> methodNodes) {
+		
+		for (MethodNode methodNode : methodNodes) {
+			
+			methodNode.removeAllTestCases();
+		}
+	}
+
+	private static MethodsWithTestCasesContainer saveMentioningMethodsAndTestCases(
+			IParametersParentNode parametersParentNode) {
+		
+		MethodsWithTestCasesContainer methodsWithTestCasesContainer = 
+				new MethodsWithTestCasesContainer();
+		
+		List<MethodNode> methodNodes = 
+				ParametersParentNodeHelper.getMentioningMethodNodes(parametersParentNode);
+		
+		for (MethodNode methodNode : methodNodes) {
+			
+			List<TestCaseNode> testCaseNodes = methodNode.getTestCases();
+			methodsWithTestCasesContainer.putMethodWithTestCases(methodNode, testCaseNodes);
+		}
+		
+		return methodsWithTestCasesContainer;
 	}
 
 	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
