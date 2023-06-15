@@ -201,6 +201,10 @@ public class ParametersParentNodeHelper {
 			return methodNodes;
 		}
 		
+		if (parametersParentNode instanceof RootNode) {
+			return new ArrayList<>();
+		}
+		
 		CompositeParameterNode compositeParameterNode =
 				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
 

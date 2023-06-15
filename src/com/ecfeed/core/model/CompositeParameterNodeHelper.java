@@ -363,6 +363,10 @@ public class CompositeParameterNodeHelper {
 	
 	public static List<MethodNode> getMentioningMethodNodes(CompositeParameterNode compositeParameterNode) {
 		
+		if (compositeParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty composite parameter node is not allowed.");
+		}
+		
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
 		List<AbstractParameterNode> linkedParameters =

@@ -779,7 +779,7 @@ public class MethodNodeHelper {
 		for (TestCase srcTestCase : srcTestCases) {
 
 			boolean isTestCaseQualified = 
-					qualifyTestCaseNode(
+					TestCaseHelper.qualifyTestCaseNode(
 							srcTestCase, constraints, testCasesFilteringDirection, includeAmbiguousTestCases);
 
 			if (isTestCaseQualified) {
@@ -792,7 +792,7 @@ public class MethodNodeHelper {
 		return filteredTestCaseNodes;
 	}
 
-	private static boolean qualifyTestCaseNode( // XYX move to test case helper
+	public																																																																																																																																																																																		 static boolean qualifyTestCaseNode(
 			TestCase testCase, 
 			List<Constraint> constraints,
 			TestCasesFilteringDirection testCasesFilteringDirection,

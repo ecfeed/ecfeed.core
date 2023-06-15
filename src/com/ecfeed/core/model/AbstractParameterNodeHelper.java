@@ -133,6 +133,10 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
+		
+		if (globalParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Global parameter node should not be empty.");
+		}
 
 		List<AbstractParameterNode> result = new ArrayList<>();
 

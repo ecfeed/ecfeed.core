@@ -10,8 +10,10 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.TestCasesFilteringDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,4 +107,66 @@ public class TestCaseHelper {
 		return testDomainWithOneTestCase;
 	}
 
+	public static boolean qualifyTestCaseNode(
+			TestCase testCase, 
+			List<Constraint> constraints,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		if (TestCaseHelper.isTestCaseAmbiguous(testCase, constraints)) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		for (Constraint constraint : constraints) {
+
+			ConstraintType constraintType = constraint.getType();
+
+			if (constraintType == ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			if (!qualifyTestCaseNodeByOneConstraint(
+					testCase, constraint, testCasesFilteringDirection, includeAmbiguousTestCases)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static boolean qualifyTestCaseNodeByOneConstraint(
+			TestCase testCase, 
+			Constraint constraint,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		EvaluationResult evaluationResult =  constraint.evaluate(testCase.getListOfChoiceNodes());
+
+		if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		if (evaluationResult == EvaluationResult.TRUE 
+				&& testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE) {
+			return true;
+		}
+
+		if (evaluationResult == EvaluationResult.FALSE 
+				&& testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE) {
+			return true;
+		}
+
+		return false;
+	}
+	
 }
