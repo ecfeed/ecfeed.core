@@ -360,5 +360,24 @@ public class CompositeParameterNodeHelper {
 			}
 		}
 	}
+	
+	public static List<MethodNode> getMentioningMethodNodes(CompositeParameterNode compositeParameterNode) {
+		
+		List<MethodNode> resultMethodNodes = new ArrayList<>();
+
+		List<AbstractParameterNode> linkedParameters =
+				AbstractParameterNodeHelper.getLinkedParameters(compositeParameterNode);
+
+		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+
+			if (methodNode != null) {
+				resultMethodNodes.add(methodNode);
+			}
+		}
+
+		return resultMethodNodes;
+	}
 
 }

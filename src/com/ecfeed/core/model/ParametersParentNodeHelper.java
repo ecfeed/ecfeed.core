@@ -189,4 +189,24 @@ public class ParametersParentNodeHelper {
 				.map(e -> (CompositeParameterNode) e)
 				.collect(Collectors.toList());
 	}
+	
+	public static List<MethodNode> getMentioningMethodNodes(IParametersParentNode parametersParentNode) {
+		
+		if (parametersParentNode instanceof MethodNode) {
+			
+			List<MethodNode> methodNodes = new ArrayList<>();
+			
+			methodNodes.add((MethodNode) parametersParentNode);
+			
+			return methodNodes;
+		}
+		
+		CompositeParameterNode compositeParameterNode =
+				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
+
+		List<MethodNode> mentioningNodes = 
+				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
+		
+		return mentioningNodes;
+	}
 }

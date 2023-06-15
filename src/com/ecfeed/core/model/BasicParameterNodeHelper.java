@@ -216,21 +216,7 @@ public class BasicParameterNodeHelper {
 		CompositeParameterNode compositeParameterNode =
 				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
 
-		List<MethodNode> resultMethodNodes = new ArrayList<>();
-
-		List<AbstractParameterNode> linkedParameters =
-				AbstractParameterNodeHelper.getLinkedParameters(compositeParameterNode);
-
-		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
-
-			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
-
-			if (methodNode != null) {
-				resultMethodNodes.add(methodNode);
-			}
-		}
-
-		return resultMethodNodes;
+		return CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
 	}
 
 	private static List<MethodNode> getMentioningMethodsForGlobalParameter(BasicParameterNode basicParameterNode) {
