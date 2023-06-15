@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -36,7 +37,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			int index, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		super(OperationNames.ADD_PARAMETER, extLanguageManager);
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
@@ -50,7 +51,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			BasicParameterNode parameter, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		this(target, parameter, -1, generateUniqueName, extLanguageManager);
 	}
 
@@ -62,7 +63,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		if (fGenerateUniqueName) {
 			generateUniqueParameterName(fAbstractParameterNode);
 		}
-		
+
 		String parameterName = fAbstractParameterNode.getName();
 
 		if(fNewIndex < 0){
@@ -76,36 +77,36 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		}
 
 		fMethodsWithTestCasesContainer = saveMentioningMethodsAndTestCases(fParametersParentNode);
-		
+
 		deleteTestCasesForMentioningMethods(fMethodsWithTestCasesContainer.getMethods());
-		
+
 		fParametersParentNode.addParameter(fAbstractParameterNode, fNewIndex);
 		markModelUpdated();
 	}
 
 	private void deleteTestCasesForMentioningMethods(List<MethodNode> methodNodes) {
-		
+
 		for (MethodNode methodNode : methodNodes) {
-			
+
 			methodNode.removeAllTestCases();
 		}
 	}
 
 	private static MethodsWithTestCasesContainer saveMentioningMethodsAndTestCases(
 			IParametersParentNode parametersParentNode) {
-		
+
 		MethodsWithTestCasesContainer methodsWithTestCasesContainer = 
 				new MethodsWithTestCasesContainer();
-		
+
 		List<MethodNode> methodNodes = 
 				ParametersParentNodeHelper.getMentioningMethodNodes(parametersParentNode);
-		
+
 		for (MethodNode methodNode : methodNodes) {
-			
-			List<TestCaseNode> testCaseNodes = methodNode.getTestCases();
+
+			List<TestCaseNode> testCaseNodes = new ArrayList<>(methodNode.getTestCases());
 			methodsWithTestCasesContainer.putMethodWithTestCases(methodNode, testCaseNodes);
 		}
-		
+
 		return methodsWithTestCasesContainer;
 	}
 
@@ -130,7 +131,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 				IParametersParentNode target, 
 				AbstractParameterNode parameter, 
 				IExtLanguageManager extLanguageManager) {
-			
+
 			super("reverse " + OperationNames.ADD_PARAMETER, extLanguageManager);
 			fReversedTarget = target;
 			fReversedParameter = parameter;
@@ -141,7 +142,23 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			setOneNodeToSelect(fParametersParentNode);
 			fOriginalIndex = fReversedParameter.getMyIndex();
 			fReversedTarget.removeParameter(fReversedParameter);
+
+			restoreTestCasesInMentioningMethodNodes();
+
 			markModelUpdated();
+		}
+
+		private void restoreTestCasesInMentioningMethodNodes() {
+
+			List<MethodNode> methodNodes = fMethodsWithTestCasesContainer.getMethods();
+
+			for (MethodNode methodNode : methodNodes) {
+
+				List<TestCaseNode> testCaseNodes = 
+						fMethodsWithTestCasesContainer.getTestCaseNodes(methodNode);
+
+				methodNode.addTestCases(testCaseNodes);
+			}
 		}
 
 		@Override
@@ -149,5 +166,5 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true, getExtLanguageManager());
 		}
 	}
-	
+
 }
