@@ -122,11 +122,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 			}
 		}
 		
-		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
-
 		if (fTargetAbstractNode instanceof TestSuiteNode) {
 			setNewNameInChildTestCases(newQualifiedNameInIntrLanguage);
-		} 
+		}
+		
+		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);		
 
 		RootNode rootNode = ModelHelper.findRoot(fTargetAbstractNode);
 
