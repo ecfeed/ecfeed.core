@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
@@ -76,7 +77,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
-		fMethodsWithTestCasesContainer = saveMentioningMethodsAndTestCases(fParametersParentNode);
+		fMethodsWithTestCasesContainer = saveMentioningMethodsAndTestCases(fAbstractParameterNode, fParametersParentNode);
 
 		deleteTestCasesForMentioningMethods(fMethodsWithTestCasesContainer.getMethods());
 
@@ -93,10 +94,15 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	}
 
 	private static MethodsWithTestCasesContainer saveMentioningMethodsAndTestCases(
+			AbstractParameterNode parameterNode,
 			IParametersParentNode parametersParentNode) {
 
 		MethodsWithTestCasesContainer methodsWithTestCasesContainer = 
 				new MethodsWithTestCasesContainer();
+		
+		if (parameterNode instanceof CompositeParameterNode) {
+			return methodsWithTestCasesContainer; 
+		}
 
 		List<MethodNode> methodNodes = 
 				ParametersParentNodeHelper.getMentioningMethodNodes(parametersParentNode);
