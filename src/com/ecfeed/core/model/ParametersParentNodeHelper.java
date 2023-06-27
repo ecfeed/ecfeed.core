@@ -208,6 +208,10 @@ public class ParametersParentNodeHelper {
 		CompositeParameterNode compositeParameterNode =
 				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
 
+		if (compositeParameterNode == null) {
+			return new ArrayList<>();
+		}
+		
 		List<MethodNode> mentioningNodes = 
 				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
 		
