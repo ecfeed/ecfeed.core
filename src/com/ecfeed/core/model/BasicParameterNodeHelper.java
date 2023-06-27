@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -726,6 +727,16 @@ public class BasicParameterNodeHelper {
 		}
 
 		return null;
+	}
+	
+	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> selectedNodes) {
+		
+		List<BasicParameterNode> parameters = selectedNodes.stream()
+					.filter(e -> e instanceof BasicParameterNode)
+					.map(e -> (BasicParameterNode)e)
+					.collect(Collectors.toList());
+		
+		return parameters;
 	}
 
 }

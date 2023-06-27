@@ -207,7 +207,7 @@ public abstract class MethodDeployer {
 
 		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
 		
-		// XYX when using createCopy, filtering does not work because basic parameter from method or structure
+		// when using createCopy, filtering does not work because basic parameter from method or structure
 		// is different than parent of choice in in deployed test case (probably not converted by mapper)
 		// when using makeClone - basic choice constraint fails 
 		

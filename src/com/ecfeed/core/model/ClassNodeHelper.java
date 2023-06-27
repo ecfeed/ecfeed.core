@@ -44,11 +44,11 @@ public class ClassNodeHelper {
 			ClassNode classNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			methodNode.setParent(classNode);
 		}
-		
+
 		classNode.addMethod(methodNode);
 
 		return methodNode;
@@ -224,7 +224,7 @@ public class ClassNodeHelper {
 
 		return null;
 	}
-	
+
 	public static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
 
 		NameHelper.compareNames(classNode1.getName(), classNode2.getName());
@@ -245,11 +245,11 @@ public class ClassNodeHelper {
 			String childCompositeName, 
 			boolean setParent, 
 			IModelChangeRegistrator modelChangeRegistrator) {
-		
-		
+
+
 		CompositeParameterNode childCompositeParameterNode = 
 				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			childCompositeParameterNode.setParent(classNode);
 		}
