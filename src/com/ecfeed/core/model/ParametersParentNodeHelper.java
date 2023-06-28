@@ -12,18 +12,11 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.ecfeed.core.operations.GenericOperationAddParameter;
-import com.ecfeed.core.operations.nodes.OnMethodParametersOperationReplaceWithGlobal;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.ui.common.Messages;
-import com.ecfeed.ui.modelif.IModelUpdateContext;
-import com.ecfeed.ui.modelif.OperationExecuter;
 
 public class ParametersParentNodeHelper {
 
@@ -138,7 +131,7 @@ public class ParametersParentNodeHelper {
 		return parameterTypes;
 	}
 
-//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
 	public static List<AbstractParameterNode> getNestedAbstractParameters(IParametersParentNode parent, boolean follow) {
 		List<AbstractParameterNode> nodes = new ArrayList<>();
@@ -196,122 +189,33 @@ public class ParametersParentNodeHelper {
 				.map(e -> (CompositeParameterNode) e)
 				.collect(Collectors.toList());
 	}
-	
+
 	public static List<MethodNode> getMentioningMethodNodes(IParametersParentNode parametersParentNode) {
-		
+
 		if (parametersParentNode instanceof MethodNode) {
-			
+
 			List<MethodNode> methodNodes = new ArrayList<>();
-			
+
 			methodNodes.add((MethodNode) parametersParentNode);
-			
+
 			return methodNodes;
 		}
-		
+
 		if (parametersParentNode instanceof RootNode) {
 			return new ArrayList<>();
 		}
-		
+
 		CompositeParameterNode compositeParameterNode =
 				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
 
 		if (compositeParameterNode == null) {
 			return new ArrayList<>();
 		}
-		
+
 		List<MethodNode> mentioningNodes = 
 				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
-		
+
 		return mentioningNodes;
 	}
-	
-	public static BasicParameterNode addNewBasicParameter(
-			IParametersParentNode parametersParentNode,
-			OperationExecuter operationExecuter,
-			IExtLanguageManager extLanguageManager) {
 
-		String parameterName = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(parametersParentNode);
-
-		String parameterType = JavaLanguageHelper.TYPE_NAME_STRING;
-
-		String defaultValue = JavaLanguageHelper.getDefaultValue(parameterType);
-
-		BasicParameterNode parameter = 
-				new BasicParameterNode(
-						parameterName, parameterType, defaultValue, false, parametersParentNode.getModelChangeRegistrator());
-
-		int index = parametersParentNode.getParameters().size();
-
-		if (addBasicParameterByOperation(parameter, index, parametersParentNode, operationExecuter, extLanguageManager)) {
-			return parameter;
-		}
-
-		return null;
-	}
-
-	public static CompositeParameterNode addNewCompositeParameter(
-			IParametersParentNode parametersParentNode, 
-			OperationExecuter operationExecuter,
-			IExtLanguageManager extLanguageManager) {
-
-		String parameterName = 
-				ParametersAndConstraintsParentNodeHelper.generateNewCompositeParameterName(parametersParentNode);
-
-		CompositeParameterNode parameter = 
-				new CompositeParameterNode(
-						parameterName, parametersParentNode.getModelChangeRegistrator());
-
-		int index = parametersParentNode.getParameters().size();
-
-		if (addCompositeParameterByOperation(
-				parameter, index, parametersParentNode, operationExecuter, extLanguageManager)) {
-			return parameter;
-		}
-
-		return null;
-	}
-
-	public static boolean addBasicParameterByOperation(
-			BasicParameterNode parameter, 
-			int index,
-			IParametersParentNode ownNode,
-			OperationExecuter operationExecuter,
-			IExtLanguageManager extLanguageManager) {
-
-		return operationExecuter.execute(
-				new GenericOperationAddParameter(ownNode, parameter, index, true, extLanguageManager), 
-				"Cannot add parameter.");
-	}
-
-	public static boolean addCompositeParameterByOperation(
-			CompositeParameterNode parameter, 
-			int index,
-			IParametersParentNode ownNode,
-			OperationExecuter operationExecuter,
-			IExtLanguageManager extLanguageManager) {
-
-		return operationExecuter.execute(
-				new GenericOperationAddParameter(ownNode, parameter, index, true, extLanguageManager), 
-				"Cannot add parameter.");
-	}
-	
-	public static boolean convertMethodParametersToGlobalByOperation(
-			IParametersParentNode parametersParentNode, 
-			List<BasicParameterNode> originalParameters,
-			IModelUpdateContext modelUpdateContext,
-			IExtLanguageManager extLanguageManager) {
-		
-		OnMethodParametersOperationReplaceWithGlobal operation = 
-				new OnMethodParametersOperationReplaceWithGlobal(
-						parametersParentNode, 
-						originalParameters, 
-						Optional.empty(), 
-						extLanguageManager);
-
-		OperationExecuter operationExecuter = new OperationExecuter(modelUpdateContext);
-		
-		return operationExecuter.execute(
-				operation, Messages.DIALOG_REPLACE_PARAMETERS_WITH_LINKS_TITLE);
-	}
-	
 }
