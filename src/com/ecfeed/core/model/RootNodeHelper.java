@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	public static final String CLASS_NEW_NAME = "TestClass";
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
@@ -111,9 +112,15 @@ public class RootNodeHelper {
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 
-		String newName = RootNodeHelper.generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
 
 		return newName;
+	}
+
+	public static String generateNewClassName(RootNode rootNode) {
+
+		String fullClassName = CLASS_NEW_NAME;
+		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName);
 	}
 
 	public static String generateUniqueClassNameFromClassNameCore(RootNode rootNode, String startClassNameCore) {
