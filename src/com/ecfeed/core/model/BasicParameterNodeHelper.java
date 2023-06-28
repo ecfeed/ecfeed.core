@@ -739,4 +739,16 @@ public class BasicParameterNodeHelper {
 		return parameters;
 	}
 
+	public static String getExtendedParameterName(String linkedParameterSignature) {
+
+		String lastToken = StringHelper.getLastToken(linkedParameterSignature, " ");
+
+		if (lastToken != null) {
+			return lastToken;
+		}
+
+		return linkedParameterSignature;
+	}
+
+	
 }
