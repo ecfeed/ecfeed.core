@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -129,6 +130,69 @@ public class ConstraintNodeTest {
 		ConstraintNode copy = constraint.makeClone(Optional.of(nodeMapper));
 		assertTrue(constraint.isMatch(copy));
 	}
-	
+
+	@Test
+	public void replaceReferencesTest() {
+		
+		MethodNode method = new MethodNode("method", null);
+		
+		BasicParameterNode par1 = MethodNodeHelper.addNewBasicParameter(method, "par1", "int", "0", true, null);
+		
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice1", "1", false, true, null);
+				
+		BasicParameterNode par2 = MethodNodeHelper.addNewBasicParameter(method, "par2", "int", "0", true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(par2, "choice1", "2", false, true, null);
+		
+		
+		AbstractStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(par1, null, EMathRelation.EQUAL, choiceNode1);		
+
+		AbstractStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(par1, null, EMathRelation.EQUAL, choiceNode1);		
+		
+		Constraint constraint = 
+				new Constraint(
+						"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+		
+		ConstraintNode constraintNode = new ConstraintNode("constraint", constraint, null);
+		
+		NodeMapper nodeMapper = new NodeMapper();
+		nodeMapper.addMappings(par1, par2);
+		nodeMapper.addMappings(choiceNode1, choiceNode2);
+		
+		BasicParameterNode initialPar1 = constraint.getPrecondition().getLeftParameter();
+		assertEquals(par1, initialPar1);
+		
+		ChoiceNode initialChoice1 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
+		assertEquals(choiceNode1, initialChoice1);
+		
+		constraintNode.replaceReferences(nodeMapper, NodeMapper.MappingDirection.SOURCE_TO_DESTINATION);
+		
+		BasicParameterNode resultPar2 = constraint.getPrecondition().getLeftParameter();
+		assertEquals(par2, resultPar2);
+
+		ChoiceNode resultChoice2 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
+		assertEquals(choiceNode2, resultChoice2);
+		
+		constraintNode.replaceReferences(nodeMapper, NodeMapper.MappingDirection.DESTINATION_TO_SOURCE);
+		
+		BasicParameterNode resultPar1 = constraint.getPrecondition().getLeftParameter();
+		assertEquals(par1, resultPar1);
+		
+		ChoiceNode resultChoice1 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
+		assertEquals(choiceNode1, resultChoice1);
+	}
+
+	private ChoiceNode getRightChoiceForReplaceReferencesTest(AbstractStatement condition) {
+		
+		RelationStatement relationStatement = (RelationStatement)condition;
+		
+		ChoiceCondition choiceCondition = (ChoiceCondition)(relationStatement.getCondition());
+		
+		return choiceCondition.getRightChoice();
+	}
 
 }

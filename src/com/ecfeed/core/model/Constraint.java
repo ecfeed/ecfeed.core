@@ -478,6 +478,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		postcondition.derandomize();
 
 	}
+	
 	public AbstractStatement getPrecondition() {
 
 		return fPrecondition;

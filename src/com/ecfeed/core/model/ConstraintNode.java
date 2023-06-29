@@ -108,8 +108,8 @@ public class ConstraintNode extends AbstractNode {
 		return copyOfConstraintNode;
 	}
 
-	public void replaceReferences(NodeMapper mapper, NodeMapper.MappingDirection mappingDirection) {
-		fConstraint.replaceReferences(mapper, mappingDirection);
+	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
+		fConstraint.replaceReferences(nodeMapper, mappingDirection);
 	}
 	
 	public Constraint getConstraint() {
