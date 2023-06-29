@@ -27,18 +27,18 @@ import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOperation{
+public class OnParametersOperationConvertToGlobal extends CompositeOperation{
 
-	public OnMethodParametersOperationReplaceWithGlobal(
-			IParametersParentNode parent, 
-			List<BasicParameterNode> originals,
+	public OnParametersOperationConvertToGlobal(
+			List<BasicParameterNode> parametersToConvert, 
+			IParametersParentNode newParametersParentNode,
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
+		super(OperationNames.REPLACE_PARAMETERS, false, newParametersParentNode, newParametersParentNode, extLanguageManager);
 		
-		for(BasicParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, nodeMapper, extLanguageManager));
+		for(BasicParameterNode parameter : parametersToConvert){
+			addOperation(new ReplaceParameterWithLink(parameter, newParametersParentNode, nodeMapper, extLanguageManager));
 		}
 	}
 	
