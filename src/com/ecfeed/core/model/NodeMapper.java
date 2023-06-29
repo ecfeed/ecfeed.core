@@ -15,6 +15,11 @@ import java.util.Map;
 
 public class NodeMapper {
 
+	public enum MappingDirection {
+		SOURCE_TO_DESTINATION,
+		DESTINATION_TO_SOURCE
+	}
+
 	private final Map<AbstractNode, AbstractNode> fSourceToDestination = new HashMap<>();
 	private final Map<AbstractNode, AbstractNode> fDestinationToSource = new HashMap<>();
 
@@ -33,7 +38,7 @@ public class NodeMapper {
 
 		AbstractNode sourceNode = fDestinationToSource.get(deployedNode);
 
-		return sourceNode != null ? (T) sourceNode : deployedNode; // TODO MO-RE remove this as this masks bugs
+		return sourceNode != null ? (T) sourceNode : deployedNode;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,6 +46,16 @@ public class NodeMapper {
 
 		AbstractNode deployedNode = fSourceToDestination.get(sourceNode);
 
-		return deployedNode != null ? (T) deployedNode : sourceNode; // TODO MO-RE remove this as this masks bugs
+		return deployedNode != null ? (T) deployedNode : sourceNode;
 	}
+
+	public <T extends AbstractNode> T getMappedNode(T node, MappingDirection mappingDirection) {
+
+		if (mappingDirection == MappingDirection.SOURCE_TO_DESTINATION) {
+			return getDestinationNode(node);
+		} else {
+			return getSourceNode(node);
+		}
+	}
+
 }
