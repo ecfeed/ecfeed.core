@@ -14,17 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNodeHelper;
-import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.NodeMapper;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.CompositeOperation;
-import com.ecfeed.core.operations.GenericOperationAddParameter;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
-import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnParametersOperationConvertToGlobal extends CompositeOperation{
@@ -34,56 +27,22 @@ public class OnParametersOperationConvertToGlobal extends CompositeOperation{
 			IParametersParentNode newParametersParentNode,
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
-		
-		super(OperationNames.REPLACE_PARAMETERS, false, newParametersParentNode, newParametersParentNode, extLanguageManager);
-		
-		for(BasicParameterNode parameter : parametersToConvert){
-			addOperation(new ReplaceParameterWithLink(parameter, newParametersParentNode, nodeMapper, extLanguageManager));
-		}
-	}
-	
-	private class ReplaceParameterWithLink extends CompositeOperation{
 
-		public ReplaceParameterWithLink(
-				BasicParameterNode target, 
-				IParametersParentNode parent,
-				Optional<NodeMapper> nodeMapper,
-				IExtLanguageManager extLanguageManager) {
-			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
-			MethodNode method = (MethodNode) target.getParent();
-			BasicParameterNode global =
-					target.makeClone(nodeMapper);
-					// new BasicParameterNode(target);
-			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
-			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
-			
-			String anyNotNullLinkSignature = " ";
-			String newType = BasicParameterNodeHelper.calculateNewParameterType(target, anyNotNullLinkSignature);
-			addOperation(new HostMethodOperationPrepareParameterChange(target, newType, extLanguageManager));
-			
-			for(ConstraintNode constraint : method.getConstraintNodes()){
-				if(constraint.mentions(target)){
-					ConstraintNode copy = constraint.makeClone(nodeMapper);
-					addOperation(new OnConstraintOperationAdd(method, copy, constraint.getMyIndex(), extLanguageManager));
-				}
-			}
-			for(TestCaseNode tc : method.getTestCases()){
-				TestCaseNode copy = tc.makeClone(nodeMapper);
-				addOperation(
-						new OnTestCaseOperationAddToMethod(
-								method, copy, tc.getMyIndex(), Optional.empty(), extLanguageManager));
-			}
-		}
+		super(
+				OperationNames.REPLACE_PARAMETERS, 
+				false, 
+				newParametersParentNode, 
+				newParametersParentNode, 
+				extLanguageManager);
 
-		@Override
-		public void execute() {
-			try {
-				super.execute();
-			} catch (Exception e) {
-				throw e;
-			}
-		}
+		for (BasicParameterNode parameter : parametersToConvert) {
 
+			OnParameterOperationConvertToGlobal operation = 
+					new OnParameterOperationConvertToGlobal(
+							parameter, newParametersParentNode, nodeMapper, extLanguageManager);
+
+			addOperation(operation);
+		}
 	}
 
 }
