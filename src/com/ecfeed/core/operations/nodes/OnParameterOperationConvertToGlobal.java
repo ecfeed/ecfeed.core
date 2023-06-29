@@ -32,13 +32,16 @@ public class OnParameterOperationConvertToGlobal extends CompositeOperation{
 	public OnParameterOperationConvertToGlobal(
 			BasicParameterNode parameterToConvert, 
 			IParametersParentNode newParametersParentNode,
-			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, parameterToConvert, parameterToConvert, extLanguageManager);
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(parameterToConvert);
-		BasicParameterNode newGlobalBasicParameterNode = parameterToConvert.makeClone(nodeMapper);
+		
+		Optional<NodeMapper> optNodeMapper = Optional.of(new NodeMapper());
+		
+		BasicParameterNode newGlobalBasicParameterNode = 
+				parameterToConvert.makeClone(optNodeMapper);
 
 		addOperationWhichAddsNewGlobalParameter(
 				newGlobalBasicParameterNode, newParametersParentNode, extLanguageManager);
@@ -52,31 +55,40 @@ public class OnParameterOperationConvertToGlobal extends CompositeOperation{
 
 		for(ConstraintNode constraint : methodNode.getConstraintNodes()){
 			if(constraint.mentions(parameterToConvert)){
-				ConstraintNode copy = constraint.makeClone(nodeMapper);
+				ConstraintNode copy = constraint.makeClone(optNodeMapper);
 				addOperation(new OnConstraintOperationAdd(methodNode, copy, constraint.getMyIndex(), extLanguageManager));
 			}
 		}
 
 		for(TestCaseNode tc : methodNode.getTestCases()){
-			TestCaseNode copy = tc.makeClone(nodeMapper);
+			TestCaseNode copy = tc.makeClone(optNodeMapper);
 			addOperation(
 					new OnTestCaseOperationAddToMethod(
 							methodNode, copy, tc.getMyIndex(), Optional.empty(), extLanguageManager));
 		}
 	}
 
-	private void addOperationWhichSetsLinkOnOldParameter(BasicParameterNode parameterToConvert,
-			BasicParameterNode newGlobalBasicParameterNode, IExtLanguageManager extLanguageManager) {
+	private void addOperationWhichSetsLinkOnOldParameter(
+			BasicParameterNode parameterToConvert,
+			BasicParameterNode linkToGlobalParameter, 
+			IExtLanguageManager extLanguageManager) {
+		
 		MethodParameterOperationSetLink operationSetLink = 
-				new MethodParameterOperationSetLink(parameterToConvert, newGlobalBasicParameterNode, extLanguageManager);
+				new MethodParameterOperationSetLink(
+						parameterToConvert, linkToGlobalParameter, extLanguageManager);
+		
 		addOperation(operationSetLink);
 	}
 
-	private void addOperationWhichAddsNewGlobalParameter(BasicParameterNode newGlobalBasicParameterNode,
-			IParametersParentNode newParametersParentNode, IExtLanguageManager extLanguageManager) {
+	private void addOperationWhichAddsNewGlobalParameter(
+			BasicParameterNode newGlobalBasicParameterNode,
+			IParametersParentNode newParametersParentNode, 
+			IExtLanguageManager extLanguageManager) {
+		
 		GenericOperationAddParameter operationAddParameter = 
 				new GenericOperationAddParameter(
 						newParametersParentNode, newGlobalBasicParameterNode, true, extLanguageManager);
+		
 		addOperation(operationAddParameter);
 	}
 

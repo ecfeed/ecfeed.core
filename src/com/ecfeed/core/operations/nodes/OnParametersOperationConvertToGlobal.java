@@ -11,11 +11,9 @@
 package com.ecfeed.core.operations.nodes;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -25,7 +23,6 @@ public class OnParametersOperationConvertToGlobal extends CompositeOperation{
 	public OnParametersOperationConvertToGlobal(
 			List<BasicParameterNode> parametersToConvert, 
 			IParametersParentNode newParametersParentNode,
-			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super(
@@ -39,7 +36,7 @@ public class OnParametersOperationConvertToGlobal extends CompositeOperation{
 
 			OnParameterOperationConvertToGlobal operation = 
 					new OnParameterOperationConvertToGlobal(
-							parameter, newParametersParentNode, nodeMapper, extLanguageManager);
+							parameter, newParametersParentNode, extLanguageManager);
 
 			addOperation(operation);
 		}
