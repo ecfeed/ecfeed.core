@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -128,6 +129,10 @@ public class AbstractStatementTest {
 		@Override
 		public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
 			return false;
+		}
+
+		@Override
+		public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
 		}
 
 	}

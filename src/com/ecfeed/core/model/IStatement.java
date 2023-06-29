@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -32,6 +33,7 @@ public interface IStatement{
 	AbstractStatement makeClone(); // TODO MO-RE obsolete ?
 	AbstractStatement createCopy(NodeMapper mapper); // TODO MO-RE obsolete ?
 	AbstractStatement makeClone(Optional<NodeMapper> mapper);
+	void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection);
 	String getLeftOperandName();
 	BasicParameterNode getLeftParameter();
 	CompositeParameterNode getLeftParameterLinkingContext();

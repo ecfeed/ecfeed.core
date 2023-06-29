@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -73,6 +74,12 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightChoice = nodeMapper.getMappedNode(fRightChoice, mappingDirection);
 	}
 
 	@Override

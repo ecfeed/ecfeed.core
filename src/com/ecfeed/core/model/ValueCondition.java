@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -130,6 +131,9 @@ public class ValueCondition implements IStatementCondition {
 		return new ValueCondition(fRightValue, statement);
 	}
 
+	@Override
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+	}
 
 	@Override
 	public ValueCondition makeClone() {

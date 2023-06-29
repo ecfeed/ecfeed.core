@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -25,7 +26,6 @@ public interface IStatementCondition {
 	public void setParentRelationStatement(RelationStatement relationStatement);
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
-	//public boolean updateReferences(IParametersParentNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean mentions(AbstractParameterNode abstractParameterNode);
@@ -39,7 +39,7 @@ public interface IStatementCondition {
 	public IStatementCondition makeClone();
 	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper); // TODO MO-RE obsolete
 	IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper);
-	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode);
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection);
 }
 

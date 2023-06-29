@@ -18,6 +18,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -248,6 +249,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
 
 		return relationStatement;
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fLeftParameter = nodeMapper.getMappedNode(fLeftParameter, mappingDirection); 
+		fLeftParameterLinkingContext  = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
+
+		fRightCondition.replaceReferences(nodeMapper, mappingDirection);
 	}
 
 	@Override  // TODO MO-RE obsolete

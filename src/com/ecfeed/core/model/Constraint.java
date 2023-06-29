@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ERunMode;
@@ -583,7 +584,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
-
+	
 	public Constraint createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
 
 		AbstractStatement precondition = fPrecondition.createCopy(mapper);
@@ -598,6 +599,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement postcondition = fPostcondition.makeClone(mapper);
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+	
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+		
+		fPrecondition.replaceReferences(mapper, mappingDirection);
+		fPostcondition.replaceReferences(mapper, mappingDirection);
 	}
 	
 	public void verifyConversionOfParameterFromToType(
@@ -1061,4 +1068,5 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		
 		return true;
 	}
+
 }

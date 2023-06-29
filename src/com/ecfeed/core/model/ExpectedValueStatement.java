@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -186,6 +187,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return new ExpectedValueStatement(
 				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(mapper), fPredicate);
+	}
+	
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+		
+		fLeftParameterNode = nodeMapper.getMappedNode(fLeftParameterNode, mappingDirection);
+		fLeftParameterLinkingContext = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
+		fChoiceNode = nodeMapper.getMappedNode(fChoiceNode, mappingDirection);
 	}
 
 	@Override
