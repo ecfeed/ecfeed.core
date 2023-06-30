@@ -49,6 +49,8 @@ public class OnBasicParameterOperationConvertToGlobal extends CompositeOperation
 		addOperationWhichSetsLinkOnOldParameter(
 				parameterToConvert, newGlobalBasicParameterNode, extLanguageManager);
 
+		
+		
 		String anyNotNullLinkSignature = " ";
 		String newType = BasicParameterNodeHelper.calculateNewParameterType(parameterToConvert, anyNotNullLinkSignature);
 		addOperation(new HostMethodOperationPrepareParameterChange(parameterToConvert, newType, extLanguageManager));
