@@ -18,9 +18,9 @@ import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnParametersOperationConvertToGlobal extends CompositeOperation{
+public class OnParametersListOperationConvertToGlobal extends CompositeOperation{
 
-	public OnParametersOperationConvertToGlobal(
+	public OnParametersListOperationConvertToGlobal(
 			List<BasicParameterNode> parametersToConvert, 
 			IParametersParentNode newParametersParentNode,
 			IExtLanguageManager extLanguageManager) {
@@ -34,8 +34,8 @@ public class OnParametersOperationConvertToGlobal extends CompositeOperation{
 
 		for (BasicParameterNode parameter : parametersToConvert) {
 
-			OnParameterOperationConvertToGlobal operation = 
-					new OnParameterOperationConvertToGlobal(
+			OnBasicParameterOperationConvertToGlobal operation = 
+					new OnBasicParameterOperationConvertToGlobal(
 							parameter, newParametersParentNode, extLanguageManager);
 
 			addOperation(operation);
