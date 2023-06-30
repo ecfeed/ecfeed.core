@@ -851,4 +851,16 @@ public class MethodNodeHelper {
 		return false;
 	}
 
+	public void replaceReferncesInTestCases(
+			MethodNode methodNode,
+			NodeMapper nodeMapper, 
+			NodeMapper.MappingDirection mappingDirection) {
+		
+		List<TestCaseNode> testCaseNodes = methodNode.getTestCases();
+		
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			testCaseNode.replaceReferences(nodeMapper, mappingDirection);
+		}
+	}
 }

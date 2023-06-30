@@ -325,4 +325,15 @@ public class TestCaseNode extends AbstractNode {
 		return false;
 	}
 
+	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
+		
+		int index = 0;
+		
+		for (ChoiceNode choiceNode : fTestData) {
+			
+			fTestData.set(index, nodeMapper.getMappedNode(choiceNode, mappingDirection));
+			
+			index++;
+		}
+	}
 }
