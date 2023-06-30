@@ -851,7 +851,7 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public void replaceReferncesInTestCases(
+	public static void replaceReferncesInTestCases(
 			MethodNode methodNode,
 			NodeMapper nodeMapper, 
 			NodeMapper.MappingDirection mappingDirection) {
