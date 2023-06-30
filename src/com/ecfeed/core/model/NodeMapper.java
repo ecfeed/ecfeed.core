@@ -10,7 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NodeMapper {
@@ -31,6 +33,36 @@ public class NodeMapper {
 
 	public void addMappingsForOneNode(AbstractNode sourceNode) {
 		addMappings(sourceNode, sourceNode);
+	}
+
+	public void removeMappings(AbstractNode abstractNode) {
+
+		fSourceToDestination.remove(abstractNode);
+		fDestinationToSource.remove(abstractNode);
+
+		removeByValue(abstractNode, fSourceToDestination);
+		removeByValue(abstractNode, fDestinationToSource);
+	}
+
+	private void removeByValue(AbstractNode abstractNode, Map<AbstractNode, AbstractNode> mapOfNodes) {
+		
+		List<AbstractNode> mappedNodesToRemove = new ArrayList<>();
+
+		for (Map.Entry<AbstractNode, AbstractNode> entry : mapOfNodes.entrySet()) {
+			
+			AbstractNode value = entry.getValue();
+
+			if (value.equals(abstractNode)) {
+
+				AbstractNode nodeToRemove = entry.getValue();
+
+				mappedNodesToRemove.add(nodeToRemove);
+			}
+		}
+		
+		for (AbstractNode mappedNodeToRemove : mappedNodesToRemove) {
+			mapOfNodes.remove(mappedNodeToRemove);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

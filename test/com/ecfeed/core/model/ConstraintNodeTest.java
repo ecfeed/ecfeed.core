@@ -163,11 +163,15 @@ public class ConstraintNodeTest {
 		nodeMapper.addMappings(par1, par2);
 		nodeMapper.addMappings(choiceNode1, choiceNode2);
 		
+		// initial check  
+		
 		BasicParameterNode initialPar1 = constraint.getPrecondition().getLeftParameter();
 		assertEquals(par1, initialPar1);
 		
 		ChoiceNode initialChoice1 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
 		assertEquals(choiceNode1, initialChoice1);
+		
+		// replace par1 to par2 with choices
 		
 		constraintNode.replaceReferences(nodeMapper, NodeMapper.MappingDirection.SOURCE_TO_DESTINATION);
 		
@@ -177,6 +181,8 @@ public class ConstraintNodeTest {
 		ChoiceNode resultChoice2 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
 		assertEquals(choiceNode2, resultChoice2);
 		
+		// replace par2 to par1 with choices
+		
 		constraintNode.replaceReferences(nodeMapper, NodeMapper.MappingDirection.DESTINATION_TO_SOURCE);
 		
 		BasicParameterNode resultPar1 = constraint.getPrecondition().getLeftParameter();
@@ -184,6 +190,21 @@ public class ConstraintNodeTest {
 		
 		ChoiceNode resultChoice1 = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
 		assertEquals(choiceNode1, resultChoice1);
+		
+		// remove par1 from mapper
+		
+		nodeMapper.removeMappings(par1);
+		
+		// converting without par1
+
+		constraintNode.replaceReferences(nodeMapper, NodeMapper.MappingDirection.SOURCE_TO_DESTINATION);
+		
+		BasicParameterNode resultPar1b = constraint.getPrecondition().getLeftParameter();
+		assertEquals(par1, resultPar1b);
+
+		ChoiceNode resultChoice2b = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
+		assertEquals(choiceNode2, resultChoice2);
+		
 	}
 
 	private ChoiceNode getRightChoiceForReplaceReferencesTest(AbstractStatement condition) {
