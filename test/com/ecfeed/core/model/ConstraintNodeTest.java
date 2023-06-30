@@ -203,7 +203,7 @@ public class ConstraintNodeTest {
 		assertEquals(par1, resultPar1b);
 
 		ChoiceNode resultChoice2b = getRightChoiceForReplaceReferencesTest(constraint.getPrecondition());
-		assertEquals(choiceNode2, resultChoice2);
+		assertEquals(choiceNode2, resultChoice2b);
 		
 	}
 
