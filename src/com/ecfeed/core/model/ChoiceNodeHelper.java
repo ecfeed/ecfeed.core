@@ -135,7 +135,7 @@ public class ChoiceNodeHelper {
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
-			Optional<NodeMapper> mapper) {
+			Optional<NodeMapper> nodeMapper) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -147,15 +147,15 @@ public class ChoiceNodeHelper {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
-			if (mapper.isPresent()) {
-				mapper.get().addMappings(choiceNode, clonedChoiceNode);
+			if (nodeMapper.isPresent()) {
+				nodeMapper.get().addMappings(choiceNode, clonedChoiceNode);
 			}
 
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, mapper);
+			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, nodeMapper);
 		}
 	}
 

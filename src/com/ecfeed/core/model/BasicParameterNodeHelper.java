@@ -756,42 +756,4 @@ public class BasicParameterNodeHelper {
 		return linkedParameterSignature;
 	}
 
-
-	public static void convertLocalToGlobalParameter( 
-		BasicParameterNode localParameterToConvert, 
-		IParametersParentNode newParametersParentNode) {
-		
-		NodeMapper nodeMapper = new NodeMapper();
-		Optional<NodeMapper> optNodeMapper = Optional.of(nodeMapper);
-		
-		BasicParameterNode newGlobalBasicParameterNode = 
-				localParameterToConvert.makeClone(optNodeMapper);
-		
-		nodeMapper.removeMappings(localParameterToConvert); // removing because in constraint parameters are local but choices are from global parameter
-		
-		newParametersParentNode.addParameter(newGlobalBasicParameterNode, null);
-		
-		localParameterToConvert.setLinkToGlobalParameter(newGlobalBasicParameterNode);
-		
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParameterToConvert);
-		
-		replaceRefencesInChildConstraints(
-				methodNode, nodeMapper, NodeMapper.MappingDirection.SOURCE_TO_DESTINATION);
-	}
-
-	private static void replaceRefencesInChildConstraints(
-			MethodNode methodNode,
-			NodeMapper nodeMapper,
-			NodeMapper.MappingDirection mappingDirection) {
-		
-		List<ConstraintNode> constraintsToConvert = 
-				ConstraintsParentNodeHelper.findChildConstraints(methodNode);
-		
-		for (ConstraintNode constraintNode : constraintsToConvert) {
-			
-			constraintNode.replaceReferences(nodeMapper, mappingDirection);
-		}
-		
-	}
-	
 }
