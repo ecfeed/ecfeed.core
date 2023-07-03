@@ -1,0 +1,50 @@
+/*******************************************************************************
+ *
+ * Copyright (c) 2016 ecFeed AS.                                                
+ * All rights reserved. This program and the accompanying materials              
+ * are made available under the terms of the Eclipse Public License v1.0         
+ * which accompanies this distribution, and is available at                      
+ * http://www.eclipse.org/legal/epl-v10.html 
+ *  
+ *******************************************************************************/
+
+package com.ecfeed.core.operations.nodes;
+
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
+import com.ecfeed.core.utils.IExtLanguageManager;
+
+public class OnBasicParameterOperationConvertToGlobalNew extends AbstractModelOperation {
+
+	private BasicParameterNode fLocalParameterToConvert;
+	private IParametersParentNode fNewParametersParentNode;
+	
+	public OnBasicParameterOperationConvertToGlobalNew(
+			BasicParameterNode localParameterToConvert, 
+			IParametersParentNode newParametersParentNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REPLACE_PARAMETER_WITH_LINK, extLanguageManager);
+		
+		fLocalParameterToConvert = localParameterToConvert;
+		fNewParametersParentNode = newParametersParentNode;
+	}
+
+	@Override
+	public void execute() {
+		
+		BasicParameterNodeHelper.convertLocalToGlobalParameter(
+				fLocalParameterToConvert, fNewParametersParentNode);
+	}
+
+	@Override
+	public IModelOperation getReverseOperation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

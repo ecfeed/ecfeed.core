@@ -34,8 +34,12 @@ public class OnParametersListOperationConvertToGlobal extends CompositeOperation
 
 		for (BasicParameterNode parameter : parametersToConvert) {
 
-			OnBasicParameterOperationConvertToGlobal operation = 
-					new OnBasicParameterOperationConvertToGlobal(
+			//	OnBasicParameterOperationConvertToGlobalOld operation = 
+			//			new OnBasicParameterOperationConvertToGlobalOld(
+			//					parameter, newParametersParentNode, extLanguageManager);
+
+			OnBasicParameterOperationConvertToGlobalNew operation = 
+					new OnBasicParameterOperationConvertToGlobalNew(
 							parameter, newParametersParentNode, extLanguageManager);
 
 			addOperation(operation);

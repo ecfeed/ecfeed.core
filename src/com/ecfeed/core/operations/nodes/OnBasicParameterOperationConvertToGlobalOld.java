@@ -26,9 +26,9 @@ import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnBasicParameterOperationConvertToGlobal extends CompositeOperation{
+public class OnBasicParameterOperationConvertToGlobalOld extends CompositeOperation{
 
-	public OnBasicParameterOperationConvertToGlobal(
+	public OnBasicParameterOperationConvertToGlobalOld(
 			BasicParameterNode localParameterToConvert, 
 			IParametersParentNode newParametersParentNode,
 			IExtLanguageManager extLanguageManager) {
