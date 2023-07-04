@@ -83,11 +83,10 @@ public class OnBasicParameterOperationConvertToGlobalNew extends AbstractModelOp
 			Optional<NodeMapper> optNodeMapper = Optional.of(nodeMapper);
 			
 			BasicParameterNode newGlobalBasicParameterNode = 
-					localParameterToConvert.makeClone(optNodeMapper);
+					createGlobalParameter(
+							localParameterToConvert, newParametersParentNode, optNodeMapper);
 			
 			nodeMapper.removeMappings(localParameterToConvert); // removing because in constraint parameters are local but choices are from global parameter
-			
-			localParameterToConvert.clearChoices();
 			
 			newParametersParentNode.addParameter(newGlobalBasicParameterNode, null);
 			
@@ -98,6 +97,18 @@ public class OnBasicParameterOperationConvertToGlobalNew extends AbstractModelOp
 			replaceRefencesInChildConstraints(
 					methodNode, nodeMapper, NodeMapper.MappingDirection.SOURCE_TO_DESTINATION);
 		}
+
+	private static BasicParameterNode createGlobalParameter(BasicParameterNode localParameterToConvert,
+			IParametersParentNode newParametersParentNode, Optional<NodeMapper> optNodeMapper) {
+		BasicParameterNode newGlobalBasicParameterNode = 
+				localParameterToConvert.makeClone(optNodeMapper);
+		
+		newGlobalBasicParameterNode.setLinkToGlobalParameter(null);
+		newGlobalBasicParameterNode.setParent(newParametersParentNode);
+		
+		localParameterToConvert.clearChoices();
+		return newGlobalBasicParameterNode;
+	}
 
 		private static void replaceRefencesInChildConstraints(
 				MethodNode methodNode,
