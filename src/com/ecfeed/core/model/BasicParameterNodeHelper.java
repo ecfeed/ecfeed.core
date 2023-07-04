@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,12 +37,12 @@ public class BasicParameterNodeHelper {
 		}
 
 		TypeHelper.compareTypes(basicParameterNode1.getType(), basicParameterNode1.getType());
-		
+
 		List<ChoiceNode> choices1 = basicParameterNode1.getChoices();
 		List<ChoiceNode> choices2 = basicParameterNode2.getChoices();
-		
+
 		AbstractNodeHelper.compareSizes(choices1, choices2, "Number of choices differ.");
-		
+
 		for(int i = 0; i < choices1.size(); ++i){
 			ChoiceNodeHelper.compareChoices(choices1.get(i), choices2.get(i));
 		}
@@ -682,7 +681,7 @@ public class BasicParameterNodeHelper {
 			BasicParameterNode basicParameterNode,
 			AbstractParameterNode parameterLinkingContext, 
 			IParametersAndConstraintsParentNode topParentNode) {
-		
+
 		IParametersParentNode parentOfParameter = basicParameterNode.getParent();
 
 		if (parentOfParameter == null) {
@@ -734,14 +733,14 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> selectedNodes) {
-		
+
 		List<BasicParameterNode> parameters = selectedNodes.stream()
-					.filter(e -> e instanceof BasicParameterNode)
-					.map(e -> (BasicParameterNode)e)
-					.collect(Collectors.toList());
-		
+				.filter(e -> e instanceof BasicParameterNode)
+				.map(e -> (BasicParameterNode)e)
+				.collect(Collectors.toList());
+
 		return parameters;
 	}
 

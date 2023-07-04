@@ -124,8 +124,7 @@ public class DragAndDropHelper {
 
 	public static boolean dragAndDropFunctionalityIsActive() {
 
-		// TODO MO-RE drag and drop is disabled in current release - todo in future versions
-		return false;
+		return true;
 	}
 
 }
