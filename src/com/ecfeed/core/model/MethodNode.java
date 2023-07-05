@@ -347,13 +347,13 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	public void addTestCases(List<TestCaseNode> testCaseNodes) {
-		
+
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			
+
 			addTestCase(testCaseNode);
 		}
 	}
-	
+
 	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.removeTestCase(testCaseNode);
@@ -484,24 +484,24 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		return fTestCasesHolder.getTestSuiteNodes();
 	}
-	
+
 	public List<String> getNamesOfTestSuites() {
 
 		Set<String> setOfNames = new HashSet<>();
-		
+
 		List<TestSuiteNode> testSuiteNodes = getTestSuites();
-		
+
 		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
 			setOfNames.add(testSuiteNode.getName());
 		}
-		
+
 		List<String> listOfNames = new ArrayList<>(setOfNames);
-		
+
 		Collections.sort(listOfNames);
-		
+
 		return listOfNames;
 	}
-	
+
 
 	public boolean hasParameters() {
 		if (getParameters().isEmpty()) {
@@ -614,7 +614,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 	@Override
 	public void replaceTestCases(List<TestCaseNode> testCases) {
-		
+
 		fTestCasesHolder.replaceTestCases(testCases);
 	}
 
@@ -952,4 +952,11 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return false;
 	}
 
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
+		fParametersHolder.shiftElements(indicesOfParameters, shift);
+	}
+
+	public void shiftOneParameter(int indexOfParameter, int shift) {
+		fParametersHolder.shiftOneElement(indexOfParameter, shift);
+	}
 }

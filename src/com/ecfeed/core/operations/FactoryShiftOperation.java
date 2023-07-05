@@ -83,22 +83,28 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodNode node) throws Exception {
+		public Object visit(MethodNode methodNode) throws Exception {
+			
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new OnParameterOfMethodOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnParameterOfMethodOperationShift(fShifted, fUp, fExtLanguageManager);
 			}
+			
 			if(fShifted.get(0) instanceof CompositeParameterNode){
-				return new OnCompositeParameterOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnCompositeParameterOperationShift(methodNode.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			if(fShifted.get(0) instanceof ConstraintNode){
-				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
+				return new GenericShiftOperation(methodNode.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			if(fShifted.get(0) instanceof TestCaseNode){
-				return new GenericShiftOperation(node.getTestCases(), fShifted, fUp, fExtLanguageManager);
+				return new GenericShiftOperation(methodNode.getTestCases(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			if(fShifted.get(0) instanceof TestSuiteNode){
-				return new GenericShiftOperation(node.getTestSuites(), fShifted, fUp, fExtLanguageManager);
+				return new GenericShiftOperation(methodNode.getTestSuites(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
@@ -218,20 +224,20 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodNode node) throws Exception {
+		public Object visit(MethodNode methodNode) throws Exception {
 			
 			IAbstractNode firstNodeToBeShifted = fNodesToBeShifted.get(0);
 			
 			if (firstNodeToBeShifted instanceof BasicParameterNode) {
-				return new OnParameterOfMethodOperationShift(node.getParameters(), fNodesToBeShifted, fShift, fExtLanguageManager);
+				return new OnParameterOfMethodOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
 			
 			if (firstNodeToBeShifted instanceof ConstraintNode) {
-				return new GenericShiftOperation(node.getConstraintNodes(), fNodesToBeShifted, fShift, fExtLanguageManager);
+				return new GenericShiftOperation(methodNode.getConstraintNodes(), fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
 			
 			if (firstNodeToBeShifted instanceof TestCaseNode) {
-				return new GenericShiftOperation(node.getTestCases(), fNodesToBeShifted, fShift, fExtLanguageManager);
+				return new GenericShiftOperation(methodNode.getTestCases(), fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
 			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);

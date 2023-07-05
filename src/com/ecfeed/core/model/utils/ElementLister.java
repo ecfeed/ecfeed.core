@@ -11,6 +11,7 @@
 package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.IModelChangeRegistrator;
@@ -389,6 +390,31 @@ public class ElementLister<TypeOfElement> {
 	public TypeOfElement getElement(int index) {
 
 		return fElements.get(index);
+	}
+
+	public void shiftElements(List<Integer> indicesOfElements, int shift) {
+
+		Collections.sort(indicesOfElements);
+
+		if(shift > 0){
+			Collections.reverse(indicesOfElements);
+		}
+
+		for (int index = 0; index < indicesOfElements.size(); index++) {
+			shiftOneElement(indicesOfElements.get(index), shift);
+		}
+	}
+
+	public void shiftOneElement(int indexOfElement, int shift) {
+
+		int minIndex = Math.min(indexOfElement, indexOfElement + shift);
+		int maxIndex = Math.max(indexOfElement, indexOfElement + shift) + ((shift < 0) ? 1:0);
+
+		List<?> rotated = fElements.subList(minIndex, (shift > 0) ? maxIndex + 1 : maxIndex);
+
+		int rotation = (shift > 0) ? -1 : 1;
+
+		Collections.rotate(rotated, rotation);
 	}
 
 }

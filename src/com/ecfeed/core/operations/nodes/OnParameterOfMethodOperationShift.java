@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
@@ -29,83 +28,91 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 
-	private List<AbstractParameterNode> fParameters;
+	//private List<AbstractParameterNode> fActualParameters;
+	private MethodNode fMethodNode;
+
+	//	public OnParameterOfMethodOperationShift(
+	//			List<AbstractParameterNode> parameters, 
+	//			IAbstractNode shifted, 
+	//			boolean up,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
+	//	}
 
 	public OnParameterOfMethodOperationShift(
-			List<AbstractParameterNode> parameters, 
-			IAbstractNode shifted, 
-			boolean up,
-			IExtLanguageManager extLanguageManager) {
-
-		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
-	}
-
-	public OnParameterOfMethodOperationShift(
-			List<AbstractParameterNode> parameters, 
+			//List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
 			IExtLanguageManager extLanguageManager) {
-		this(parameters, shifted, 0, extLanguageManager);
+		this(shifted, 0, extLanguageManager);
+
 		setShift(minAllowedShift(shifted, up));
 	}
 
 	public OnParameterOfMethodOperationShift(
-			List<AbstractParameterNode> actualParameters, 
+			//List<AbstractParameterNode> actualParameters, 
 			List<? extends IAbstractNode> nodesToBeShifted, 
 			int shift,
 			IExtLanguageManager extLanguageManager) {
-		
-		super(actualParameters, nodesToBeShifted, shift, extLanguageManager);
-		
-		fParameters = actualParameters;
+
+		super(
+				null, // not used
+				nodesToBeShifted, 
+				shift, 
+				extLanguageManager);
+
+		fMethodNode = (MethodNode) nodesToBeShifted.get(0).getParent();
+
+		// fActualParameters = actualParameters;
 	}
 
 	@Override
 	public void execute() {
-		
-		BasicParameterNode firstActualParameterNode = (BasicParameterNode)fParameters.get(0);
-		MethodNode methodNode = (MethodNode) firstActualParameterNode.getParent();
 
-		List<? extends IAbstractNode> elementsToBeShifted = getShiftedElements();
+		List<? extends IAbstractNode> nodesToBeShifted = getShiftedElements();
+
 		int shift = getShift();
-		
-		if (!shiftIsAllowed(elementsToBeShifted, shift)) {
+
+		if (!shiftIsAllowed(nodesToBeShifted, shift)) {
 
 			ExceptionHelper.reportRuntimeException(
 					ClassNodeHelper.createMethodNameDuplicateMessage(
-							methodNode.getClassNode(),  methodNode, false, getExtLanguageManager()));
+							fMethodNode.getClassNode(),  fMethodNode, false, getExtLanguageManager()));
 		}
-		
-		List<Integer> indices = calculateIndices(fParameters, elementsToBeShifted);
-		shiftElements(fParameters, indices, shift);
-		
-		for(TestCaseNode testCase : methodNode.getTestCases()){
-			shiftElements(testCase.getTestData(), indices, shift);
+
+		List<AbstractParameterNode> methodParameters = fMethodNode.getParameters();
+		List<Integer> indicesOfNodesToBeShifted = calculateIndices(methodParameters, nodesToBeShifted);
+
+		fMethodNode.shiftParameters(indicesOfNodesToBeShifted, shift);
+
+		for (TestCaseNode testCase : fMethodNode.getTestCases()) {
+			shiftElements(testCase.getTestData(), indicesOfNodesToBeShifted, shift);
 		}
 	}
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new OnParameterOfMethodOperationShift(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
+		return new OnParameterOfMethodOperationShift(getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override
 	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift) {
-		
+
 		if(super.shiftIsAllowed(shifted, shift) == false) 
 			return false;
-		
+
 		if(shifted.get(0) instanceof BasicParameterNode == false) 
 			return false;
-		
+
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
-		
+
 		List<String> parameterTypes = 
 				ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());
-		
+
 		List<Integer> indices = calculateIndices(method.getParameters(), shifted);
-		
+
 		shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
@@ -121,7 +128,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 		if (sibling != null && sibling != method) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
