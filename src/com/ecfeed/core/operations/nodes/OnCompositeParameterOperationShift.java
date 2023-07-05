@@ -64,7 +64,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 		
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 
-		if(shiftAllowed(getShiftedElements(), getShift()) == false){
+		if(shiftIsAllowed(getShiftedElements(), getShift()) == false){
 
 			ExceptionHelper.reportRuntimeException(
 					ClassNodeHelper.createMethodNameDuplicateMessage(
@@ -83,8 +83,8 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	}
 
 	@Override
-	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
-		if(super.shiftAllowed(shifted, shift) == false) return false;
+	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift){
+		if(super.shiftIsAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
 		
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
@@ -112,7 +112,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	@Override
 	protected int minAllowedShift(List<? extends IAbstractNode> shifted, boolean up){
 		int shift = up ? -1 : 1;
-		while(shiftAllowed(shifted, shift) == false){
+		while(shiftIsAllowed(shifted, shift) == false){
 			shift += up ? -1 : 1;
 			int borderIndex = (borderNode(shifted, shift) != null) ? borderNode(shifted, shift).getMyIndex() + shift : -1;
 			if(borderIndex < 0 || borderIndex >= borderNode(shifted, shift).getMaxIndex()){

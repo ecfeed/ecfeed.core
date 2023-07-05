@@ -39,7 +39,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	public GenericShiftOperation(List<? extends IAbstractNode> collection, List<? extends IAbstractNode> shifted, int shift, IExtLanguageManager extLanguageManager){
 		super(OperationNames.MOVE, extLanguageManager);
-		shift = shiftAllowed(shifted, shift) ? shift : 0;
+		shift = shiftIsAllowed(shifted, shift) ? shift : 0;
 		fNodesToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;
 		fShiftSize = shift;
@@ -79,7 +79,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	protected int minAllowedShift(List<? extends IAbstractNode> shifted, boolean up){
 		int shift = up ? -1 : 1;
-		return shiftAllowed(shifted, shift) ? shift : 0; 
+		return shiftIsAllowed(shifted, shift) ? shift : 0; 
 	}
 
 	protected boolean haveSameParent(List<? extends IAbstractNode> shifted) {
@@ -135,7 +135,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 		Collections.rotate(rotated, rotation);
 	}
 
-	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
+	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(areInstancesOfSameClass(shifted) == false){
 			return false;
 		}
