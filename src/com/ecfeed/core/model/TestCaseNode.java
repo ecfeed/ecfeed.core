@@ -16,11 +16,12 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 
 public class TestCaseNode extends AbstractNode {
 
-	List<ChoiceNode> fTestData;
+	List<ChoiceNode> fChoiceNodes;
 
 	@Override
 	public String getNonQualifiedName() {
@@ -93,7 +94,7 @@ public class TestCaseNode extends AbstractNode {
 
 		List<ChoiceNode> testdata = new ArrayList<>();
 
-		for (ChoiceNode choice : fTestData) {
+		for (ChoiceNode choice : fChoiceNodes) {
 			testdata.add(choice);
 		}
 
@@ -104,13 +105,13 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public List<ChoiceNode> getChoices() { 
-		return fTestData;
+		return fChoiceNodes;
 	}
 
 	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
 
 		super(testSuiteName, modelChangeRegistrator);
-		fTestData = testData;
+		fChoiceNodes = testData;
 	}
 
 	public MethodNode getMethod() {
@@ -156,19 +157,19 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public List<ChoiceNode> getTestData() {
-		return fTestData;
+		return fChoiceNodes;
 	}
 
 	public void setTestData(List<ChoiceNode> testData) {
-		fTestData = testData;
+		fChoiceNodes = testData;
 	}
 
 	public void replaceValue(int index, ChoiceNode newValue) {
-		fTestData.set(index, newValue);
+		fChoiceNodes.set(index, newValue);
 	}
 
 	public boolean mentions(ChoiceNode choice) {
-		for(ChoiceNode p : fTestData){
+		for(ChoiceNode p : fChoiceNodes){
 			if(p.isMatchIncludingParents(choice)){
 				return true;
 			}
@@ -296,7 +297,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCase getTestCase() {
-		return new TestCase(fTestData);
+		return new TestCase(fChoiceNodes);
 	}
 
 	public void updateChoiceReferences( // TODO MO-RE do we need this ?
@@ -304,10 +305,10 @@ public class TestCaseNode extends AbstractNode {
 
 		int index = 0;
 
-		for (ChoiceNode choiceNode : fTestData) {
+		for (ChoiceNode choiceNode : fChoiceNodes) {
 
 			if (choiceNode.equals(oldChoiceNode)) {
-				fTestData.set(index, newChoiceNode);
+				fChoiceNodes.set(index, newChoiceNode);
 			}
 
 			index++;
@@ -326,14 +327,19 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
-		
+
 		int index = 0;
-		
-		for (ChoiceNode choiceNode : fTestData) {
-			
-			fTestData.set(index, nodeMapper.getMappedNode(choiceNode, mappingDirection));
-			
+
+		for (ChoiceNode choiceNode : fChoiceNodes) {
+
+			fChoiceNodes.set(index, nodeMapper.getMappedNode(choiceNode, mappingDirection));
+
 			index++;
 		}
+	}
+
+	public void shiftElements(List<Integer> indices, int shift) {
+
+		ShifterOfListElements.shiftElements(fChoiceNodes, indices, shift);
 	}
 }

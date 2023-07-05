@@ -88,7 +88,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 		fMethodNode.shiftParameters(indicesOfNodesToBeShifted, shift);
 
 		for (TestCaseNode testCase : fMethodNode.getTestCases()) {
-			ShifterOfListElements.shiftElements(testCase.getTestData(), indicesOfNodesToBeShifted, shift);
+			testCase.shiftElements(indicesOfNodesToBeShifted, shift);
 		}
 	}
 
