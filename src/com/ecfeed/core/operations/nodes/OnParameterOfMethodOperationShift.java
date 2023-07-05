@@ -25,6 +25,7 @@ import com.ecfeed.core.operations.GenericShiftOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 
@@ -87,7 +88,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 		fMethodNode.shiftParameters(indicesOfNodesToBeShifted, shift);
 
 		for (TestCaseNode testCase : fMethodNode.getTestCases()) {
-			shiftElements(testCase.getTestData(), indicesOfNodesToBeShifted, shift);
+			ShifterOfListElements.shiftElements(testCase.getTestData(), indicesOfNodesToBeShifted, shift);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 
 		List<Integer> indices = calculateIndices(method.getParameters(), shifted);
 
-		shiftElements(parameterTypes, indices, shift);
+		ShifterOfListElements.shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
 

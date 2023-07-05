@@ -26,6 +26,7 @@ import com.ecfeed.core.operations.GenericShiftOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 public class OnCompositeParameterOperationShift extends GenericShiftOperation { // TODO MO-RE implement
 
@@ -61,7 +62,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	@Override
 	public void execute() {
 		BasicParameterNode basicParameterNode = (BasicParameterNode)fParameters.get(0);
-		
+
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 
 		if(shiftIsAllowed(getShiftedElements(), getShift()) == false){
@@ -71,9 +72,9 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 							method.getClassNode(),  method, false, getExtLanguageManager()));
 		}
 		List<Integer> indices = calculateIndices(fParameters, getShiftedElements());
-		shiftElements(fParameters, indices, getShift());
+		ShifterOfListElements.shiftElements(fParameters, indices, getShift());
 		for(TestCaseNode testCase : method.getTestCases()){
-			shiftElements(testCase.getTestData(), indices, getShift());
+			ShifterOfListElements.shiftElements(testCase.getTestData(), indices, getShift());
 		}
 	}
 
@@ -86,12 +87,12 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(super.shiftIsAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
-		
+
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 		List<String> parameterTypes = ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = calculateIndices(method.getParameters(), shifted);
-		shiftElements(parameterTypes, indices, shift);
+		ShifterOfListElements.shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
 
