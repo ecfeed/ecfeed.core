@@ -25,7 +25,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationShift;
-import com.ecfeed.core.operations.nodes.OnParameterOfMethodOperationShift;
+import com.ecfeed.core.operations.nodes.OnParameterOperationShift;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -86,7 +86,7 @@ public class FactoryShiftOperation {
 		public Object visit(MethodNode methodNode) throws Exception {
 			
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new OnParameterOfMethodOperationShift(fShifted, fUp, fExtLanguageManager);
+				return new OnParameterOperationShift(fShifted, fUp, fExtLanguageManager);
 			}
 			
 			if(fShifted.get(0) instanceof CompositeParameterNode){
@@ -229,7 +229,7 @@ public class FactoryShiftOperation {
 			IAbstractNode firstNodeToBeShifted = fNodesToBeShifted.get(0);
 			
 			if (firstNodeToBeShifted instanceof BasicParameterNode) {
-				return new OnParameterOfMethodOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
+				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
 			
 			if (firstNodeToBeShifted instanceof ConstraintNode) {

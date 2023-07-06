@@ -27,7 +27,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ShifterOfListElements;
 
-public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
+public class OnParameterOperationShift extends GenericShiftOperation {
 
 	//private List<AbstractParameterNode> fActualParameters;
 	private MethodNode fMethodNode;
@@ -41,7 +41,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 	//		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	//	}
 
-	public OnParameterOfMethodOperationShift(
+	public OnParameterOperationShift(
 			//List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
@@ -51,7 +51,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public OnParameterOfMethodOperationShift(
+	public OnParameterOperationShift(
 			//List<AbstractParameterNode> actualParameters, 
 			List<? extends IAbstractNode> nodesToBeShifted, 
 			int shift,
@@ -94,7 +94,7 @@ public class OnParameterOfMethodOperationShift extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new OnParameterOfMethodOperationShift(getShiftedElements(), -getShift(), getExtLanguageManager());
+		return new OnParameterOperationShift(getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override
