@@ -84,24 +84,26 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(MethodNode methodNode) throws Exception {
+
+			IAbstractNode firstShiftedNode = fShifted.get(0);
 			
-			if(fShifted.get(0) instanceof BasicParameterNode){
+			if (firstShiftedNode instanceof BasicParameterNode) {
 				return new OnParameterOperationShift(fShifted, fUp, fExtLanguageManager);
 			}
 			
-			if(fShifted.get(0) instanceof CompositeParameterNode){
+			if (firstShiftedNode instanceof CompositeParameterNode) {
 				return new OnCompositeParameterOperationShift(methodNode.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			
-			if(fShifted.get(0) instanceof ConstraintNode){
+			if (firstShiftedNode instanceof ConstraintNode) {
 				return new GenericShiftOperation(methodNode.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
 			}
 			
-			if(fShifted.get(0) instanceof TestCaseNode){
+			if (firstShiftedNode instanceof TestCaseNode) {
 				return new GenericShiftOperation(methodNode.getTestCases(), fShifted, fUp, fExtLanguageManager);
 			}
 			
-			if(fShifted.get(0) instanceof TestSuiteNode){
+			if (firstShiftedNode instanceof TestSuiteNode) {
 				return new GenericShiftOperation(methodNode.getTestSuites(), fShifted, fUp, fExtLanguageManager);
 			}
 			
@@ -265,7 +267,14 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			
+			IAbstractNode firstNodeToBeShifted = fNodesToBeShifted.get(0);
+			
+			if (firstNodeToBeShifted instanceof BasicParameterNode) {
+				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
+			}
+			
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 

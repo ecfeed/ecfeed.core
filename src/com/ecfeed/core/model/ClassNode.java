@@ -485,4 +485,16 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return false;
 	}
 
+	@Override
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
+		
+		fParametersLister.shiftElements(indicesOfParameters, shift);
+	}
+
+	@Override
+	public void shiftOneParameter(int indexOfParameter, int shift) {
+		
+		fParametersLister.shiftOneElement(indexOfParameter, shift);
+	}
+
 }

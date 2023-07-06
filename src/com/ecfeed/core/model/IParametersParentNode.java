@@ -38,6 +38,9 @@ public interface IParametersParentNode extends IAbstractNode {
 
 	public String generateNewParameterName(String startParameterName);
 
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift);
+	public void shiftOneParameter(int indexOfParameter, int shift);
+
 	//----------------------------------------------------------------------------
 
 	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) { // TODO MO-RE remove ?

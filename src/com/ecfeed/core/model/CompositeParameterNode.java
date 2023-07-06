@@ -442,5 +442,17 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return false;
 	}
+	
+	@Override
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
+		
+		fParametersLister.shiftElements(indicesOfParameters, shift);
+	}
 
+	@Override
+	public void shiftOneParameter(int indexOfParameter, int shift) {
+		
+		fParametersLister.shiftOneElement(indexOfParameter, shift);
+	}
+	
 }

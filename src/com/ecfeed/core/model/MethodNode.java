@@ -952,10 +952,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return false;
 	}
 
+	@Override
 	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
 		fParametersHolder.shiftElements(indicesOfParameters, shift);
 	}
 
+	@Override
 	public void shiftOneParameter(int indexOfParameter, int shift) {
 		fParametersHolder.shiftOneElement(indexOfParameter, shift);
 	}

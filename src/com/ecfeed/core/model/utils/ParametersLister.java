@@ -264,4 +264,14 @@ public class ParametersLister {
 		return true;
 	}
 
+	public void shiftElements(List<Integer> indicesOfElements, int shift) {
+
+		fElementLister.shiftElements(indicesOfElements, shift);
+	}
+	
+	public void shiftOneElement(int indexOfElement, int shift) {
+
+		fElementLister.shiftOneElement(indexOfElement, shift);
+	}
+	
 }
