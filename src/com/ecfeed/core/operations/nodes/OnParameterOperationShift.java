@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -17,6 +18,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.GenericShiftOperation;
 import com.ecfeed.core.operations.IModelOperation;
@@ -26,9 +28,10 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class OnParameterOperationShift extends GenericShiftOperation {
 
 	private IParametersParentNode fParametersParentNode;
+	private List<TestCaseNode> fTestCaseNodes;
+	private boolean fIsReverseOperation;
 
 	public OnParameterOperationShift(
-			//List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
 			IExtLanguageManager extLanguageManager) {
@@ -38,20 +41,32 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 	}
 
 	public OnParameterOperationShift(
-			//List<AbstractParameterNode> actualParameters, 
 			List<? extends IAbstractNode> nodesToBeShifted, 
 			int shift,
 			IExtLanguageManager extLanguageManager) {
 
+		this(nodesToBeShifted, shift, false, null, extLanguageManager);
+	}
+
+	private OnParameterOperationShift(
+			List<? extends IAbstractNode> nodesToBeShifted, 
+			int shift,
+			boolean isReverseOperation,
+			List<TestCaseNode> oldTestCaseNodes,
+			IExtLanguageManager extLanguageManager) {
+
 		super(
-				null, // not used
+				null,
 				nodesToBeShifted, 
 				shift, 
 				extLanguageManager);
 
 		fParametersParentNode = (IParametersParentNode) nodesToBeShifted.get(0).getParent();
+		fIsReverseOperation = isReverseOperation;
 
-		// fActualParameters = actualParameters;
+		if (isReverseOperation) {
+			fTestCaseNodes = oldTestCaseNodes;
+		}
 	}
 
 	@Override
@@ -72,18 +87,27 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 
 		fParametersParentNode.shiftParameters(indicesOfNodesToBeShifted, shift);
 
-		if (fParametersParentNode instanceof MethodNode) {
+		IAbstractNode theFirstNodeToBeShifted = nodesToBeShifted.get(0);
 
-			MethodNode methodNode = (MethodNode) fParametersParentNode;
-			for (TestCaseNode testCase : methodNode.getTestCases()) {
-				testCase.shiftElements(indicesOfNodesToBeShifted, shift);
-			}
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(theFirstNodeToBeShifted);
+
+		if (fIsReverseOperation) {
+			methodNode.setTestCases(fTestCaseNodes);
+		} else {
+			List<TestCaseNode> testCases = methodNode.getTestCases();
+			fTestCaseNodes = new ArrayList<>(testCases);
+			methodNode.removeAllTestCases();
 		}
 	}
 
 	@Override
-	public IModelOperation getReverseOperation(){
-		return new OnParameterOperationShift(getShiftedElements(), -getShift(), getExtLanguageManager());
+	public IModelOperation getReverseOperation() {
+		return new OnParameterOperationShift(
+				getShiftedElements(), 
+				-getShift(),
+				true,
+				fTestCaseNodes,
+				getExtLanguageManager());
 	}
 
 	@Override

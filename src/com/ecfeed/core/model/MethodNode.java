@@ -354,6 +354,15 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		}
 	}
 
+	public void setTestCases(List<TestCaseNode> testCaseNodes) {
+		
+		removeAllTestCases();
+		
+		if (testCaseNodes != null) {
+			addTestCases(testCaseNodes);
+		}
+	}
+	
 	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.removeTestCase(testCaseNode);
