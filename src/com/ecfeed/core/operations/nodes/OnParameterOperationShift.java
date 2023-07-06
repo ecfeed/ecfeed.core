@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -113,11 +114,19 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 	@Override
 	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift) {
 
-		if(super.shiftIsAllowed(shifted, shift) == false) 
+		if (!super.shiftIsAllowed(shifted, shift)) { 
 			return false;
+		}
 
-		if(shifted.get(0) instanceof BasicParameterNode == false) 
-			return false;
+		IAbstractNode firstShiftedNode = shifted.get(0);
+
+		if (firstShiftedNode instanceof BasicParameterNode) 
+			return true;
+
+		if (firstShiftedNode instanceof CompositeParameterNode) 
+			return true;
+
+		return false;
 
 		//		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		//		MethodNode method = (MethodNode) basicParameterNode.getParent();
@@ -142,8 +151,8 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 		//		if (sibling != null && sibling != method) {
 		//			return false;
 		//		}
-
-		return true;
+		//
+		//		return true;
 	}
 
 	@Override

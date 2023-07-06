@@ -233,6 +233,10 @@ public class FactoryShiftOperation {
 			if (firstNodeToBeShifted instanceof BasicParameterNode) {
 				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
+
+			if (firstNodeToBeShifted instanceof CompositeParameterNode) {
+				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
+			}
 			
 			if (firstNodeToBeShifted instanceof ConstraintNode) {
 				return new GenericShiftOperation(methodNode.getConstraintNodes(), fNodesToBeShifted, fShift, fExtLanguageManager);
