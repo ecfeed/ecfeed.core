@@ -277,6 +277,10 @@ public class FactoryShiftOperation {
 			if (firstNodeToBeShifted instanceof BasicParameterNode) {
 				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
 			}
+
+			if (firstNodeToBeShifted instanceof CompositeParameterNode) {
+				return new OnParameterOperationShift(fNodesToBeShifted, fShift, fExtLanguageManager);
+			}
 			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
