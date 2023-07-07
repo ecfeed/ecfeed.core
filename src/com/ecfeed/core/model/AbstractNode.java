@@ -383,7 +383,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild) {
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild) {
 
 		return getChildren().size();
 	}

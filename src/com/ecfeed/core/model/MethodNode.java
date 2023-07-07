@@ -355,14 +355,14 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	public void setTestCases(List<TestCaseNode> testCaseNodes) {
-		
+
 		removeAllTestCases();
-		
+
 		if (testCaseNodes != null) {
 			addTestCases(testCaseNodes);
 		}
 	}
-	
+
 	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.removeTestCase(testCaseNode);
@@ -640,21 +640,21 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild) {
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialNewChild) {
 
-		if (potentialChild instanceof BasicParameterNode) {
+		if (potentialNewChild instanceof BasicParameterNode) {
 			return getParameters().size();
 		}
 
-		if (potentialChild instanceof ConstraintNode) {
+		if (potentialNewChild instanceof ConstraintNode) {
 			return getConstraintNodes().size();
 		}
 
-		if (potentialChild instanceof TestCaseNode) { 
+		if (potentialNewChild instanceof TestCaseNode) { 
 			return getTestCases().size();
 		}
 
-		return super.getMaxChildIndex(potentialChild);
+		return super.getMaxChildIndexAfterAddingNewChildNode(potentialNewChild);
 	}
 
 	@Override

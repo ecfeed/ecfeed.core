@@ -46,7 +46,7 @@ public interface IAbstractNode {
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 	public void setProperties(NodeProperties nodeProperties);
 	public NodeProperties getProperties();
-	public int getMaxChildIndex(IAbstractNode potentialChild);
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild);
 	public void setPropertyValue(NodePropertyDefs.PropertyId propertyId, String value);
 	public void setPropertyDefaultValue(NodePropertyDefs.PropertyId propertyId);
 	public String getPropertyValue(NodePropertyDefs.PropertyId propertyId);

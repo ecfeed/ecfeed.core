@@ -48,11 +48,11 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild){
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild){
 		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof ClassNode) return getClasses().size();
-		return super.getMaxChildIndex(potentialChild);
+		return super.getMaxChildIndexAfterAddingNewChildNode(potentialChild);
 	}
 
 	@Override
