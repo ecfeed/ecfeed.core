@@ -354,7 +354,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		}
 	}
 
-	public void setTestCases(List<TestCaseNode> testCaseNodes) {
+	public void setTestCases(List<TestCaseNode> testCaseNodes) { // XYX remove - use replace test cases
 
 		removeAllTestCases();
 
