@@ -99,7 +99,7 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 		public void execute() {
 			
 			if (fTestCasesParentNode != null) {
-				fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
+				fTestCasesParentNode.setTestCases(fRemovedTestCases);
 			}
 			
 			super.execute();

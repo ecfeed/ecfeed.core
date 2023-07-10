@@ -56,7 +56,7 @@ public class OnTestCasesOperationSimpleRemoveAll extends AbstractModelOperation 
 		@Override
 		public void execute() {
 
-			fMethodNode.replaceTestCases(fOriginalTestCases);
+			fMethodNode.setTestCases(fOriginalTestCases);
 			markModelUpdated();
 		}
 

@@ -93,7 +93,7 @@ public class OnBasicParameterOperationRemoveFromMethod extends AbstractModelOper
 
 			onParameterOperationAddToParent.execute();
 
-			fMethodNode.replaceTestCases(fOriginalTestCases);
+			fMethodNode.setTestCases(fOriginalTestCases);
 			fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
 
 			markModelUpdated();

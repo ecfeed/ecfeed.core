@@ -273,7 +273,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			if (parent instanceof ITestCasesParentNode) {
 				
 				ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
-				testCasesParentNode.replaceTestCases(fOriginalTestCases);
+				testCasesParentNode.setTestCases(fOriginalTestCases);
 			}
 			parametersAndConstraintsParentNode.replaceConstraints(fOriginalConstraints);
 			

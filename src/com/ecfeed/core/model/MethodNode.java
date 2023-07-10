@@ -354,15 +354,6 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		}
 	}
 
-	public void setTestCases(List<TestCaseNode> testCaseNodes) { // XYX remove - use replace test cases
-
-		removeAllTestCases();
-
-		if (testCaseNodes != null) {
-			addTestCases(testCaseNodes);
-		}
-	}
-
 	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.removeTestCase(testCaseNode);
@@ -622,9 +613,9 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	@Override
-	public void replaceTestCases(List<TestCaseNode> testCases) {
+	public void setTestCases(List<TestCaseNode> testCaseNodes) {
 
-		fTestCasesHolder.replaceTestCases(testCases);
+		fTestCasesHolder.replaceTestCases(testCaseNodes);
 	}
 
 	@Override
