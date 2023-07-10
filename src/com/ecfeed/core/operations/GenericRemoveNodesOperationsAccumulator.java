@@ -24,7 +24,7 @@ import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemoveFromMethod;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
@@ -206,7 +206,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof MethodNode) {
 
 				IModelOperation operation = 
-						new OnBasicParameterOperationRemove(
+						new OnBasicParameterOperationRemoveFromMethod(
 								(MethodNode)parent, basicParameterNode, extLanguageManager);
 
 				result.add(operation);

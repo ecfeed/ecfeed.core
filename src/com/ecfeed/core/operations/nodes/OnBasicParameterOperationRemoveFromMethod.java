@@ -20,7 +20,7 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnBasicParameterOperationRemove extends AbstractModelOperation {
+public class OnBasicParameterOperationRemoveFromMethod extends AbstractModelOperation {
 
 	private static final String REMOVE_BASIC_PARAMETER = "Remove basic parameter";
 
@@ -31,7 +31,7 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 	private List<TestCaseNode> fOriginalTestCases;
 	private List<BasicParameterNode> fOriginalDeployedParameters;
 
-	public OnBasicParameterOperationRemove(
+	public OnBasicParameterOperationRemoveFromMethod(
 			MethodNode methodNode,
 			BasicParameterNode basicParameterNode,
 			IExtLanguageManager extLanguageManager) {
