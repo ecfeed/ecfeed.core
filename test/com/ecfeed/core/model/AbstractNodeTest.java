@@ -61,11 +61,6 @@ public class AbstractNodeTest{
 		}
 
 		@Override
-		public int getMaxChildIndex(IAbstractNode potentialChild) {
-			return 0;
-		}
-
-		@Override
 		public List<IAbstractNode> getDirectChildren() {
 			return null;
 		}
