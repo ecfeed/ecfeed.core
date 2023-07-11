@@ -249,5 +249,22 @@ public abstract class AbstractNodeHelper  {
 			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
 		}
 	}
-	
+
+	public static boolean containsNodesOfTheSameType(List<IAbstractNode> listOfNodes) {
+
+		if (listOfNodes == null || listOfNodes.size() == 0) { 
+			return false;
+		}
+
+		Class<?> type = listOfNodes.get(0).getClass();
+
+		for (IAbstractNode node : listOfNodes) {
+			if (node.getClass().equals(type) == false) { 
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }
