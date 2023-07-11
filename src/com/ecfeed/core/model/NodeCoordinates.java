@@ -30,6 +30,10 @@ public class NodeCoordinates {
 	}
 
 	public boolean isMatch(NodeCoordinates otherCoordinates) {
+		
+		if (otherCoordinates == null) {
+			return false;
+		}
 
 		if (!fNode.equals(otherCoordinates.fNode)) {
 			return false;
