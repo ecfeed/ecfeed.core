@@ -29,8 +29,13 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class OnParameterOperationShift extends GenericShiftOperation {
 
 	private IParametersParentNode fParametersParentNode;
-	private List<TestCaseNode> fTestCaseNodes;
-	private boolean fIsReverseOperation;
+
+	List<? extends IAbstractNode> fNodesToBeShifted;
+	private int fShift;
+	private IExtLanguageManager fExtLanguageManager;
+
+	private MethodNode fMethodNode;
+	private List<TestCaseNode> fInitialTestCaseNodes;
 
 	public OnParameterOperationShift(
 			List<? extends IAbstractNode> shifted, 
@@ -46,69 +51,48 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 			int shift,
 			IExtLanguageManager extLanguageManager) {
 
-		this(nodesToBeShifted, shift, false, null, extLanguageManager);
-	}
-
-	private OnParameterOperationShift(
-			List<? extends IAbstractNode> nodesToBeShifted, 
-			int shift,
-			boolean isReverseOperation,
-			List<TestCaseNode> oldTestCaseNodes,
-			IExtLanguageManager extLanguageManager) {
-
 		super(
 				null,
 				nodesToBeShifted, 
 				shift, 
 				extLanguageManager);
 
-		fParametersParentNode = (IParametersParentNode) nodesToBeShifted.get(0).getParent();
-		fIsReverseOperation = isReverseOperation;
+		fNodesToBeShifted = nodesToBeShifted;
+		fShift = shift;
+		fExtLanguageManager = extLanguageManager;
 
-		if (isReverseOperation) {
-			fTestCaseNodes = oldTestCaseNodes;
-		}
+		fParametersParentNode = (IParametersParentNode) nodesToBeShifted.get(0).getParent();
 	}
 
 	@Override
 	public void execute() {
 
-		List<? extends IAbstractNode> nodesToBeShifted = getShiftedElements();
+		fShift = getShift();
 
-		int shift = getShift();
-
-		if (!shiftIsAllowed(nodesToBeShifted, shift)) {
+		if (!shiftIsAllowed(fNodesToBeShifted, fShift)) {
 
 			ExceptionHelper.reportRuntimeException("Shifting parameters is not allowed.");
 			return;
 		}
 
 		List<AbstractParameterNode> parameters = fParametersParentNode.getParameters();
-		List<Integer> indicesOfNodesToBeShifted = calculateIndices(parameters, nodesToBeShifted);
+		List<Integer> fIndicesOfNodesToBeShifted = calculateIndices(parameters, fNodesToBeShifted);
 
-		fParametersParentNode.shiftParameters(indicesOfNodesToBeShifted, shift);
+		fParametersParentNode.shiftParameters(fIndicesOfNodesToBeShifted, fShift);
 
-		IAbstractNode theFirstNodeToBeShifted = nodesToBeShifted.get(0);
+		IAbstractNode theFirstNodeToBeShifted = fNodesToBeShifted.get(0);
 
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(theFirstNodeToBeShifted);
+		fMethodNode = MethodNodeHelper.findMethodNode(theFirstNodeToBeShifted);
 
-		if (fIsReverseOperation) {
-			methodNode.setTestCases(fTestCaseNodes);
-		} else {
-			List<TestCaseNode> testCases = methodNode.getTestCases();
-			fTestCaseNodes = new ArrayList<>(testCases);
-			methodNode.removeAllTestCases();
-		}
+		List<TestCaseNode> testCases = fMethodNode.getTestCases();
+		fInitialTestCaseNodes = new ArrayList<>(testCases);
+		fMethodNode.removeAllTestCases();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new OnParameterOperationShift(
-				getShiftedElements(), 
-				-getShift(),
-				true,
-				fTestCaseNodes,
-				getExtLanguageManager());
+
+		return new ReverseShift();
 	}
 
 	@Override
@@ -168,4 +152,36 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 		return shift;
 	}
 
+	private class ReverseShift extends GenericShiftOperation {
+
+		public ReverseShift() {
+
+			super(
+					null,
+					fNodesToBeShifted, 
+					fShift, 
+					fExtLanguageManager);					
+		}
+
+		@Override
+		protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift) {
+			return true;
+		}		
+
+		@Override
+		public void execute() {
+
+			List<AbstractParameterNode> parameters = fParametersParentNode.getParameters();
+			List<Integer> fIndicesOfNodesToBeShifted = calculateIndices(parameters, fNodesToBeShifted);
+
+			fParametersParentNode.shiftParameters(fIndicesOfNodesToBeShifted, -fShift);
+			fMethodNode.setTestCases(new ArrayList<TestCaseNode>(fInitialTestCaseNodes));
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return null;
+		}
+
+	}
 }
