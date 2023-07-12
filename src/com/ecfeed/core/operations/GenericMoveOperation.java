@@ -131,8 +131,12 @@ public class GenericMoveOperation extends CompositeOperation {
 			inOutMethodsInvolved.addAll(((IChoicesParentNode)nodeToMove).getParameter().getMethods());
 		}
 
-		addOperation((IModelOperation)nodeToMove.getParent().accept(
-				new FactoryRemoveChildOperation(nodeToMove, false, extLanguageManager)));
+		IAbstractNode parent = nodeToMove.getParent();
+		
+		IModelOperation modelOperation = (IModelOperation)parent.accept(
+				new RemoveChildOperationFactory(nodeToMove, false, extLanguageManager));
+		
+		addOperation(modelOperation);
 
 		if ((nodeToMove instanceof BasicParameterNode && ((BasicParameterNode)nodeToMove).isGlobalParameter()) && newParent instanceof MethodNode){
 			BasicParameterNode parameter = (BasicParameterNode)nodeToMove;
@@ -169,7 +173,7 @@ public class GenericMoveOperation extends CompositeOperation {
 
 			addOperation(
 					(IModelOperation)node.getParent().accept(
-							new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+							new RemoveChildOperationFactory(node, false, getExtLanguageManager())));
 
 			addOperation((
 					IModelOperation)newParent.getParent().accept(
@@ -192,7 +196,7 @@ public class GenericMoveOperation extends CompositeOperation {
 
 			addOperation((
 					IModelOperation)node.getParent().accept(
-							new FactoryRemoveChildOperation(node, false, getExtLanguageManager())));
+							new RemoveChildOperationFactory(node, false, getExtLanguageManager())));
 
 			addOperation(
 					(IModelOperation)newParent.accept(

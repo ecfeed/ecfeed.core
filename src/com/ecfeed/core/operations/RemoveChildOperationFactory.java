@@ -31,13 +31,13 @@ import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class FactoryRemoveChildOperation implements IModelVisitor{
+public class RemoveChildOperationFactory implements IModelVisitor{
 
 	private IAbstractNode fChild;
 	private boolean fValidate;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public FactoryRemoveChildOperation(
+	public RemoveChildOperationFactory(
 			IAbstractNode child, boolean validate, IExtLanguageManager extLanguageManager) {
 		fChild = child;
 		fValidate = validate;
