@@ -74,19 +74,25 @@ public class RemoveChildOperationFactory implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode methodNode) throws Exception {
 
-		if(fChild instanceof BasicParameterNode){
-			return new OnBasicParameterOperationRemoveFromMethod(methodNode, (BasicParameterNode)fChild, fExtLanguageManager);
+		if (fChild instanceof BasicParameterNode) {
+			return new OnBasicParameterOperationRemoveFromMethod(
+					methodNode, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 
-		if(fChild instanceof ConstraintNode){
+		if (fChild instanceof CompositeParameterNode) {
+			return new OnCompositeParameterOperationRemove(
+					methodNode, (CompositeParameterNode)fChild, false, fExtLanguageManager);
+		}
+
+		if (fChild instanceof ConstraintNode) {
 			return new OnConstraintOperationAdd(methodNode, (ConstraintNode)fChild, fExtLanguageManager);
 		}
 
-		if(fChild instanceof TestSuiteNode) {
+		if (fChild instanceof TestSuiteNode) {
 			return new OnTestCaseOperationRemove(methodNode, (TestCaseNode)fChild, fExtLanguageManager);
 		}
 
-		if(fChild instanceof TestCaseNode){
+		if (fChild instanceof TestCaseNode) {
 			return new OnTestCaseOperationRemove(methodNode, (TestCaseNode)fChild, fExtLanguageManager);
 		}
 

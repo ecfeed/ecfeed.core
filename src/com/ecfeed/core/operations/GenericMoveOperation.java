@@ -32,7 +32,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 public class GenericMoveOperation extends CompositeOperation {
 
 	public GenericMoveOperation(
-			List<? extends IAbstractNode> nodesToBeMoved, 
+			List<IAbstractNode> nodesToBeMoved, 
 			IAbstractNode newParent, 
 			int newIndex,
 			IExtLanguageManager extLanguageManager) {
@@ -50,7 +50,7 @@ public class GenericMoveOperation extends CompositeOperation {
 	}
 
 	private void addChildOperations(
-			List<? extends IAbstractNode> nodesToBeMoved, 
+			List<IAbstractNode> nodesToBeMoved, 
 			IAbstractNode newParent, 
 			int newIndex,
 			IExtLanguageManager extLanguageManager) throws Exception {
@@ -74,7 +74,7 @@ public class GenericMoveOperation extends CompositeOperation {
 	}
 
 	private void addOperationsToMoveNodesUnderTheSameParent(
-			List<? extends IAbstractNode> nodesToBeMoved, 
+			List<IAbstractNode> nodesToBeMoved, 
 			int newIndex,
 			IExtLanguageManager extLanguageManager) {
 
@@ -95,12 +95,9 @@ public class GenericMoveOperation extends CompositeOperation {
 
 		for (IAbstractNode abstractNode : nodesToBeMoved) {
 
-			abstractNode = addOperationsToMoveOneNodeBetweenParents(
-					abstractNode, 
-					newParent, 
-					newIndex,
-					methodsInvolved,
-					extLanguageManager);
+			abstractNode = 
+					addOperationsToMoveOneNodeBetweenParents(
+							abstractNode, newParent, newIndex, methodsInvolved,extLanguageManager);
 		}
 
 		for (MethodNode method : methodsInvolved) {
@@ -133,10 +130,12 @@ public class GenericMoveOperation extends CompositeOperation {
 
 		IAbstractNode parent = nodeToMove.getParent();
 		
-		IModelOperation modelOperation = (IModelOperation)parent.accept(
-				new RemoveChildOperationFactory(nodeToMove, false, extLanguageManager));
+		RemoveChildOperationFactory removeChildOperationVisitor = 
+				new RemoveChildOperationFactory(nodeToMove, false, extLanguageManager);
 		
-		addOperation(modelOperation);
+		IModelOperation removeChildOperation = (IModelOperation)parent.accept(removeChildOperationVisitor);
+		
+		addOperation(removeChildOperation);
 
 		if ((nodeToMove instanceof BasicParameterNode && ((BasicParameterNode)nodeToMove).isGlobalParameter()) && newParent instanceof MethodNode){
 			BasicParameterNode parameter = (BasicParameterNode)nodeToMove;
