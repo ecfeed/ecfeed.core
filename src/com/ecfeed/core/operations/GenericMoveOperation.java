@@ -109,48 +109,48 @@ public class GenericMoveOperation extends CompositeOperation {
 	}
 
 	private IAbstractNode addOperationsToMoveOneNodeBetweenParents(
-			IAbstractNode node, 
+			IAbstractNode nodeToMove, 
 			IAbstractNode newParent,
 			int newIndex,
 			Set<MethodNode> inOutMethodsInvolved,
 			IExtLanguageManager extLanguageManager) throws Exception {
 
-		if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
+		if (nodeToMove instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
 
-			processTestCaseNode((TestCaseNode) node, (TestSuiteNode) newParent);
-			return node;
+			processTestCaseNode((TestCaseNode) nodeToMove, (TestSuiteNode) newParent);
+			return nodeToMove;
 		}
 
-		if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
+		if (nodeToMove instanceof TestSuiteNode && newParent instanceof MethodNode) {
 
-			processTestSuiteNode((TestSuiteNode) node, (MethodNode) newParent);
-			return node;
+			processTestSuiteNode((TestSuiteNode) nodeToMove, (MethodNode) newParent);
+			return nodeToMove;
 		}
 
-		if (node instanceof IChoicesParentNode) {
-			inOutMethodsInvolved.addAll(((IChoicesParentNode)node).getParameter().getMethods());
+		if (nodeToMove instanceof IChoicesParentNode) {
+			inOutMethodsInvolved.addAll(((IChoicesParentNode)nodeToMove).getParameter().getMethods());
 		}
 
-		addOperation((IModelOperation)node.getParent().accept(
-				new FactoryRemoveChildOperation(node, false, extLanguageManager)));
+		addOperation((IModelOperation)nodeToMove.getParent().accept(
+				new FactoryRemoveChildOperation(nodeToMove, false, extLanguageManager)));
 
-		if ((node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) && newParent instanceof MethodNode){
-			BasicParameterNode parameter = (BasicParameterNode)node;
-			node = new BasicParameterNode(parameter, JavaLanguageHelper.getAdapter(parameter.getType()).getDefaultValue(), false, null);
+		if ((nodeToMove instanceof BasicParameterNode && ((BasicParameterNode)nodeToMove).isGlobalParameter()) && newParent instanceof MethodNode){
+			BasicParameterNode parameter = (BasicParameterNode)nodeToMove;
+			nodeToMove = new BasicParameterNode(parameter, JavaLanguageHelper.getAdapter(parameter.getType()).getDefaultValue(), false, null);
 		}
 
 		if(newIndex != -1){
 			addOperation(
 					(IModelOperation)newParent.accept(
-							new AddChildOperationCreator(node, newIndex, false, extLanguageManager)));
+							new AddChildOperationCreator(nodeToMove, newIndex, false, extLanguageManager)));
 		}
 		else{
 			addOperation(
 					(IModelOperation)newParent.accept(
-							new AddChildOperationCreator(node, false, extLanguageManager)));
+							new AddChildOperationCreator(nodeToMove, false, extLanguageManager)));
 		}
 
-		return node;
+		return nodeToMove;
 	}
 
 	private void processTestCaseNode(TestCaseNode node, TestSuiteNode newParent) throws Exception {
