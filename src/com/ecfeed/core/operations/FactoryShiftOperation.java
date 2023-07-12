@@ -19,6 +19,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
@@ -327,12 +328,24 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends IAbstractNode> nodesToBeShifted, 
+			List<IAbstractNode> nodesToBeShifted, 
 			int newIndex, 
 			IExtLanguageManager extLanguageManager) {
 		
 		IAbstractNode parent = getParent(nodesToBeShifted);
-		return getShiftOperation(parent, nodesToBeShifted, new ShiftToIndexOperationProvider(nodesToBeShifted, newIndex, extLanguageManager));
+		
+		if (parent == null) {
+			return null;
+		}
+		
+		if (!AbstractNodeHelper.containsNodesOfTheSameType(nodesToBeShifted)) {
+			return null;
+		}
+
+		ShiftToIndexOperationProvider shiftOperationProvider = 
+				new ShiftToIndexOperationProvider(nodesToBeShifted, newIndex, extLanguageManager);
+		
+		return getShiftOperation(parent, nodesToBeShifted, shiftOperationProvider);
 	}
 
 	private static GenericShiftOperation getShiftOperation(
@@ -340,14 +353,10 @@ public class FactoryShiftOperation {
 			List<? extends IAbstractNode> shifted, 
 			IModelVisitor provider) {
 		
-		if (parent == null || haveTheSameType(shifted) == false) {
-			return null;
-		}
-		
 		try{
 			return (GenericShiftOperation)parent.accept(provider);
-		}
-		catch(Exception e){
+			
+		} catch(Exception e) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
@@ -369,18 +378,18 @@ public class FactoryShiftOperation {
 		return minIndexNode;
 	}
 
-	private static boolean haveTheSameType(List<? extends IAbstractNode> shifted) {
-		if(shifted.size() == 0){
-			return false;
-		}
-		Class<?> _class = shifted.get(0).getClass();
-		for(IAbstractNode node : shifted){
-			if(node.getClass().equals(_class) == false){
-				return false;
-			}
-		}
-		return true;
-	}
+//	private static boolean haveTheSameType(List<? extends IAbstractNode> shifted) {
+//		if(shifted.size() == 0){
+//			return false;
+//		}
+//		Class<?> _class = shifted.get(0).getClass();
+//		for(IAbstractNode node : shifted){
+//			if(node.getClass().equals(_class) == false){
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
 
 	private static IAbstractNode getParent(List<? extends IAbstractNode> nodes) {
 
