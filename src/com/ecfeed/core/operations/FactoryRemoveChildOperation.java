@@ -24,6 +24,7 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemoveFromCompositeParameter;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemoveFromMethod;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
+import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
@@ -118,6 +119,15 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 			return new OnBasicParameterOperationRemoveFromCompositeParameter(
 					compositeParameterNode, 
 					(BasicParameterNode)fChild, 
+					fExtLanguageManager	);
+		}
+		
+		if (fChild instanceof CompositeParameterNode) {
+
+			return new OnCompositeParameterOperationRemove(
+					compositeParameterNode, 
+					(CompositeParameterNode)fChild, 
+					false,
 					fExtLanguageManager	);
 		}
 
