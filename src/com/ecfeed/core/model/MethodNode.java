@@ -615,7 +615,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void setTestCases(List<TestCaseNode> testCaseNodes) {
 
-		fTestCasesHolder.replaceTestCases(testCaseNodes);
+		fTestCasesHolder.replaceTestCases(testCaseNodes, this);
 	}
 
 	@Override

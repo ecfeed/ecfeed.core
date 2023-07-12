@@ -111,12 +111,13 @@ public class TestCasesHolder {
 		registerChange();
 	}
 
-	public void replaceTestCases(List<TestCaseNode> testCases){ // TODO MO-RE fix test suites after changing test cases
+	public void replaceTestCases(List<TestCaseNode> testCases, MethodNode parent) {
 
 		fTestCaseNodes.clear();
 
-		if (testCases != null) {
-			fTestCaseNodes.addAll(testCases);
+		for (TestCaseNode testCaseNode : testCases) {
+			
+			addTestCase(testCaseNode, parent);
 		}
 
 		registerChange();
