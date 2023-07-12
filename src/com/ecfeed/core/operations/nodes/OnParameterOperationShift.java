@@ -87,6 +87,8 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 		List<TestCaseNode> testCases = fMethodNode.getTestCases();
 		fInitialTestCaseNodes = new ArrayList<>(testCases);
 		fMethodNode.removeAllTestCases();
+		
+		markModelUpdated();
 	}
 
 	@Override
@@ -175,7 +177,9 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 			List<Integer> fIndicesOfNodesToBeShifted = calculateIndices(parameters, fNodesToBeShifted);
 
 			fParametersParentNode.shiftParameters(fIndicesOfNodesToBeShifted, -fShift);
-			fMethodNode.setTestCases(new ArrayList<TestCaseNode>(fInitialTestCaseNodes));
+			fMethodNode.setTestCases(fInitialTestCaseNodes);
+			
+			markModelUpdated();
 		}
 
 		@Override
