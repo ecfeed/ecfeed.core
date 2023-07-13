@@ -432,6 +432,7 @@ public class MethodNodeHelper {
 	}
 
 	public static MethodNode findMethodNode(IAbstractNode anyNode) {
+		
 		IAbstractNode parent = anyNode;
 
 		while (parent != null) {
@@ -862,6 +863,20 @@ public class MethodNodeHelper {
 			
 			testCaseNode.replaceReferences(nodeMapper, mappingDirection);
 		}
+	}
+	
+	public static List<MethodNode> findMentioningMethodNodes(IAbstractNode abstractNode) {
+		
+		IParametersParentNode parametersParentNode = 
+				ParametersParentNodeHelper.findParametersParentNode(abstractNode);
+		
+		if (parametersParentNode == null) {
+			return new ArrayList<>();
+		}
+		
+		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(parametersParentNode);
+		
+		return mentioningMethodNodes;
 	}
 	
 	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {

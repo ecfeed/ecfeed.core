@@ -190,4 +190,20 @@ public class ParametersParentNodeHelper {
 				.collect(Collectors.toList());
 	}
 
+	public static IParametersParentNode findParametersParentNode(IAbstractNode abstractNode) {
+
+		IAbstractNode parent = abstractNode;
+
+		while (parent != null) {
+
+			if (parent instanceof IParametersParentNode) {
+				return (IParametersParentNode) parent;
+			}
+
+			parent = parent.getParent();
+		}
+
+		return null;
+	}
+
 }
