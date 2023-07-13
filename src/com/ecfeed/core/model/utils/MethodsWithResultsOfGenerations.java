@@ -18,22 +18,14 @@ public class MethodsWithResultsOfGenerations {
 		fMethodsToDeployedParameters = new HashMap<>();
 		fMethodsToTestCases = new HashMap<>();
 	}
-	
-	public MethodsWithResultsOfGenerations(List<MethodNode> methodNodes) {
 
-		fMethodsToDeployedParameters = new HashMap<>();
-		fMethodsToTestCases = new HashMap<>();
-		
-		saveResults(methodNodes);
-	}
-
-	private void saveResults(List<MethodNode> methodNodes) {
+	public void saveResultsForMethods(List<MethodNode> methodNodes) {
 
 		for (MethodNode methodNode : methodNodes) {
 			putMethodWithResultsOfGenerations(methodNode);
 		}
 	}
-	
+
 	public void clearResultsForAllMethods() {
 
 		List<MethodNode> methodNodes = getMethods();
@@ -43,7 +35,6 @@ public class MethodsWithResultsOfGenerations {
 			methodNode.removeAllTestCases();
 			methodNode.removeAllDeployedParameters();
 		}
-		
 	}
 
 	public void restoreResultsForAllMethods() {
@@ -79,10 +70,10 @@ public class MethodsWithResultsOfGenerations {
 	private void restoreResultsForOneMethod(MethodNode methodNode) {
 
 		methodNode.removeAllTestCases();
-		methodNode.addTestCases(getTestCaseNodes(methodNode));
+		methodNode.addTestCases(fMethodsToTestCases.get(methodNode));
 
 		methodNode.removeAllDeployedParameters();
-		methodNode.setDeployedParametersWithContexts(getDeployedParameters(methodNode));
+		methodNode.setDeployedParametersWithContexts(fMethodsToDeployedParameters.get(methodNode));
 	}
 
 	private List<MethodNode> getMethods() {
@@ -94,14 +85,6 @@ public class MethodsWithResultsOfGenerations {
 		}
 
 		return methodNodes;
-	}
-
-	private List<TestCaseNode> getTestCaseNodes(MethodNode methodNode) {
-		return fMethodsToTestCases.get(methodNode);
-	}
-
-	private List<ParameterWithLinkingContext> getDeployedParameters(MethodNode methodNode) {
-		return fMethodsToDeployedParameters.get(methodNode);
 	}
 
 }

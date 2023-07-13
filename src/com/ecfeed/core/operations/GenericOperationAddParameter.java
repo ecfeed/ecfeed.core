@@ -18,7 +18,6 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.utils.MethodsWithResultsOfGenerations;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -91,10 +90,11 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			return new MethodsWithResultsOfGenerations(); 
 		}
 
-		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(parametersParentNode);
-
 		MethodsWithResultsOfGenerations methodsWithResultsOfGenerations = 
-				new MethodsWithResultsOfGenerations(methodNodes);
+				new MethodsWithResultsOfGenerations();
+
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(parametersParentNode);		
+		methodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
 
 		return methodsWithResultsOfGenerations;
 	}

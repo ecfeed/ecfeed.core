@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -20,7 +19,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.MethodsWithResultsOfGenerations;
 import com.ecfeed.core.operations.GenericShiftOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -28,22 +27,20 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnParameterOperationShift extends GenericShiftOperation {
 
-	private IParametersParentNode fParametersParentNode;
-
 	List<? extends IAbstractNode> fNodesToBeShifted;
 	private int fShift;
 	private IExtLanguageManager fExtLanguageManager;
 
-	private MethodNode fMethodNode;
-	private List<TestCaseNode> fInitialTestCaseNodes;
+	private IParametersParentNode fParametersParentNode;
+	private MethodsWithResultsOfGenerations fMethodsWithResultsOfGenerations;
 
 	public OnParameterOperationShift(
-			List<? extends IAbstractNode> shifted, 
+			List<? extends IAbstractNode> nodesToBeShifted, 
 			boolean up, 
 			IExtLanguageManager extLanguageManager) {
-		this(shifted, 0, extLanguageManager);
+		this(nodesToBeShifted, 0, extLanguageManager);
 
-		setShift(minAllowedShift(shifted, up));
+		setShift(minAllowedShift(nodesToBeShifted, up));
 	}
 
 	public OnParameterOperationShift(
@@ -62,6 +59,7 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 		fExtLanguageManager = extLanguageManager;
 
 		fParametersParentNode = (IParametersParentNode) nodesToBeShifted.get(0).getParent();
+		fMethodsWithResultsOfGenerations = new MethodsWithResultsOfGenerations();
 	}
 
 	@Override
@@ -75,19 +73,19 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 			return;
 		}
 
+		IAbstractNode theFirstNodeToBeShifted = fNodesToBeShifted.get(0);
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(theFirstNodeToBeShifted);
+
+		fMethodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
+		fMethodsWithResultsOfGenerations.clearResultsForAllMethods();
+
+
 		List<AbstractParameterNode> parameters = fParametersParentNode.getParameters();
 		List<Integer> fIndicesOfNodesToBeShifted = calculateIndices(parameters, fNodesToBeShifted);
 
 		fParametersParentNode.shiftParameters(fIndicesOfNodesToBeShifted, fShift);
 
-		IAbstractNode theFirstNodeToBeShifted = fNodesToBeShifted.get(0);
 
-		fMethodNode = MethodNodeHelper.findMethodNode(theFirstNodeToBeShifted);
-
-		List<TestCaseNode> testCases = fMethodNode.getTestCases();
-		fInitialTestCaseNodes = new ArrayList<>(testCases);
-		fMethodNode.removeAllTestCases();
-		
 		markModelUpdated();
 	}
 
@@ -175,10 +173,10 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 
 			List<AbstractParameterNode> parameters = fParametersParentNode.getParameters();
 			List<Integer> fIndicesOfNodesToBeShifted = calculateIndices(parameters, fNodesToBeShifted);
-
 			fParametersParentNode.shiftParameters(fIndicesOfNodesToBeShifted, -fShift);
-			fMethodNode.setTestCases(fInitialTestCaseNodes);
-			
+
+			fMethodsWithResultsOfGenerations.restoreResultsForAllMethods();
+
 			markModelUpdated();
 		}
 
