@@ -14,32 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnBasicParameterOperationRemoveFromMethod extends AbstractModelOperation {
+public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 
 	private static final String REMOVE_BASIC_PARAMETER = "Remove basic parameter";
 
-	private MethodNode fMethodNode;
+	private IParametersParentNode fParent;
 	private BasicParameterNode fBasicParameterNode;
 	private int fParameterIndex;
+	
+	private MethodNode fMethodNode;
 
 	private List<TestCaseNode> fOriginalTestCases;
 	private List<BasicParameterNode> fOriginalDeployedParameters;
 
-	public OnBasicParameterOperationRemoveFromMethod(
-			MethodNode methodNode,
+	public OnBasicParameterOperationRemove(
+			IParametersParentNode parent,
 			BasicParameterNode basicParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		super(REMOVE_BASIC_PARAMETER, extLanguageManager);
 
-		fMethodNode = methodNode;
+		fParent = parent;
 		fBasicParameterNode = basicParameterNode;
+		
+		fMethodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
+		
+		if (fMethodNode == null) {
+			ExceptionHelper.reportRuntimeException("Method node not found.");
+		}
 
 		fOriginalTestCases = new ArrayList<>();
 		fOriginalDeployedParameters = new ArrayList<>();
@@ -58,7 +69,7 @@ public class OnBasicParameterOperationRemoveFromMethod extends AbstractModelOper
 		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
 		fMethodNode.removeAllDeployedParameters();
 
-		fMethodNode.removeParameter(fBasicParameterNode);
+		fParent.removeParameter(fBasicParameterNode);
 
 		markModelUpdated();
 	}
@@ -76,17 +87,18 @@ public class OnBasicParameterOperationRemoveFromMethod extends AbstractModelOper
 	private class OperationAddParameter extends AbstractModelOperation {
 
 		public OperationAddParameter(IExtLanguageManager extLanguageManager) {
-			super(AbstractModelOperation.createReverseOperationName(REMOVE_BASIC_PARAMETER), extLanguageManager);
+			super(AbstractModelOperation.createReverseOperationName(
+					REMOVE_BASIC_PARAMETER), extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
 
-			setOneNodeToSelect(fMethodNode);
+			setOneNodeToSelect(fParent);
 
 			OnParameterOperationAddToParent onParameterOperationAddToParent = 
 					new OnParameterOperationAddToParent(
-							fMethodNode,
+							fParent,
 							fBasicParameterNode,
 							fParameterIndex,
 							getExtLanguageManager());

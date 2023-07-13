@@ -21,8 +21,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemoveFromCompositeParameter;
-import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemoveFromMethod;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
@@ -75,7 +74,7 @@ public class RemoveChildOperationFactory implements IModelVisitor{
 	public Object visit(MethodNode methodNode) throws Exception {
 
 		if (fChild instanceof BasicParameterNode) {
-			return new OnBasicParameterOperationRemoveFromMethod(
+			return new OnBasicParameterOperationRemove(
 					methodNode, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 
@@ -122,7 +121,7 @@ public class RemoveChildOperationFactory implements IModelVisitor{
 
 		if (fChild instanceof BasicParameterNode) {
 
-			return new OnBasicParameterOperationRemoveFromCompositeParameter(
+			return new OnBasicParameterOperationRemove(
 					compositeParameterNode, 
 					(BasicParameterNode)fChild, 
 					fExtLanguageManager	);
