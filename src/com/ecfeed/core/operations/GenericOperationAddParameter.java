@@ -105,7 +105,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		}
 
 		List<MethodNode> methodNodes = 
-				ParametersParentNodeHelper.getMentioningMethodNodes(parametersParentNode);
+				ParametersParentNodeHelper.findMentioningMethodNodes(parametersParentNode);
 
 		for (MethodNode methodNode : methodNodes) {
 

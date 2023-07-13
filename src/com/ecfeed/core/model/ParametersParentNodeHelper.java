@@ -190,7 +190,7 @@ public class ParametersParentNodeHelper {
 				.collect(Collectors.toList());
 	}
 
-	public static List<MethodNode> getMentioningMethodNodes(IParametersParentNode parametersParentNode) {
+	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
 
 		if (parametersParentNode instanceof MethodNode) {
 
