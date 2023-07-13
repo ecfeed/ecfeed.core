@@ -895,7 +895,7 @@ public class MethodNodeHelper {
 		}
 
 		CompositeParameterNode compositeParameterNode =
-				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
+				CompositeParameterNodeHelper.findTopComposite(parametersParentNode);
 
 		if (compositeParameterNode == null) {
 			return new ArrayList<>();

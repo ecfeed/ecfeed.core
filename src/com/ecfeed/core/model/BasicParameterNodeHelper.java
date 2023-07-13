@@ -215,7 +215,7 @@ public class BasicParameterNodeHelper {
 			BasicParameterNode basicParameterNode) {
 
 		CompositeParameterNode compositeParameterNode =
-				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
+				CompositeParameterNodeHelper.findTopComposite(basicParameterNode);
 
 		return CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
 	}
@@ -580,7 +580,7 @@ public class BasicParameterNodeHelper {
 			IParametersAndConstraintsParentNode parentMethodNodeOfConstraint) {
 
 		CompositeParameterNode globalTopCompositeParameterNode = 
-				AbstractParameterNodeHelper.findTopComposite(globalBasicParameterNode);
+				CompositeParameterNodeHelper.findTopComposite(globalBasicParameterNode);
 
 		if (globalTopCompositeParameterNode == null) {
 			return false;
@@ -649,7 +649,7 @@ public class BasicParameterNodeHelper {
 			IParametersAndConstraintsParentNode topParentNode) {
 
 		CompositeParameterNode topComposite = 
-				AbstractParameterNodeHelper.findTopComposite(basicParameterNode);
+				CompositeParameterNodeHelper.findTopComposite(basicParameterNode);
 
 		if (topComposite == null) {
 
@@ -700,7 +700,7 @@ public class BasicParameterNodeHelper {
 		if (parameterLinkingContext != null) {
 
 			CompositeParameterNode topComposite2 = 
-					AbstractParameterNodeHelper.findTopComposite(parameterLinkingContext);
+					CompositeParameterNodeHelper.findTopComposite(parameterLinkingContext);
 
 			if (topComposite2 != null && parentOfParameter.equals(topComposite2.getParent())) {
 				return false;

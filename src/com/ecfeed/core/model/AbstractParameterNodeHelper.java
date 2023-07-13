@@ -133,7 +133,7 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
-		
+
 		if (globalParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Global parameter node should not be empty.");
 		}
@@ -204,32 +204,6 @@ public abstract class AbstractParameterNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
-
-		IAbstractNode currentNode = abstractNode;
-
-		CompositeParameterNode topCompositeParameterNode = null;
-
-		if (abstractNode instanceof CompositeParameterNode) {
-			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
-		}
-
-		for (;;) {
-
-			IAbstractNode parent = currentNode.getParent();
-
-			if (parent == null || parent instanceof ClassNode || parent instanceof RootNode) {
-				return topCompositeParameterNode;
-			}
-
-			if (parent instanceof CompositeParameterNode) {
-				topCompositeParameterNode = (CompositeParameterNode) parent;
-			}
-
-			currentNode = parent;
-		}
-	}
-
 	public static void compareParameterTypes(
 			AbstractParameterNode abstractParameter1,
 			AbstractParameterNode abstractParameter2) {
@@ -243,7 +217,6 @@ public abstract class AbstractParameterNodeHelper {
 
 			ExceptionHelper.reportRuntimeException("Types of nodes do not match: composite parameter vs basic parameter.");
 		}
-
 	}
 
 	private enum ParameterPathType {
@@ -294,28 +267,28 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		String formattedPath = formatSearchPath(path, parameterPathType);
-		
+
 		IAbstractNode foundAbstractNode = topNode.getChild(formattedPath);
-		
+
 		if (!(foundAbstractNode instanceof AbstractParameterNode)) {
 			return null;
 		}
-		
+
 		return (AbstractParameterNode) foundAbstractNode;
 	}
 
 	private static String formatSearchPath(String path, ParameterPathType parameterPathType) {
-		
+
 		String formattedPath = path;
 
 		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			formattedPath = path.substring(1);
 		}
-		
+
 		if (parameterPathType == ParameterPathType.PATH_CONTAINTS_TOP_NODE) {
 			formattedPath = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, formattedPath);
 		}
-		
+
 		return formattedPath;
 	}
 

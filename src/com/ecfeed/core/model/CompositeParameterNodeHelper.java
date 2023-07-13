@@ -36,7 +36,7 @@ public class CompositeParameterNodeHelper {
 
 		CompositeParameterNode childCompositeParameterNode = 
 				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			childCompositeParameterNode.setParent(parentCompositeParameterNode);
 		}
@@ -268,29 +268,29 @@ public class CompositeParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static List<CompositeParameterNode> getChildCompositeParameterNodes(IParametersParentNode parentNode) {
-		
+
 		List<AbstractParameterNode> childAbstractParameterNodes = parentNode.getParameters();
-		
+
 		List<CompositeParameterNode> childCompositeParameterNodes = 
 				filterCompositeParameterNodes(childAbstractParameterNodes);
-		
+
 		return childCompositeParameterNodes;
 	}
 
 	public static List<CompositeParameterNode> filterCompositeParameterNodes(
 			List<AbstractParameterNode> abstractParameterNodes) {
-		
+
 		List<CompositeParameterNode> compositeParameterNodes = new ArrayList<>();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
-			
+
 			if (abstractParameterNode instanceof CompositeParameterNode) {
 				compositeParameterNodes.add((CompositeParameterNode) abstractParameterNode);
 			}
 		}
-		
+
 		return compositeParameterNodes;
 	}
 
@@ -304,7 +304,7 @@ public class CompositeParameterNodeHelper {
 
 		int parametersCount1 = compositeParameterNode1.getParametersCount();
 		int parametersCount2 = compositeParameterNode2.getParametersCount();
-		
+
 		if (parametersCount1 != parametersCount2) {
 			ExceptionHelper.reportRuntimeException("Count of parameters does not match.");
 		}
@@ -323,7 +323,7 @@ public class CompositeParameterNodeHelper {
 
 		List<ConstraintNode> constraintNodes1 = compositeParameterNode1.getConstraintNodes();
 		List<ConstraintNode> constraintNodes2 = compositeParameterNode2.getConstraintNodes();
-		
+
 		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
 
 		for (int i =0; i < constraintNodes1.size(); ++i) {
@@ -360,13 +360,13 @@ public class CompositeParameterNodeHelper {
 			}
 		}
 	}
-	
+
 	public static List<MethodNode> getMentioningMethodNodes(CompositeParameterNode compositeParameterNode) {
-		
+
 		if (compositeParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty composite parameter node is not allowed.");
 		}
-		
+
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
 		List<AbstractParameterNode> linkedParameters =
@@ -382,6 +382,32 @@ public class CompositeParameterNodeHelper {
 		}
 
 		return resultMethodNodes;
+	}
+
+	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
+
+		IAbstractNode currentNode = abstractNode;
+
+		CompositeParameterNode topCompositeParameterNode = null;
+
+		if (abstractNode instanceof CompositeParameterNode) {
+			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
+		}
+
+		for (;;) {
+
+			IAbstractNode parent = currentNode.getParent();
+
+			if (parent == null || parent instanceof ClassNode || parent instanceof RootNode) {
+				return topCompositeParameterNode;
+			}
+
+			if (parent instanceof CompositeParameterNode) {
+				topCompositeParameterNode = (CompositeParameterNode) parent;
+			}
+
+			currentNode = parent;
+		}
 	}
 
 }

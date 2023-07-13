@@ -983,7 +983,7 @@ public class ChoiceNodeHelper {
 
 	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
 
-		CompositeParameterNode compositeParameterNode = AbstractParameterNodeHelper.findTopComposite(globalChoiceNode);
+		CompositeParameterNode compositeParameterNode = CompositeParameterNodeHelper.findTopComposite(globalChoiceNode);
 
 		if (compositeParameterNode != null) {
 			return calculateTestCasesForChoiceOfGlobalComposite(compositeParameterNode);
