@@ -863,4 +863,33 @@ public class MethodNodeHelper {
 			testCaseNode.replaceReferences(nodeMapper, mappingDirection);
 		}
 	}
+	
+	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
+
+		if (parametersParentNode instanceof MethodNode) {
+
+			List<MethodNode> methodNodes = new ArrayList<>();
+
+			methodNodes.add((MethodNode) parametersParentNode);
+
+			return methodNodes;
+		}
+
+		if (parametersParentNode instanceof RootNode) {
+			return new ArrayList<>();
+		}
+
+		CompositeParameterNode compositeParameterNode =
+				AbstractParameterNodeHelper.findTopComposite(parametersParentNode);
+
+		if (compositeParameterNode == null) {
+			return new ArrayList<>();
+		}
+
+		List<MethodNode> mentioningNodes = 
+				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
+
+		return mentioningNodes;
+	}
+	
 }
