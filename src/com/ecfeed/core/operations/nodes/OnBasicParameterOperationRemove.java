@@ -10,17 +10,15 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.MethodsWithResultsOfGenerations;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnBasicParameterOperationRemove extends AbstractModelOperation {
@@ -30,11 +28,12 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 	private IParametersParentNode fParent;
 	private BasicParameterNode fBasicParameterNode;
 	private int fParameterIndex;
-	
-	private MethodNode fMethodNode;
 
-	private List<TestCaseNode> fOriginalTestCases;
-	private List<BasicParameterNode> fOriginalDeployedParameters;
+	private MethodsWithResultsOfGenerations fMethodsWithResultsOfGenerations;
+
+	//	private MethodNode fMethodNode;
+	//	private List<TestCaseNode> fOriginalTestCases;
+	//	private List<BasicParameterNode> fOriginalDeployedParameters;
 
 	public OnBasicParameterOperationRemove(
 			IParametersParentNode parent,
@@ -45,15 +44,17 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 
 		fParent = parent;
 		fBasicParameterNode = basicParameterNode;
-		
-		fMethodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
-		
-		if (fMethodNode == null) {
-			ExceptionHelper.reportRuntimeException("Method node not found.");
-		}
 
-		fOriginalTestCases = new ArrayList<>();
-		fOriginalDeployedParameters = new ArrayList<>();
+		fMethodsWithResultsOfGenerations = new MethodsWithResultsOfGenerations();
+
+		//		fMethodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
+		//		
+		//		if (fMethodNode == null) {
+		//			ExceptionHelper.reportRuntimeException("Method node not found.");
+		//		}
+		//
+		//		fOriginalTestCases = new ArrayList<>();
+		//		fOriginalDeployedParameters = new ArrayList<>();
 	}
 
 	@Override
@@ -61,13 +62,17 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 
 		fParameterIndex = fBasicParameterNode.getMyIndex();
 
-		fOriginalTestCases.clear();
-		fOriginalTestCases.addAll(fMethodNode.getTestCases());
-		fMethodNode.removeAllTestCases();
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(fBasicParameterNode);
+		fMethodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
+		fMethodsWithResultsOfGenerations.clearResultsForAllMethods();
 
-		fOriginalDeployedParameters.clear();
-		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
-		fMethodNode.removeAllDeployedParameters();
+		//		fOriginalTestCases.clear();
+		//		fOriginalTestCases.addAll(fMethodNode.getTestCases());
+		//		fMethodNode.removeAllTestCases();
+		//
+		//		fOriginalDeployedParameters.clear();
+		//		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
+		//		fMethodNode.removeAllDeployedParameters();
 
 		fParent.removeParameter(fBasicParameterNode);
 
@@ -105,8 +110,9 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 
 			onParameterOperationAddToParent.execute();
 
-			fMethodNode.setTestCases(fOriginalTestCases);
-			fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
+			fMethodsWithResultsOfGenerations.restoreResultsForAllMethods();
+			//			fMethodNode.setTestCases(fOriginalTestCases);
+			//			fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
 
 			markModelUpdated();
 		}
