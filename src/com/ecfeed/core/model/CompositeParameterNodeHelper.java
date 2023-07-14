@@ -385,6 +385,10 @@ public class CompositeParameterNodeHelper {
 	}
 
 	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
+		
+		if (abstractNode == null) {
+			return null;
+		}
 
 		IAbstractNode currentNode = abstractNode;
 
