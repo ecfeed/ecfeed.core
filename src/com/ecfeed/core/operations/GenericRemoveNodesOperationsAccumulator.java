@@ -24,12 +24,10 @@ import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
-import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
-import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
+import com.ecfeed.core.operations.nodes.OnParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -206,7 +204,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof MethodNode) {
 
 				IModelOperation operation = 
-						new OnBasicParameterOperationRemove(
+						new OnParameterOperationRemove(
 								(MethodNode)parent, basicParameterNode, extLanguageManager);
 
 				result.add(operation);
@@ -216,7 +214,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof CompositeParameterNode) {
 
 				IModelOperation operation = 
-						new OnParameterOperationRemoveFromComposite(
+						new OnParameterOperationRemove(
 								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
 				result.add(operation);
 				continue;
@@ -237,8 +235,8 @@ public class GenericRemoveNodesOperationsAccumulator {
 			IParametersParentNode parent = (IParametersParentNode)basicParameterNode.getParent();
 			
 			IModelOperation modelOperation = 
-								new OnCompositeParameterOperationRemove(
-										parent, basicParameterNode, validate, extLanguageManager);
+								new OnParameterOperationRemove(
+										parent, basicParameterNode, extLanguageManager);
 		
 			result.add(modelOperation);
 		
