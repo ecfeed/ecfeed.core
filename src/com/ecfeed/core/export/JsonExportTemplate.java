@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.ecfeed.core.export;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -44,8 +45,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 	public static String getTemplateFormatSt() {
 
-		final String FORMAT_JSON = "JSON";
-		return FORMAT_JSON;
+		return "JSON";
 	}	
 
 	private static String createDefaultHeaderTemplate() {
@@ -73,18 +73,21 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 		StringBuilder template = new StringBuilder();
 
-		int parametersSize = parameters.size();
+		List<String> elements = new ArrayList<>();
 
-		for (int index = 0; index < parametersSize; index++) {
-			template.append(createParameterString(index+1));			
+		for (int index = 0; index < parameters.size(); index++) {
+			elements.add(createParameterString(index+1));
 		}
+
+		template.append(String.join(", \n", elements));
+		template.append("\n");
 
 		return template.toString();
 	}
 
 	private static String createParameterString(int counter) {
 
-		return "\t\t\t\"$" + counter + ".name\":\"$" + counter + ".value\", \n";
+		return "\t\t\t\"$" + counter + ".name\":\"$" + counter + ".value\"";
 	}
 
 }
