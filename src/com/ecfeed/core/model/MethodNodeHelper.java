@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -867,16 +868,43 @@ public class MethodNodeHelper {
 	
 	public static List<MethodNode> findMentioningMethodNodes(IAbstractNode abstractNode) {
 		
-		IParametersParentNode parametersParentNode = 
-				ParametersParentNodeHelper.findParametersParentNode(abstractNode);
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
 		
-		if (parametersParentNode == null) {
+		if (methodNode != null) {
+			return new ArrayList<>(Arrays.asList(methodNode));
+		}
+		
+		if (isBasicParameterDirectlyUnderRootOrClass(abstractNode)) {
+			
+			List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(abstractNode.getParent());
+			
+			return mentioningMethodNodes;
+		}
+		
+		CompositeParameterNode compositeParameterNode = 
+				CompositeParameterNodeHelper.findTopComposite(abstractNode);
+		
+		if (compositeParameterNode == null) {
 			return new ArrayList<>();
 		}
 		
-		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(parametersParentNode);
-		
+		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(compositeParameterNode);
 		return mentioningMethodNodes;
+	}
+
+	private static boolean isBasicParameterDirectlyUnderRootOrClass(IAbstractNode abstractNode) {
+		
+		if (!(abstractNode instanceof BasicParameterNode)) {
+			return false;
+		}
+		
+		IAbstractNode parent = abstractNode.getParent();
+		
+		if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
