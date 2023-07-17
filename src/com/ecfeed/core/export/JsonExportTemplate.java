@@ -57,27 +57,23 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 	}
 
 	private static String createDefaultTestCaseTemplate(List<AbstractParameterNode> parameters) {
-
 		StringBuilder template = new StringBuilder();
 
 		template.append("\t\t{\n\t\t\t\"index\": %index, \n");
-
 		template.append(createParametersTemplate(parameters));
-
-		template.append( "\t\t},");
+		template.append( "\t\t}");
 
 		return template.toString();
 	}
 
 	private static String createParametersTemplate(List<AbstractParameterNode> parameters) {
-
-		StringBuilder template = new StringBuilder();
-
 		List<String> elements = new ArrayList<>();
 
 		for (int index = 0; index < parameters.size(); index++) {
 			elements.add(createParameterString(index+1));
 		}
+
+		StringBuilder template = new StringBuilder();
 
 		template.append(String.join(", \n", elements));
 		template.append("\n");
@@ -89,5 +85,4 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 		return "\t\t\t\"$" + counter + ".name\":\"$" + counter + ".value\"";
 	}
-
 }
