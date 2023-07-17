@@ -266,5 +266,14 @@ public abstract class AbstractNodeHelper  {
 
 		return true;
 	}
+	
+	public static boolean twoNodesAreOfTheSameClass(IAbstractNode node1, IAbstractNode node2) {
+		
+		if (node1.getClass().equals(node2.getClass())) {
+			return true;
+		}
+		
+		return false;
+	}
 
 }
