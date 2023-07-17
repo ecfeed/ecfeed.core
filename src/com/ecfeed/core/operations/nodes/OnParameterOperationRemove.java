@@ -47,12 +47,11 @@ public class OnParameterOperationRemove extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		fParameterIndex = fBasicParameterNode.getMyIndex();
-
 		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(fBasicParameterNode);
 		fMethodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
 		fMethodsWithResultsOfGenerations.clearResultsForAllMethods();
 
+		fParameterIndex = fBasicParameterNode.getMyIndex();
 		fParent.removeParameter(fBasicParameterNode);
 
 		markModelUpdated();
