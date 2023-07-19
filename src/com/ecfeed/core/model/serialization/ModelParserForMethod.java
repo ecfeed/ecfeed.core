@@ -35,14 +35,14 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	IModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
 	IModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
 	IModelParserForTestCase fModelParserForTestCase;
-	IModelParserForConstraint fModelParserForConstraint;
+	ModelParserForConstraint fModelParserForConstraint;
 
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
 			IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
 			IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
 			IModelParserForTestCase modelParserForTestCase,
-			IModelParserForConstraint modelParserForConstraint) {
+			ModelParserForConstraint modelParserForConstraint) {
 
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 		fModelParserForMethodCompositeParameter = modelParserForMethodCompositeParameter;

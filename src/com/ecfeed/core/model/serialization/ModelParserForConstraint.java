@@ -42,7 +42,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForConstraint implements IModelParserForConstraint {
+public class ModelParserForConstraint {
 
 	//private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
 

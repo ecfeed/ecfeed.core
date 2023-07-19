@@ -25,10 +25,12 @@ import nu.xom.Element;
 public class ModelParserForGlobalCompositeParameter implements IModelParserForGlobalCompositeParameter {
 
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
-	private IModelParserForConstraint fModelParserForConstraint;
+	private ModelParserForConstraint fModelParserForConstraint;
 
-	public ModelParserForGlobalCompositeParameter(IModelParserForGlobalParameter modelParserForGlobalParameter,
-			IModelParserForConstraint modelParserForConstraint) {
+	public ModelParserForGlobalCompositeParameter(
+			IModelParserForGlobalParameter modelParserForGlobalParameter,
+			ModelParserForConstraint modelParserForConstraint) {
+		
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}

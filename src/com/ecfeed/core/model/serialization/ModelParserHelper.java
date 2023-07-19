@@ -36,7 +36,7 @@ public class ModelParserHelper  {
 		
 		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
-		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
 				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
@@ -57,7 +57,7 @@ public class ModelParserHelper  {
 		
 		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
 
-		IModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
+		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 		
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
@@ -79,7 +79,7 @@ public class ModelParserHelper  {
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
-		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
 				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserForConstraint);
