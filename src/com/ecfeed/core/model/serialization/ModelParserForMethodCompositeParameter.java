@@ -22,7 +22,7 @@ import nu.xom.Element;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
-public class ModelParserForMethodCompositeParameter implements IModelParserForMethodCompositeParameter {
+public class ModelParserForMethodCompositeParameter {
 
 	private ModelParserForMethodParameter fModelParserForMethodParameter;
 	private ModelParserForConstraint fModelParserForConstraint;

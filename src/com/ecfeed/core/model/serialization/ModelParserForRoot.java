@@ -25,13 +25,13 @@ public class ModelParserForRoot {
 	IModelChangeRegistrator fModelChangeRegistrator;
 	private int fModelVersion;
 	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
-	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
+	private ModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
 	private ModelParserForClass fModelParserForClass;
 
 	public ModelParserForRoot(
 			int modelVersion, 
 			ModelParserForGlobalParameter modelParserForGlobalParameter,
-			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
+			ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
 			ModelParserForClass modelParserForClass,
 			IModelChangeRegistrator modelChangeRegistrator) {
 

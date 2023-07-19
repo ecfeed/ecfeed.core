@@ -29,12 +29,12 @@ import nu.xom.Element;
 public class ModelParserForClass {
 
 	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
-	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
+	private ModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
 	private ModelParserForMethod fModelParserForMethod;
 
 	public ModelParserForClass(
 			ModelParserForGlobalParameter modelParserForGlobalParameter,
-			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
+			ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
 			ModelParserForMethod modelParserForMethod) {
 
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;

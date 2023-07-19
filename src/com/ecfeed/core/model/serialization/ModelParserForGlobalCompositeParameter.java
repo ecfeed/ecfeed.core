@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.LogHelperCore;
 import nu.xom.Element;
 
-public class ModelParserForGlobalCompositeParameter implements IModelParserForGlobalCompositeParameter {
+public class ModelParserForGlobalCompositeParameter { // XYX
 
 	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private ModelParserForConstraint fModelParserForConstraint;
