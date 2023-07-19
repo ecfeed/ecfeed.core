@@ -142,14 +142,100 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
 
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
 	}
+
+	//	@Test 
+	//	public void AAAshouldSerializeAndParseNestedStructureWithConstraintAtStructureLevel() {
+	//
+	//		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+	//
+	//		// class and method
+	//
+	//		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+	//
+	//		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+	//
+	//		// local structure 1
+	//
+	//		CompositeParameterNode compositeParameterNode = 
+	//				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+	//
+	//		// local parameter1 with choice
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+	//						compositeParameterNode, "LP1", "int", "0", true, null);
+	//
+	//		ChoiceNode choiceNode = 
+	//				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//						basicParameterNode, "LC1", "0", false, true, null);
+	//
+	//		// constraint with parameter condition
+	//
+	//		RelationStatement precondition =
+	//				RelationStatement.createRelationStatementWithChoiceCondition(
+	//						basicParameterNode, null, 
+	//						EMathRelation.EQUAL, 
+	//						choiceNode);
+	//
+	//		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+	//
+	//		Constraint constraint = new Constraint(
+	//				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+	//
+	//		ConstraintsParentNodeHelper.addNewConstraintNode(compositeParameterNode, constraint, true, null);
+	//
+	//		// root
+	//		//   class
+	//		//     method
+	//		//       LS1
+	//		//          LP1
+	//		//				LC1
+	//		//		 	constraint: LS1:LP1 = LC1 => true
+	//
+	//		try {
+	//			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+	//			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+	//
+	//			serializer.serialize(rootNode);
+	//			String xml = ostream.toString();
+	//
+	//			String tags = "<Constraint name=\"constraint\" type=\"EF\">\n" + 
+	//					"                    <Premise>\n" + 
+	//					"                        <Statement choice=\"LC1\" parameter=\"LS1:LP1\" relation=\"equal\"/>\n" + 
+	//					"                    </Premise>\n" + 
+	//					"                    <Consequence>\n" + 
+	//					"                        <StaticStatement value=\"true\"/>\n" + 
+	//					"                    </Consequence>\n" + 
+	//					"                </Constraint>";
+	//			
+	//						if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+	//							fail();
+	//						}
+	//			
+	//			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+	//			ModelParser parser = new ModelParser();
+	//			ListOfStrings errorList = new ListOfStrings();
+	//			
+	//			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+	//
+	//			checkErrorList(errorList);
+	//			ModelComparator.compareRootNodes(rootNode, parsedModel);
+	//
+	//		} catch (Exception e) {
+	//			fail("Unexpected exception: " + e.getMessage());
+	//		}
+	//	}
 
 	@Test 
 	public void shouldSerializeAndParseLinkedStructureAndConstraintWithParameterCondition() {
@@ -247,8 +333,11 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
 
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
@@ -358,8 +447,11 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
 
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
@@ -474,8 +566,10 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
 
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
@@ -557,8 +651,11 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
 
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
@@ -639,8 +736,11 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
 
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
 			ModelComparator.compareRootNodes(rootNode, parsedModel);
 
 		} catch (Exception e) {
@@ -695,7 +795,10 @@ public class ModelSerializerAndParserTest {
 
 			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+			ListOfStrings errorList = new ListOfStrings();
+
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+			checkErrorList(errorList);
 
 			// check parsed deployed parameter 1
 
@@ -726,59 +829,62 @@ public class ModelSerializerAndParserTest {
 
 	@Test
 	public void shouldSerializeModelWithClassesAndGlobalBasicParameters() {
-		
-			int version = ModelVersionDistributor.getCurrentSoftwareVersion();
-			RootNode model = new RootNode("model", null, version);
-			
-			model.addClass(new ClassNode("com.example.TestClass1", null));
-			model.addClass(new ClassNode("com.example.TestClass2", null));
-			model.addParameter(new BasicParameterNode("globalParameter1", "int", null, false, null));
-			model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null, false, null));
-			
-			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-			ModelSerializer serializer = new ModelSerializer(ostream, version);
-			try {
-				serializer.serialize(model);
-				
-				String xml = ostream.toString();
 
-				String tags =
-						"    <Class name=\"com.example.TestClass1\"/>\n" + 
-						"    <Class name=\"com.example.TestClass2\"/>\n" + 
-						"    <Parameter name=\"globalParameter1\" type=\"int\">\n" + 
-						"        <Properties>\n" + 
-						"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-						"        </Properties>\n" + 
-						"        <Comments>\n" + 
-						"            <TypeComments/>\n" + 
-						"        </Comments>\n" + 
-						"    </Parameter>\n" + 
-						"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\">\n" + 
-						"        <Properties>\n" + 
-						"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-						"        </Properties>\n" + 
-						"        <Comments>\n" + 
-						"            <TypeComments/>\n" + 
-						"        </Comments>\n" + 
-						"    </Parameter>";
+		int version = ModelVersionDistributor.getCurrentSoftwareVersion();
+		RootNode model = new RootNode("model", null, version);
 
-				if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
-					fail();
-				}
-			
-				InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-				ModelParser parser = new ModelParser();
-				RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
-			
-				assertElementsEqual(model, parsedModel);
-			} catch (Exception e) {
-				fail("Unexpected exception: " + e.getMessage());
+		model.addClass(new ClassNode("com.example.TestClass1", null));
+		model.addClass(new ClassNode("com.example.TestClass2", null));
+		model.addParameter(new BasicParameterNode("globalParameter1", "int", null, false, null));
+		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null, false, null));
+
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+		ModelSerializer serializer = new ModelSerializer(ostream, version);
+		try {
+			serializer.serialize(model);
+
+			String xml = ostream.toString();
+
+			String tags =
+					"    <Class name=\"com.example.TestClass1\"/>\n" + 
+							"    <Class name=\"com.example.TestClass2\"/>\n" + 
+							"    <Parameter name=\"globalParameter1\" type=\"int\">\n" + 
+							"        <Properties>\n" + 
+							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
+							"        </Properties>\n" + 
+							"        <Comments>\n" + 
+							"            <TypeComments/>\n" + 
+							"        </Comments>\n" + 
+							"    </Parameter>\n" + 
+							"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\">\n" + 
+							"        <Properties>\n" + 
+							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
+							"        </Properties>\n" + 
+							"        <Comments>\n" + 
+							"            <TypeComments/>\n" + 
+							"        </Comments>\n" + 
+							"    </Parameter>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+				fail();
 			}
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			ListOfStrings errorList = new ListOfStrings();
+
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
+			assertElementsEqual(model, parsedModel);
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
 	}
-	
+
 	@Test
 	public void serializerTestWithModelConversion(){
-		
+
 		RootNode convertedModel = null;
 		try {
 			convertedModel = ModelConverter.convertToCurrentVersion(createModel(0));
@@ -808,8 +914,8 @@ public class ModelSerializerAndParserTest {
 
 		RelationStatement relationStatementWithChoiceCondition = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-				parameter, null, EMathRelation.EQUAL, choice);
-		
+						parameter, null, EMathRelation.EQUAL, choice);
+
 		Constraint constraint = new Constraint(
 				"constraint",
 				ConstraintType.EXTENDED_FILTER,
@@ -831,9 +937,9 @@ public class ModelSerializerAndParserTest {
 	}
 
 	private String getSerializedString(RootNode model) {
-		
+
 		OutputStream modelStream = new ByteArrayOutputStream();
-		
+
 		ModelSerializer serializer = 
 				new ModelSerializer(modelStream, ModelVersionDistributor.getCurrentSoftwareVersion());
 
@@ -844,6 +950,15 @@ public class ModelSerializerAndParserTest {
 		}
 
 		return modelStream.toString();
+	}
+
+	private void checkErrorList(ListOfStrings errorList) {
+
+		if (errorList.isEmpty()) {
+			return;
+		}
+
+		fail(errorList.getFirstString());
 	}
 
 }
