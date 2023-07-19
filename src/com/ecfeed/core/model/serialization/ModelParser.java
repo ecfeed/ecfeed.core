@@ -38,7 +38,7 @@ public class ModelParser {
 
 	Builder fBuilder = new Builder();
 	XomAnalyser fXomAnalyser = null;
-	
+
 	public ModelParser() {
 	}
 
@@ -68,10 +68,10 @@ public class ModelParser {
 			}
 
 			createXomAnalyser(modelVersion);
-			
+
 			RootNode rootNode = getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
 			return rootNode;
-			
+
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -93,14 +93,14 @@ public class ModelParser {
 
 	public ClassNode parseClass(
 			InputStream istream, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
-			
+
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			return modelParserForClass.parseAndAddClass(
 					document.getRootElement(), null, outErrorList).get();
-			
+
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -109,12 +109,12 @@ public class ModelParser {
 
 	public MethodNode parseMethod(
 			InputStream istream, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
-			
+
 			ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
-			
+
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
@@ -124,21 +124,18 @@ public class ModelParser {
 
 	public BasicParameterNode parseGlobalParameter(
 			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
-			
-			ModelParserForChoice modelParserForChoice =
-					new ModelParserForChoice(null);
-			
+
 			ModelParserForGlobalParameter modelParserForGlobalParameter
-				= new ModelParserForGlobalParameter(modelParserForChoice);
-			
+			= new ModelParserForGlobalParameter();
+
 			return modelParserForGlobalParameter.parseGlobalBasicParameter(
 					document.getRootElement(), 
 					modelChangeRegistrator, 
 					outErrorList).get();
-			
+
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -147,7 +144,7 @@ public class ModelParser {
 
 	public BasicParameterNode parseMethodParameter(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForMethodParameter().parseMethodParameter(document.getRootElement(), method, method, outErrorList).get();
@@ -173,7 +170,7 @@ public class ModelParser {
 
 	public TestCaseNode parseTestCase(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForTestCase().parseTestCase(document.getRootElement(), method, outErrorList).get();
@@ -185,7 +182,7 @@ public class ModelParser {
 
 	public Optional<ConstraintNode> parseConstraint(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseConstraint(document.getRootElement(), method, outErrorList);
@@ -197,7 +194,7 @@ public class ModelParser {
 
 	public AbstractStatement parseStatement(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStatement(document.getRootElement(), method, outErrorList).get();
@@ -209,7 +206,7 @@ public class ModelParser {
 
 	public StaticStatement parseStaticStatement(
 			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
@@ -221,7 +218,7 @@ public class ModelParser {
 
 	public AbstractStatement parseChoicesParentStatement(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseChoiceStatement(document.getRootElement(), method, outErrorList);
@@ -233,7 +230,7 @@ public class ModelParser {
 
 	public ExpectedValueStatement parseExpectedValueStatement(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
@@ -245,7 +242,7 @@ public class ModelParser {
 
 	public StatementArray parseStatementArray(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-		
+
 		try {
 			Document document = fBuilder.build(istream);
 			return new ModelParserForConstraint().parseStatementArray(document.getRootElement(), method, outErrorList);

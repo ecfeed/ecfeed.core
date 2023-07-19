@@ -10,67 +10,28 @@
 
 package com.ecfeed.core.model.serialization;
 
-import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.*;
-
 public class ModelParserForGlobalParameter {
 
-	private ModelParserForChoice fModelParserForChoice;
-	
-	public ModelParserForGlobalParameter(ModelParserForChoice modelParserForChoice) {
-		fModelParserForChoice = modelParserForChoice;
-	}
-	
 	public Optional<BasicParameterNode> parseGlobalBasicParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrator, 
-			
 			ListOfStrings errorList) {
 
-		String name, type;
-		String defaultValue = null;
-		String expected = String.valueOf(false);
-
-		try {
-			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(element, errorList);
-			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
-
-			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-				expected = ModelParserHelper.getAttributeValue(element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
-			}
-
-			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
-				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
-			}
-		} catch (Exception e) {
-			errorList.add(e.getMessage());
-			return Optional.empty();
-		}
-
-		BasicParameterNode targetGlobalParameterNode = new BasicParameterNode(name, type, defaultValue, Boolean.parseBoolean(expected), modelChangeRegistrator);
+		BasicParameterNode targetGlobalParameterNode = 
+				ModelParserForParameterHelper.createBasicParameter(
+						element, SerializationHelperVersion1.getBasicParameterNodeName(), modelChangeRegistrator, errorList);
 
 		ModelParserHelper.parseParameterProperties(element, targetGlobalParameterNode);
 
-		List<Element> children = 
-				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getChoiceNodeName());
-
-		for (Element child : children) {
-
-			Optional<ChoiceNode> node = fModelParserForChoice.parseChoice(child, errorList);
-			if (node.isPresent()) {
-				targetGlobalParameterNode.addChoice(node.get());
-			}
-		}
+		ModelParserForParameterHelper.parseChoices(element, targetGlobalParameterNode, modelChangeRegistrator, errorList);
 
 		targetGlobalParameterNode.setDescription(ModelParserHelper.parseComments(element));
 		targetGlobalParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(element));

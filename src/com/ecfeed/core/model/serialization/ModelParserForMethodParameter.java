@@ -10,16 +10,15 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
 
-import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -30,53 +29,12 @@ public class ModelParserForMethodParameter {
 	public Optional<BasicParameterNode> parseMethodParameter(
 			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings outErrorList) {
 
-		String name, type;
-		String defaultValue = null;
-		String expected = String.valueOf(false);
-
-		try {
-			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), outErrorList);
-			name = ModelParserHelper.getElementName(parameterElement, outErrorList);
-			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, outErrorList);
-
-			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-				expected = 
-						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList);
-			}
-
-			if (parameterElement.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
-				defaultValue =
-						ModelParserHelper.getAttributeValue(
-								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
-			}
-
-		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
-			return Optional.empty();
-		}
-
 		BasicParameterNode targetMethodParameterNode = 
-				new BasicParameterNode(
-						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
-						);
+				ModelParserForParameterHelper.createBasicParameter(
+						parameterElement, getParameterNodeName(), method.getModelChangeRegistrator(), outErrorList);
 
 		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
-		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-			//			boolean linked ;
-			//
-			//			try {
-			//				linked = 
-			//						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-			//								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
-			//
-			//			} catch (ParserException e) {
-			//				return Optional.empty();
-			//			}
-			//
-			//targetMethodParameterNode.setLinked(linked);
-		}
 
 		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
 			String linkPath;
@@ -102,19 +60,11 @@ public class ModelParserForMethodParameter {
 			// targetMethodParameterNode.setLinked(false);
 		}
 
-		ModelParserForChoice modelParserForChoice = 
-				new ModelParserForChoice(targetMethodParameterNode.getModelChangeRegistrator());
-
-		List<Element> children = 
-				ModelParserHelper.getIterableChildren(
-						parameterElement, SerializationHelperVersion1.getChoiceNodeName());
-
-		for (Element child : children) {
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, outErrorList);
-			if (node.isPresent()) {
-				targetMethodParameterNode.addChoice(node.get());
-			}
-		}
+		ModelParserForParameterHelper.parseChoices(
+				parameterElement, 
+				targetMethodParameterNode, 
+				targetMethodParameterNode.getModelChangeRegistrator(), 
+				outErrorList);
 
 		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement));
 
@@ -126,11 +76,11 @@ public class ModelParserForMethodParameter {
 	}
 
 	private AbstractParameterNode findLink(String linkPath, MethodNode method) {
-		
+
 		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			return AbstractParameterNodeHelper.findParameter(linkPath, method);
 		}
-		
+
 		// old convention - to be removed in next release when all models would be converted to new convention
 		return method.getClassNode().findGlobalParameter(linkPath); 
 	}
@@ -138,6 +88,5 @@ public class ModelParserForMethodParameter {
 	private String getParameterNodeName() {
 		return SerializationHelperVersion1.getBasicParameterNodeName();
 	}
-
 
 }

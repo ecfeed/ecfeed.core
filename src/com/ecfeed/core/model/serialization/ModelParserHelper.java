@@ -29,18 +29,18 @@ import nu.xom.Node;
 public class ModelParserHelper  {
 
 	public static ModelParserForMethod createStandardModelParserForMethod() {
-		
+
 		ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 
 		ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
-		
+
 		ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-		
+
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
-				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
-		
+		= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
+
 		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,
 				modelParserForMethodCompositeParameter,
@@ -50,34 +50,31 @@ public class ModelParserHelper  {
 
 		return modelParserForMethod;
 	}
-	
+
 	public static ModelParserForClass createStandardModelParserForClass() {
-		
-		ModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
-		
+
 		ModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
 
 		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
-		
+
 		ModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
+				new ModelParserForGlobalParameter();
 
 		ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
 				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserFroConstraint);
-		
+
 		ModelParserForClass modelParserForClass = 
 				new ModelParserForClass(
 						modelParserForGlobalParameter, modelParserForGlobalCompositeParameter, modelParserForMethod);
 		return modelParserForClass;
 	}
-	
+
 	public static ModelParserForRoot createStandardModelParserForRoot(
 			int modelVersion, 
 			IModelChangeRegistrator modelChangeRegistrator) {
-		ModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
-		
+
 		ModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
+				new ModelParserForGlobalParameter();
 
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
@@ -85,7 +82,7 @@ public class ModelParserHelper  {
 				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserForConstraint);
 
 		ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-		
+
 		ModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						modelVersion, 
@@ -93,15 +90,15 @@ public class ModelParserHelper  {
 						modelParserForGlobalCompositeParameter,
 						modelParserForClass,
 						modelChangeRegistrator);
-		
+
 		return modelParserForRoot;
 	}
-	
+
 	public static boolean verifyElementName(Element element, String expectedName) {
 
 		return element.getQualifiedName().equals(expectedName);
 	}
-	
+
 	public static void assertNameEqualsExpectedName(
 			String qualifiedName, String expectedName, ListOfStrings errorList) {
 
