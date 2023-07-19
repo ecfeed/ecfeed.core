@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForRoot implements IModelParserForRoot {
+public class ModelParserForRoot {
 
 	IModelChangeRegistrator fModelChangeRegistrator;
 	private int fModelVersion;

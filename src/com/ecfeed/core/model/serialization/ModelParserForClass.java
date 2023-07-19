@@ -30,12 +30,12 @@ public class ModelParserForClass {
 
 	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
-	private IModelParserForMethod fModelParserForMethod;
+	private ModelParserForMethod fModelParserForMethod;
 
 	public ModelParserForClass(
 			ModelParserForGlobalParameter modelParserForGlobalParameter,
 			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
-			IModelParserForMethod modelParserForMethod) {
+			ModelParserForMethod modelParserForMethod) {
 
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
 		fModelParserForGlobalCompositeParameter = modelParserForGlobalCompositeParameter;

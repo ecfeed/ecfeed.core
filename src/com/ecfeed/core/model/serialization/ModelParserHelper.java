@@ -28,20 +28,20 @@ import nu.xom.Node;
 
 public class ModelParserHelper  {
 
-	public static IModelParserForMethod createStandardModelParserForMethod() {
+	public static ModelParserForMethod createStandardModelParserForMethod() {
 		
-		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+		ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 
-		IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
+		ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
 		
-		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+		ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
 				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
 		
-		IModelParserForMethod modelParserForMethod = new ModelParserForMethod(
+		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,
 				modelParserForMethodCompositeParameter,
 				modelParserForMethodDeployedParameter,
@@ -53,9 +53,9 @@ public class ModelParserHelper  {
 	
 	public static ModelParserForClass createStandardModelParserForClass() {
 		
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
+		ModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 		
-		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
+		ModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
 
 		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 		
@@ -71,10 +71,10 @@ public class ModelParserHelper  {
 		return modelParserForClass;
 	}
 	
-	public static IModelParserForRoot createStandardModelParserForRoot(
+	public static ModelParserForRoot createStandardModelParserForRoot(
 			int modelVersion, 
 			IModelChangeRegistrator modelChangeRegistrator) {
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
+		ModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
 		
 		ModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
@@ -86,7 +86,7 @@ public class ModelParserHelper  {
 
 		ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 		
-		IModelParserForRoot modelParserForRoot = 
+		ModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						modelVersion, 
 						modelParserForGlobalParameter,

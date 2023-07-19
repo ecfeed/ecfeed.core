@@ -24,11 +24,11 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMET
 
 public class ModelParserForMethodCompositeParameter implements IModelParserForMethodCompositeParameter {
 
-	private IModelParserForMethodParameter fModelParserForMethodParameter;
+	private ModelParserForMethodParameter fModelParserForMethodParameter;
 	private ModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForMethodCompositeParameter(
-			IModelParserForMethodParameter modelParserForMethodParameter,
+			ModelParserForMethodParameter modelParserForMethodParameter,
 			ModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;

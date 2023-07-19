@@ -29,19 +29,19 @@ import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethod implements IModelParserForMethod {
+public class ModelParserForMethod {
 
-	IModelParserForMethodParameter fModelParserForMethodParameter;
+	ModelParserForMethodParameter fModelParserForMethodParameter;
 	IModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
-	IModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
-	IModelParserForTestCase fModelParserForTestCase;
+	ModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
+	ModelParserForTestCase fModelParserForTestCase;
 	ModelParserForConstraint fModelParserForConstraint;
 
 	public  ModelParserForMethod(
-			IModelParserForMethodParameter modelParserForMethodParameter,
+			ModelParserForMethodParameter modelParserForMethodParameter,
 			IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
-			IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
-			IModelParserForTestCase modelParserForTestCase,
+			ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
+			ModelParserForTestCase modelParserForTestCase,
 			ModelParserForConstraint modelParserForConstraint) {
 
 		fModelParserForMethodParameter = modelParserForMethodParameter;

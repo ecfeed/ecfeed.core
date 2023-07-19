@@ -27,9 +27,8 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter { // TODO MO-RE do we need interface ?
+public class ModelParserForMethodDeployedParameter {
 
-	@Override
 	public Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(
 			Element parameterElement, 
 			MethodNode methodNode,

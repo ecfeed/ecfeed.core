@@ -113,7 +113,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
-			IModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
+			ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 			
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (Exception e) {
@@ -128,7 +128,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
-			IModelParserForChoice modelParserForChoice =
+			ModelParserForChoice modelParserForChoice =
 					new ModelParserForChoice(null);
 			
 			ModelParserForGlobalParameter modelParserForGlobalParameter

@@ -24,9 +24,9 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
 public class ModelParserForGlobalParameter {
 
-	private IModelParserForChoice fModelParserForChoice;
+	private ModelParserForChoice fModelParserForChoice;
 	
-	public ModelParserForGlobalParameter(IModelParserForChoice modelParserForChoice) {
+	public ModelParserForGlobalParameter(ModelParserForChoice modelParserForChoice) {
 		fModelParserForChoice = modelParserForChoice;
 	}
 	

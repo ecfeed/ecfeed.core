@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
+public class ModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
 			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings outErrorList) {

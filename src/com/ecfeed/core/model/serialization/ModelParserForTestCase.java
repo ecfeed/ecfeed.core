@@ -31,7 +31,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForTestCase implements IModelParserForTestCase {
+public class ModelParserForTestCase {
 
 	public Optional<TestCaseNode> parseTestCase(
 			Element element, MethodNode method, ListOfStrings errorList) {

@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForChoice implements IModelParserForChoice {
+public class ModelParserForChoice {
 
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
