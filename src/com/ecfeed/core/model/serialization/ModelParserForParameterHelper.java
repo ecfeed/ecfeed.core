@@ -12,15 +12,20 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
@@ -102,5 +107,39 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
+	public static void setLink(
+			Element parameterElement, 
+			MethodNode method, 
+			BasicParameterNode targetMethodParameterNode, 
+			ListOfStrings outErrorList) {
+
+		String linkPath;
+
+		try {
+			linkPath = 
+					ModelParserHelper.getAttributeValue(
+							parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
+			
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
+			return;
+		}
+
+		AbstractParameterNode link = findLink(linkPath, method);
+
+		if (link != null) {
+			targetMethodParameterNode.setLinkToGlobalParameter(link);
+		}
+	}
+
+	private static AbstractParameterNode findLink(String linkPath, MethodNode method) {
+
+		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
+			return AbstractParameterNodeHelper.findParameter(linkPath, method);
+		}
+
+		// old convention - to be removed in next release when all models would be converted to new convention
+		return method.getClassNode().findGlobalParameter(linkPath); 
+	}
 
 }
