@@ -42,7 +42,6 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestCaseNodeHelper;
-import com.ecfeed.core.model.serialization.IModelParserForClass;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
@@ -117,7 +116,7 @@ public class XomParserTest {
 
 			RootNode tmpRoot = new RootNode("tmp", null);
 			
-			IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
+			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseAndAddClass(element, tmpRoot, new ListOfStrings());
