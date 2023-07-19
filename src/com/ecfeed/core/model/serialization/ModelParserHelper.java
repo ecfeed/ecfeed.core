@@ -84,7 +84,7 @@ public class ModelParserHelper  {
 		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
 				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserForConstraint);
 
-		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
+		ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 		
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(

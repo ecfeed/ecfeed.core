@@ -26,7 +26,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForClass implements IModelParserForClass {
+public class ModelParserForClass {
 
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;

@@ -26,13 +26,13 @@ public class ModelParserForRoot implements IModelParserForRoot {
 	private int fModelVersion;
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
-	private IModelParserForClass fModelParserForClass;
+	private ModelParserForClass fModelParserForClass;
 
 	public ModelParserForRoot(
 			int modelVersion, 
 			IModelParserForGlobalParameter modelParserForGlobalParameter,
 			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
-			IModelParserForClass modelParserForClass,
+			ModelParserForClass modelParserForClass,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelVersion = modelVersion;
