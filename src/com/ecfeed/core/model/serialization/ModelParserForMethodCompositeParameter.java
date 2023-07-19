@@ -41,6 +41,53 @@ public class ModelParserForMethodCompositeParameter {
 			IParametersParentNode parent,
 			ListOfStrings errorList) {
 
+		CompositeParameterNode targetCompositeParameterNode = 
+				createCompositeParameter(element, method, parent, errorList);
+
+		List<Element> children = 
+				ModelParserHelper.getIterableChildren(
+						element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
+
+		parseParameters(children, targetCompositeParameterNode, method, errorList);
+
+		parseConstraints(children, targetCompositeParameterNode, errorList);
+
+		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
+
+			setLinkToGlobalParameter(element, parent, targetCompositeParameterNode, errorList);
+		}
+
+		return Optional.ofNullable(targetCompositeParameterNode);
+	}
+
+	private void setLinkToGlobalParameter(
+			Element element, 
+			IParametersParentNode parent,
+			CompositeParameterNode targetCompositeParameterNode, 
+			ListOfStrings errorList) {
+		
+		String linkPath;
+
+		try {
+			linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
+			return;
+		}
+
+		AbstractParameterNode link = findLink(linkPath, parent);
+
+		if (link != null) {
+			targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
+		} else {
+			errorList.add("Cannot find link for parameter: " + targetCompositeParameterNode.getName());
+		}
+	}
+
+	private CompositeParameterNode createCompositeParameter(
+			Element element, MethodNode method,
+			IParametersParentNode parent, ListOfStrings errorList) {
+		
 		String nameOfCompositeParameter;
 
 		try {
@@ -48,41 +95,19 @@ public class ModelParserForMethodCompositeParameter {
 			nameOfCompositeParameter = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
-		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(nameOfCompositeParameter, method.getModelChangeRegistrator());
+		CompositeParameterNode targetCompositeParameterNode = 
+				new CompositeParameterNode(nameOfCompositeParameter, method.getModelChangeRegistrator());
+		
 		targetCompositeParameterNode.setParent(parent);
+		
+		return targetCompositeParameterNode;
+	}
 
-		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
-
-		for (Element child : children) {
-
-			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-
-				Optional<BasicParameterNode> methodParameter = 
-						fModelParserForMethodParameter.parseMethodParameter(
-								child, method, targetCompositeParameterNode, errorList);
-
-				if (methodParameter.isPresent()) {
-					targetCompositeParameterNode.addParameter(methodParameter.get());
-				} else {
-					errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
-				}
-
-			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-
-				Optional<CompositeParameterNode> compositeParameter = parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList);
-
-				if (compositeParameter.isPresent()) {
-					targetCompositeParameterNode.addParameter(compositeParameter.get());
-				} else {
-					errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
-				}
-
-			}
-		}
-
+	private void parseConstraints(List<Element> children, CompositeParameterNode targetCompositeParameterNode,
+			ListOfStrings errorList) {
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
@@ -102,32 +127,54 @@ public class ModelParserForMethodCompositeParameter {
 				}
 			}
 		}
+	}
 
-		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
+	private void parseParameters(
+			List<Element> elementsOfParametersAndConstraints, 
+			CompositeParameterNode targetCompositeParameterNode,
+			MethodNode method, 
+			ListOfStrings errorList) {
+		
+		for (Element child : elementsOfParametersAndConstraints) {
 
-			String linkPath;
+			parseConditionallyParameterElement(child, method, targetCompositeParameterNode, errorList);
+		}
+	}
 
-			try {
-				linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-			} catch (Exception e) {
-				errorList.add(e.getMessage());
-				return Optional.empty();
+	private void parseConditionallyParameterElement(
+			Element child, 
+			MethodNode method,
+			CompositeParameterNode targetCompositeParameterNode, 
+			ListOfStrings errorList) {
+		
+		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+
+			Optional<BasicParameterNode> methodParameter = 
+					fModelParserForMethodParameter.parseMethodParameter(
+							child, method, targetCompositeParameterNode, errorList);
+
+			if (methodParameter.isPresent()) {
+				targetCompositeParameterNode.addParameter(methodParameter.get());
+			} else {
+				errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
 			}
 
-			AbstractParameterNode link = findLink(linkPath, parent);
+			return;
+		} 
+		
+		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 
-			if (link != null) {
-				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
+			Optional<CompositeParameterNode> compositeParameter = parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList);
+
+			if (compositeParameter.isPresent()) {
+				targetCompositeParameterNode.addParameter(compositeParameter.get());
 			} else {
-				errorList.add("Cannot find link for parameter: " + nameOfCompositeParameter);
+				errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
 			}
 		}
-
-		return Optional.ofNullable(targetCompositeParameterNode);
 	}
 
 	private AbstractParameterNode findLink(String linkPath, IParametersParentNode parent) {
-
 
 		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
 
