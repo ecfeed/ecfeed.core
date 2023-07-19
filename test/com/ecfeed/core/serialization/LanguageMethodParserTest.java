@@ -22,8 +22,8 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
+import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -262,7 +262,7 @@ public class LanguageMethodParserTest {
 
 		Element element = document.getRootElement();
 
-		IModelParserForMethod modelParserForMethod = 
+		ModelParserForMethod modelParserForMethod = 
 				ModelParserHelper.createStandardModelParserForMethod();
 
 		ListOfStrings errorList = new ListOfStrings();
