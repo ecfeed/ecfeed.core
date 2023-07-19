@@ -59,7 +59,7 @@ public class ModelParserHelper  {
 
 		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 		
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+		ModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
 		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
@@ -76,7 +76,7 @@ public class ModelParserHelper  {
 			IModelChangeRegistrator modelChangeRegistrator) {
 		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
 		
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+		ModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();

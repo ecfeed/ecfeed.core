@@ -22,7 +22,7 @@ import nu.xom.Element;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
-public class ModelParserForGlobalParameter implements IModelParserForGlobalParameter {
+public class ModelParserForGlobalParameter {
 
 	private IModelParserForChoice fModelParserForChoice;
 	
