@@ -23,10 +23,12 @@ import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
@@ -112,7 +114,7 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
-	public static void parseChoices2(
+	public static void parseChoices2( // XYX remove
 			Element parameterElement, 
 			BasicParameterNode targetMethodParameterNode,
 			IModelChangeRegistrator modelChangeRegistrator,
@@ -166,6 +168,32 @@ public class ModelParserForParameterHelper {
 
 		// old convention - to be removed in next release when all models would be converted to new convention
 		return ((MethodNode)parametersParentNode).getClassNode().findGlobalParameter(linkPath); 
+	}
+
+	public static void parseConstraints(
+			List<Element> children, 
+			CompositeParameterNode targetCompositeParameterNode,
+			ListOfStrings errorList) {
+
+		for (Element child : children) {
+
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
+
+				try {
+					Optional<ConstraintNode> constraint = 
+							new ModelParserForConstraint().parseConstraint(child, targetCompositeParameterNode, errorList);
+
+					if (constraint.isPresent()) {
+						targetCompositeParameterNode.addConstraint(constraint.get());
+					} else {
+						errorList.add("Cannot parse constraint of parent structure: " + targetCompositeParameterNode.getName() + ".");
+					}
+
+				} catch (Exception e) {
+					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
+				}
+			}
+		}
 	}
 
 }

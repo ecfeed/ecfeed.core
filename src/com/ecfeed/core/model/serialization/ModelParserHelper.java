@@ -39,7 +39,7 @@ public class ModelParserHelper  {
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
-		= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
+		= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter);
 
 		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,
@@ -55,13 +55,11 @@ public class ModelParserHelper  {
 
 		ModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
 
-		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
-
 		ModelParserBasicForParameter ModelParserForParameter = 
 				new ModelParserBasicForParameter();
 
 		ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
-				new ModelParserForGlobalCompositeParameter(ModelParserForParameter, modelParserFroConstraint);
+				new ModelParserForGlobalCompositeParameter(ModelParserForParameter);
 
 		ModelParserForClass modelParserForClass = 
 				new ModelParserForClass(
@@ -76,10 +74,8 @@ public class ModelParserHelper  {
 		ModelParserBasicForParameter ModelParserForParameter = 
 				new ModelParserBasicForParameter();
 
-		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-
 		ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
-				new ModelParserForGlobalCompositeParameter(ModelParserForParameter, modelParserForConstraint);
+				new ModelParserForGlobalCompositeParameter(ModelParserForParameter);
 
 		ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 

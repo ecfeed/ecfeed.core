@@ -10,29 +10,32 @@
 
 package com.ecfeed.core.model.serialization;
 
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
+
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
-
 public class ModelParserForMethodCompositeParameter {
 
 	private ModelParserBasicForParameter fModelParserForMethodParameter;
-	private ModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForMethodCompositeParameter(
-			ModelParserBasicForParameter modelParserForMethodParameter,
-			ModelParserForConstraint modelParserForConstraint) {
+			ModelParserBasicForParameter modelParserForMethodParameter) {
 
 		fModelParserForMethodParameter = modelParserForMethodParameter;
-		fModelParserForConstraint = modelParserForConstraint;
 	}
 
 	public Optional<CompositeParameterNode> parseMethodCompositeParameter(
@@ -53,7 +56,7 @@ public class ModelParserForMethodCompositeParameter {
 
 		parseParameters(children, targetCompositeParameterNode, method, errorList);
 
-		parseConstraints(children, targetCompositeParameterNode, errorList);
+		ModelParserForParameterHelper.parseConstraints(children, targetCompositeParameterNode, errorList);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
@@ -84,29 +87,6 @@ public class ModelParserForMethodCompositeParameter {
 			targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
 		} else {
 			errorList.add("Cannot find link for parameter: " + targetCompositeParameterNode.getName());
-		}
-	}
-
-	private void parseConstraints(List<Element> children, CompositeParameterNode targetCompositeParameterNode,
-			ListOfStrings errorList) {
-		for (Element child : children) {
-
-			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
-
-				try {
-					Optional<ConstraintNode> constraint = 
-							fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList);
-
-					if (constraint.isPresent()) {
-						targetCompositeParameterNode.addConstraint(constraint.get());
-					} else {
-						errorList.add("Cannot parse constraint of parent structure: " + targetCompositeParameterNode.getName() + ".");
-					}
-
-				} catch (Exception e) {
-					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
-				}
-			}
 		}
 	}
 
