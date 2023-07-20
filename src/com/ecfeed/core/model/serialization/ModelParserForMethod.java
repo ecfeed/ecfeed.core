@@ -32,14 +32,14 @@ import nu.xom.Element;
 public class ModelParserForMethod {
 
 	ModelParserBasicForParameter fModelParserForMethodParameter;
-	ModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
+	ModelParserForCompositeParameter fModelParserForMethodCompositeParameter;
 	ModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
 	ModelParserForTestCase fModelParserForTestCase;
 	ModelParserForConstraint fModelParserForConstraint;
 
 	public  ModelParserForMethod(
 			ModelParserBasicForParameter modelParserForMethodParameter,
-			ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
+			ModelParserForCompositeParameter modelParserForMethodCompositeParameter,
 			ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
 			ModelParserForTestCase modelParserForTestCase,
 			ModelParserForConstraint modelParserForConstraint) {
@@ -139,7 +139,7 @@ public class ModelParserForMethod {
 		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
 
 			Optional<CompositeParameterNode> compositeParameter = 
-					ModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
+					ModelParserForCompositeParameter.parseParameter(
 							parameterElement, targetMethodNode, targetMethodNode.getModelChangeRegistrator(), inOutErrorList);
 			
 			if (compositeParameter.isPresent()) {

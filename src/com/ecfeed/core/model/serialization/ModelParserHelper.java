@@ -38,8 +38,8 @@ public class ModelParserHelper  {
 
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
-		ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
-			= new ModelParserForMethodCompositeParameter();
+		ModelParserForCompositeParameter modelParserForMethodCompositeParameter
+			= new ModelParserForCompositeParameter();
 
 		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,

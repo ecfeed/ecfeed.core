@@ -28,9 +28,9 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodCompositeParameter {
+public class ModelParserForCompositeParameter {
 
-	public static Optional<CompositeParameterNode> parseMethodCompositeParameter(
+	public static Optional<CompositeParameterNode> parseParameter(
 			Element element,
 			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator,
@@ -118,7 +118,7 @@ public class ModelParserForMethodCompositeParameter {
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 
 			Optional<CompositeParameterNode> compositeParameter = 
-					parseMethodCompositeParameter(child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
+					parseParameter(child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
 
 			if (compositeParameter.isPresent()) {
 				targetCompositeParameterNode.addParameter(compositeParameter.get());
