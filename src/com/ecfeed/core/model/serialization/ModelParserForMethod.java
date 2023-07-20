@@ -123,7 +123,7 @@ public class ModelParserForMethod {
 
 			Optional<BasicParameterNode> basicParameterNode = 
 					fModelParserForMethodParameter.parseMethodParameter(
-							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+							parameterElement, targetMethodNode, inOutErrorList);
 
 			if (basicParameterNode.isPresent()) {
 				targetMethodNode.addParameter(basicParameterNode.get());

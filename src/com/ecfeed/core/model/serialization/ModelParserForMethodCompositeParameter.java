@@ -151,7 +151,7 @@ public class ModelParserForMethodCompositeParameter {
 
 			Optional<BasicParameterNode> methodParameter = 
 					fModelParserForMethodParameter.parseMethodParameter(
-							child, method, targetCompositeParameterNode, errorList);
+							child, method, errorList);
 
 			if (methodParameter.isPresent()) {
 				targetCompositeParameterNode.addParameter(methodParameter.get());

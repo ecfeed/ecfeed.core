@@ -15,7 +15,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMET
 import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -24,17 +23,20 @@ import nu.xom.Element;
 public class ModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings outErrorList) {
+			Element parameterElement, 
+			MethodNode method, 
+			ListOfStrings outErrorList) {
 
 		BasicParameterNode targetMethodParameterNode = 
 				ModelParserForParameterHelper.createBasicParameter(
-						parameterElement, getParameterNodeName(), method.getModelChangeRegistrator(), outErrorList);
+						parameterElement, 
+						SerializationHelperVersion1.getBasicParameterNodeName(), 
+						method.getModelChangeRegistrator(), outErrorList);
 
 		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 			ModelParserForParameterHelper.setLink(parameterElement, method, targetMethodParameterNode, outErrorList);
-			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
 		} 
 
 		ModelParserForParameterHelper.parseChoices(
@@ -45,11 +47,11 @@ public class ModelParserForMethodParameter {
 
 		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement));
 
-		return Optional.ofNullable(targetMethodParameterNode);
-	}
+		if (!targetMethodParameterNode.isLinked()) {
+			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
+		}
 
-	private String getParameterNodeName() {
-		return SerializationHelperVersion1.getBasicParameterNodeName();
+		return Optional.ofNullable(targetMethodParameterNode);
 	}
 
 }
