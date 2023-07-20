@@ -182,7 +182,8 @@ public class XomParserTest {
 					TRACE(element);
 
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
-							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, new ListOfStrings());
+							new ModelParserForMethodParameter().parseMethodParameter(
+									element, methodNode, methodNode.getModelChangeRegistrator(), new ListOfStrings());
 					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
 				}

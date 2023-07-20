@@ -81,7 +81,7 @@ public class ModelParserForRoot {
 		if (isBasicParameterElement) {
 			Optional<BasicParameterNode> globalBasicParameter = 
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
-							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
+							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), outErrorList);
 
 			if (globalBasicParameter.isPresent()) {
 				targetRootNode.addParameter(globalBasicParameter.get());

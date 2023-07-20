@@ -92,7 +92,7 @@ public class ModelParserForClass {
 
 			Optional<BasicParameterNode> globalBasicParameter = 
 					fModelParserForGlobalParameter.parseGlobalBasicParameter(
-							child, targetClassNode.getModelChangeRegistrator(), errorList);
+							child, targetClassNode, targetClassNode.getModelChangeRegistrator(), errorList);
 
 			if (globalBasicParameter.isPresent()) {
 				targetClassNode.addParameter(globalBasicParameter.get());

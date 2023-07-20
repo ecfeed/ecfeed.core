@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -21,7 +22,8 @@ import nu.xom.Element;
 public class ModelParserForGlobalParameter {
 
 	public Optional<BasicParameterNode> parseGlobalBasicParameter(
-			Element element, 
+			Element element,
+			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator, 
 			ListOfStrings errorList) {
 

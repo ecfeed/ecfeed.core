@@ -59,7 +59,7 @@ public class ModelParserForGlobalCompositeParameter { // XYX
 
 				Optional<BasicParameterNode> globalBasicParameter = 
 						fModelParserForGlobalParameter.parseGlobalBasicParameter(
-								child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
+								child, null, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
 
 				if (globalBasicParameter.isPresent()) {
 					targetCompositeParameterNode.addParameter(globalBasicParameter.get());
