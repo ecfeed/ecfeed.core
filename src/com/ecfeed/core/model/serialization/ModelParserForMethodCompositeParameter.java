@@ -19,8 +19,8 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -32,13 +32,13 @@ public class ModelParserForMethodCompositeParameter {
 
 	public static Optional<CompositeParameterNode> parseMethodCompositeParameter(
 			Element element,
-			MethodNode method,
-			IParametersParentNode parent,
+			IParametersParentNode parametersParentNode,
+			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
 
 		CompositeParameterNode targetCompositeParameterNode = 
 				ModelParserForParameterHelper.createCompositeParameter(
-						element, parent, method.getModelChangeRegistrator(), errorList);
+						element, parametersParentNode, modelChangeRegistrator, errorList);
 
 		String[] parametersAndConstraintsElementNames = 
 				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
@@ -46,13 +46,13 @@ public class ModelParserForMethodCompositeParameter {
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
-		parseParameters(children, targetCompositeParameterNode, method, errorList);
+		parseParameters(children, targetCompositeParameterNode, parametersParentNode, errorList);
 
 		ModelParserForParameterHelper.parseConstraints(children, targetCompositeParameterNode, errorList);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
-			setLinkToGlobalParameter(element, parent, targetCompositeParameterNode, errorList);
+			setLinkToGlobalParameter(element, parametersParentNode, targetCompositeParameterNode, errorList);
 		}
 
 		return Optional.ofNullable(targetCompositeParameterNode);
@@ -60,7 +60,7 @@ public class ModelParserForMethodCompositeParameter {
 
 	private static void setLinkToGlobalParameter(
 			Element element, 
-			IParametersParentNode parent,
+			IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ListOfStrings errorList) {
 
@@ -73,7 +73,7 @@ public class ModelParserForMethodCompositeParameter {
 			return;
 		}
 
-		AbstractParameterNode link = findLink(linkPath, parent);
+		AbstractParameterNode link = findLink(linkPath, parametersParentNode);
 
 		if (link != null) {
 			targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
@@ -85,18 +85,18 @@ public class ModelParserForMethodCompositeParameter {
 	private static void parseParameters(
 			List<Element> elementsOfParametersAndConstraints, 
 			CompositeParameterNode targetCompositeParameterNode,
-			MethodNode method, 
+			IParametersParentNode parametersParentNode, 
 			ListOfStrings errorList) {
 
 		for (Element child : elementsOfParametersAndConstraints) {
 
-			parseConditionallyParameterElement(child, method, targetCompositeParameterNode, errorList);
+			parseConditionallyParameterElement(child, parametersParentNode, targetCompositeParameterNode, errorList);
 		}
 	}
 
 	private static void parseConditionallyParameterElement(
 			Element child, 
-			MethodNode method,
+			IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ListOfStrings errorList) {
 
@@ -104,7 +104,7 @@ public class ModelParserForMethodCompositeParameter {
 
 			Optional<BasicParameterNode> methodParameter = 
 					new ModelParserBasicForParameter().parseParameter(
-							child, method, method.getModelChangeRegistrator(), errorList);
+							child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
 
 			if (methodParameter.isPresent()) {
 				targetCompositeParameterNode.addParameter(methodParameter.get());
@@ -117,7 +117,8 @@ public class ModelParserForMethodCompositeParameter {
 
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 
-			Optional<CompositeParameterNode> compositeParameter = parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList);
+			Optional<CompositeParameterNode> compositeParameter = 
+					parseMethodCompositeParameter(child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
 
 			if (compositeParameter.isPresent()) {
 				targetCompositeParameterNode.addParameter(compositeParameter.get());
@@ -127,15 +128,15 @@ public class ModelParserForMethodCompositeParameter {
 		}
 	}
 
-	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parent) {
+	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
 
-		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
+		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
 
 		if (link!=null) {
 			return link;
 		}
 
-		RootNode rootNode = RootNodeHelper.findRootNode(parent);
+		RootNode rootNode = RootNodeHelper.findRootNode(parametersParentNode);
 
 		if (rootNode == null) {
 			return null;
@@ -145,7 +146,7 @@ public class ModelParserForMethodCompositeParameter {
 				SignatureHelper.SIGNATURE_ROOT_MARKER + rootNode.getName() + 
 				SignatureHelper.SIGNATURE_NAME_SEPARATOR + linkPath;
 
-		link = AbstractParameterNodeHelper.findParameter(newLinkPath, parent);
+		link = AbstractParameterNodeHelper.findParameter(newLinkPath, parametersParentNode);
 
 		if (link == null) {
 			return null;

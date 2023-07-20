@@ -140,7 +140,7 @@ public class ModelParserForMethod {
 
 			Optional<CompositeParameterNode> compositeParameter = 
 					ModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
-							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
+							parameterElement, targetMethodNode, targetMethodNode.getModelChangeRegistrator(), inOutErrorList);
 			
 			if (compositeParameter.isPresent()) {
 				targetMethodNode.addParameter(compositeParameter.get());
