@@ -24,11 +24,11 @@ import nu.xom.Element;
 
 public class ModelParserForGlobalCompositeParameter { // XYX
 
-	private ModelParserForParameter fModelParserForParameter;
+	private ModelParserBasicForParameter fModelParserForParameter;
 	private ModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForGlobalCompositeParameter(
-			ModelParserForParameter ModelParserForParameter,
+			ModelParserBasicForParameter ModelParserForParameter,
 			ModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForParameter = ModelParserForParameter;

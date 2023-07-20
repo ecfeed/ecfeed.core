@@ -31,14 +31,14 @@ import nu.xom.Element;
 
 public class ModelParserForMethod {
 
-	ModelParserForParameter fModelParserForMethodParameter;
+	ModelParserBasicForParameter fModelParserForMethodParameter;
 	ModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
 	ModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
 	ModelParserForTestCase fModelParserForTestCase;
 	ModelParserForConstraint fModelParserForConstraint;
 
 	public  ModelParserForMethod(
-			ModelParserForParameter modelParserForMethodParameter,
+			ModelParserBasicForParameter modelParserForMethodParameter,
 			ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
 			ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
 			ModelParserForTestCase modelParserForTestCase,

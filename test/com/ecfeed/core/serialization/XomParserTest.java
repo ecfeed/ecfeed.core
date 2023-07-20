@@ -46,7 +46,7 @@ import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
-import com.ecfeed.core.model.serialization.ModelParserForParameter;
+import com.ecfeed.core.model.serialization.ModelParserBasicForParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.model.serialization.SerializationConstants;
@@ -182,7 +182,7 @@ public class XomParserTest {
 					TRACE(element);
 
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
-							new ModelParserForParameter().parseParameter(
+							new ModelParserBasicForParameter().parseParameter(
 									element, methodNode, methodNode.getModelChangeRegistrator(), new ListOfStrings());
 					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());

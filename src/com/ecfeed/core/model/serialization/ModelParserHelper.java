@@ -30,7 +30,7 @@ public class ModelParserHelper  {
 
 	public static ModelParserForMethod createStandardModelParserForMethod() {
 
-		ModelParserForParameter modelParserForMethodParameter = new ModelParserForParameter();
+		ModelParserBasicForParameter modelParserForMethodParameter = new ModelParserBasicForParameter();
 
 		ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
 
@@ -57,8 +57,8 @@ public class ModelParserHelper  {
 
 		ModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 
-		ModelParserForParameter ModelParserForParameter = 
-				new ModelParserForParameter();
+		ModelParserBasicForParameter ModelParserForParameter = 
+				new ModelParserBasicForParameter();
 
 		ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
 				new ModelParserForGlobalCompositeParameter(ModelParserForParameter, modelParserFroConstraint);
@@ -73,8 +73,8 @@ public class ModelParserHelper  {
 			int modelVersion, 
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		ModelParserForParameter ModelParserForParameter = 
-				new ModelParserForParameter();
+		ModelParserBasicForParameter ModelParserForParameter = 
+				new ModelParserBasicForParameter();
 
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
