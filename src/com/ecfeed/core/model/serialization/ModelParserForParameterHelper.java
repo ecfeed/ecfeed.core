@@ -22,6 +22,7 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -63,6 +64,30 @@ public class ModelParserForParameterHelper {
 				new BasicParameterNode(name, type, defaultValue, Boolean.parseBoolean(expected), modelChangeRegistrator);
 
 		return targetGlobalParameterNode;
+	}
+
+	public static CompositeParameterNode createCompositeParameter(
+			Element element, 
+			IParametersParentNode parent,
+			IModelChangeRegistrator modelChangeRegistrator, 
+			ListOfStrings errorList) {
+
+		String nameOfCompositeParameter;
+
+		try {
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
+			nameOfCompositeParameter = ModelParserHelper.getElementName(element, errorList);
+		} catch (Exception e) {
+			errorList.add(e.getMessage());
+			return null;
+		}
+
+		CompositeParameterNode targetCompositeParameterNode = 
+				new CompositeParameterNode(nameOfCompositeParameter, modelChangeRegistrator);
+
+		targetCompositeParameterNode.setParent(parent);
+
+		return targetCompositeParameterNode;
 	}
 
 	public static void parseChoices(

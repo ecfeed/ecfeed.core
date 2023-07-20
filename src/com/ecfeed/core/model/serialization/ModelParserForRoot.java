@@ -98,7 +98,7 @@ public class ModelParserForRoot {
 		if (isCompositeParameterElement) {
 			Optional<CompositeParameterNode> globalCompositeParameter = 
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
-							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
+							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), outErrorList);
 
 			if (globalCompositeParameter.isPresent()) {
 				targetRootNode.addParameter(globalCompositeParameter.get());

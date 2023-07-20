@@ -17,6 +17,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import com.ecfeed.core.utils.LogHelperCore;
@@ -30,28 +31,25 @@ public class ModelParserForGlobalCompositeParameter { // XYX
 	public ModelParserForGlobalCompositeParameter(
 			ModelParserBasicForParameter ModelParserForParameter,
 			ModelParserForConstraint modelParserForConstraint) {
-		
+
 		fModelParserForParameter = ModelParserForParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
 
 	public Optional<CompositeParameterNode> parseGlobalCompositeParameter(
-			Element element, 
-			IModelChangeRegistrator modelChangeRegistrar,
+			Element element,
+			IParametersParentNode parent,
+			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
 
-		String name;
+		CompositeParameterNode targetCompositeParameterNode = 
+				ModelParserForParameterHelper.createCompositeParameter(
+						element, parent, modelChangeRegistrator, errorList);
 
-		try {
-			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(element, errorList);
-		} catch (Exception e) {
-			return Optional.empty();
-		}
+		String[] parametersAndConstraintsElementNames = 
+				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
 
-		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrar);
-
-		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
+		List<Element> children = ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
 		for (Element child : children) {
 
@@ -71,7 +69,7 @@ public class ModelParserForGlobalCompositeParameter { // XYX
 
 				Optional<CompositeParameterNode> globalCompositeParameter = 
 						parseGlobalCompositeParameter(
-								child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
+								child, parent, modelChangeRegistrator, errorList);
 
 				if (globalCompositeParameter.isPresent()) {
 					targetCompositeParameterNode.addParameter(globalCompositeParameter.get());

@@ -30,7 +30,7 @@ public class ModelParserForMethodCompositeParameter {
 	public ModelParserForMethodCompositeParameter(
 			ModelParserBasicForParameter modelParserForMethodParameter,
 			ModelParserForConstraint modelParserForConstraint) {
-		
+
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
@@ -42,11 +42,14 @@ public class ModelParserForMethodCompositeParameter {
 			ListOfStrings errorList) {
 
 		CompositeParameterNode targetCompositeParameterNode = 
-				createCompositeParameter(element, method, parent, errorList);
+				ModelParserForParameterHelper.createCompositeParameter(
+						element, parent, method.getModelChangeRegistrator(), errorList);
+
+		String[] parametersAndConstraintsElementNames = 
+				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
 
 		List<Element> children = 
-				ModelParserHelper.getIterableChildren(
-						element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
+				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
 		parseParameters(children, targetCompositeParameterNode, method, errorList);
 
@@ -65,7 +68,7 @@ public class ModelParserForMethodCompositeParameter {
 			IParametersParentNode parent,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ListOfStrings errorList) {
-		
+
 		String linkPath;
 
 		try {
@@ -82,28 +85,6 @@ public class ModelParserForMethodCompositeParameter {
 		} else {
 			errorList.add("Cannot find link for parameter: " + targetCompositeParameterNode.getName());
 		}
-	}
-
-	private CompositeParameterNode createCompositeParameter(
-			Element element, MethodNode method,
-			IParametersParentNode parent, ListOfStrings errorList) {
-		
-		String nameOfCompositeParameter;
-
-		try {
-			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
-			nameOfCompositeParameter = ModelParserHelper.getElementName(element, errorList);
-		} catch (Exception e) {
-			errorList.add(e.getMessage());
-			return null;
-		}
-
-		CompositeParameterNode targetCompositeParameterNode = 
-				new CompositeParameterNode(nameOfCompositeParameter, method.getModelChangeRegistrator());
-		
-		targetCompositeParameterNode.setParent(parent);
-		
-		return targetCompositeParameterNode;
 	}
 
 	private void parseConstraints(List<Element> children, CompositeParameterNode targetCompositeParameterNode,
@@ -134,7 +115,7 @@ public class ModelParserForMethodCompositeParameter {
 			CompositeParameterNode targetCompositeParameterNode,
 			MethodNode method, 
 			ListOfStrings errorList) {
-		
+
 		for (Element child : elementsOfParametersAndConstraints) {
 
 			parseConditionallyParameterElement(child, method, targetCompositeParameterNode, errorList);
@@ -146,7 +127,7 @@ public class ModelParserForMethodCompositeParameter {
 			MethodNode method,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ListOfStrings errorList) {
-		
+
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 
 			Optional<BasicParameterNode> methodParameter = 
@@ -161,7 +142,7 @@ public class ModelParserForMethodCompositeParameter {
 
 			return;
 		} 
-		
+
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 
 			Optional<CompositeParameterNode> compositeParameter = parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList);

@@ -111,7 +111,7 @@ public class ModelParserForClass {
 
 			Optional<CompositeParameterNode> globalCompositeParameter = 
 					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
-							child, targetClassNode.getModelChangeRegistrator(), errorList);
+							child, targetClassNode, targetClassNode.getModelChangeRegistrator(), errorList);
 
 			if (globalCompositeParameter.isPresent()) {
 				targetClassNode.addParameter(globalCompositeParameter.get());
