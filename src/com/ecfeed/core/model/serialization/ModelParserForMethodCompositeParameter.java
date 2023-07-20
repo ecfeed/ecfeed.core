@@ -24,11 +24,11 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMET
 
 public class ModelParserForMethodCompositeParameter {
 
-	private ModelParserForMethodParameter fModelParserForMethodParameter;
+	private ModelParserForParameter fModelParserForMethodParameter;
 	private ModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForMethodCompositeParameter(
-			ModelParserForMethodParameter modelParserForMethodParameter,
+			ModelParserForParameter modelParserForMethodParameter,
 			ModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
@@ -150,7 +150,7 @@ public class ModelParserForMethodCompositeParameter {
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 
 			Optional<BasicParameterNode> methodParameter = 
-					fModelParserForMethodParameter.parseMethodParameter(
+					fModelParserForMethodParameter.parseParameter(
 							child, method, method.getModelChangeRegistrator(), errorList);
 
 			if (methodParameter.isPresent()) {

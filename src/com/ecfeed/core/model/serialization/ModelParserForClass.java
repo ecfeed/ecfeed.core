@@ -28,16 +28,16 @@ import nu.xom.Element;
 
 public class ModelParserForClass {
 
-	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
+	private ModelParserForParameter fModelParserForParameter;
 	private ModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
 	private ModelParserForMethod fModelParserForMethod;
 
 	public ModelParserForClass(
-			ModelParserForGlobalParameter modelParserForGlobalParameter,
+			ModelParserForParameter ModelParserForParameter,
 			ModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
 			ModelParserForMethod modelParserForMethod) {
 
-		fModelParserForGlobalParameter = modelParserForGlobalParameter;
+		fModelParserForParameter = ModelParserForParameter;
 		fModelParserForGlobalCompositeParameter = modelParserForGlobalCompositeParameter;
 		fModelParserForMethod = modelParserForMethod;
 	}
@@ -91,7 +91,7 @@ public class ModelParserForClass {
 		if (isBasicParameter) {
 
 			Optional<BasicParameterNode> globalBasicParameter = 
-					fModelParserForGlobalParameter.parseGlobalBasicParameter(
+					fModelParserForParameter.parseParameter(
 							child, targetClassNode, targetClassNode.getModelChangeRegistrator(), errorList);
 
 			if (globalBasicParameter.isPresent()) {

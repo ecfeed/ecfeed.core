@@ -21,9 +21,9 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodParameter {
+public class ModelParserForParameter {
 
-	public Optional<BasicParameterNode> parseMethodParameter(
+	public Optional<BasicParameterNode> parseParameter(
 			Element parameterElement, 
 			IParametersParentNode parametersParentNodeUsedForLocalParameters,
 			IModelChangeRegistrator modelChangeRegistrator,

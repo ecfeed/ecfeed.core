@@ -128,10 +128,10 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 
-			ModelParserForGlobalParameter modelParserForGlobalParameter
-			= new ModelParserForGlobalParameter();
+			ModelParserForParameter ModelParserForParameter
+			= new ModelParserForParameter();
 
-			return modelParserForGlobalParameter.parseGlobalBasicParameter(
+			return ModelParserForParameter.parseParameter(
 					document.getRootElement(), 
 					null,
 					modelChangeRegistrator, 
@@ -148,7 +148,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForMethodParameter().parseMethodParameter(
+			return new ModelParserForParameter().parseParameter(
 					document.getRootElement(), method, method.getModelChangeRegistrator(), outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());

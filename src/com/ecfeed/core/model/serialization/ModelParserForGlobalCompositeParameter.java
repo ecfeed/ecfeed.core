@@ -24,14 +24,14 @@ import nu.xom.Element;
 
 public class ModelParserForGlobalCompositeParameter { // XYX
 
-	private ModelParserForGlobalParameter fModelParserForGlobalParameter;
+	private ModelParserForParameter fModelParserForParameter;
 	private ModelParserForConstraint fModelParserForConstraint;
 
 	public ModelParserForGlobalCompositeParameter(
-			ModelParserForGlobalParameter modelParserForGlobalParameter,
+			ModelParserForParameter ModelParserForParameter,
 			ModelParserForConstraint modelParserForConstraint) {
 		
-		fModelParserForGlobalParameter = modelParserForGlobalParameter;
+		fModelParserForParameter = ModelParserForParameter;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
 
@@ -58,7 +58,7 @@ public class ModelParserForGlobalCompositeParameter { // XYX
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 
 				Optional<BasicParameterNode> globalBasicParameter = 
-						fModelParserForGlobalParameter.parseGlobalBasicParameter(
+						fModelParserForParameter.parseParameter(
 								child, null, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
 
 				if (globalBasicParameter.isPresent()) {
