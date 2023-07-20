@@ -39,7 +39,7 @@ public class ModelParserHelper  {
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 
 		ModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
-		= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter);
+			= new ModelParserForMethodCompositeParameter();
 
 		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,

@@ -30,15 +30,7 @@ import nu.xom.Element;
 
 public class ModelParserForMethodCompositeParameter {
 
-	private ModelParserBasicForParameter fModelParserForMethodParameter;
-
-	public ModelParserForMethodCompositeParameter(
-			ModelParserBasicForParameter modelParserForMethodParameter) {
-
-		fModelParserForMethodParameter = modelParserForMethodParameter;
-	}
-
-	public Optional<CompositeParameterNode> parseMethodCompositeParameter(
+	public static Optional<CompositeParameterNode> parseMethodCompositeParameter(
 			Element element,
 			MethodNode method,
 			IParametersParentNode parent,
@@ -66,7 +58,7 @@ public class ModelParserForMethodCompositeParameter {
 		return Optional.ofNullable(targetCompositeParameterNode);
 	}
 
-	private void setLinkToGlobalParameter(
+	private static void setLinkToGlobalParameter(
 			Element element, 
 			IParametersParentNode parent,
 			CompositeParameterNode targetCompositeParameterNode, 
@@ -90,7 +82,7 @@ public class ModelParserForMethodCompositeParameter {
 		}
 	}
 
-	private void parseParameters(
+	private static void parseParameters(
 			List<Element> elementsOfParametersAndConstraints, 
 			CompositeParameterNode targetCompositeParameterNode,
 			MethodNode method, 
@@ -102,7 +94,7 @@ public class ModelParserForMethodCompositeParameter {
 		}
 	}
 
-	private void parseConditionallyParameterElement(
+	private static void parseConditionallyParameterElement(
 			Element child, 
 			MethodNode method,
 			CompositeParameterNode targetCompositeParameterNode, 
@@ -111,7 +103,7 @@ public class ModelParserForMethodCompositeParameter {
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 
 			Optional<BasicParameterNode> methodParameter = 
-					fModelParserForMethodParameter.parseParameter(
+					new ModelParserBasicForParameter().parseParameter(
 							child, method, method.getModelChangeRegistrator(), errorList);
 
 			if (methodParameter.isPresent()) {
@@ -135,7 +127,7 @@ public class ModelParserForMethodCompositeParameter {
 		}
 	}
 
-	private AbstractParameterNode findLink(String linkPath, IParametersParentNode parent) {
+	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parent) {
 
 		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parent);
 

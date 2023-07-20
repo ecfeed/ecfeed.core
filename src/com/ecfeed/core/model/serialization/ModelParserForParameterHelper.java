@@ -114,27 +114,6 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
-	public static void parseChoices2( // XYX remove
-			Element parameterElement, 
-			BasicParameterNode targetMethodParameterNode,
-			IModelChangeRegistrator modelChangeRegistrator,
-			ListOfStrings outErrorList) {
-
-		ModelParserForChoice modelParserForChoice = 
-				new ModelParserForChoice(modelChangeRegistrator);
-
-		List<Element> children = 
-				ModelParserHelper.getIterableChildren(
-						parameterElement, SerializationHelperVersion1.getChoiceNodeName());
-
-		for (Element child : children) {
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, outErrorList);
-			if (node.isPresent()) {
-				targetMethodParameterNode.addChoice(node.get());
-			}
-		}
-	}
-
 	public static void setLink(
 			Element parameterElement, 
 			IParametersParentNode parametersParentNode, 

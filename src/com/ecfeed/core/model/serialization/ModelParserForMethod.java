@@ -139,7 +139,7 @@ public class ModelParserForMethod {
 		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
 
 			Optional<CompositeParameterNode> compositeParameter = 
-					fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
+					ModelParserForMethodCompositeParameter.parseMethodCompositeParameter(
 							parameterElement, targetMethodNode, targetMethodNode, inOutErrorList);
 			
 			if (compositeParameter.isPresent()) {
