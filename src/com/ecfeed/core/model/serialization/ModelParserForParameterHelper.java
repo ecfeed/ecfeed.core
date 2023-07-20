@@ -23,6 +23,7 @@ import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.SignatureHelper;
@@ -109,7 +110,7 @@ public class ModelParserForParameterHelper {
 
 	public static void setLink(
 			Element parameterElement, 
-			MethodNode method, 
+			IParametersParentNode parametersParentNode, 
 			BasicParameterNode targetMethodParameterNode, 
 			ListOfStrings outErrorList) {
 
@@ -119,27 +120,27 @@ public class ModelParserForParameterHelper {
 			linkPath = 
 					ModelParserHelper.getAttributeValue(
 							parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
-			
+
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return;
 		}
 
-		AbstractParameterNode link = findLink(linkPath, method);
+		AbstractParameterNode link = findLink(linkPath, parametersParentNode);
 
 		if (link != null) {
 			targetMethodParameterNode.setLinkToGlobalParameter(link);
 		}
 	}
 
-	private static AbstractParameterNode findLink(String linkPath, MethodNode method) {
+	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
 
 		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
-			return AbstractParameterNodeHelper.findParameter(linkPath, method);
+			return AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
 		}
 
 		// old convention - to be removed in next release when all models would be converted to new convention
-		return method.getClassNode().findGlobalParameter(linkPath); 
+		return ((MethodNode)parametersParentNode).getClassNode().findGlobalParameter(linkPath); 
 	}
 
 }

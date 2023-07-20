@@ -15,7 +15,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMET
 import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -24,19 +24,19 @@ public class ModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
 			Element parameterElement, 
-			MethodNode method, 
+			IParametersParentNode parametersParentNode, 
 			ListOfStrings outErrorList) {
 
 		BasicParameterNode targetMethodParameterNode = 
 				ModelParserForParameterHelper.createBasicParameter(
 						parameterElement, 
 						SerializationHelperVersion1.getBasicParameterNodeName(), 
-						method.getModelChangeRegistrator(), outErrorList);
+						parametersParentNode.getModelChangeRegistrator(), outErrorList);
 
 		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
-			ModelParserForParameterHelper.setLink(parameterElement, method, targetMethodParameterNode, outErrorList);
+			ModelParserForParameterHelper.setLink(parameterElement, parametersParentNode, targetMethodParameterNode, outErrorList);
 		} 
 
 		ModelParserForParameterHelper.parseChoices(
