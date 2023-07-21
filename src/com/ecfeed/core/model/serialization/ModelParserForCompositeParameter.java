@@ -36,6 +36,24 @@ public class ModelParserForCompositeParameter {
 			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
 
+		Optional<CompositeParameterNode> compositeParameterNode = 
+				parseParameterWithoutConstraints(element, parametersParentNode, modelChangeRegistrator, errorList);
+
+		if (!compositeParameterNode.isPresent()) {
+			return compositeParameterNode;
+		}
+
+		parseConstraints(element, compositeParameterNode.get(), errorList);
+
+		return compositeParameterNode;
+	}
+
+	private static Optional<CompositeParameterNode> parseParameterWithoutConstraints(
+			Element element,
+			IParametersParentNode parametersParentNode,
+			IModelChangeRegistrator modelChangeRegistrator,
+			ListOfStrings errorList) {
+
 		CompositeParameterNode targetCompositeParameterNode = 
 				ModelParserForParameterHelper.createCompositeParameter(
 						element, parametersParentNode, modelChangeRegistrator, errorList);
@@ -56,6 +74,20 @@ public class ModelParserForCompositeParameter {
 		}
 
 		return Optional.ofNullable(targetCompositeParameterNode);
+	}
+
+	private static void parseConstraints(
+			Element element,
+			CompositeParameterNode targetCompositeParameterNode,
+			ListOfStrings errorList) {
+
+		String[] parametersAndConstraintsElementNames = 
+				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
+
+		List<Element> children = 
+				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
+
+		ModelParserForParameterHelper.parseConstraints(children, targetCompositeParameterNode, errorList);
 	}
 
 	private static void setLinkToGlobalParameter(
