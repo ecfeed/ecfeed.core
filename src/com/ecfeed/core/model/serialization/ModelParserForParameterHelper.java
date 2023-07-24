@@ -25,6 +25,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -149,9 +150,21 @@ public class ModelParserForParameterHelper {
 		return ((MethodNode)parametersParentNode).getClassNode().findGlobalParameter(linkPath); 
 	}
 
-	public static void parseConstraints(
+	public static void parseLocalConstraints(
+			Element element, 
+			IParametersAndConstraintsParentNode targetNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) {
+
+		List<Element> constraintElements = 
+				ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_NODE_NAME);
+
+		ModelParserForParameterHelper.parseConstraints(constraintElements, targetNode, inOutErrorList);
+	}
+
+	private static void parseConstraints(
 			List<Element> children, 
-			CompositeParameterNode targetCompositeParameterNode,
+			IParametersAndConstraintsParentNode constraintsParentNode,
 			ListOfStrings errorList) {
 
 		for (Element child : children) {
@@ -160,18 +173,56 @@ public class ModelParserForParameterHelper {
 
 				try {
 					Optional<ConstraintNode> constraint = 
-							new ModelParserForConstraint().parseConstraint(child, targetCompositeParameterNode, errorList);
+							new ModelParserForConstraint().parseConstraint(child, constraintsParentNode, errorList);
 
 					if (constraint.isPresent()) {
-						targetCompositeParameterNode.addConstraint(constraint.get());
+						constraintsParentNode.addConstraint(constraint.get());
 					} else {
-						errorList.add("Cannot parse constraint of parent structure: " + targetCompositeParameterNode.getName() + ".");
+						errorList.add("Cannot parse constraint of parent structure: " + constraintsParentNode.getName() + ".");
 					}
 
 				} catch (Exception e) {
-					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
+					LogHelperCore.logError("A composite parameter could not be parsed: " + constraintsParentNode.getName());
 				}
 			}
+		}
+	}
+
+	public static void parseLocalAndChildConstraints(
+			Element methodElement, 
+			IParametersAndConstraintsParentNode targetMethodNode, 
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) {
+
+		ModelParserForParameterHelper.parseLocalConstraints(
+				methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+
+		parseConstraintsOfChildComposites(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+	}
+
+	private static void parseConstraintsOfChildComposites(
+			Element element,
+			IParametersAndConstraintsParentNode parentNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) { 
+
+		List<Element> childCompositeParameterElements =
+				ModelParserHelper.getIterableChildren(
+						element, SerializationHelperVersion1.getCompositeParameterNodeName());
+
+		for (Element childCompositeParameterElement : childCompositeParameterElements) {
+
+			IParametersAndConstraintsParentNode childAbstractNode = 
+					(IParametersAndConstraintsParentNode) elementToNodeMapper.getNode(childCompositeParameterElement);
+
+			ModelParserForParameterHelper.parseLocalConstraints(
+					childCompositeParameterElement, childAbstractNode, elementToNodeMapper, inOutErrorList);
+
+			CompositeParameterNode childCompositeParameterNode = 
+					(CompositeParameterNode) elementToNodeMapper.getNode(childCompositeParameterElement); 
+
+			parseConstraintsOfChildComposites(
+					childCompositeParameterElement, childCompositeParameterNode, elementToNodeMapper, inOutErrorList);
 		}
 	}
 

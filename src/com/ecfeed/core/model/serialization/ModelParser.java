@@ -92,14 +92,16 @@ public class ModelParser {
 	}
 
 	public ClassNode parseClass(
-			InputStream istream, ListOfStrings outErrorList) {
+			InputStream istream,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
 
 		try {
 			Document document = fBuilder.build(istream);
 
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			return modelParserForClass.parseAndAddClass(
-					document.getRootElement(), null, outErrorList).get();
+					document.getRootElement(), null, elementToNodeMapper, outErrorList).get();
 
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
@@ -108,14 +110,16 @@ public class ModelParser {
 	}
 
 	public MethodNode parseMethod(
-			InputStream istream, ListOfStrings outErrorList) {
+			InputStream istream,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
 
 		try {
 			Document document = fBuilder.build(istream);
 
 			ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 
-			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
+			return modelParserForMethod.parseMethod(document.getRootElement(), null, new ElementToNodeMapper(), outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;

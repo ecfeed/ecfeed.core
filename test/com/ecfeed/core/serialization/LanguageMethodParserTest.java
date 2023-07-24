@@ -22,6 +22,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.serialization.ElementToNodeMapper;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
@@ -273,7 +274,7 @@ public class LanguageMethodParserTest {
 		try {
 			optMethodNodeFromXml = 
 					modelParserForMethod.parseMethod(
-							element, classNode, errorList);
+							element, classNode, new ElementToNodeMapper(), errorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 		}

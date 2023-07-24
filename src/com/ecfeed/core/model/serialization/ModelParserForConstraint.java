@@ -26,12 +26,15 @@ import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
@@ -49,7 +52,10 @@ public class ModelParserForConstraint {
 	public ModelParserForConstraint() {
 	}
 
-	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
+	public Optional<ConstraintNode> parseConstraint(
+			Element element, 
+			IParametersAndConstraintsParentNode parent, 
+			ListOfStrings errorList) {
 
 		String name;
 
@@ -487,12 +493,12 @@ public class ModelParserForConstraint {
 			String elementName) {
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
-		
+
 		if (pathToParameter == null) {
 			return null;
 		}
 
-		AbstractParameterNode context = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
+		AbstractParameterNode context = findParameterForPathWhichStartsFromTopAllowedNode(pathToParameter, parent);
 
 		return (CompositeParameterNode) context;
 	}
@@ -519,26 +525,11 @@ public class ModelParserForConstraint {
 			String attributeName,
 			IParametersAndConstraintsParentNode parent,
 			CompositeParameterNode parameterContext,
-			//			boolean primary,
 			ListOfStrings errorList) {
-
-		//		String serialization;
-		//		if (primary) {
-		//			serialization = SerializationHelperVersion1.getStatementParameterAttributeName();
-		//		} else {
-		//			serialization = SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
-		//		}
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, attributeName, errorList);
 
-		//		BasicParameterNode parameter;
-		//		if (parameterContext != null) {
-		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parameterContext, parameterName);
-		//		} else {
-		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parent, parameterName);
-		//		}
-
-		AbstractParameterNode parameter = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
+		AbstractParameterNode parameter = findParameterForPathWhichStartsFromTopAllowedNode(pathToParameter, parent);
 
 		if (parameter == null) {
 			errorList.add("Cannot find parameter: " + pathToParameter + " for parsed attribute: " + attributeName + ".");
@@ -549,5 +540,24 @@ public class ModelParserForConstraint {
 		}
 
 		return (BasicParameterNode) parameter;
+	}
+
+	private AbstractParameterNode findParameterForPathWhichStartsFromTopAllowedNode(
+			String pathToParameterRelativeToTopParametersParent,
+			IParametersAndConstraintsParentNode parent) {
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(parent);
+
+		if (methodNode != null) {
+			return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, methodNode);
+		}
+
+		CompositeParameterNode topComposite = CompositeParameterNodeHelper.findTopComposite(parent);
+
+		if (topComposite != null) {
+			return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, topComposite);
+		}
+
+		return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, parent);
 	}
 }

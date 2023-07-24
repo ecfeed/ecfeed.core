@@ -154,88 +154,88 @@ public class ModelSerializerAndParserTest {
 		}
 	}
 
-	//	@Test 
-	//	public void AAAshouldSerializeAndParseNestedStructureWithConstraintAtStructureLevel() {
-	//
-	//		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
-	//
-	//		// class and method
-	//
-	//		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
-	//
-	//		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
-	//
-	//		// local structure 1
-	//
-	//		CompositeParameterNode compositeParameterNode = 
-	//				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
-	//
-	//		// local parameter1 with choice
-	//
-	//		BasicParameterNode basicParameterNode = 
-	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
-	//						compositeParameterNode, "LP1", "int", "0", true, null);
-	//
-	//		ChoiceNode choiceNode = 
-	//				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
-	//						basicParameterNode, "LC1", "0", false, true, null);
-	//
-	//		// constraint with parameter condition
-	//
-	//		RelationStatement precondition =
-	//				RelationStatement.createRelationStatementWithChoiceCondition(
-	//						basicParameterNode, null, 
-	//						EMathRelation.EQUAL, 
-	//						choiceNode);
-	//
-	//		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
-	//
-	//		Constraint constraint = new Constraint(
-	//				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
-	//
-	//		ConstraintsParentNodeHelper.addNewConstraintNode(compositeParameterNode, constraint, true, null);
-	//
-	//		// root
-	//		//   class
-	//		//     method
-	//		//       LS1
-	//		//          LP1
-	//		//				LC1
-	//		//		 	constraint: LS1:LP1 = LC1 => true
-	//
-	//		try {
-	//			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-	//			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
-	//
-	//			serializer.serialize(rootNode);
-	//			String xml = ostream.toString();
-	//
-	//			String tags = "<Constraint name=\"constraint\" type=\"EF\">\n" + 
-	//					"                    <Premise>\n" + 
-	//					"                        <Statement choice=\"LC1\" parameter=\"LS1:LP1\" relation=\"equal\"/>\n" + 
-	//					"                    </Premise>\n" + 
-	//					"                    <Consequence>\n" + 
-	//					"                        <StaticStatement value=\"true\"/>\n" + 
-	//					"                    </Consequence>\n" + 
-	//					"                </Constraint>";
-	//			
-	//						if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
-	//							fail();
-	//						}
-	//			
-	//			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-	//			ModelParser parser = new ModelParser();
-	//			ListOfStrings errorList = new ListOfStrings();
-	//			
-	//			RootNode parsedModel = parser.parseModel(istream, null, errorList);
-	//
-	//			checkErrorList(errorList);
-	//			ModelComparator.compareRootNodes(rootNode, parsedModel);
-	//
-	//		} catch (Exception e) {
-	//			fail("Unexpected exception: " + e.getMessage());
-	//		}
-	//	}
+	@Test 
+	public void shouldSerializeAndParseNestedStructureWithConstraintAtStructureLevel() {
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		// class and method
+
+		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+
+		// local structure 1
+
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+
+		// local parameter1 with choice
+
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+						compositeParameterNode, "LP1", "int", "0", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+						basicParameterNode, "LC1", "0", false, true, null);
+
+		// constraint with parameter condition
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(compositeParameterNode, constraint, true, null);
+
+		// root
+		//   class
+		//     method
+		//       LS1
+		//          LP1
+		//				LC1
+		//		 	constraint: LS1:LP1 = LC1 => true
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			String xml = ostream.toString();
+
+			String tags = "<Constraint name=\"constraint\" type=\"EF\">\n" + 
+					"                    <Premise>\n" + 
+					"                        <Statement choice=\"LC1\" parameter=\"LS1:LP1\" relation=\"equal\"/>\n" + 
+					"                    </Premise>\n" + 
+					"                    <Consequence>\n" + 
+					"                        <StaticStatement value=\"true\"/>\n" + 
+					"                    </Consequence>\n" + 
+					"                </Constraint>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+				fail();
+			}
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			ListOfStrings errorList = new ListOfStrings();
+
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 
 	@Test 
 	public void shouldSerializeAndParseLinkedStructureAndConstraintWithParameterCondition() {

@@ -39,7 +39,10 @@ public class ModelParserForRoot {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public RootNode parseRoot(Element element, ListOfStrings outErrorList) {
+	public RootNode parseRoot(
+			Element element,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
@@ -48,27 +51,32 @@ public class ModelParserForRoot {
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
-		parseGlobalParametersOfRoot(element, targetRootNode, outErrorList);
+		parseGlobalParametersOfRoot(element, targetRootNode, elementToNodeMapper, outErrorList);
 
-		parseClasses(element, targetRootNode, outErrorList);
+		parseClasses(element, targetRootNode, elementToNodeMapper, outErrorList);
 
 		return targetRootNode;
 	}
 
-	private void parseGlobalParametersOfRoot(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
+	private void parseGlobalParametersOfRoot(
+			Element element, 
+			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
 
 		List<Element> parameterElements = 
 				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
 
 		for (Element parameterElement : parameterElements) {
 
-			parseOneGlobalParameter(parameterElement, targetRootNode, outErrorList);
+			parseOneGlobalParameter(parameterElement, targetRootNode, elementToNodeMapper, outErrorList);
 		}
 	}
 
 	private void parseOneGlobalParameter(
 			Element parameterElement, 
 			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings outErrorList) {
 
 		boolean isBasicParameterElement = 
@@ -94,8 +102,9 @@ public class ModelParserForRoot {
 
 		if (isCompositeParameterElement) {
 			Optional<CompositeParameterNode> globalCompositeParameter = 
-					ModelParserForCompositeParameter.parseParameter(
-							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), outErrorList);
+					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
+							parameterElement, targetRootNode, 
+							targetRootNode.getModelChangeRegistrator(), elementToNodeMapper, outErrorList);
 
 			if (globalCompositeParameter.isPresent()) {
 				targetRootNode.addParameter(globalCompositeParameter.get());
@@ -106,14 +115,18 @@ public class ModelParserForRoot {
 		}
 	}
 
-	private void parseClasses(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
+	private void parseClasses(
+			Element element, 
+			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
 
 		List<Element> childClassElements = 
 				ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME);
 
 		for (Element classElement : childClassElements) {
 
-			fModelParserForClass.parseAndAddClass(classElement, targetRootNode, outErrorList);
+			fModelParserForClass.parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
 		}
 	}
 

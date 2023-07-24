@@ -28,8 +28,10 @@ public abstract class XomAnalyser {
 
 		ModelParserForRoot modelParserForRoot = 
 				ModelParserHelper.createStandardModelParserForRoot(getModelVersion(), modelChangeRegistrator);
+		
+		ElementToNodeMapper elementToNodeMapper = new ElementToNodeMapper();
 
-		return modelParserForRoot.parseRoot(element, outErrorList);
+		return modelParserForRoot.parseRoot(element, elementToNodeMapper, outErrorList);
 	}
 
 }

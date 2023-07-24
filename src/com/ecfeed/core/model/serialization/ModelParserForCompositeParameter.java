@@ -30,28 +30,29 @@ import nu.xom.Element;
 
 public class ModelParserForCompositeParameter {
 
-	public static Optional<CompositeParameterNode> parseParameter(
+	public static Optional<CompositeParameterNode> parseParameterWithoutConstraints(
 			Element element,
 			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator,
+			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
 		Optional<CompositeParameterNode> compositeParameterNode = 
-				parseParameterWithoutConstraints(element, parametersParentNode, modelChangeRegistrator, errorList);
+				parseParameterWithoutConstraintsIntr(
+						element, parametersParentNode, modelChangeRegistrator, elementToNodeMapper, errorList);
 
 		if (!compositeParameterNode.isPresent()) {
 			return compositeParameterNode;
 		}
 
-		parseConstraints(element, compositeParameterNode.get(), errorList);
-
 		return compositeParameterNode;
 	}
 
-	private static Optional<CompositeParameterNode> parseParameterWithoutConstraints(
+	private static Optional<CompositeParameterNode> parseParameterWithoutConstraintsIntr(
 			Element element,
 			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator,
+			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
 		CompositeParameterNode targetCompositeParameterNode = 
@@ -64,9 +65,7 @@ public class ModelParserForCompositeParameter {
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
-		parseParameters(children, targetCompositeParameterNode, parametersParentNode, errorList);
-
-		ModelParserForParameterHelper.parseConstraints(children, targetCompositeParameterNode, errorList);
+		parseParameters(children, targetCompositeParameterNode, parametersParentNode, elementToNodeMapper, errorList);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
@@ -74,20 +73,6 @@ public class ModelParserForCompositeParameter {
 		}
 
 		return Optional.ofNullable(targetCompositeParameterNode);
-	}
-
-	private static void parseConstraints(
-			Element element,
-			CompositeParameterNode targetCompositeParameterNode,
-			ListOfStrings errorList) {
-
-		String[] parametersAndConstraintsElementNames = 
-				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
-
-		List<Element> children = 
-				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
-
-		ModelParserForParameterHelper.parseConstraints(children, targetCompositeParameterNode, errorList);
 	}
 
 	private static void setLinkToGlobalParameter(
@@ -114,15 +99,17 @@ public class ModelParserForCompositeParameter {
 		}
 	}
 
-	private static void parseParameters(
+	private static void parseParameters( // XYX combine with parse parameters for model parser for method
 			List<Element> elementsOfParametersAndConstraints, 
 			CompositeParameterNode targetCompositeParameterNode,
 			IParametersParentNode parametersParentNode, 
+			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
 		for (Element child : elementsOfParametersAndConstraints) {
 
-			parseConditionallyParameterElement(child, parametersParentNode, targetCompositeParameterNode, errorList);
+			parseConditionallyParameterElement(
+					child, parametersParentNode, targetCompositeParameterNode, elementToNodeMapper, errorList);
 		}
 	}
 
@@ -130,6 +117,7 @@ public class ModelParserForCompositeParameter {
 			Element child, 
 			IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 
+			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
@@ -137,8 +125,9 @@ public class ModelParserForCompositeParameter {
 			Optional<BasicParameterNode> methodParameter = 
 					new ModelParserBasicForParameter().parseParameter(
 							child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
-
+			
 			if (methodParameter.isPresent()) {
+				elementToNodeMapper.addMappings(child, methodParameter.get());
 				targetCompositeParameterNode.addParameter(methodParameter.get());
 			} else {
 				errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
@@ -150,9 +139,12 @@ public class ModelParserForCompositeParameter {
 		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 
 			Optional<CompositeParameterNode> compositeParameter = 
-					parseParameter(child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), errorList);
+					parseParameterWithoutConstraints(
+							child, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), 
+							elementToNodeMapper, errorList);
 
 			if (compositeParameter.isPresent()) {
+				elementToNodeMapper.addMappings(child, compositeParameter.get());
 				targetCompositeParameterNode.addParameter(compositeParameter.get());
 			} else {
 				errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");

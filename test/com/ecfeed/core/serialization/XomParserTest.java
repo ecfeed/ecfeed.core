@@ -46,6 +46,7 @@ import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
+import com.ecfeed.core.model.serialization.ElementToNodeMapper;
 import com.ecfeed.core.model.serialization.ModelParserBasicForParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
 import com.ecfeed.core.model.serialization.ModelParserHelper;
@@ -119,7 +120,7 @@ public class XomParserTest {
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			Optional<ClassNode> parsedClass = 
-					modelParserForClass.parseAndAddClass(element, tmpRoot, new ListOfStrings());
+					modelParserForClass.parseAndAddClass(element, tmpRoot, new ElementToNodeMapper(), new ListOfStrings());
 			
 			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
 			
@@ -152,7 +153,9 @@ public class XomParserTest {
 				
 				ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 				
-				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
+				Optional<MethodNode> parsedMethodNode = 
+						modelParserForMethod.parseMethod(
+								element, tmpClassNode, new ElementToNodeMapper(), new ListOfStrings());
 				
 				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());
 			}
@@ -440,14 +443,14 @@ public class XomParserTest {
 			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			try {
-				modelParserForClass.parseAndAddClass(classElement, rootNode, new ListOfStrings());
+				modelParserForClass.parseAndAddClass(classElement, rootNode, new ElementToNodeMapper(), new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
 				ListOfStrings errorList = new ListOfStrings();
-				modelParserForClass.parseAndAddClass(rootElement, rootNode, errorList);
+				modelParserForClass.parseAndAddClass(rootElement, rootNode, new ElementToNodeMapper(), errorList);
 				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
