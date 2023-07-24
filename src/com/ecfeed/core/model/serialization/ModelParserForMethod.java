@@ -19,6 +19,7 @@ import java.util.Optional;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.TestCaseNode;
@@ -103,9 +104,9 @@ public class ModelParserForMethod {
 		return targetMethodNode;
 	}
 
-	private void parseLocalAndChildParametersWithoutConstraints(// XYX combine with parse parameters for model parser for composite parameter
+	private void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for composite parameter
 			Element methodElement, 
-			MethodNode targetMethodNode,
+			IParametersParentNode targetMethodNode,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings inOutErrorList) {
 
@@ -122,7 +123,7 @@ public class ModelParserForMethod {
 
 	private void parseConditionallyParameterElementWithChildParameters(
 			Element parameterElement, 
-			MethodNode targetMethodNode,
+			IParametersParentNode targetMethodNode,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings inOutErrorList) {
 
