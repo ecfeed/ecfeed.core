@@ -16,10 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.TestCaseNode;
@@ -65,7 +62,7 @@ public class ModelParserForMethod {
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
-		parseLocalAndChildParametersWithoutConstraints(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+		ModelParserForParameterHelper.parseLocalAndChildParametersWithoutConstraints(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
 
 		ModelParserForParameterHelper.parseLocalAndChildConstraints(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
 
@@ -103,72 +100,6 @@ public class ModelParserForMethod {
 
 		return targetMethodNode;
 	}
-
-	private void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for composite parameter
-			Element methodElement, 
-			IParametersParentNode targetMethodNode,
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings inOutErrorList) {
-
-		List<Element> parameterElements =
-				ModelParserHelper.getIterableChildren(
-						methodElement, SerializationHelperVersion1.getParametersElementNames());
-
-		for (Element parameterElement : parameterElements) {
-
-			parseConditionallyParameterElementWithChildParameters(
-					parameterElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
-		}
-	}
-
-	private void parseConditionallyParameterElementWithChildParameters(
-			Element parameterElement, 
-			IParametersParentNode targetMethodNode,
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings inOutErrorList) {
-
-		String basicParameterElementName = SerializationHelperVersion1.getBasicParameterNodeName();
-
-		if (ModelParserHelper.verifyElementName(parameterElement, basicParameterElementName)) {
-
-			Optional<BasicParameterNode> basicParameterNode = 
-					fModelParserForMethodParameter.parseParameter(
-							parameterElement, targetMethodNode, targetMethodNode.getModelChangeRegistrator(), inOutErrorList);
-
-			elementToNodeMapper.addMappings(parameterElement, basicParameterNode.get());
-
-			if (basicParameterNode.isPresent()) {
-				targetMethodNode.addParameter(basicParameterNode.get());
-			} else {
-				inOutErrorList.add("Cannot parse parameter for method: " + targetMethodNode.getName() + ".");
-			}
-
-			return;
-		} 
-
-		String compositeParameterElementName = SerializationHelperVersion1.getCompositeParameterNodeName();
-
-		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
-
-			Optional<CompositeParameterNode> compositeParameterNode = 
-					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
-							parameterElement, targetMethodNode, 
-							targetMethodNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
-
-			elementToNodeMapper.addMappings(parameterElement, compositeParameterNode.get());
-
-			if (compositeParameterNode.isPresent()) {
-				targetMethodNode.addParameter(compositeParameterNode.get());
-			} else {
-				inOutErrorList.add("Cannot parse structure for method: " + targetMethodNode.getName() + ".");
-			}
-
-			return;
-		}
-
-		inOutErrorList.add("Invalid type of parameter element.");
-	}
-
 
 	private void parseTestCases(Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 

@@ -116,14 +116,14 @@ public class ModelParserForCompositeParameter {
 
 			parseConditionallyParameterElementWithChildParameters(
 					child, 
-					//targetCompositeParameterNode, 
-					targetCompositeParameterNode, elementToNodeMapper, errorList);
+					targetCompositeParameterNode, 
+					elementToNodeMapper, 
+					errorList);
 		}
 	}
 
 	private static void parseConditionallyParameterElementWithChildParameters(
 			Element child, 
-			//IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {

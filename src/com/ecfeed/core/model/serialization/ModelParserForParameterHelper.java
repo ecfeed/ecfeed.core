@@ -226,4 +226,69 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
+	public static void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for composite parameter
+			Element methodElement, 
+			IParametersParentNode targetMethodNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) {
+
+		List<Element> parameterElements =
+				ModelParserHelper.getIterableChildren(
+						methodElement, SerializationHelperVersion1.getParametersElementNames());
+
+		for (Element parameterElement : parameterElements) {
+
+			parseConditionallyParameterElementWithChildParameters(
+					parameterElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+		}
+	}
+
+	private static void parseConditionallyParameterElementWithChildParameters(
+			Element parameterElement, 
+			IParametersParentNode targetMethodNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) {
+
+		String basicParameterElementName = SerializationHelperVersion1.getBasicParameterNodeName();
+
+		if (ModelParserHelper.verifyElementName(parameterElement, basicParameterElementName)) {
+
+			Optional<BasicParameterNode> basicParameterNode = 
+					new ModelParserBasicForParameter().parseParameter(
+							parameterElement, targetMethodNode, targetMethodNode.getModelChangeRegistrator(), inOutErrorList);
+
+			elementToNodeMapper.addMappings(parameterElement, basicParameterNode.get());
+
+			if (basicParameterNode.isPresent()) {
+				targetMethodNode.addParameter(basicParameterNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse parameter for method: " + targetMethodNode.getName() + ".");
+			}
+
+			return;
+		} 
+
+		String compositeParameterElementName = SerializationHelperVersion1.getCompositeParameterNodeName();
+
+		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
+
+			Optional<CompositeParameterNode> compositeParameterNode = 
+					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
+							parameterElement, targetMethodNode, 
+							targetMethodNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
+
+			elementToNodeMapper.addMappings(parameterElement, compositeParameterNode.get());
+
+			if (compositeParameterNode.isPresent()) {
+				targetMethodNode.addParameter(compositeParameterNode.get());
+			} else {
+				inOutErrorList.add("Cannot parse structure for method: " + targetMethodNode.getName() + ".");
+			}
+
+			return;
+		}
+
+		inOutErrorList.add("Invalid type of parameter element.");
+	}
+	
 }
