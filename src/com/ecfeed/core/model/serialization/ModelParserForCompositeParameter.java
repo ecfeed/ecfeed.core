@@ -65,7 +65,7 @@ public class ModelParserForCompositeParameter {
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
-		parseParameters(children, targetCompositeParameterNode, parametersParentNode, elementToNodeMapper, errorList);
+		parseLocalAndChildParametersWithoutConstraints(children, targetCompositeParameterNode, parametersParentNode, elementToNodeMapper, errorList);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
@@ -99,7 +99,7 @@ public class ModelParserForCompositeParameter {
 		}
 	}
 
-	private static void parseParameters( // XYX combine with parse parameters for model parser for method
+	private static void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for method
 			List<Element> elementsOfParametersAndConstraints, 
 			CompositeParameterNode targetCompositeParameterNode,
 			IParametersParentNode parametersParentNode, 
@@ -108,12 +108,12 @@ public class ModelParserForCompositeParameter {
 
 		for (Element child : elementsOfParametersAndConstraints) {
 
-			parseConditionallyParameterElement(
+			parseConditionallyParameterElementWithChildParameters(
 					child, parametersParentNode, targetCompositeParameterNode, elementToNodeMapper, errorList);
 		}
 	}
 
-	private static void parseConditionallyParameterElement(
+	private static void parseConditionallyParameterElementWithChildParameters(
 			Element child, 
 			IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 

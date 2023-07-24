@@ -64,7 +64,7 @@ public class ModelParserForMethod {
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
-		parseParameters(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+		parseLocalAndChildParametersWithoutConstraints(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
 
 		ModelParserForParameterHelper.parseLocalAndChildConstraints(methodElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
 
@@ -103,7 +103,7 @@ public class ModelParserForMethod {
 		return targetMethodNode;
 	}
 
-	private void parseParameters(// XYX combine with parse parameters for model parser for composite parameter
+	private void parseLocalAndChildParametersWithoutConstraints(// XYX combine with parse parameters for model parser for composite parameter
 			Element methodElement, 
 			MethodNode targetMethodNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -115,11 +115,12 @@ public class ModelParserForMethod {
 
 		for (Element parameterElement : parameterElements) {
 
-			parseParameterElement(parameterElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+			parseConditionallyParameterElementWithChildParameters(
+					parameterElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
 		}
 	}
 
-	private void parseParameterElement(
+	private void parseConditionallyParameterElementWithChildParameters(
 			Element parameterElement, 
 			MethodNode targetMethodNode,
 			ElementToNodeMapper elementToNodeMapper,
