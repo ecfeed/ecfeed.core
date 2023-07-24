@@ -61,21 +61,6 @@ public class ModelParserForCompositeParameter {
 				element, targetCompositeParameterNode, elementToNodeMapper, errorList);
 
 
-		//		String[] parametersAndConstraintsElementNames = 
-		//				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
-		//
-		//		List<Element> children = 
-		//				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
-		//
-		//		for (Element child : children) {
-		//		
-		//			parseConditionallyParameterElementWithChildParameters(
-		//					child, 
-		//					targetCompositeParameterNode, 
-		//					elementToNodeMapper, 
-		//					errorList);
-		//		}
-
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
 			setLinkToGlobalParameter(element, 
@@ -88,7 +73,6 @@ public class ModelParserForCompositeParameter {
 
 	private static void setLinkToGlobalParameter(
 			Element element, 
-			//IParametersParentNode parametersParentNode,
 			CompositeParameterNode targetCompositeParameterNode, 
 			ListOfStrings errorList) {
 
@@ -101,7 +85,6 @@ public class ModelParserForCompositeParameter {
 			return;
 		}
 
-		//AbstractParameterNode link = findLink(linkPath, parametersParentNode);
 		AbstractParameterNode link = findLink(linkPath, targetCompositeParameterNode);
 
 		if (link != null) {
@@ -111,65 +94,7 @@ public class ModelParserForCompositeParameter {
 		}
 	}
 
-	//	private static void parseLocalAndChildParametersWithoutConstraints(
-	//			List<Element> elementsOfParametersAndConstraints, 
-	//			CompositeParameterNode targetCompositeParameterNode,
-	//			//IParametersParentNode parametersParentNode, 
-	//			ElementToNodeMapper elementToNodeMapper,
-	//			ListOfStrings errorList) {
-	//
-	//		for (Element child : elementsOfParametersAndConstraints) {
-	//
-	//			parseConditionallyParameterElementWithChildParameters(
-	//					child, 
-	//					targetCompositeParameterNode, 
-	//					elementToNodeMapper, 
-	//					errorList);
-	//		}
-	//	}
-
-	//	private static void parseConditionallyParameterElementWithChildParameters(
-	//			Element child, 
-	//			CompositeParameterNode targetCompositeParameterNode, 
-	//			ElementToNodeMapper elementToNodeMapper,
-	//			ListOfStrings errorList) {
-	//
-	//		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-	//
-	//			Optional<BasicParameterNode> methodParameter = 
-	//					new ModelParserBasicForParameter().parseParameter(
-	//							child, 
-	//							targetCompositeParameterNode, 
-	//							targetCompositeParameterNode.getModelChangeRegistrator(), 
-	//							errorList);
-	//			
-	//			if (methodParameter.isPresent()) {
-	//				elementToNodeMapper.addMappings(child, methodParameter.get());
-	//				targetCompositeParameterNode.addParameter(methodParameter.get());
-	//			} else {
-	//				errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
-	//			}
-	//
-	//			return;
-	//		} 
-	//
-	//		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-	//
-	//			Optional<CompositeParameterNode> compositeParameter = 
-	//					parseParameterWithoutConstraints(
-	//							child, targetCompositeParameterNode, targetCompositeParameterNode.getModelChangeRegistrator(), 
-	//							elementToNodeMapper, errorList);
-	//
-	//			if (compositeParameter.isPresent()) {
-	//				elementToNodeMapper.addMappings(child, compositeParameter.get());
-	//				targetCompositeParameterNode.addParameter(compositeParameter.get());
-	//			} else {
-	//				errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
-	//			}
-	//		}
-	//	}
-
-	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
+	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) { // XYX combine with method find link from ModelParserForParameterHelper
 
 		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
 
