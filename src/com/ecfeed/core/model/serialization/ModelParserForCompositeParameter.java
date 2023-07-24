@@ -12,12 +12,10 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
@@ -59,16 +57,24 @@ public class ModelParserForCompositeParameter {
 				ModelParserForParameterHelper.createCompositeParameter(
 						element, parametersParentNode, modelChangeRegistrator, errorList);
 
-		String[] parametersAndConstraintsElementNames = 
-				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
+		ModelParserForParameterHelper.parseLocalAndChildParametersWithoutConstraints(
+				element, targetCompositeParameterNode, elementToNodeMapper, errorList);
 
-		List<Element> children = 
-				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
 
-		parseLocalAndChildParametersWithoutConstraints(
-				children, targetCompositeParameterNode, 
-				// parametersParentNode, 
-				elementToNodeMapper, errorList);
+		//		String[] parametersAndConstraintsElementNames = 
+		//				SerializationHelperVersion1.getParametersAndConstraintsElementNames();
+		//
+		//		List<Element> children = 
+		//				ModelParserHelper.getIterableChildren(element, parametersAndConstraintsElementNames);
+		//
+		//		for (Element child : children) {
+		//		
+		//			parseConditionallyParameterElementWithChildParameters(
+		//					child, 
+		//					targetCompositeParameterNode, 
+		//					elementToNodeMapper, 
+		//					errorList);
+		//		}
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
@@ -105,63 +111,63 @@ public class ModelParserForCompositeParameter {
 		}
 	}
 
-	private static void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for method
-			List<Element> elementsOfParametersAndConstraints, 
-			CompositeParameterNode targetCompositeParameterNode,
-			//IParametersParentNode parametersParentNode, 
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings errorList) {
+	//	private static void parseLocalAndChildParametersWithoutConstraints(
+	//			List<Element> elementsOfParametersAndConstraints, 
+	//			CompositeParameterNode targetCompositeParameterNode,
+	//			//IParametersParentNode parametersParentNode, 
+	//			ElementToNodeMapper elementToNodeMapper,
+	//			ListOfStrings errorList) {
+	//
+	//		for (Element child : elementsOfParametersAndConstraints) {
+	//
+	//			parseConditionallyParameterElementWithChildParameters(
+	//					child, 
+	//					targetCompositeParameterNode, 
+	//					elementToNodeMapper, 
+	//					errorList);
+	//		}
+	//	}
 
-		for (Element child : elementsOfParametersAndConstraints) {
-
-			parseConditionallyParameterElementWithChildParameters(
-					child, 
-					targetCompositeParameterNode, 
-					elementToNodeMapper, 
-					errorList);
-		}
-	}
-
-	private static void parseConditionallyParameterElementWithChildParameters(
-			Element child, 
-			CompositeParameterNode targetCompositeParameterNode, 
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings errorList) {
-
-		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-
-			Optional<BasicParameterNode> methodParameter = 
-					new ModelParserBasicForParameter().parseParameter(
-							child, 
-							targetCompositeParameterNode, 
-							targetCompositeParameterNode.getModelChangeRegistrator(), 
-							errorList);
-			
-			if (methodParameter.isPresent()) {
-				elementToNodeMapper.addMappings(child, methodParameter.get());
-				targetCompositeParameterNode.addParameter(methodParameter.get());
-			} else {
-				errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
-			}
-
-			return;
-		} 
-
-		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-
-			Optional<CompositeParameterNode> compositeParameter = 
-					parseParameterWithoutConstraints(
-							child, targetCompositeParameterNode, targetCompositeParameterNode.getModelChangeRegistrator(), 
-							elementToNodeMapper, errorList);
-
-			if (compositeParameter.isPresent()) {
-				elementToNodeMapper.addMappings(child, compositeParameter.get());
-				targetCompositeParameterNode.addParameter(compositeParameter.get());
-			} else {
-				errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
-			}
-		}
-	}
+	//	private static void parseConditionallyParameterElementWithChildParameters(
+	//			Element child, 
+	//			CompositeParameterNode targetCompositeParameterNode, 
+	//			ElementToNodeMapper elementToNodeMapper,
+	//			ListOfStrings errorList) {
+	//
+	//		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+	//
+	//			Optional<BasicParameterNode> methodParameter = 
+	//					new ModelParserBasicForParameter().parseParameter(
+	//							child, 
+	//							targetCompositeParameterNode, 
+	//							targetCompositeParameterNode.getModelChangeRegistrator(), 
+	//							errorList);
+	//			
+	//			if (methodParameter.isPresent()) {
+	//				elementToNodeMapper.addMappings(child, methodParameter.get());
+	//				targetCompositeParameterNode.addParameter(methodParameter.get());
+	//			} else {
+	//				errorList.add("Cannot parse parameter of parent structure: " + targetCompositeParameterNode.getName() + ".");
+	//			}
+	//
+	//			return;
+	//		} 
+	//
+	//		if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+	//
+	//			Optional<CompositeParameterNode> compositeParameter = 
+	//					parseParameterWithoutConstraints(
+	//							child, targetCompositeParameterNode, targetCompositeParameterNode.getModelChangeRegistrator(), 
+	//							elementToNodeMapper, errorList);
+	//
+	//			if (compositeParameter.isPresent()) {
+	//				elementToNodeMapper.addMappings(child, compositeParameter.get());
+	//				targetCompositeParameterNode.addParameter(compositeParameter.get());
+	//			} else {
+	//				errorList.add("Cannot parse structure of parent structure: " + targetCompositeParameterNode.getName() + ".");
+	//			}
+	//		}
+	//	}
 
 	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
 

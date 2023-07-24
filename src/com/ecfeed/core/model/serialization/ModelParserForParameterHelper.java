@@ -226,7 +226,7 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
-	public static void parseLocalAndChildParametersWithoutConstraints( // XYX combine with parse parameters for model parser for composite parameter
+	public static void parseLocalAndChildParametersWithoutConstraints(
 			Element methodElement, 
 			IParametersParentNode targetMethodNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -290,5 +290,5 @@ public class ModelParserForParameterHelper {
 
 		inOutErrorList.add("Invalid type of parameter element.");
 	}
-	
+
 }
