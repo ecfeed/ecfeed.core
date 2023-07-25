@@ -28,26 +28,6 @@ import nu.xom.Element;
 
 public class ModelParserForMethod {
 
-	ModelParserBasicForParameter fModelParserForMethodParameter;
-	ModelParserForCompositeParameter fModelParserForMethodCompositeParameter;
-	ModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
-	ModelParserForTestCase fModelParserForTestCase;
-	ModelParserForConstraint fModelParserForConstraint;
-
-	public  ModelParserForMethod(
-			ModelParserBasicForParameter modelParserForMethodParameter,
-			ModelParserForCompositeParameter modelParserForMethodCompositeParameter,
-			ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
-			ModelParserForTestCase modelParserForTestCase,
-			ModelParserForConstraint modelParserForConstraint) {
-
-		fModelParserForMethodParameter = modelParserForMethodParameter;
-		fModelParserForMethodCompositeParameter = modelParserForMethodCompositeParameter;
-		fModelParserForMethodDeployedParameter = modelParserForMethodDeployedParameter;
-		fModelParserForTestCase = modelParserForTestCase;
-		fModelParserForConstraint = modelParserForConstraint;
-	}
-
 	public Optional<MethodNode> parseMethod(
 			Element methodElement, 
 			ClassNode classNode,
@@ -113,7 +93,7 @@ public class ModelParserForMethod {
 			for (Element testCaseElement : testCaseElements) {
 
 				Optional<TestCaseNode> testCase = 
-						fModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
+						new ModelParserForTestCase().parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
 
 				if (testCase.isPresent()) {
 					targetMethodNode.addTestCase(testCase.get());
@@ -157,7 +137,7 @@ public class ModelParserForMethod {
 		for (Element childNested : iterableChildren) {
 
 			Optional<ParameterWithLinkingContext> parameterWithLinkingContext = 
-					fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
+					new ModelParserForMethodDeployedParameter().parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
 			if (parameterWithLinkingContext.isPresent()) {

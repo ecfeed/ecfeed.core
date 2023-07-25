@@ -27,15 +27,6 @@ import nu.xom.Element;
 
 public class ModelParserForClass {
 
-	private ModelParserForMethod fModelParserForMethod;
-
-	public ModelParserForClass(
-			ModelParserBasicForParameter ModelParserForParameter,  // XYX remove parsers from constructors
-			ModelParserForMethod modelParserForMethod) {
-
-		fModelParserForMethod = modelParserForMethod;
-	}
-
 	public Optional<ClassNode> parseAndAddClass(
 			Element classElement, 
 			RootNode rootNode,
@@ -113,7 +104,7 @@ public class ModelParserForClass {
 		for (Element methodElement : childrenMethodElements) {
 
 			Optional<MethodNode> node = 
-					fModelParserForMethod.parseMethod(
+					new ModelParserForMethod().parseMethod(
 							methodElement, targetClassNode, elementToNodeMapper, errorList);
 
 			if (!node.isPresent()) {

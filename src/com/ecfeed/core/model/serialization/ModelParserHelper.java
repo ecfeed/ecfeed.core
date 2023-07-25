@@ -30,37 +30,14 @@ public class ModelParserHelper  {
 
 	public static ModelParserForMethod createStandardModelParserForMethod() {
 
-		ModelParserBasicForParameter modelParserForMethodParameter = new ModelParserBasicForParameter();
-
-		ModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
-
-		ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-
-		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-
-		ModelParserForCompositeParameter modelParserForMethodCompositeParameter
-		= new ModelParserForCompositeParameter();
-
-		ModelParserForMethod modelParserForMethod = new ModelParserForMethod(
-				modelParserForMethodParameter,
-				modelParserForMethodCompositeParameter,
-				modelParserForMethodDeployedParameter,
-				modelParserForTestCase,
-				modelParserForConstraint);
+		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
 
 		return modelParserForMethod;
 	}
 
 	public static ModelParserForClass createStandardModelParserForClass() {
 
-		ModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
-
-		ModelParserBasicForParameter ModelParserForParameter = 
-				new ModelParserBasicForParameter();
-
-		ModelParserForClass modelParserForClass = 
-				new ModelParserForClass(
-						ModelParserForParameter, modelParserForMethod);
+		ModelParserForClass modelParserForClass = new ModelParserForClass();
 		return modelParserForClass;
 	}
 
@@ -68,17 +45,8 @@ public class ModelParserHelper  {
 			int modelVersion, 
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		ModelParserBasicForParameter ModelParserForParameter = 
-				new ModelParserBasicForParameter();
-
-		ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-
 		ModelParserForRoot modelParserForRoot = 
-				new ModelParserForRoot(
-						modelVersion, 
-						ModelParserForParameter,
-						modelParserForClass,
-						modelChangeRegistrator);
+				new ModelParserForRoot(modelVersion, modelChangeRegistrator);
 
 		return modelParserForRoot;
 	}

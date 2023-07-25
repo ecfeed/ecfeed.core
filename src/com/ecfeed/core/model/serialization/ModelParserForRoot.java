@@ -24,18 +24,12 @@ public class ModelParserForRoot {
 
 	IModelChangeRegistrator fModelChangeRegistrator;
 	private int fModelVersion;
-	private ModelParserBasicForParameter fModelParserForParameter;
-	private ModelParserForClass fModelParserForClass;
 
 	public ModelParserForRoot(
 			int modelVersion, 
-			ModelParserBasicForParameter ModelParserForParameter,
-			ModelParserForClass modelParserForClass,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelVersion = modelVersion;
-		fModelParserForParameter = ModelParserForParameter;
-		fModelParserForClass = modelParserForClass;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
@@ -86,7 +80,7 @@ public class ModelParserForRoot {
 		if (isBasicParameterElement) {
 			
 			Optional<BasicParameterNode> globalBasicParameter = 
-					fModelParserForParameter.parseParameter(
+					new ModelParserBasicForParameter().parseParameter(
 							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
 
 			if (globalBasicParameter.isPresent()) {
@@ -132,7 +126,7 @@ public class ModelParserForRoot {
 
 		for (Element classElement : childClassElements) {
 
-			fModelParserForClass.parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
+			new ModelParserForClass().parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
 		}
 	}
 

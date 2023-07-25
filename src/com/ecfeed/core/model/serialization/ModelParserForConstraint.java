@@ -47,11 +47,6 @@ import nu.xom.Element;
 
 public class ModelParserForConstraint {
 
-	//private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
-
-	public ModelParserForConstraint() {
-	}
-
 	public Optional<ConstraintNode> parseConstraint(
 			Element element, 
 			IParametersAndConstraintsParentNode parent, 
