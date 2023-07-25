@@ -133,7 +133,7 @@ public class ModelParser {
 					document.getRootElement(), 
 					null,
 					modelChangeRegistrator, 
-					outErrorList).get();
+					outErrorList);
 
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
@@ -147,7 +147,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			return ModelParserBasicForParameter.parseParameter(
-					document.getRootElement(), method, method.getModelChangeRegistrator(), outErrorList).get();
+					document.getRootElement(), method, method.getModelChangeRegistrator(), outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -173,7 +173,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForTestCase().parseTestCase(document.getRootElement(), method, outErrorList).get();
+			return ModelParserForTestCase.parseTestCase(document.getRootElement(), method, outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;

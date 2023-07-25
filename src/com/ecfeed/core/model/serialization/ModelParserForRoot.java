@@ -70,12 +70,12 @@ public class ModelParserForRoot {
 
 		if (isBasicParameterElement) {
 
-			Optional<BasicParameterNode> globalBasicParameter = 
+			BasicParameterNode globalBasicParameter = 
 					ModelParserBasicForParameter.parseParameter(
 							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
 
-			if (globalBasicParameter.isPresent()) {
-				targetRootNode.addParameter(globalBasicParameter.get());
+			if (globalBasicParameter != null) {
+				targetRootNode.addParameter(globalBasicParameter);
 			} else {
 				inOutErrorList.add("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
 			}

@@ -93,7 +93,7 @@ public class ModelParserForMethod {
 			for (Element testCaseElement : testCaseElements) {
 
 				Optional<TestCaseNode> testCase = 
-						new ModelParserForTestCase().parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
+						ModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
 
 				if (testCase.isPresent()) {
 					targetMethodNode.addTestCase(testCase.get());

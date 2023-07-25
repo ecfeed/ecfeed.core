@@ -250,13 +250,13 @@ public class ModelParserForParameterHelper {
 
 		if (ModelParserHelper.verifyElementName(parameterElement, basicParameterElementName)) {
 
-			Optional<BasicParameterNode> basicParameterNode = 
+			BasicParameterNode basicParameterNode = 
 					ModelParserBasicForParameter.parseParameter(
 							parameterElement, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), inOutErrorList);
 
-			if (basicParameterNode.isPresent()) {
-				elementToNodeMapper.addMappings(parameterElement, basicParameterNode.get());
-				parametersParentNode.addParameter(basicParameterNode.get());
+			if (basicParameterNode != null) {
+				elementToNodeMapper.addMappings(parameterElement, basicParameterNode);
+				parametersParentNode.addParameter(basicParameterNode);
 			} else {
 				inOutErrorList.add("Cannot parse parameter for method: " + parametersParentNode.getName() + ".");
 			}

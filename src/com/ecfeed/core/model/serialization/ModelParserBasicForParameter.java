@@ -12,8 +12,6 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
-import java.util.Optional;
-
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
@@ -23,7 +21,7 @@ import nu.xom.Element;
 
 public class ModelParserBasicForParameter {
 
-	public static Optional<BasicParameterNode> parseParameter(
+	public static BasicParameterNode parseParameter(
 			Element parameterElement, 
 			IParametersParentNode parametersParentNodeUsedForLocalParameters,
 			IModelChangeRegistrator modelChangeRegistrator,
@@ -54,7 +52,7 @@ public class ModelParserBasicForParameter {
 			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
 		}
 
-		return Optional.ofNullable(targetMethodParameterNode);
+		return targetMethodParameterNode;
 	}
 
 }

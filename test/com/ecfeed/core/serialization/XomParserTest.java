@@ -179,11 +179,10 @@ public class XomParserTest {
 					Element element = (Element)methodParameterNode.accept(builder);
 					TRACE(element);
 
-					Optional<BasicParameterNode> parsedMethodParameterNode = 
+					BasicParameterNode parsedMethodParameterNode = 
 							ModelParserBasicForParameter.parseParameter(
 									element, methodNode, methodNode.getModelChangeRegistrator(), new ListOfStrings());
-					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
-					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
+					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode);
 				}
 			}
 			catch (Exception e) {
@@ -209,8 +208,7 @@ public class XomParserTest {
 					Element element = (Element)testCaseNode.accept(builder);
 					TRACE(element);
 
-					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
+					Optional<TestCaseNode> tc1 = ModelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					// assertElementsEqual(testCaseNode, tc1.get());
 					TestCaseNodeHelper.compareTestCases(testCaseNode, tc1.get());
 				} catch (Exception e) {
