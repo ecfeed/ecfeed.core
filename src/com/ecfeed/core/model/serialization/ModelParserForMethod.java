@@ -136,12 +136,12 @@ public class ModelParserForMethod {
 
 		for (Element childNested : iterableChildren) {
 
-			Optional<ParameterWithLinkingContext> parameterWithLinkingContext = 
+			ParameterWithLinkingContext parameterWithLinkingContext = 
 					ModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
-			if (parameterWithLinkingContext.isPresent()) {
-				inOutParametersWithContexts.add(parameterWithLinkingContext.get());
+			if (parameterWithLinkingContext != null) {
+				inOutParametersWithContexts.add(parameterWithLinkingContext);
 			} else {
 				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
 			}

@@ -29,7 +29,7 @@ import nu.xom.Element;
 
 public class ModelParserForMethodDeployedParameter {
 
-	public static Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(
+	public static ParameterWithLinkingContext parseMethodDeployedParameter(
 			Element parameterElement, 
 			MethodNode methodNode,
 			ListOfStrings errorList) {
@@ -41,12 +41,12 @@ public class ModelParserForMethodDeployedParameter {
 				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, methodNode, errorList);
 
 		if (parameter == null && linkingContext == null) {
-			return Optional.empty();
+			return null;
 		}
 
 		ParameterWithLinkingContext parameterWithLinkingContext = new ParameterWithLinkingContext(parameter, linkingContext);
 
-		return Optional.of(parameterWithLinkingContext);
+		return parameterWithLinkingContext;
 	}
 
 	private static AbstractParameterNode parseDeployedNode(
