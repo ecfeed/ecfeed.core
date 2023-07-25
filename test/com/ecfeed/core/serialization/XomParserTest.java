@@ -115,12 +115,12 @@ public class XomParserTest {
 			TRACE(element);
 
 			RootNode tmpRoot = new RootNode("tmp", null);
-			
-			Optional<ClassNode> parsedClass = 
+
+			ClassNode parsedClass = 
 					ModelParserForClass.parseAndAddClass(element, tmpRoot, new ElementToNodeMapper(), new ListOfStrings());
-			
-			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
-			
+
+			ClassNodeHelper.compareClasses(classNode, parsedClass);
+
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -128,30 +128,30 @@ public class XomParserTest {
 
 	@Test
 	public void parseMethodTest() {
-		
+
 		int currentSoftwareVersion = ModelVersionDistributor.getCurrentSoftwareVersion();
-		
+
 		for (int version = currentSoftwareVersion - 1; version <= currentSoftwareVersion; version++) {
 			parseMethodTest(version);
 		}
 	}
 
 	private void parseMethodTest(int version){
-		
+
 		for(int i = 0; i < 10; i++){
 			try{
 				MethodNode methodNode = fModelGenerator.generateMethod(5, 5, 5);
-				
+
 				XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 				Element element = (Element)methodNode.accept(builder);
 				TRACE(element);
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				
+
 				Optional<MethodNode> parsedMethodNode = 
 						ModelParserForMethod.parseMethod(
 								element, tmpClassNode, new ElementToNodeMapper(), new ListOfStrings());
-				
+
 				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
@@ -441,7 +441,7 @@ public class XomParserTest {
 			try {
 				ListOfStrings errorList = new ListOfStrings();
 				ModelParserForClass.parseAndAddClass(rootElement, rootNode, new ElementToNodeMapper(), errorList);
-				
+
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
 			}
@@ -465,25 +465,25 @@ public class XomParserTest {
 
 	}
 
-//	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
-//		
-//		if (n.isMatch(n1)) {
-//			return;
-//		}
-//		
-//		String str1 = fStringifier.stringify(n, 0);
-//		String str2 = fStringifier.stringify(n1, 0);
-//		
-//		int index = StringHelper.findFirstDifference(str1, str2);
-//		
-//		String substr1 = str1.substring(index, index + 20);
-//		String substr2 = str2.substring(index, index + 20);
-//		
-//		System.out.println(substr1);
-//		System.out.println(substr2);
-//		
-//		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
-//	}
+	//	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
+	//		
+	//		if (n.isMatch(n1)) {
+	//			return;
+	//		}
+	//		
+	//		String str1 = fStringifier.stringify(n, 0);
+	//		String str2 = fStringifier.stringify(n1, 0);
+	//		
+	//		int index = StringHelper.findFirstDifference(str1, str2);
+	//		
+	//		String substr1 = str1.substring(index, index + 20);
+	//		String substr2 = str2.substring(index, index + 20);
+	//		
+	//		System.out.println(substr1);
+	//		System.out.println(substr2);
+	//		
+	//		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
+	//	}
 
 	private void TRACE(Element element){
 		if (!DEBUG) {

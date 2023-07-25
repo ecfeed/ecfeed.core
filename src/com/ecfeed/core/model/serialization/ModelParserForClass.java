@@ -27,7 +27,7 @@ import nu.xom.Element;
 
 public class ModelParserForClass {
 
-	public static Optional<ClassNode> parseAndAddClass(
+	public static ClassNode parseAndAddClass(
 			Element classElement, 
 			RootNode rootNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -36,7 +36,7 @@ public class ModelParserForClass {
 		ClassNode classNode = createClassNode(classElement, rootNode, errorList);
 
 		if (classNode == null) {
-			return Optional.empty();
+			return null;
 		}
 
 		rootNode.addClass(classNode);
@@ -50,7 +50,7 @@ public class ModelParserForClass {
 
 		parseMethods(classElement, classNode, elementToNodeMapper, errorList);
 
-		return Optional.ofNullable(classNode);
+		return classNode;
 	}
 
 	private static void parseConstraintsOfGlobalCompositeParameters(

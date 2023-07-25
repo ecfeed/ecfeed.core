@@ -100,7 +100,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 
 			return ModelParserForClass.parseAndAddClass(
-					document.getRootElement(), null, elementToNodeMapper, outErrorList).get();
+					document.getRootElement(), null, elementToNodeMapper, outErrorList);
 
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
