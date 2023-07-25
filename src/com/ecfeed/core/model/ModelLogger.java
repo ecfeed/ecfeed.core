@@ -103,9 +103,13 @@ public class ModelLogger {
 		}
 
 		if (abstractNode instanceof BasicParameterNode) {
-			return printMethodParameterNode((BasicParameterNode)abstractNode, null, indent);
+			return printParameterNode((BasicParameterNode)abstractNode, null, indent);
 		}
 
+		if (abstractNode instanceof CompositeParameterNode) {
+			return printParameterNode((CompositeParameterNode)abstractNode, null, indent);
+		}
+		
 		if (abstractNode instanceof ChoiceNode) {
 			return printChoiceNode((ChoiceNode)abstractNode, null, indent);
 		}
@@ -155,27 +159,32 @@ public class ModelLogger {
 		return printObjectLine(parametersParentNode, fieldName, indent);
 	}
 
-	private static String printMethodParameterNode(BasicParameterNode methodParameterNode, String fieldName, int indent) {
-		if (methodParameterNode == null) {
+	private static String printParameterNode(
+			AbstractParameterNode abstractParameterNode, String fieldName, int indent) {
+		
+		if (abstractParameterNode == null) {
 			return printIndentedLine("MethodNode is null", indent);
 		}
 
-		String text = printObjectLine(methodParameterNode, fieldName, indent);
+		String text = printObjectLine(abstractParameterNode, fieldName, indent);
 
-		boolean isLinked = methodParameterNode.isLinked();
-		text += printFieldLine(methodParameterNode.getType() + " [isLinked]=" + isLinked, indent + indentIncrement);
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			text += printFieldLine(((BasicParameterNode)abstractParameterNode).getType(), indent + indentIncrement);
+		}
 
-		if (isLinked) {
-			BasicParameterNode globalParameterNode = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
+		if (abstractParameterNode.isLinked()) {
+			
+			AbstractParameterNode globalParameterNode = abstractParameterNode.getLinkToGlobalParameter();
+			
 			if (globalParameterNode == null) {
-				text += printIndentedLine("GlobalParameterNode is null", indent + indentIncrement);
+				text += printIndentedLine("Link is null", indent + indentIncrement);
 			} else {
-				text += printAbstractNode(globalParameterNode, indent + indentIncrement);
+				text += printIndentedLine("Link:" + globalParameterNode.getName(), indent + indentIncrement);
 			}
 		}
 
 		return text;
-	}	
+	}
 
 	private static String printChoiceNode(ChoiceNode choiceNode, String fieldName, int indent) {
 
