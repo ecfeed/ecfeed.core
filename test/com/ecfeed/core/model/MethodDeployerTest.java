@@ -155,9 +155,9 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "RP1", "String", "", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalParameterNodeOfRoot, "RC11", "100", false, false, null);
 
 		// add class node
@@ -167,12 +167,12 @@ public class MethodDeployerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// add composite parameter
 
 		CompositeParameterNode compositeParameterNode = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(methodNode, "S1");
 
 		// add linked basic parameter to composite parameter
 
@@ -295,7 +295,7 @@ public class MethodDeployerTest {
 		// global composite 1
 
 		CompositeParameterNode globalCompositeNode = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(rootNode, "GS1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(rootNode, "GS1");
 
 		// parameter 1 of global composite and choices
 
@@ -303,27 +303,27 @@ public class MethodDeployerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						globalCompositeNode, "GP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(globalBasicParameterNode, "GC11", "GC11");
+		MethodParameterNodeHelper.addNewChoice(globalBasicParameterNode, "GC11", "GC11");
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// local composite
 
 		CompositeParameterNode localCompositeNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(methodNode, "S1");
 
 		localCompositeNode1.setLinkToGlobalParameter(globalCompositeNode);
 
 		// local composite 2
 
 		CompositeParameterNode localCompositeNode2 = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S2");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(methodNode, "S2");
 
 		localCompositeNode2.setLinkToGlobalParameter(globalCompositeNode);
 
@@ -786,11 +786,11 @@ public class MethodDeployerTest {
 		// add global parameter of root and choice node
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "RP1", "String", "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "RP1", "String", "", true, null);
 
 		String globalChoiceNodeName = "RC11";
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalParameterNodeOfRoot, globalChoiceNodeName, "100", false, false, null);
 
 		// add class node
@@ -800,7 +800,7 @@ public class MethodDeployerTest {
 
 		// add method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		BasicParameterNode basicParameterNodeOfMethod = 
 				new BasicParameterNode(
@@ -811,7 +811,7 @@ public class MethodDeployerTest {
 		// add composite parameter
 
 		CompositeParameterNode compositeParameterNode = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(methodNode, "S1");
 
 		// add linked basic parameter to composite parameter
 
@@ -838,16 +838,16 @@ public class MethodDeployerTest {
 
 		RootNode rootNode = new RootNode("model", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
 		CompositeParameterNode compositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LC", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LC", true, null);
 
-		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+		CompositeParameterNodeHelper.addNewBasicParameter(
 				compositeParameterNode, "LP", "int", "0", true, null);
 
 		NodeMapper nodeMapper = new NodeMapper();
@@ -893,7 +893,7 @@ public class MethodDeployerTest {
 	//
 	//		String globalChoiceNodeName = "RC11";
 	//
-	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//		BasicParameterNodeHelper.addNewChoice(
 	//				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
 	//
 	//		// add class node

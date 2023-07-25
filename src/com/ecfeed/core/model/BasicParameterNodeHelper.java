@@ -403,22 +403,7 @@ public class BasicParameterNodeHelper {
 		return errorMessage;
 	}
 
-	//	public static ChoiceNode addNewChoiceToBasicParameter(
-	//			BasicParameterNode globalParameterNode,
-	//			String choiceNodeName,
-	//			String valueString,
-	//			boolean isRandomizedValue,
-	//			IModelChangeRegistrator modelChangeRegistrator) {
-	//
-	//		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
-	//		choiceNode.setRandomizedValue(isRandomizedValue);
-	//
-	//		globalParameterNode.addChoice(choiceNode);
-	//
-	//		return choiceNode;
-	//	}
-
-	public static ChoiceNode addNewChoiceToBasicParameter(
+	public static ChoiceNode addNewChoice(
 			BasicParameterNode basicParameterNode,
 			String choiceNodeName,
 			String valueString,

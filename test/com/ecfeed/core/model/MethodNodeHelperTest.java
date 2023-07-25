@@ -360,7 +360,7 @@ public class MethodNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method_1", true, null); 
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method_1", true, null); 
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "param_1", "int", "0", true, null);
 
@@ -643,19 +643,19 @@ public class MethodNodeHelperTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice1", "1", false, true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice2", "2", false, true, null);
 
 		// constraint
@@ -719,19 +719,19 @@ public class MethodNodeHelperTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice1", "1", false, true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice2", "2", false, true, null);
 
 		// constraint
@@ -795,19 +795,19 @@ public class MethodNodeHelperTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice1", "1:2", true, true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice2", "2:3", true, true, null);
 
 		// list of constraints
@@ -867,19 +867,19 @@ public class MethodNodeHelperTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice1", "1:2", true, true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice2", "2:3", true, true, null);
 
 		// list of constraints

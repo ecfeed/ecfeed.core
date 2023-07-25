@@ -62,14 +62,14 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// local structure 1
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		// local structure 2
 
@@ -80,19 +80,19 @@ public class ModelSerializerAndParserTest {
 		// local parameter1 with choice
 
 		BasicParameterNode localBasicParameterNode1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameterNode2, "LP1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				localBasicParameterNode1, "GC11", "0", false, true, null);
 
 		// local parameter2 with choice
 
 		BasicParameterNode localBasicParameterNode2 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameterNode2, "LP2", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				localBasicParameterNode2, "GC21", "0", false, true, null);
 
 		// constraint with parameter condition
@@ -161,23 +161,23 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// local structure 1
 
 		CompositeParameterNode compositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		// local parameter1 with choice
 
 		BasicParameterNode basicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						compositeParameterNode, "LP1", "int", "0", true, null);
 
 		ChoiceNode choiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "LC1", "0", false, true, null);
 
 		// constraint with parameter condition
@@ -245,16 +245,16 @@ public class ModelSerializerAndParserTest {
 		// local structure 1
 
 		CompositeParameterNode globalCompositeParameterNode = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 
 		// local parameter1 with choice
 
 		BasicParameterNode basicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode, "GP1", "int", "0", true, null);
 
 		ChoiceNode choiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "GC1", "0", false, true, null);
 
 		// constraint with parameter condition
@@ -275,14 +275,14 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// linked parameter
 
 		CompositeParameterNode localCompositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
 
@@ -347,7 +347,7 @@ public class ModelSerializerAndParserTest {
 
 		// class 
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null); // XYX rename 
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null); // XYX rename 
 
 		// local structure 1
 
@@ -357,11 +357,11 @@ public class ModelSerializerAndParserTest {
 		// local parameter1 with choice
 
 		BasicParameterNode basicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode, "GP1", "int", "0", true, null);
 
 		ChoiceNode choiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "GC1", "0", false, true, null);
 
 		// constraint with parameter condition
@@ -382,12 +382,12 @@ public class ModelSerializerAndParserTest {
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// linked structure
 
 		CompositeParameterNode localCompositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
@@ -452,14 +452,14 @@ public class ModelSerializerAndParserTest {
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// structure 1
 
 		CompositeParameterNode compositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		// nested structure 2
 
@@ -469,11 +469,11 @@ public class ModelSerializerAndParserTest {
 		// local parameter1 under structure 2, with choice
 
 		BasicParameterNode basicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						compositeParameterNode2, "LP1", "int", "0", true, null);
 
 		ChoiceNode choiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "LC1", "0", false, true, null);
 
 		// constraint with parameter condition under structure 1
@@ -540,37 +540,37 @@ public class ModelSerializerAndParserTest {
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS", true, null);
 
 		// global parameter1 with choice
 
 		BasicParameterNode globalBasicParameterNode1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode, "GP1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode1, "GC11", "0", false, true, null);
 
 
 		// global parameter2 with choice
 
 		BasicParameterNode globalBasicParameterNode2 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode, "GP2", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode2, "GC21", "0", false, true, null);
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// local structure
 
 		CompositeParameterNode localCompositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS", true, null);
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
 
@@ -650,7 +650,7 @@ public class ModelSerializerAndParserTest {
 		// global structures
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
 				CompositeParameterNodeHelper.addNewCompositeParameter(
@@ -659,27 +659,27 @@ public class ModelSerializerAndParserTest {
 		// global parameter1 with choice
 
 		BasicParameterNode globalBasicParameterNode1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode2, "GP1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode1, "GC11", "0", false, true, null);
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// local structures
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
 		CompositeParameterNode localCompositeParameterNode2 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS2", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS2", true, null);
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -764,24 +764,24 @@ public class ModelSerializerAndParserTest {
 		// global parameter1 with choice
 
 		BasicParameterNode globalBasicParameterNode1 = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "GP1", "int", "0", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "GP1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode1, "GC11", "0", false, true, null);
 
 		// global parameter2 with choice
 
 		BasicParameterNode globalBasicParameterNode2 = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "GP2", "int", "0", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "GP2", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode2, "GC21", "0", false, true, null);
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		// local parameter1
 
@@ -880,22 +880,22 @@ public class ModelSerializerAndParserTest {
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameterNode1, "GP", "int", "o", true, null);
 
 		ChoiceNode choice1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						globalBasicParameterNode, "choice1", "0", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -966,32 +966,32 @@ public class ModelSerializerAndParserTest {
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 
 		// BasicParameterNode globalBasicParameterNode1 = 
-		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+		CompositeParameterNodeHelper.addNewBasicParameter(
 				globalCompositeParameterNode1, "GP", "int", "o", true, null);
 
 		CompositeParameterNode globalCompositeParameterNode2 = 
-				CompositeParameterNodeHelper.addNewCompositeParameterNodeToCompositeParameter(
+				CompositeParameterNodeHelper.addNewCompositeParameterNode(
 						globalCompositeParameterNode1, "GS2", null);
 
 		// BasicParameterNode globalBasicParameterNode2 =
-		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+		CompositeParameterNodeHelper.addNewBasicParameter(
 				globalCompositeParameterNode2, "GP", "int", "o", true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
 
 		CompositeParameterNode localCompositeParameterNode2 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS2", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS2", true, null);
 
 		localCompositeParameterNode2.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -1050,15 +1050,15 @@ public class ModelSerializerAndParserTest {
 
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "LP", "int", "0", true, null);
 
-		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS", true, null);
+		CompositeParameterNode compositeParameterNode = MethodNodeHelper.addNewCompositeParameter(methodNode, "LS", true, null);
 
-		CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+		CompositeParameterNodeHelper.addNewBasicParameter(
 				compositeParameterNode, "LP", "int", "0", true, null);
 
 		// root

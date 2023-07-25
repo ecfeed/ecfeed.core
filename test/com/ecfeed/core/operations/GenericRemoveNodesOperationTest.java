@@ -202,7 +202,7 @@ public class GenericRemoveNodesOperationTest {
 	//
 	//		final String choiceValueString = "AB";
 	//
-	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//		BasicParameterNodeHelper.addNewChoice(
 	//				globalParameterNodeOfRoot1, "RC11", choiceValueString, false, null);
 	//
 	//
@@ -212,7 +212,7 @@ public class GenericRemoveNodesOperationTest {
 	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 	//
 	//		BasicParameterNode localParameterNode = 
-	//				ParametersAndConstraintsParentNodeHelper.addLinkedParameterToMethod(methodNode, "MP1", parameterType, globalParameterNodeOfRoot1);
+	//				ParametersAndConstraintsParentNodeHelper.addLinkedParameter(methodNode, "MP1", parameterType, globalParameterNodeOfRoot1);
 	//
 	//		List<IAbstractNode> listOfNodesToDelete = new ArrayList<>();
 	//		listOfNodesToDelete.add(localParameterNode);
@@ -231,7 +231,7 @@ public class GenericRemoveNodesOperationTest {
 	//
 	//		BasicParameterNode globalBasicParameterNode = RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, "GParam1", "String", null);
 	//
-	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(globalBasicParameterNode, "Choice1", "1", null);
+	//		BasicParameterNodeHelper.addNewChoice(globalBasicParameterNode, "Choice1", "1", null);
 	//		
 	//		// class node 
 	//
@@ -787,17 +787,17 @@ public class GenericRemoveNodesOperationTest {
 		// global basic parameter
 
 		BasicParameterNode globalBasicParameterNode = 
-				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
+				ClassNodeHelper.addGlobalBasicParameter(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
 
 		// global choice
 
 		ChoiceNode globalChoiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						globalBasicParameterNode, "GC1", "A", false, false, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// local parameter linked to global
 

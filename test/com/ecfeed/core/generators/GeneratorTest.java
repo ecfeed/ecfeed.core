@@ -49,22 +49,22 @@ public class GeneratorTest {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class",  true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class",  true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// two basic parameters
 
 		BasicParameterNode basicParameterNode1 =
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode1, "choice1", "test", false, true, null);
 
 		BasicParameterNode basicParameterNode2 =
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode2, "choice2", "test", false, true, null);
 
 		// constraint with parameter condition

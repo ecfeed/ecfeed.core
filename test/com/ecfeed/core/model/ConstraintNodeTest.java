@@ -139,12 +139,12 @@ public class ConstraintNodeTest {
 		BasicParameterNode par1 = MethodNodeHelper.addNewBasicParameter(method, "par1", "int", "0", true, null);
 		
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice1", "1", false, true, null);
+				BasicParameterNodeHelper.addNewChoice(par1, "choice1", "1", false, true, null);
 				
 		BasicParameterNode par2 = MethodNodeHelper.addNewBasicParameter(method, "par2", "int", "0", true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(par2, "choice1", "2", false, true, null);
+				BasicParameterNodeHelper.addNewChoice(par2, "choice1", "2", false, true, null);
 		
 		
 		AbstractStatement precondition = 

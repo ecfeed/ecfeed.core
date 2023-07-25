@@ -323,11 +323,11 @@
 //	//
 //	//		RootNode rootNode = new RootNode("TestModel11", null);
 //	//
-//	//		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "C1", null);
+//	//		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "C1", null);
 //	//
-//	//		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
+//	//		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "M1", true, null);
 //	//
-//	//		CompositeParameterNode s1 = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
+//	//		CompositeParameterNode s1 = MethodNodeHelper.addNewCompositeParameter(methodNode, "S1", true, null);
 //	//
 //	//		CompositeParameterNode s2 = CompositeParameterNodeHelper.addNewCompositeParameter(s1, "S2", true, null);
 //	//
@@ -336,27 +336,27 @@
 //	//		CompositeParameterNode s3 = CompositeParameterNodeHelper.addNewCompositeParameter(s2, "S3", true, null);
 //	//
 //	//		BasicParameterNode par1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s3, "par1", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s3, "par1", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice3", "2", false, true, null);
 //	//
 //	//		// parameter under s2
 //	//
 //	//		BasicParameterNode ref = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s2, "ref", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s2, "ref", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref, "choice1", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(ref, "choice1", "1", false, true, null);
 //	//
 //	//		// parameter under S1
 //	//
 //	//		BasicParameterNode ref2 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s1, "ref", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s1, "ref", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref2, "choice1", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(ref2, "choice1", "1", false, true, null);
 //	//
 //	//		// constraint under S1
 //	//
@@ -393,28 +393,28 @@
 //	//		CompositeParameterNode c1 = ClassNodeHelper.addNewCompositeParameter(classNode, "CS1", true, null);
 //	//
 //	//		BasicParameterNode cs1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(c1, "cs1", "int", "0", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(c1, "cs1", "int", "0", true, null);
 //	//
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice3", "2", false, true, null);
 //	//
 //	//		// structure GS1 under root node
 //	//
-//	//		CompositeParameterNode gs1 = RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+//	//		CompositeParameterNode gs1 = RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 //	//
 //	//		BasicParameterNode parGs1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(gs1, "gs1", "int", "0", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(gs1, "gs1", "int", "0", true, null);
 //	//
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice3", "2", false, true, null);
 //	//
 //	//		return rootNode;
 //	//	}
@@ -675,11 +675,11 @@
 //	//
 //	//		RootNode rootNode = new RootNode("TestModel11", null);
 //	//
-//	//		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "C1", null);
+//	//		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "C1", null);
 //	//
-//	//		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
+//	//		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "M1", true, null);
 //	//
-//	//		CompositeParameterNode s1 = MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
+//	//		CompositeParameterNode s1 = MethodNodeHelper.addNewCompositeParameter(methodNode, "S1", true, null);
 //	//
 //	//		CompositeParameterNode s2 = CompositeParameterNodeHelper.addNewCompositeParameter(s1, "S2", true, null);
 //	//
@@ -688,45 +688,45 @@
 //	//		CompositeParameterNode s3 = CompositeParameterNodeHelper.addNewCompositeParameter(s2, "S3", true, null);
 //	//
 //	//		BasicParameterNode par1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s3, "par1", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s3, "par1", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(par1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(par1, "choice3", "2", false, true, null);
 //	//
 //	//		// parameter under s2
 //	//
 //	//		BasicParameterNode ref = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s2, "ref", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s2, "ref", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref, "choice1", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(ref, "choice1", "1", false, true, null);
 //	//
 //	//		// parameter under S1
 //	//
 //	//		BasicParameterNode ref2 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(s1, "ref", "int", "", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(s1, "ref", "int", "", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(ref2, "choice1", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(ref2, "choice1", "1", false, true, null);
 //	//
 //	//		// structure C1 under class with parameter cs1 and choices
 //	//
 //	//		CompositeParameterNode c1 = ClassNodeHelper.addNewCompositeParameter(classNode, "CS1", true, null);
 //	//
 //	//		BasicParameterNode cs1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(c1, "cs1", "int", "0", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(c1, "cs1", "int", "0", true, null);
 //	//
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(cs1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(cs1, "choice3", "2", false, true, null);
 //	//
 //	//		// structure GS1 under root node
 //	//
-//	//		CompositeParameterNode gs1 = RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+//	//		CompositeParameterNode gs1 = RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 //	//
 //	//		// linking local structure S3 g
 //	//
@@ -735,13 +735,13 @@
 //	//		// parameter under GS1 with choices
 //	//
 //	//		BasicParameterNode parGs1 = 
-//	//				CompositeParameterNodeHelper.addNewBasicParameterToComposite(gs1, "gs1", "int", "0", true, null);
+//	//				CompositeParameterNodeHelper.addNewBasicParameter(gs1, "gs1", "int", "0", true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice1", "0", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice1", "0", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice2", "1", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice2", "1", false, true, null);
 //	//
-//	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(parGs1, "choice3", "2", false, true, null);
+//	//		BasicParameterNodeHelper.addNewChoice(parGs1, "choice3", "2", false, true, null);
 //	//
 //	//
 //	//		// constraint under S1

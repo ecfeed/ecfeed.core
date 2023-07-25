@@ -8,7 +8,7 @@ import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
 
-	public static BasicParameterNode addNewBasicParameterToComposite(
+	public static BasicParameterNode addNewBasicParameter(
 			CompositeParameterNode compositeParameterNode, 
 			String name, 
 			String type,
@@ -46,7 +46,7 @@ public class CompositeParameterNodeHelper {
 		return childCompositeParameterNode;
 	}
 
-	public static CompositeParameterNode addNewCompositeParameterNodeToCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameterNode(
 			CompositeParameterNode compositeParameterNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode parameterNode = new CompositeParameterNode (name, modelChangeRegistrator);

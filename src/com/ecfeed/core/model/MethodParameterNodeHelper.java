@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodParameterNodeHelper {
 
-	public static ChoiceNode addNewChoiceToMethodParameter(
+	public static ChoiceNode addNewChoice(
 			BasicParameterNode methodParameterNode, 
 			String choiceNodeName, 
 			String valueString) {
