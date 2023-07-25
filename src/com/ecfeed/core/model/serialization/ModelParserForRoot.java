@@ -22,9 +22,6 @@ import nu.xom.Element;
 
 public class ModelParserForRoot {
 
-//	IModelChangeRegistrator fModelChangeRegistrator;
-//	private int fModelVersion;
-
 	public static RootNode parseRoot(
 			int modelVersion,
 			Element element,
@@ -72,7 +69,7 @@ public class ModelParserForRoot {
 						parameterElement, SerializationHelperVersion1.getBasicParameterNodeName());
 
 		if (isBasicParameterElement) {
-			
+
 			Optional<BasicParameterNode> globalBasicParameter = 
 					ModelParserBasicForParameter.parseParameter(
 							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
@@ -90,7 +87,7 @@ public class ModelParserForRoot {
 						parameterElement, SerializationHelperVersion1.getCompositeParameterNodeName());
 
 		if (isCompositeParameterElement) {
-			
+
 			Optional<CompositeParameterNode> globalCompositeParameter = 
 					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
 							parameterElement, targetRootNode, 
@@ -101,7 +98,7 @@ public class ModelParserForRoot {
 			} else {
 				inOutErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
 			}
-			
+
 			ModelParserForParameterHelper.parseLocalAndChildConstraints(
 					parameterElement, globalCompositeParameter.get(), elementToNodeMapper, inOutErrorList);
 
