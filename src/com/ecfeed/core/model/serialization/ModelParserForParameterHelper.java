@@ -16,7 +16,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMET
 import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
@@ -169,11 +168,11 @@ public class ModelParserForParameterHelper {
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
-					Optional<ConstraintNode> constraint = 
+					ConstraintNode constraint = 
 							ModelParserForConstraint.parseConstraint(child, constraintsParentNode, errorList);
 
-					if (constraint.isPresent()) {
-						constraintsParentNode.addConstraint(constraint.get());
+					if (constraint != null) {
+						constraintsParentNode.addConstraint(constraint);
 					} else {
 						errorList.add("Cannot parse constraint of parent structure: " + constraintsParentNode.getName() + ".");
 					}

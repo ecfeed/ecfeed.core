@@ -12,7 +12,6 @@ package com.ecfeed.core.model.serialization;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -180,7 +179,7 @@ public class ModelParser {
 		} 
 	}
 
-	public Optional<ConstraintNode> parseConstraint(
+	public ConstraintNode parseConstraint(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
 
 		try {

@@ -236,9 +236,9 @@ public class XomParserTest {
 					Element element = (Element)c.accept(builder);
 					TRACE(element);
 
-					Optional<ConstraintNode> c1 = ModelParserForConstraint.parseConstraint(element, m, new ListOfStrings());
+					ConstraintNode c1 = ModelParserForConstraint.parseConstraint(element, m, new ListOfStrings());
 					//assertElementsEqual(c, c1.get());
-					ConstraintNodeHelper.compareConstraintNodes(c, c1.get());
+					ConstraintNodeHelper.compareConstraintNodes(c, c1);
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
 				}

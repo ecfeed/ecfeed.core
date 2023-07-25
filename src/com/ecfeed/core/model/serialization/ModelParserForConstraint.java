@@ -47,7 +47,7 @@ import nu.xom.Element;
 
 public class ModelParserForConstraint {
 
-	public static Optional<ConstraintNode> parseConstraint(
+	public static ConstraintNode parseConstraint(
 			Element element, 
 			IParametersAndConstraintsParentNode parent, 
 			ListOfStrings errorList) {
@@ -59,7 +59,7 @@ public class ModelParserForConstraint {
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
 		ConstraintType constraintType = getConstraintType(element, errorList);
@@ -71,7 +71,7 @@ public class ModelParserForConstraint {
 				(ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME).size() != 1)) {
 
 			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-			return Optional.empty();
+			return null;
 		}
 
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME)) {
@@ -82,7 +82,7 @@ public class ModelParserForConstraint {
 					precondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-					return Optional.empty();
+					return null;
 				}
 			}
 		}
@@ -93,17 +93,17 @@ public class ModelParserForConstraint {
 					postcondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-					return Optional.empty();
+					return null;
 				}
 			} else {
 				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-				return Optional.empty();
+				return null;
 			}
 		}
 
 		if (!precondition.isPresent() || !postcondition.isPresent()) {
 			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-			return Optional.empty();
+			return null;
 		}
 
 		Constraint constraint =
@@ -118,7 +118,7 @@ public class ModelParserForConstraint {
 
 		targetConstraint.setDescription(ModelParserHelper.parseComments(element));
 
-		return Optional.ofNullable(targetConstraint);
+		return targetConstraint;
 	}
 
 	private static ConstraintType getConstraintType(Element element, ListOfStrings errorList) {
