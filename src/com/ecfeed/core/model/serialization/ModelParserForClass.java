@@ -104,7 +104,7 @@ public class ModelParserForClass {
 		for (Element methodElement : childrenMethodElements) {
 
 			Optional<MethodNode> node = 
-					new ModelParserForMethod().parseMethod(
+					ModelParserForMethod.parseMethod(
 							methodElement, targetClassNode, elementToNodeMapper, errorList);
 
 			if (!node.isPresent()) {

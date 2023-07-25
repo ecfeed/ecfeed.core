@@ -42,14 +42,13 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestCaseNodeHelper;
+import com.ecfeed.core.model.serialization.ElementToNodeMapper;
+import com.ecfeed.core.model.serialization.ModelParserBasicForParameter;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
-import com.ecfeed.core.model.serialization.ElementToNodeMapper;
-import com.ecfeed.core.model.serialization.ModelParserBasicForParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
-import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.model.serialization.SerializationHelperVersion1;
 import com.ecfeed.core.model.serialization.XomAnalyser;
@@ -149,10 +148,8 @@ public class XomParserTest {
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
 				
-				ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
-				
 				Optional<MethodNode> parsedMethodNode = 
-						modelParserForMethod.parseMethod(
+						ModelParserForMethod.parseMethod(
 								element, tmpClassNode, new ElementToNodeMapper(), new ListOfStrings());
 				
 				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());

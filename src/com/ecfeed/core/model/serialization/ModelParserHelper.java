@@ -28,12 +28,12 @@ import nu.xom.Node;
 
 public class ModelParserHelper  {
 
-	public static ModelParserForMethod createStandardModelParserForMethod() {
-
-		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
-
-		return modelParserForMethod;
-	}
+//	public static ModelParserForMethod createStandardModelParserForMethod() {
+//
+//		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
+//
+//		return modelParserForMethod;
+//	}
 
 	public static ModelParserForClass createStandardModelParserForClass() {
 

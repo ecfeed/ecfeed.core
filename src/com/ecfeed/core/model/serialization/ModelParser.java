@@ -116,9 +116,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 
-			ModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
-
-			return modelParserForMethod.parseMethod(document.getRootElement(), null, new ElementToNodeMapper(), outErrorList).get();
+			return ModelParserForMethod.parseMethod(document.getRootElement(), null, new ElementToNodeMapper(), outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;

@@ -28,7 +28,7 @@ import nu.xom.Element;
 
 public class ModelParserForMethod {
 
-	public Optional<MethodNode> parseMethod(
+	public static Optional<MethodNode> parseMethod(
 			Element methodElement, 
 			ClassNode classNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -57,12 +57,12 @@ public class ModelParserForMethod {
 		return Optional.of(targetMethodNode);
 	}
 
-	private void parseComments(Element methodElement, MethodNode targetMethodNode) {
+	private static void parseComments(Element methodElement, MethodNode targetMethodNode) {
 
 		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
 	}
 
-	private MethodNode parseAndInitializeMethod(
+	private static MethodNode parseAndInitializeMethod(
 			Element methodElement, ClassNode classNode, ListOfStrings inOutErrorList) {
 
 		String name;
@@ -83,7 +83,7 @@ public class ModelParserForMethod {
 		return targetMethodNode;
 	}
 
-	private void parseTestCases(Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
+	private static void parseTestCases(Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 
 		try {
 			List<Element> testCaseElements = 
@@ -107,7 +107,7 @@ public class ModelParserForMethod {
 		}
 	}
 
-	private void parseDeployedParameters(
+	private static void parseDeployedParameters(
 			Element methodElement, MethodNode targetMethodNode, ListOfStrings inOutErrorList) {
 
 		List<ParameterWithLinkingContext> parametersWithContexts = new ArrayList<>();
@@ -124,7 +124,7 @@ public class ModelParserForMethod {
 		targetMethodNode.setDeployedParametersWithContexts(parametersWithContexts);
 	}
 
-	private void parseDeploymentElement(
+	private static void parseDeploymentElement(
 			Element deploymentElement, 
 			MethodNode targetMethodNode,
 			List<ParameterWithLinkingContext> inOutParametersWithContexts,
@@ -149,7 +149,7 @@ public class ModelParserForMethod {
 		}
 	}
 
-	private void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
+	private static void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
 		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodElement, targetMethodNode); // TODO MO-RE obsolete property ?
 		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
 		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
@@ -158,7 +158,7 @@ public class ModelParserForMethod {
 		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
 	}
 
-	private void parseMethodProperty(
+	private static void parseMethodProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
 			MethodNode targetMethodNode) {
