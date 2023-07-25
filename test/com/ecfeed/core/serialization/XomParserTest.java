@@ -241,7 +241,7 @@ public class XomParserTest {
 					Element element = (Element)c.accept(builder);
 					TRACE(element);
 
-					Optional<ConstraintNode> c1 = new ModelParserForConstraint().parseConstraint(element, m, new ListOfStrings());
+					Optional<ConstraintNode> c1 = ModelParserForConstraint.parseConstraint(element, m, new ListOfStrings());
 					//assertElementsEqual(c, c1.get());
 					ConstraintNodeHelper.compareConstraintNodes(c, c1.get());
 				} catch (Exception e) {
@@ -299,8 +299,8 @@ public class XomParserTest {
 			TRACE(trueElement);
 			TRACE(falseElement);
 
-			StaticStatement parsedTrue = new ModelParserForConstraint().parseStaticStatement(trueElement, null, new ListOfStrings());
-			StaticStatement parsedFalse = new ModelParserForConstraint().parseStaticStatement(falseElement, null, new ListOfStrings());
+			StaticStatement parsedTrue = ModelParserForConstraint.parseStaticStatement(trueElement, null, new ListOfStrings());
+			StaticStatement parsedFalse = ModelParserForConstraint.parseStaticStatement(falseElement, null, new ListOfStrings());
 
 			assertStatementsEqual(trueStatement, parsedTrue);
 			assertStatementsEqual(falseStatement, parsedFalse);
@@ -334,10 +334,10 @@ public class XomParserTest {
 				AbstractStatement parsedS = null;
 				switch(element.getLocalName()){
 				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
-					parsedS = new ModelParserForConstraint().parseLabelStatement(element, m, new ListOfStrings());
+					parsedS = ModelParserForConstraint.parseLabelStatement(element, m, new ListOfStrings());
 					break;
 				case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
-					parsedS = new ModelParserForConstraint().parseChoiceStatement(element, m, new ListOfStrings());
+					parsedS = ModelParserForConstraint.parseChoiceStatement(element, m, new ListOfStrings());
 					break;
 				}
 
@@ -381,7 +381,7 @@ public class XomParserTest {
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
 
-				ExpectedValueStatement parsedS = new ModelParserForConstraint().parseExpectedValueStatement(element, m, new ListOfStrings());
+				ExpectedValueStatement parsedS = ModelParserForConstraint.parseExpectedValueStatement(element, m, new ListOfStrings());
 				assertStatementsEqual(s, parsedS);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -409,7 +409,7 @@ public class XomParserTest {
 			Element element = (Element)s.accept(builder);
 			TRACE(element);
 
-			StatementArray parsedS = new ModelParserForConstraint().parseStatementArray(element, m, new ListOfStrings());
+			StatementArray parsedS = ModelParserForConstraint.parseStatementArray(element, m, new ListOfStrings());
 			assertStatementsEqual(s, parsedS);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());

@@ -170,7 +170,7 @@ public class ModelParserForParameterHelper {
 
 				try {
 					Optional<ConstraintNode> constraint = 
-							new ModelParserForConstraint().parseConstraint(child, constraintsParentNode, errorList);
+							ModelParserForConstraint.parseConstraint(child, constraintsParentNode, errorList);
 
 					if (constraint.isPresent()) {
 						constraintsParentNode.addConstraint(constraint.get());

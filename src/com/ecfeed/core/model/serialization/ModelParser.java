@@ -187,7 +187,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseConstraint(document.getRootElement(), method, outErrorList);
+			return ModelParserForConstraint.parseConstraint(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -199,7 +199,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseStatement(document.getRootElement(), method, outErrorList).get();
+			return ModelParserForConstraint.parseStatement(document.getRootElement(), method, outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -211,7 +211,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
+			return ModelParserForConstraint.parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -223,7 +223,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseChoiceStatement(document.getRootElement(), method, outErrorList);
+			return ModelParserForConstraint.parseChoiceStatement(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;
@@ -235,7 +235,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
+			return ModelParserForConstraint.parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return new ExpectedValueStatement(null, null, null, null);
@@ -247,7 +247,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForConstraint().parseStatementArray(document.getRootElement(), method, outErrorList);
+			return ModelParserForConstraint.parseStatementArray(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return new StatementArray(null, method.getModelChangeRegistrator());
