@@ -172,7 +172,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return ModelParserForTestCase.parseTestCase(document.getRootElement(), method, outErrorList).get();
+			return ModelParserForTestCase.parseTestCase(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 			return null;

@@ -17,7 +17,6 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Optional;
 import java.util.Random;
 
 import org.junit.Test;
@@ -208,9 +207,9 @@ public class XomParserTest {
 					Element element = (Element)testCaseNode.accept(builder);
 					TRACE(element);
 
-					Optional<TestCaseNode> tc1 = ModelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
+					TestCaseNode tc1 = ModelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					// assertElementsEqual(testCaseNode, tc1.get());
-					TestCaseNodeHelper.compareTestCases(testCaseNode, tc1.get());
+					TestCaseNodeHelper.compareTestCases(testCaseNode, tc1);
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
 				}

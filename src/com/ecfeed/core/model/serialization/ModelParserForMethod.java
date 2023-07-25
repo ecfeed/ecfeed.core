@@ -14,7 +14,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
@@ -92,11 +91,11 @@ public class ModelParserForMethod {
 
 			for (Element testCaseElement : testCaseElements) {
 
-				Optional<TestCaseNode> testCase = 
+				TestCaseNode testCase = 
 						ModelParserForTestCase.parseTestCase(testCaseElement, targetMethodNode, inOutErrorList);
 
-				if (testCase.isPresent()) {
-					targetMethodNode.addTestCase(testCase.get());
+				if (testCase != null) {
+					targetMethodNode.addTestCase(testCase);
 				} else {
 					inOutErrorList.add("Cannot parse test case for method: " + targetMethodNode.getName() + ".");
 				}

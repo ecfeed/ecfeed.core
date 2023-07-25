@@ -33,13 +33,13 @@ import nu.xom.Element;
 
 public class ModelParserForTestCase {
 
-	public static Optional<TestCaseNode> parseTestCase(
+	public static TestCaseNode parseTestCase(
 			Element element, MethodNode method, ListOfStrings errorList) {
 
 		TestCaseNode targetTestCaseNode = createAndInitializeTestCase(element, method, errorList);
 
 		if (targetTestCaseNode == null) {
-			return Optional.empty();
+			return null;
 		}
 
 		List<Element> choiceElements = getChoiceElements(element);
@@ -47,19 +47,19 @@ public class ModelParserForTestCase {
 
 		if (deployedParameters.size() != choiceElements.size()) {
 			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(targetTestCaseNode.getName()));
-			return Optional.empty();
+			return null;
 		}
 
 		Optional<List<ChoiceNode>> testData = parseTestData(choiceElements, deployedParameters, errorList);
 
 		if (!testData.isPresent()) {
-			return Optional.empty();
+			return null;
 		}
 
 		targetTestCaseNode.setTestData(testData.get());
 		targetTestCaseNode.setDescription(ModelParserHelper.parseComments(element));
 
-		return Optional.ofNullable(targetTestCaseNode);
+		return targetTestCaseNode;
 	}
 
 	private static TestCaseNode createAndInitializeTestCase (Element testCaseElement, MethodNode method, ListOfStrings errorList) {
