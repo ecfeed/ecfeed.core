@@ -268,14 +268,14 @@ public class ModelParserForParameterHelper {
 
 		if (ModelParserHelper.verifyElementName(parameterElement, compositeParameterElementName)) {
 
-			Optional<CompositeParameterNode> compositeParameterNode = 
+			CompositeParameterNode compositeParameterNode = 
 					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
 							parameterElement, parametersParentNode, 
 							parametersParentNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
 
-			if (compositeParameterNode.isPresent()) {
-				elementToNodeMapper.addMappings(parameterElement, compositeParameterNode.get());
-				parametersParentNode.addParameter(compositeParameterNode.get());
+			if (compositeParameterNode != null) {
+				elementToNodeMapper.addMappings(parameterElement, compositeParameterNode);
+				parametersParentNode.addParameter(compositeParameterNode);
 			} else {
 				inOutErrorList.add("Cannot parse structure for method: " + parametersParentNode.getName() + ".");
 			}

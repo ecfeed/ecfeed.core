@@ -13,9 +13,11 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -88,19 +90,19 @@ public class ModelParserForRoot {
 
 		if (isCompositeParameterElement) {
 
-			Optional<CompositeParameterNode> globalCompositeParameter = 
+			CompositeParameterNode globalCompositeParameter = 
 					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
 							parameterElement, targetRootNode, 
 							targetRootNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
 
-			if (globalCompositeParameter.isPresent()) {
-				targetRootNode.addParameter(globalCompositeParameter.get());
+			if (globalCompositeParameter!= null) {
+				targetRootNode.addParameter(globalCompositeParameter);
 			} else {
 				inOutErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
 			}
 
 			ModelParserForParameterHelper.parseLocalAndChildConstraints(
-					parameterElement, globalCompositeParameter.get(), elementToNodeMapper, inOutErrorList);
+					parameterElement, globalCompositeParameter, elementToNodeMapper, inOutErrorList);
 
 			return;
 		}

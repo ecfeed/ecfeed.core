@@ -12,8 +12,6 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
-import java.util.Optional;
-
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
@@ -28,25 +26,25 @@ import nu.xom.Element;
 
 public class ModelParserForCompositeParameter {
 
-	public static Optional<CompositeParameterNode> parseParameterWithoutConstraints(
+	public static CompositeParameterNode parseParameterWithoutConstraints(
 			Element element,
 			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
-		Optional<CompositeParameterNode> compositeParameterNode = 
+		CompositeParameterNode compositeParameterNode = 
 				parseParameterWithoutConstraintsIntr(
 						element, parametersParentNode, modelChangeRegistrator, elementToNodeMapper, errorList);
 
-		if (!compositeParameterNode.isPresent()) {
+		if (compositeParameterNode != null) {
 			return compositeParameterNode;
 		}
 
 		return compositeParameterNode;
 	}
 
-	private static Optional<CompositeParameterNode> parseParameterWithoutConstraintsIntr(
+	private static CompositeParameterNode parseParameterWithoutConstraintsIntr(
 			Element element,
 			IParametersParentNode parametersParentNode,
 			IModelChangeRegistrator modelChangeRegistrator,
@@ -68,7 +66,7 @@ public class ModelParserForCompositeParameter {
 					targetCompositeParameterNode, errorList);
 		}
 
-		return Optional.ofNullable(targetCompositeParameterNode);
+		return targetCompositeParameterNode;
 	}
 
 	private static void setLinkToGlobalParameter(
