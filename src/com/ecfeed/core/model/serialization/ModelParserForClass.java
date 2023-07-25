@@ -15,7 +15,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_N
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
@@ -28,14 +27,12 @@ import nu.xom.Element;
 
 public class ModelParserForClass {
 
-	private ModelParserBasicForParameter fModelParserForParameter;
 	private ModelParserForMethod fModelParserForMethod;
 
 	public ModelParserForClass(
-			ModelParserBasicForParameter ModelParserForParameter,
+			ModelParserBasicForParameter ModelParserForParameter,  // XYX remove parsers from constructors
 			ModelParserForMethod modelParserForMethod) {
 
-		fModelParserForParameter = ModelParserForParameter;
 		fModelParserForMethod = modelParserForMethod;
 	}
 
@@ -45,6 +42,49 @@ public class ModelParserForClass {
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
 
+		ClassNode classNode = createClassNode(classElement, rootNode, errorList);
+
+		if (classNode == null) {
+			return Optional.empty();
+		}
+
+		rootNode.addClass(classNode);
+
+		classNode.setDescription(ModelParserHelper.parseComments(classElement));
+
+		ModelParserForParameterHelper.parseLocalAndChildParametersWithoutConstraints(
+				classElement, classNode, elementToNodeMapper, errorList);
+
+		parseConstraintsOfGlobalCompositeParameters(classElement, elementToNodeMapper, errorList);
+
+		parseMethods(classElement, classNode, elementToNodeMapper, errorList);
+
+		return Optional.ofNullable(classNode);
+	}
+
+	private void parseConstraintsOfGlobalCompositeParameters(
+			Element classElement,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings errorList) {
+
+		List<Element> iterableChildren = 
+				ModelParserHelper.getIterableChildren(
+						classElement, SerializationHelperVersion1.getCompositeParameterNodeName());
+
+		for (Element compositeElement : iterableChildren) {
+
+			CompositeParameterNode compositeParameterNode = 
+					(CompositeParameterNode) elementToNodeMapper.getNode(compositeElement);
+
+			ModelParserForParameterHelper.parseLocalAndChildConstraints(
+					compositeElement, 
+					compositeParameterNode, 
+					elementToNodeMapper, 
+					errorList);
+		}
+	}
+
+	private ClassNode createClassNode(Element classElement, RootNode rootNode, ListOfStrings errorList) {
 		String name;
 
 		try {
@@ -52,83 +92,13 @@ public class ModelParserForClass {
 			name = ModelParserHelper.getElementName(classElement, errorList);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
 		ClassNode classNode = new ClassNode(name, rootNode.getModelChangeRegistrator());
 		classNode.setParent(rootNode);
-		rootNode.addClass(classNode);
 
-		classNode.setDescription(ModelParserHelper.parseComments(classElement));
-		//we need to do it here, so the backward search for global parameters will work
-		classNode.setParent(rootNode);
-
-		parseClassParameters(classElement, classNode, elementToNodeMapper, errorList);
-
-		parseMethods(classElement, classNode, elementToNodeMapper, errorList);
-
-		return Optional.ofNullable(classNode);
-	}
-
-	private void parseClassParameters(
-			Element classElement, 
-			ClassNode targetClassNode,
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings errorList) {
-
-		List<Element> iterableChildren = 
-				ModelParserHelper.getIterableChildren(
-						classElement, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
-
-		for (Element child : iterableChildren) {
-
-			parseClassParameter(targetClassNode, elementToNodeMapper, errorList,child);
-		}
-	}
-
-	private void parseClassParameter(
-			ClassNode targetClassNode, 
-			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings errorList, 
-			Element child) {
-
-		boolean isBasicParameter = 
-				ModelParserHelper.verifyElementName(
-						child, SerializationHelperVersion1.getBasicParameterNodeName());
-
-		if (isBasicParameter) {
-
-			Optional<BasicParameterNode> globalBasicParameter = 
-					fModelParserForParameter.parseParameter(
-							child, targetClassNode, targetClassNode.getModelChangeRegistrator(), errorList);
-
-			if (globalBasicParameter.isPresent()) {
-				targetClassNode.addParameter(globalBasicParameter.get());
-			} else {
-				errorList.add("Cannot parse parameter for class: " + targetClassNode.getName() + ".");
-			}
-
-			return;
-		} 
-
-		boolean isCompositeParameter = 
-				ModelParserHelper.verifyElementName(
-						child, SerializationHelperVersion1.getCompositeParameterNodeName());
-
-		if (isCompositeParameter) {
-
-			Optional<CompositeParameterNode> globalCompositeParameter = 
-					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
-							child, targetClassNode, targetClassNode.getModelChangeRegistrator(), 
-							elementToNodeMapper, errorList);
-
-			if (globalCompositeParameter.isPresent()) {
-				targetClassNode.addParameter(globalCompositeParameter.get());
-			} else {
-				errorList.add("Cannot parse structure for class: " + targetClassNode.getName() + ".");
-			}
-
-		}
+		return classNode;
 	}
 
 	private void parseMethods(

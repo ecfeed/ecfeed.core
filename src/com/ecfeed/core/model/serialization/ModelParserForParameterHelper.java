@@ -228,7 +228,7 @@ public class ModelParserForParameterHelper {
 
 	public static void parseLocalAndChildParametersWithoutConstraints(
 			Element methodElement, 
-			IParametersParentNode targetMethodNode,
+			IParametersParentNode parametersParentNode,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings inOutErrorList) {
 
@@ -239,13 +239,13 @@ public class ModelParserForParameterHelper {
 		for (Element parameterElement : parameterElements) {
 
 			parseConditionallyParameterElementWithChildParameters(
-					parameterElement, targetMethodNode, elementToNodeMapper, inOutErrorList);
+					parameterElement, parametersParentNode, elementToNodeMapper, inOutErrorList);
 		}
 	}
 
 	private static void parseConditionallyParameterElementWithChildParameters(
 			Element parameterElement, 
-			IParametersParentNode targetMethodNode,
+			IParametersParentNode parametersParentNode,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings inOutErrorList) {
 
@@ -255,14 +255,13 @@ public class ModelParserForParameterHelper {
 
 			Optional<BasicParameterNode> basicParameterNode = 
 					new ModelParserBasicForParameter().parseParameter(
-							parameterElement, targetMethodNode, targetMethodNode.getModelChangeRegistrator(), inOutErrorList);
-
-			elementToNodeMapper.addMappings(parameterElement, basicParameterNode.get());
+							parameterElement, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), inOutErrorList);
 
 			if (basicParameterNode.isPresent()) {
-				targetMethodNode.addParameter(basicParameterNode.get());
+				elementToNodeMapper.addMappings(parameterElement, basicParameterNode.get());
+				parametersParentNode.addParameter(basicParameterNode.get());
 			} else {
-				inOutErrorList.add("Cannot parse parameter for method: " + targetMethodNode.getName() + ".");
+				inOutErrorList.add("Cannot parse parameter for method: " + parametersParentNode.getName() + ".");
 			}
 
 			return;
@@ -274,15 +273,14 @@ public class ModelParserForParameterHelper {
 
 			Optional<CompositeParameterNode> compositeParameterNode = 
 					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
-							parameterElement, targetMethodNode, 
-							targetMethodNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
-
-			elementToNodeMapper.addMappings(parameterElement, compositeParameterNode.get());
+							parameterElement, parametersParentNode, 
+							parametersParentNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
 
 			if (compositeParameterNode.isPresent()) {
-				targetMethodNode.addParameter(compositeParameterNode.get());
+				elementToNodeMapper.addMappings(parameterElement, compositeParameterNode.get());
+				parametersParentNode.addParameter(compositeParameterNode.get());
 			} else {
-				inOutErrorList.add("Cannot parse structure for method: " + targetMethodNode.getName() + ".");
+				inOutErrorList.add("Cannot parse structure for method: " + parametersParentNode.getName() + ".");
 			}
 
 			return;
