@@ -137,7 +137,7 @@ public class ModelParserForMethod {
 		for (Element childNested : iterableChildren) {
 
 			Optional<ParameterWithLinkingContext> parameterWithLinkingContext = 
-					new ModelParserForMethodDeployedParameter().parseMethodDeployedParameter(
+					ModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childNested, targetMethodNode, inOutErrorList);
 
 			if (parameterWithLinkingContext.isPresent()) {

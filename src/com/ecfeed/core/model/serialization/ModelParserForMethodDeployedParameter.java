@@ -29,7 +29,7 @@ import nu.xom.Element;
 
 public class ModelParserForMethodDeployedParameter {
 
-	public Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(
+	public static Optional<ParameterWithLinkingContext> parseMethodDeployedParameter(
 			Element parameterElement, 
 			MethodNode methodNode,
 			ListOfStrings errorList) {
@@ -49,7 +49,7 @@ public class ModelParserForMethodDeployedParameter {
 		return Optional.of(parameterWithLinkingContext);
 	}
 
-	private AbstractParameterNode parseDeployedNode(
+	private static AbstractParameterNode parseDeployedNode(
 			Element parameterElement,
 			String attributeName,
 			MethodNode methodNode,
@@ -73,49 +73,6 @@ public class ModelParserForMethodDeployedParameter {
 		return foundParameter;
 	}
 
-	//	public Optional<BasicParameterNode> parseMethodDeployedParameter(
-	//			Element element, MethodNode method, ListOfStrings errors) {
-	//		
-	//		Optional<BasicParameterNode> parameter = 
-	//				parseMethodBasicParameter(element, method, errors);
-	//
-	//		try {
-	//			if (!parameter.isPresent()) {
-	//
-	//				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
-	//			}
-	//
-	//			if (parameter.get().isLinked() && parameter.get().getLinkToGlobalParameter() != null) {
-	//
-	//				AbstractParameterNode candidate = parameter.get().getLinkToGlobalParameter();
-	//				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
-	//			} else {
-	//
-	//				String candidateName = AbstractParameterSignatureHelper.getQualifiedName(parameter.get());
-	//
-	//				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-	//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(candidateName))
-	//						.findAny();
-	//
-	//				if (candidate.isPresent()) {
-	//
-	//					parameter.get().setDeploymentParameter(candidate.get()); //XXY
-	//				} else {
-	//
-	//					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
-	//					return Optional.empty();
-	//				}
-	//			}
-	//
-	//		} catch(Exception e) {
-	//
-	//			ExceptionHelper.reportRuntimeException("The deployed parameter could not be parsed.");
-	//			return Optional.empty();
-	//		}
-	//
-	//		return parameter;
-	//	}
-	//
 	public Optional<BasicParameterNode> parseMethodBasicParameter(
 			Element element, MethodNode method, ListOfStrings outErrorList) {
 

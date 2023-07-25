@@ -22,26 +22,20 @@ import nu.xom.Element;
 
 public class ModelParserForRoot {
 
-	IModelChangeRegistrator fModelChangeRegistrator;
-	private int fModelVersion;
+//	IModelChangeRegistrator fModelChangeRegistrator;
+//	private int fModelVersion;
 
-	public ModelParserForRoot(
-			int modelVersion, 
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		fModelVersion = modelVersion;
-		fModelChangeRegistrator = modelChangeRegistrator;
-	}
-
-	public RootNode parseRoot(
+	public static RootNode parseRoot(
+			int modelVersion,
 			Element element,
 			ElementToNodeMapper elementToNodeMapper,
+			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings outErrorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
 
-		RootNode targetRootNode = new RootNode(name, fModelChangeRegistrator, fModelVersion);
+		RootNode targetRootNode = new RootNode(name, modelChangeRegistrator, modelVersion);
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
@@ -52,7 +46,7 @@ public class ModelParserForRoot {
 		return targetRootNode;
 	}
 
-	private void parseGlobalParametersOfRoot(
+	private static void parseGlobalParametersOfRoot(
 			Element element, 
 			RootNode targetRootNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -67,7 +61,7 @@ public class ModelParserForRoot {
 		}
 	}
 
-	private void parseOneGlobalParameter(
+	private static void parseOneGlobalParameter(
 			Element parameterElement, 
 			RootNode targetRootNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -115,7 +109,7 @@ public class ModelParserForRoot {
 		}
 	}
 
-	private void parseClasses(
+	private static void parseClasses(
 			Element element, 
 			RootNode targetRootNode,
 			ElementToNodeMapper elementToNodeMapper,

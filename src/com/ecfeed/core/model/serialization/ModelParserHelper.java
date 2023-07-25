@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -28,27 +27,10 @@ import nu.xom.Node;
 
 public class ModelParserHelper  {
 
-//	public static ModelParserForMethod createStandardModelParserForMethod() {
-//
-//		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
-//
-//		return modelParserForMethod;
-//	}
-
 	public static ModelParserForClass createStandardModelParserForClass() {
 
 		ModelParserForClass modelParserForClass = new ModelParserForClass();
 		return modelParserForClass;
-	}
-
-	public static ModelParserForRoot createStandardModelParserForRoot(
-			int modelVersion, 
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		ModelParserForRoot modelParserForRoot = 
-				new ModelParserForRoot(modelVersion, modelChangeRegistrator);
-
-		return modelParserForRoot;
 	}
 
 	public static boolean verifyElementName(Element element, String expectedName) {
