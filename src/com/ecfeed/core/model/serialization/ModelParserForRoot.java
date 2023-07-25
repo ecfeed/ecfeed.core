@@ -77,21 +77,22 @@ public class ModelParserForRoot {
 			Element parameterElement, 
 			RootNode targetRootNode,
 			ElementToNodeMapper elementToNodeMapper,
-			ListOfStrings outErrorList) {
+			ListOfStrings inOutErrorList) {
 
 		boolean isBasicParameterElement = 
 				ModelParserHelper.verifyElementName(
 						parameterElement, SerializationHelperVersion1.getBasicParameterNodeName());
 
 		if (isBasicParameterElement) {
+			
 			Optional<BasicParameterNode> globalBasicParameter = 
 					fModelParserForParameter.parseParameter(
-							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), outErrorList);
+							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
 
 			if (globalBasicParameter.isPresent()) {
 				targetRootNode.addParameter(globalBasicParameter.get());
 			} else {
-				outErrorList.add("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
+				inOutErrorList.add("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
 			}
 			return;
 		} 
@@ -101,16 +102,21 @@ public class ModelParserForRoot {
 						parameterElement, SerializationHelperVersion1.getCompositeParameterNodeName());
 
 		if (isCompositeParameterElement) {
+			
 			Optional<CompositeParameterNode> globalCompositeParameter = 
 					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
 							parameterElement, targetRootNode, 
-							targetRootNode.getModelChangeRegistrator(), elementToNodeMapper, outErrorList);
+							targetRootNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
 
 			if (globalCompositeParameter.isPresent()) {
 				targetRootNode.addParameter(globalCompositeParameter.get());
 			} else {
-				outErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
+				inOutErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
 			}
+			
+			ModelParserForParameterHelper.parseLocalAndChildConstraints(
+					parameterElement, globalCompositeParameter.get(), elementToNodeMapper, inOutErrorList);
+
 			return;
 		}
 	}
