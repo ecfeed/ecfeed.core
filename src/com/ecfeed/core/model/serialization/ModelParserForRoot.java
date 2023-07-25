@@ -80,7 +80,7 @@ public class ModelParserForRoot {
 		if (isBasicParameterElement) {
 			
 			Optional<BasicParameterNode> globalBasicParameter = 
-					new ModelParserBasicForParameter().parseParameter(
+					ModelParserBasicForParameter.parseParameter(
 							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
 
 			if (globalBasicParameter.isPresent()) {
@@ -126,7 +126,7 @@ public class ModelParserForRoot {
 
 		for (Element classElement : childClassElements) {
 
-			new ModelParserForClass().parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
+			ModelParserForClass.parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
 		}
 	}
 

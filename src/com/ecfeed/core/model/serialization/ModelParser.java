@@ -99,8 +99,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 
-			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-			return modelParserForClass.parseAndAddClass(
+			return ModelParserForClass.parseAndAddClass(
 					document.getRootElement(), null, elementToNodeMapper, outErrorList).get();
 
 		} catch (Exception e) {
@@ -132,10 +131,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 
-			ModelParserBasicForParameter ModelParserForParameter
-			= new ModelParserBasicForParameter();
-
-			return ModelParserForParameter.parseParameter(
+			return ModelParserBasicForParameter.parseParameter(
 					document.getRootElement(), 
 					null,
 					modelChangeRegistrator, 
@@ -152,7 +148,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserBasicForParameter().parseParameter(
+			return ModelParserBasicForParameter.parseParameter(
 					document.getRootElement(), method, method.getModelChangeRegistrator(), outErrorList).get();
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
@@ -165,7 +161,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForChoice(modelChangeRegistrator).parseChoice(document.getRootElement(), outErrorList).get();
+			return ModelParserForChoice.parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
 
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());

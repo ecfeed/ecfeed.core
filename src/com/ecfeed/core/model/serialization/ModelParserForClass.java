@@ -27,7 +27,7 @@ import nu.xom.Element;
 
 public class ModelParserForClass {
 
-	public Optional<ClassNode> parseAndAddClass(
+	public static Optional<ClassNode> parseAndAddClass(
 			Element classElement, 
 			RootNode rootNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -53,7 +53,7 @@ public class ModelParserForClass {
 		return Optional.ofNullable(classNode);
 	}
 
-	private void parseConstraintsOfGlobalCompositeParameters(
+	private static void parseConstraintsOfGlobalCompositeParameters(
 			Element classElement,
 			ElementToNodeMapper elementToNodeMapper,
 			ListOfStrings errorList) {
@@ -75,7 +75,7 @@ public class ModelParserForClass {
 		}
 	}
 
-	private ClassNode createClassNode(Element classElement, RootNode rootNode, ListOfStrings errorList) {
+	private static ClassNode createClassNode(Element classElement, RootNode rootNode, ListOfStrings errorList) {
 		String name;
 
 		try {
@@ -92,7 +92,7 @@ public class ModelParserForClass {
 		return classNode;
 	}
 
-	private void parseMethods(
+	private static void parseMethods(
 			Element classElement, 
 			ClassNode targetClassNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -117,7 +117,7 @@ public class ModelParserForClass {
 		}
 	}
 
-	private void addMethodWithUniqueName(ClassNode targetClassNode, MethodNode methodNode) {
+	private static void addMethodWithUniqueName(ClassNode targetClassNode, MethodNode methodNode) {
 
 		MethodNode existingMethodNode = targetClassNode.findMethodWithTheSameName(methodNode.getName());
 

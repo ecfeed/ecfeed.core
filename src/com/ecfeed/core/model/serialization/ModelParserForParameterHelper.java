@@ -99,15 +99,12 @@ public class ModelParserForParameterHelper {
 			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
 
-		ModelParserForChoice modelParserForChoice = 
-				new ModelParserForChoice(modelChangeRegistrator);
-
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getChoiceNodeName());
 
 		for (Element child : children) {
 
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, errorList);
+			Optional<ChoiceNode> node = ModelParserForChoice.parseChoice(child, modelChangeRegistrator, errorList);
 
 			if (node.isPresent()) {
 				targetGlobalParameterNode.addChoice(node.get());
@@ -254,7 +251,7 @@ public class ModelParserForParameterHelper {
 		if (ModelParserHelper.verifyElementName(parameterElement, basicParameterElementName)) {
 
 			Optional<BasicParameterNode> basicParameterNode = 
-					new ModelParserBasicForParameter().parseParameter(
+					ModelParserBasicForParameter.parseParameter(
 							parameterElement, parametersParentNode, parametersParentNode.getModelChangeRegistrator(), inOutErrorList);
 
 			if (basicParameterNode.isPresent()) {

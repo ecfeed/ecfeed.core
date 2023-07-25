@@ -117,10 +117,8 @@ public class XomParserTest {
 
 			RootNode tmpRoot = new RootNode("tmp", null);
 			
-			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-			
 			Optional<ClassNode> parsedClass = 
-					modelParserForClass.parseAndAddClass(element, tmpRoot, new ElementToNodeMapper(), new ListOfStrings());
+					ModelParserForClass.parseAndAddClass(element, tmpRoot, new ElementToNodeMapper(), new ListOfStrings());
 			
 			ClassNodeHelper.compareClasses(classNode, parsedClass.get());
 			
@@ -185,7 +183,7 @@ public class XomParserTest {
 					TRACE(element);
 
 					Optional<BasicParameterNode> parsedMethodParameterNode = 
-							new ModelParserBasicForParameter().parseParameter(
+							ModelParserBasicForParameter.parseParameter(
 									element, methodNode, methodNode.getModelChangeRegistrator(), new ListOfStrings());
 					//assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 					AbstractParameterNodeHelper.compareParameters(methodParameterNode, parsedMethodParameterNode.get());
@@ -270,7 +268,7 @@ public class XomParserTest {
 				Element element = (Element)p.accept(builder);
 				TRACE(element);
 
-				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
+				Optional<ChoiceNode> p1 = ModelParserForChoice.parseChoice(element, null, new ListOfStrings());
 				//assertElementsEqual(p, p1.get());
 				ChoiceNodeHelper.compareChoices(p, p1.get());
 			} catch (Exception e) {
@@ -440,17 +438,15 @@ public class XomParserTest {
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 			RootNode rootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
 
-			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-			
 			try {
-				modelParserForClass.parseAndAddClass(classElement, rootNode, new ElementToNodeMapper(), new ListOfStrings());
+				ModelParserForClass.parseAndAddClass(classElement, rootNode, new ElementToNodeMapper(), new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
 				ListOfStrings errorList = new ListOfStrings();
-				modelParserForClass.parseAndAddClass(rootElement, rootNode, new ElementToNodeMapper(), errorList);
+				ModelParserForClass.parseAndAddClass(rootElement, rootNode, new ElementToNodeMapper(), errorList);
 				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {

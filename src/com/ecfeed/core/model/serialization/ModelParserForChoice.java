@@ -23,14 +23,10 @@ import nu.xom.Element;
 
 public class ModelParserForChoice {
 
-	private IModelChangeRegistrator fModelChangeRegistrator;
-
-	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
-		fModelChangeRegistrator = modelChangeRegistrator;
-	}
-
-	public Optional<ChoiceNode> parseChoice(
-			Element element, ListOfStrings errorList) {
+	public static Optional<ChoiceNode> parseChoice(
+			Element element,
+			IModelChangeRegistrator modelChangeRegistrator,
+			ListOfStrings errorList) {
 
 		String name, value;
 		boolean isRandomized;
@@ -45,14 +41,14 @@ public class ModelParserForChoice {
 			return Optional.empty();
 		}
 
-		ChoiceNode choice = new ChoiceNode(name, value, fModelChangeRegistrator);
+		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element)) {
 
 			if (child.getLocalName() == SerializationHelperVersion1.getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, errorList);
+				Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
 				if (node.isPresent()) {
 					choice.addChoice(node.get());
 				} else {

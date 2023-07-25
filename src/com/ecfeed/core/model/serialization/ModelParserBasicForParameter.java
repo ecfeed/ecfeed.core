@@ -23,7 +23,7 @@ import nu.xom.Element;
 
 public class ModelParserBasicForParameter {
 
-	public Optional<BasicParameterNode> parseParameter(
+	public static Optional<BasicParameterNode> parseParameter(
 			Element parameterElement, 
 			IParametersParentNode parametersParentNodeUsedForLocalParameters,
 			IModelChangeRegistrator modelChangeRegistrator,
