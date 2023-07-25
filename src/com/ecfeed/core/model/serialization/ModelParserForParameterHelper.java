@@ -104,10 +104,10 @@ public class ModelParserForParameterHelper {
 
 		for (Element child : children) {
 
-			Optional<ChoiceNode> node = ModelParserForChoice.parseChoice(child, modelChangeRegistrator, errorList);
+			ChoiceNode node = ModelParserForChoice.parseChoice(child, modelChangeRegistrator, errorList);
 
-			if (node.isPresent()) {
-				targetGlobalParameterNode.addChoice(node.get());
+			if (node != null) {
+				targetGlobalParameterNode.addChoice(node);
 			}
 		}
 	}

@@ -13,8 +13,6 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
 
-import java.util.Optional;
-
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -23,7 +21,7 @@ import nu.xom.Element;
 
 public class ModelParserForChoice {
 
-	public static Optional<ChoiceNode> parseChoice(
+	public static ChoiceNode parseChoice(
 			Element element,
 			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
@@ -38,7 +36,7 @@ public class ModelParserForChoice {
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
 		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
@@ -48,12 +46,12 @@ public class ModelParserForChoice {
 		for (Element child : ModelParserHelper.getIterableChildren(element)) {
 
 			if (child.getLocalName() == SerializationHelperVersion1.getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
-				if (node.isPresent()) {
-					choice.addChoice(node.get());
+				ChoiceNode node = parseChoice(child, modelChangeRegistrator, errorList);
+				if (node != null) {
+					choice.addChoice(node);
 				} else {
 					errorList.add("Cannot parse choice.");
-					return Optional.empty();
+					return null;
 				}
 			}
 
@@ -62,7 +60,7 @@ public class ModelParserForChoice {
 			}
 		}
 
-		return Optional.ofNullable(choice);
+		return choice;
 	}
 
 }

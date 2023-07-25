@@ -263,9 +263,8 @@ public class XomParserTest {
 				Element element = (Element)p.accept(builder);
 				TRACE(element);
 
-				Optional<ChoiceNode> p1 = ModelParserForChoice.parseChoice(element, null, new ListOfStrings());
-				//assertElementsEqual(p, p1.get());
-				ChoiceNodeHelper.compareChoices(p, p1.get());
+				ChoiceNode p1 = ModelParserForChoice.parseChoice(element, null, new ListOfStrings());
+				ChoiceNodeHelper.compareChoices(p, p1);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}

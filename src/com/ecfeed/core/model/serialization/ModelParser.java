@@ -159,7 +159,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return ModelParserForChoice.parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
+			return ModelParserForChoice.parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList);
 
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
