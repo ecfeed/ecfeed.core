@@ -15,7 +15,6 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.junit.Test;
 
@@ -265,20 +264,21 @@ public class LanguageMethodParserTest {
 		ListOfStrings errorList = new ListOfStrings();
 
 		ClassNode classNode = new ClassNode("Class1", null);
-		Optional<MethodNode> optMethodNodeFromXml = Optional.empty();
+		MethodNode methodNodeFromXml = null;
 
 		try {
-			optMethodNodeFromXml = 
+			methodNodeFromXml = 
 					ModelParserForMethod.parseMethod(
 							element, classNode, new ElementToNodeMapper(), errorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 		}
 
-		if (!optMethodNodeFromXml.isPresent()) {
+		if (methodNodeFromXml == null) {
 			ExceptionHelper.reportRuntimeException("Failed to convert method from xml.");
 		}
-		return optMethodNodeFromXml.get();
+		
+		return methodNodeFromXml;
 	}
 
 	private String createXmlForMethodWithThreeParameters() {

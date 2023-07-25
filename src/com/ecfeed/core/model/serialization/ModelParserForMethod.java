@@ -28,7 +28,7 @@ import nu.xom.Element;
 
 public class ModelParserForMethod {
 
-	public static Optional<MethodNode> parseMethod(
+	public static MethodNode parseMethod(
 			Element methodElement, 
 			ClassNode classNode,
 			ElementToNodeMapper elementToNodeMapper,
@@ -37,7 +37,7 @@ public class ModelParserForMethod {
 		MethodNode targetMethodNode = parseAndInitializeMethod(methodElement, classNode, inOutErrorList);
 
 		if (targetMethodNode == null) {
-			return Optional.empty();
+			return null;
 		}
 
 		parseMethodProperties(methodElement, targetMethodNode);
@@ -54,7 +54,7 @@ public class ModelParserForMethod {
 
 		parseComments(methodElement, targetMethodNode);
 
-		return Optional.of(targetMethodNode);
+		return targetMethodNode;
 	}
 
 	private static void parseComments(Element methodElement, MethodNode targetMethodNode) {

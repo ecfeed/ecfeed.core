@@ -148,11 +148,11 @@ public class XomParserTest {
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
 
-				Optional<MethodNode> parsedMethodNode = 
+				MethodNode parsedMethodNode = 
 						ModelParserForMethod.parseMethod(
 								element, tmpClassNode, new ElementToNodeMapper(), new ListOfStrings());
 
-				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode.get());
+				MethodNodeHelper.compareMethods(methodNode, parsedMethodNode);
 			}
 			catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());

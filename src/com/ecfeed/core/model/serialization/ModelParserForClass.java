@@ -13,7 +13,6 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -103,17 +102,15 @@ public class ModelParserForClass {
 
 		for (Element methodElement : childrenMethodElements) {
 
-			Optional<MethodNode> node = 
+			MethodNode node = 
 					ModelParserForMethod.parseMethod(
 							methodElement, targetClassNode, elementToNodeMapper, errorList);
 
-			if (!node.isPresent()) {
+			if (node==null) {
 				continue;
 			}
 
-			MethodNode methodNode = node.get();
-
-			addMethodWithUniqueName(targetClassNode, methodNode);
+			addMethodWithUniqueName(targetClassNode, node);
 		}
 	}
 
