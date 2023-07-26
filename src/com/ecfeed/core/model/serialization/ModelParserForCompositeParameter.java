@@ -13,14 +13,10 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
@@ -83,7 +79,8 @@ public class ModelParserForCompositeParameter {
 			return;
 		}
 
-		AbstractParameterNode link = findLink(linkPath, targetCompositeParameterNode);
+		//AbstractParameterNode link = ModelParserForParameterHelper.findLink2(linkPath, targetCompositeParameterNode);
+		AbstractParameterNode link = ModelParserForParameterHelper.findLink(linkPath, targetCompositeParameterNode);
 
 		if (link != null) {
 			targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
@@ -92,30 +89,4 @@ public class ModelParserForCompositeParameter {
 		}
 	}
 
-	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) { // XYX combine with method find link from ModelParserForParameterHelper
-
-		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
-
-		if (link!=null) {
-			return link;
-		}
-
-		RootNode rootNode = RootNodeHelper.findRootNode(parametersParentNode);
-
-		if (rootNode == null) {
-			return null;
-		}
-
-		String newLinkPath = 
-				SignatureHelper.SIGNATURE_ROOT_MARKER + rootNode.getName() + 
-				SignatureHelper.SIGNATURE_NAME_SEPARATOR + linkPath;
-
-		link = AbstractParameterNodeHelper.findParameter(newLinkPath, parametersParentNode);
-
-		if (link == null) {
-			return null;
-		}
-
-		return link;
-	}
 }

@@ -27,6 +27,8 @@ import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.SignatureHelper;
@@ -136,7 +138,7 @@ public class ModelParserForParameterHelper {
 		}
 	}
 
-	private static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
+	public static AbstractParameterNode findLink(String linkPath, IParametersParentNode parametersParentNode) {
 
 		if (linkPath.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			return AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
@@ -145,6 +147,34 @@ public class ModelParserForParameterHelper {
 		// old convention - to be removed in next release when all models would be converted to new convention
 		return ((MethodNode)parametersParentNode).getClassNode().findGlobalParameter(linkPath); 
 	}
+	
+	public static AbstractParameterNode findLink2(String linkPath, IParametersParentNode parametersParentNode) { // TODO REMOVE ? 
+
+		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
+
+		if (link!=null) {
+			return link;
+		}
+
+		RootNode rootNode = RootNodeHelper.findRootNode(parametersParentNode);
+
+		if (rootNode == null) {
+			return null;
+		}
+
+		String newLinkPath = 
+				SignatureHelper.SIGNATURE_ROOT_MARKER + rootNode.getName() + 
+				SignatureHelper.SIGNATURE_NAME_SEPARATOR + linkPath;
+
+		link = AbstractParameterNodeHelper.findParameter(newLinkPath, parametersParentNode);
+
+		if (link == null) {
+			return null;
+		}
+
+		return link;
+	}
+	
 
 	public static void parseLocalConstraints(
 			Element element, 
