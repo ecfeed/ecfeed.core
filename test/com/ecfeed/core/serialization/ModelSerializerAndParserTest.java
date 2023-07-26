@@ -347,7 +347,7 @@ public class ModelSerializerAndParserTest {
 
 		// class 
 
-		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null); // XYX rename 
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null); 
 
 		// local structure 1
 
@@ -393,11 +393,11 @@ public class ModelSerializerAndParserTest {
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
 
 		// root
-		// 	 GS1
-		//     GP1
-		//		 GC1
-		//	   constraint: GS1:GP1 = GC1 => true
 		//   class
+		// 	   GS1
+		//       GP1
+		//		   GC1
+		//	     constraint: GS1:GP1 = GC1 => true
 		//     method
 		//       LS1->GS1
 
@@ -446,7 +446,7 @@ public class ModelSerializerAndParserTest {
 	}
 
 	@Test 
-	public void shouldSerializeAndParseNestedStructureWithParameterOneLevelDeeperThanConstraint() { // XYX 2
+	public void shouldSerializeAndParseNestedStructureWithParameterOneLevelDeeperThanConstraint() {
 
 		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
@@ -515,6 +515,104 @@ public class ModelSerializerAndParserTest {
 					"                        <StaticStatement value=\"true\"/>\n" + 
 					"                    </Consequence>\n" + 
 					"                </Constraint>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+				fail();
+			}
+
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
+			ModelParser parser = new ModelParser();
+			ListOfStrings errorList = new ListOfStrings();
+
+			RootNode parsedModel = parser.parseModel(istream, null, errorList);
+
+			checkErrorList(errorList);
+			ModelComparator.compareRootNodes(rootNode, parsedModel);
+
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
+
+	@Test 
+	public void AAAshouldSerializeAndParseGlobalRootStructureWithParameterOneLevelDeeperThanConstraint() { // XYX 2
+
+		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		// structure 1
+
+		CompositeParameterNode globalCompositeParameterNode1 = 
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
+
+		// nested structure 2
+
+		CompositeParameterNode compositeParameterNode2 = 
+				CompositeParameterNodeHelper.addNewCompositeParameter(globalCompositeParameterNode1, "GS2", true, null);
+
+		// local parameter1 under structure 2, with choice
+
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameter(
+						compositeParameterNode2, "GP1", "int", "0", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "GC1", "0", false, true, null);
+
+		// constraint with parameter condition under structure 1
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(globalCompositeParameterNode1, constraint, true, null);
+
+
+		// class and method
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		// local linked structure
+
+		CompositeParameterNode localCompositeParameterNode1 = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
+
+		localCompositeParameterNode1.setLinkToGlobalParameter(globalCompositeParameterNode1);
+
+		// root
+		//   GS1
+		//	   GS2
+		//       GP1
+		//		   GC1
+		//		 constraint: GS1:GS2:GP1 = GC1 => true
+		//   class
+		//     method
+		//       LS1->GS1
+
+		try {
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+			serializer.serialize(rootNode);
+			String xml = ostream.toString();
+
+			String tags = "<Constraint name=\"constraint\" type=\"EF\">\n" + 
+					"            <Premise>\n" + 
+					"                <Statement choice=\"GC1\" parameter=\"@root:GS1:GS2:GP1\" relation=\"equal\"/>\n" + 
+					"            </Premise>\n" + 
+					"            <Consequence>\n" + 
+					"                <StaticStatement value=\"true\"/>\n" + 
+					"            </Consequence>\n" + 
+					"        </Constraint>"; 
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
 				fail();
