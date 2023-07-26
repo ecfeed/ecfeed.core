@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -325,4 +326,14 @@ public abstract class AbstractParameterNodeHelper {
 		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
 	}
 
+	public static List<AbstractParameterNode> findParameters(List<IAbstractNode> selectedNodes) {
+
+		List<AbstractParameterNode> parameters = selectedNodes.stream()
+				.filter(e -> ((e instanceof BasicParameterNode) || (e instanceof CompositeParameterNode)))
+				.map(e -> (AbstractParameterNode)e)
+				.collect(Collectors.toList());
+
+		return parameters;
+	}
+	
 }
