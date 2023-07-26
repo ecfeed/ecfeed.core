@@ -12,7 +12,7 @@ package com.ecfeed.core.operations.nodes;
 
 import java.util.List;
 
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class OnParametersListOperationConvertToGlobal extends CompositeOperation{
 
 	public OnParametersListOperationConvertToGlobal(
-			List<BasicParameterNode> parametersToConvert, 
+			List<AbstractParameterNode> parametersToConvert, 
 			IParametersParentNode newParametersParentNode,
 			IExtLanguageManager extLanguageManager) {
 
@@ -32,14 +32,14 @@ public class OnParametersListOperationConvertToGlobal extends CompositeOperation
 				newParametersParentNode, 
 				extLanguageManager);
 
-		for (BasicParameterNode parameter : parametersToConvert) {
+		for (AbstractParameterNode parameter : parametersToConvert) {
 
 			//	OnBasicParameterOperationConvertToGlobalOld operation = 
 			//			new OnBasicParameterOperationConvertToGlobalOld(
 			//					parameter, newParametersParentNode, extLanguageManager);
 
 			OnBasicParameterOperationConvertToGlobalNew operation = 
-					new OnBasicParameterOperationConvertToGlobalNew(
+					new OnBasicParameterOperationConvertToGlobalNew( // XYX rename
 							parameter, newParametersParentNode, extLanguageManager);
 
 			addOperation(operation);
