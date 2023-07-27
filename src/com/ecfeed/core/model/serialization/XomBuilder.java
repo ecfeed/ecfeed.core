@@ -504,9 +504,9 @@ public abstract class XomBuilder implements IModelVisitor {
 			addParameterProperties(node, targetCompositeParameterElement);
 		}
 
-		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetCompositeParameterElement, node);
-		}
+		//		if (fSerializatorParams.getSerializeComments()) {
+		//			appendTypeComments(targetCompositeParameterElement, node);
+		//		}
 
 		encodeAndAddAttribute(
 				targetCompositeParameterElement,
@@ -561,15 +561,16 @@ public abstract class XomBuilder implements IModelVisitor {
 	//	}
 
 	private Element createTargetGlobalCompositeParameterElement(CompositeParameterNode node) {
+
 		Element targetGlobalParamElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
 			addParameterProperties(node, targetGlobalParamElement);
 		}
 
-		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetGlobalParamElement, node);
-		}
+		//		if (fSerializatorParams.getSerializeComments()) {
+		//			appendTypeComments(targetGlobalParamElement, node);
+		//		}
 
 		return targetGlobalParamElement;
 	}
@@ -787,22 +788,40 @@ public abstract class XomBuilder implements IModelVisitor {
 		commentElement.appendChild(typeCommentsElement);
 	}
 
-	private void appendTypeComments(Element element, AbstractParameterNode node) {
+	//	private void appendTypeComments(Element element, BasicParameterNode node) {
+	//
+	//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+	//		Element commentElement;
+	//
+	//		if (commentElements.size() > 0) {
+	//			commentElement = commentElements.get(0);
+	//		} else {
+	//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+	//			element.appendChild(commentElement);
+	//		}
+	//
+	//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+	//
+	//		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
+	//		commentElement.appendChild(typeComments);
+	//	}
 
-		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
-		Element commentElement;
-
-		if (commentElements.size() > 0) {
-			commentElement = commentElements.get(0);
-		} else {
-			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
-			element.appendChild(commentElement);
-		}
-
-		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
-
-		commentElement.appendChild(typeComments);
-	}
+	//	private void appendTypeComments(Element element, AbstractParameterNode node) {
+	//
+	//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+	//		Element commentElement;
+	//
+	//		if (commentElements.size() > 0) {
+	//			commentElement = commentElements.get(0);
+	//		} else {
+	//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+	//			element.appendChild(commentElement);
+	//		}
+	//
+	//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+	//
+	//		commentElement.appendChild(typeComments);
+	//	}
 
 	//	private void appendTypeComments(Element element, BasicParameterNode node) {
 	//

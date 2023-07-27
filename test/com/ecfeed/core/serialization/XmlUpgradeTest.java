@@ -379,9 +379,6 @@ public class XmlUpgradeTest {
 				"                <Properties>\n" +
 				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
 				"                </Properties>\n" +
-				"                <Comments>\n" +
-				"                    <TypeComments/>\n" +
-				"                </Comments>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
@@ -417,9 +414,6 @@ public class XmlUpgradeTest {
 				"                <Properties>\n" +
 				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
 				"                </Properties>\n" +
-				"                <Comments>\n" +
-				"                    <TypeComments/>\n" +
-				"                </Comments>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +

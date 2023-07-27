@@ -307,9 +307,6 @@ public class ModelSerializerAndParserTest {
 							"            <Properties>\n" + 
 							"                <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
 							"            </Properties>\n" + 
-							"            <Comments>\n" + 
-							"                <TypeComments/>\n" + 
-							"            </Comments>\n" + 
 							"            <Choice name=\"GC1\" value=\"0\" isRandomized=\"false\"/>\n" + 
 							"        </Parameter>\n" + 
 							"        <Constraint name=\"constraint\" type=\"EF\">\n" + 
@@ -413,9 +410,6 @@ public class ModelSerializerAndParserTest {
 							"                <Properties>\n" + 
 							"                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
 							"                </Properties>\n" + 
-							"                <Comments>\n" + 
-							"                    <TypeComments/>\n" + 
-							"                </Comments>\n" + 
 							"                <Choice name=\"GC1\" value=\"0\" isRandomized=\"false\"/>\n" + 
 							"            </Parameter>\n" + 
 							"            <Constraint name=\"constraint\" type=\"EF\">\n" + 
@@ -806,7 +800,7 @@ public class ModelSerializerAndParserTest {
 			String xml = ostream.toString();
 
 			String tags1 =
-					"<Structure name=\"LS\" linked=\"true\" link=\"@root:GS\">";
+					"<Structure name=\"LS\" linked=\"true\" link=\"@root:GS\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
@@ -914,13 +908,13 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
+			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
 			}
 
-			String tags2 = "<Structure name=\"LS2\" linked=\"true\" link=\"@root:GS1\">";
+			String tags2 = "<Structure name=\"LS2\" linked=\"true\" link=\"@root:GS1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
@@ -1123,8 +1117,7 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags1 =
-					"<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\">";
+			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
@@ -1347,17 +1340,11 @@ public class ModelSerializerAndParserTest {
 							"        <Properties>\n" + 
 							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
 							"        </Properties>\n" + 
-							"        <Comments>\n" + 
-							"            <TypeComments/>\n" + 
-							"        </Comments>\n" + 
 							"    </Parameter>\n" + 
 							"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\">\n" + 
 							"        <Properties>\n" + 
 							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
 							"        </Properties>\n" + 
-							"        <Comments>\n" + 
-							"            <TypeComments/>\n" + 
-							"        </Comments>\n" + 
 							"    </Parameter>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
