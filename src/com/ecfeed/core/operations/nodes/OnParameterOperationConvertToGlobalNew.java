@@ -29,13 +29,13 @@ import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnBasicParameterOperationConvertToGlobalNew extends AbstractModelOperation {
+public class OnParameterOperationConvertToGlobalNew extends AbstractModelOperation {
 
 	private AbstractParameterNode fLocalParameterToConvert;
 	private IParametersParentNode fNewParametersParentNode;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public OnBasicParameterOperationConvertToGlobalNew(
+	public OnParameterOperationConvertToGlobalNew(
 			AbstractParameterNode localParameterToConvert, 
 			IParametersParentNode newParametersParentNode,
 			IExtLanguageManager extLanguageManager) {
@@ -148,24 +148,24 @@ public class OnBasicParameterOperationConvertToGlobalNew extends AbstractModelOp
 
 	public static void undoConvertLocalToGlobalParameter(AbstractParameterNode localParameter) {
 
-		BasicParameterNode globalParameter = 
-				(BasicParameterNode) localParameter.getLinkToGlobalParameter();
+		AbstractParameterNode globalAbstractParameterNode = 
+				(AbstractParameterNode) localParameter.getLinkToGlobalParameter();
 
 		NodeMapper nodeMapper = new NodeMapper();
 
 		if (localParameter instanceof BasicParameterNode) {
-			
+
 			IChoicesParentNode localChoicesParentNode = (IChoicesParentNode) localParameter;
-			IChoicesParentNode globalChoicesParentNode = globalParameter;
-			
+			IChoicesParentNode globalChoicesParentNode = (IChoicesParentNode) globalAbstractParameterNode;
+
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(
 					globalChoicesParentNode, localChoicesParentNode, Optional.of(nodeMapper));
 		}
 
 		localParameter.setLinkToGlobalParameter(null);
 
-		IParametersParentNode parentOfGlobal = globalParameter.getParent();
-		parentOfGlobal.removeParameter(globalParameter);
+		IParametersParentNode parentOfGlobal = globalAbstractParameterNode.getParent();
+		parentOfGlobal.removeParameter(globalAbstractParameterNode);
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParameter);
 
