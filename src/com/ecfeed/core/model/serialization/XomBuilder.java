@@ -64,6 +64,7 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -764,6 +765,12 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	private void appendTypeComments(Element element, BasicParameterNode node) {
 
+		String typeComments = node.getTypeComments();
+		
+		if (StringHelper.isNullOrEmpty(typeComments)) {
+			return;
+		}
+		
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;
 
@@ -774,10 +781,10 @@ public abstract class XomBuilder implements IModelVisitor {
 			element.appendChild(commentElement);
 		}
 
-		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+		Element typeCommentsElement = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
 
-		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
-		commentElement.appendChild(typeComments);
+		typeCommentsElement.appendChild(fWhiteCharConverter.encode(typeComments));
+		commentElement.appendChild(typeCommentsElement);
 	}
 
 	private void appendTypeComments(Element element, AbstractParameterNode node) {
