@@ -304,9 +304,6 @@ public class ModelSerializerAndParserTest {
 
 			String tags = 
 					"        <Parameter name=\"GP1\" type=\"int\">\n" + 
-							"            <Properties>\n" + 
-							"                <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-							"            </Properties>\n" + 
 							"            <Choice name=\"GC1\" value=\"0\" isRandomized=\"false\"/>\n" + 
 							"        </Parameter>\n" + 
 							"        <Constraint name=\"constraint\" type=\"EF\">\n" + 
@@ -404,14 +401,17 @@ public class ModelSerializerAndParserTest {
 
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
-
-			String tags = 
+			
+			String tags1 = 
 					"            <Parameter name=\"GP1\" type=\"int\">\n" + 
-							"                <Properties>\n" + 
-							"                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-							"                </Properties>\n" + 
-							"                <Choice name=\"GC1\" value=\"0\" isRandomized=\"false\"/>\n" + 
-							"            </Parameter>\n" + 
+					"                <Choice name=\"GC1\" value=\"0\" isRandomized=\"false\"/>\n" + 
+					"            </Parameter>";
+
+			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
+				fail();
+			}
+			
+			String tags2 = 
 							"            <Constraint name=\"constraint\" type=\"EF\">\n" + 
 							"                <Premise>\n" + 
 							"                    <Statement choice=\"GC1\" parameter=\"@root:class:GS1:GP1\" relation=\"equal\"/>\n" + 
@@ -421,7 +421,7 @@ public class ModelSerializerAndParserTest {
 							"                </Consequence>\n" + 
 							"            </Constraint>"; 
 
-			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
+			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
 			}
 
@@ -1023,17 +1023,13 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags1 =
-					"<Parameter name=\"P1\" type=\"int\" isExpected=\"false\" "
-							+ "expected=\"0\" linked=\"true\" link=\"@root:GP1\">";
+			String tags1 = "<Parameter name=\"P1\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@root:GP1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
 			}
 
-			String tags2 =
-					"<Parameter name=\"P2\" type=\"int\" isExpected=\"false\" "
-							+ "expected=\"0\" linked=\"true\" link=\"@root:GP2\">";
+			String tags2 = "<Parameter name=\"P2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@root:GP2\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
@@ -1334,18 +1330,13 @@ public class ModelSerializerAndParserTest {
 			String xml = ostream.toString();
 
 			String tags =
+					"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+					"<Model name=\"model\" version=\"5\">\n" + 
 					"    <Class name=\"com.example.TestClass1\"/>\n" + 
-							"    <Class name=\"com.example.TestClass2\"/>\n" + 
-							"    <Parameter name=\"globalParameter1\" type=\"int\">\n" + 
-							"        <Properties>\n" + 
-							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-							"        </Properties>\n" + 
-							"    </Parameter>\n" + 
-							"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\">\n" + 
-							"        <Properties>\n" + 
-							"            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" + 
-							"        </Properties>\n" + 
-							"    </Parameter>";
+					"    <Class name=\"com.example.TestClass2\"/>\n" + 
+					"    <Parameter name=\"globalParameter1\" type=\"int\"/>\n" + 
+					"    <Parameter name=\"globalParameter2\" type=\"com.example.UserType\"/>\n" + 
+					"</Model>\n"; 
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
 				fail();

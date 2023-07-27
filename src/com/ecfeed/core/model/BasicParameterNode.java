@@ -638,9 +638,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	private void createDefaultProperties() {
-
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
+		//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
+		//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
 
 	@Override

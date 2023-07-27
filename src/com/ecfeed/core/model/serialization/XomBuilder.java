@@ -688,25 +688,24 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private void addParameterProperties(AbstractParameterNode abstractParameterNode, Element targetElement) {
-
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_ACTION, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_ACTION, abstractParameterNode, targetElement);
 	}
 
-	private void addParameterProperty(
-			NodePropertyDefs.PropertyId propertyId,
-			AbstractParameterNode abstractParameterNode,
-			Element targetElement) {
-
-		String value = abstractParameterNode.getPropertyValue(propertyId);
-		if (value == null) {
-			return;
-		}
-		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
-	}
+	//	private void addParameterProperty(
+	//			NodePropertyDefs.PropertyId propertyId,
+	//			AbstractParameterNode abstractParameterNode,
+	//			Element targetElement) {
+	//
+	//		String value = abstractParameterNode.getPropertyValue(propertyId);
+	//		if (value == null) {
+	//			return;
+	//		}
+	//		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
+	//	}
 
 	private Element createAbstractElement(String nodeTag, IAbstractNode node) {
 
@@ -767,11 +766,11 @@ public abstract class XomBuilder implements IModelVisitor {
 	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		String typeComments = node.getTypeComments();
-		
+
 		if (StringHelper.isNullOrEmpty(typeComments)) {
 			return;
 		}
-		
+
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;
 

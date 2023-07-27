@@ -164,7 +164,7 @@ public class ModelParserHelper  {
 	static String parseTypeComments(Element element) {
 
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
-			
+
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 				Element typeComments = comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).get(0);
@@ -219,31 +219,30 @@ public class ModelParserHelper  {
 	}	
 
 	static void parseParameterProperties(Element parameterElement, BasicParameterNode targetAbstractParameterNode) {
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
-				parameterElement, 
-				targetAbstractParameterNode);		
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
-				parameterElement, 
-				targetAbstractParameterNode);
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);		
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
 	}
 
 	static void parseParameterProperty(

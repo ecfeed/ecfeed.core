@@ -376,9 +376,6 @@ public class XmlUpgradeTest {
 				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
 				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
-				"                <Properties>\n" +
-				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
-				"                </Properties>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
@@ -411,9 +408,6 @@ public class XmlUpgradeTest {
 				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
 				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
-				"                <Properties>\n" +
-				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
-				"                </Properties>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
