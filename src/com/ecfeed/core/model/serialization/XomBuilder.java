@@ -27,11 +27,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_NA
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTIES_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_TYPE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_VALUE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
@@ -57,7 +52,6 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -668,24 +662,24 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	private void addMethodProperties(MethodNode methodNode, Element targetElement) {
 
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER, methodNode, targetElement);
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM,  methodNode, targetElement);
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodNode, targetElement);
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodNode, targetElement);
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodNode, targetElement);
-//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM,  methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodNode, targetElement);
 	}
 
-	private void addMethodProperty(NodePropertyDefs.PropertyId propertyId,  MethodNode methodNode, Element targetElement) {
-
-		String value = methodNode.getPropertyValue(propertyId);
-
-		if (value == null) {
-			return;
-		}
-
-		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
-	}
+	//	private void addMethodProperty(NodePropertyDefs.PropertyId propertyId,  MethodNode methodNode, Element targetElement) {
+	//
+	//		String value = methodNode.getPropertyValue(propertyId);
+	//
+	//		if (value == null) {
+	//			return;
+	//		}
+	//
+	//		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
+	//	}
 
 	private void addParameterProperties(AbstractParameterNode abstractParameterNode, Element targetElement) {
 		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
@@ -866,50 +860,50 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetRootElement;
 	}
 
-	private String getPropertyName(NodePropertyDefs.PropertyId propertyId) {
+	//	private String getPropertyName(NodePropertyDefs.PropertyId propertyId) {
+	//
+	//		return NodePropertyDefs.getPropertyName(propertyId);
+	//	}
 
-		return NodePropertyDefs.getPropertyName(propertyId);
-	}
+	//	private String getPropertyType(NodePropertyDefs.PropertyId propertyId) {
+	//
+	//		return NodePropertyDefs.getPropertyType(propertyId);
+	//	}	
 
-	private String getPropertyType(NodePropertyDefs.PropertyId propertyId) {
+	//	private void appendProperty(String key, String type, String value, Element targetElement) {
+	//
+	//		Element propertiesBlock = getPropertiesBlock(targetElement);
+	//		Element propertyElement = createCommonPropertyElement(key, type, value);
+	//
+	//		propertiesBlock.appendChild(propertyElement);
+	//	}	
 
-		return NodePropertyDefs.getPropertyType(propertyId);
-	}	
+	//	private Element getPropertiesBlock(Element parentElement) {
+	//
+	//		Elements propiertiesBlocks = parentElement.getChildElements(PROPERTIES_BLOCK_TAG_NAME);
+	//
+	//		if (propiertiesBlocks.size() == 0) {
+	//			Element propertiesBlock = new Element(PROPERTIES_BLOCK_TAG_NAME);
+	//			parentElement.appendChild(propertiesBlock);
+	//			return propertiesBlock;
+	//		}
+	//
+	//		return propiertiesBlocks.get(0);
+	//	}
 
-	private void appendProperty(String key, String type, String value, Element targetElement) {
-
-		Element propertiesBlock = getPropertiesBlock(targetElement);
-		Element propertyElement = createCommonPropertyElement(key, type, value);
-
-		propertiesBlock.appendChild(propertyElement);
-	}	
-
-	private Element getPropertiesBlock(Element parentElement) {
-
-		Elements propiertiesBlocks = parentElement.getChildElements(PROPERTIES_BLOCK_TAG_NAME);
-
-		if (propiertiesBlocks.size() == 0) {
-			Element propertiesBlock = new Element(PROPERTIES_BLOCK_TAG_NAME);
-			parentElement.appendChild(propertiesBlock);
-			return propertiesBlock;
-		}
-
-		return propiertiesBlocks.get(0);
-	}
-
-	private Element createCommonPropertyElement(String name, String type, String value) {
-
-		Element targetPropertyElement = new Element(PROPERTY_TAG_NAME);
-
-		Attribute attributeName = new Attribute(PROPERTY_ATTRIBUTE_NAME, name);
-		targetPropertyElement.addAttribute(attributeName);
-
-		Attribute attributeType = new Attribute(PROPERTY_ATTRIBUTE_TYPE, type);
-		targetPropertyElement.addAttribute(attributeType);
-
-		Attribute attributeValue = new Attribute(PROPERTY_ATTRIBUTE_VALUE, value);
-		targetPropertyElement.addAttribute(attributeValue);
-
-		return targetPropertyElement;
-	}
+	//	private Element createCommonPropertyElement(String name, String type, String value) {
+	//
+	//		Element targetPropertyElement = new Element(PROPERTY_TAG_NAME);
+	//
+	//		Attribute attributeName = new Attribute(PROPERTY_ATTRIBUTE_NAME, name);
+	//		targetPropertyElement.addAttribute(attributeName);
+	//
+	//		Attribute attributeType = new Attribute(PROPERTY_ATTRIBUTE_TYPE, type);
+	//		targetPropertyElement.addAttribute(attributeType);
+	//
+	//		Attribute attributeValue = new Attribute(PROPERTY_ATTRIBUTE_VALUE, value);
+	//		targetPropertyElement.addAttribute(attributeValue);
+	//
+	//		return targetPropertyElement;
+	//	}
 }
