@@ -13,6 +13,8 @@ package com.ecfeed.core.model.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ShifterOfListElements;
@@ -49,6 +51,26 @@ public class ElementLister<TypeOfElement> {
 		registerChange();
 	}
 
+	public void addElements(List<TypeOfElement> elements, IAbstractNode parent) {
+
+		for (TypeOfElement methodParameterNode : elements) {
+			
+			addElement(methodParameterNode);
+		}
+	}
+	
+	public boolean removeElement(AbstractParameterNode parameter) {
+		
+		boolean result = fElements.removeIf(e -> e.equals(parameter));
+		registerChange();
+		return result;
+	}
+	
+	public void replaceElements(List<TypeOfElement> parameters, IAbstractNode parent) {
+
+		fElements.clear();
+		addElements(parameters, parent);
+	}
 
 	private boolean elementExists(TypeOfElement elementToCheck) {
 
@@ -376,7 +398,7 @@ public class ElementLister<TypeOfElement> {
 		return fElements.size();
 	}
 
-	public void registerChange() { // TODO MO-RE make private
+	private void registerChange() { // TODO MO-RE make private
 
 		if (fModelChangeRegistrator == null) {
 			return;

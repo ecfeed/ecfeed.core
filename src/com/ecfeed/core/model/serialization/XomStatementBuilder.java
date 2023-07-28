@@ -221,7 +221,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	//
 	//			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
 	//
-	//			// parameterLoop: //TODO MO-RE check unused label
+	//			// parameterLoop: 
 	//			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
 	//				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
 	//					if (candidateComposite.isLinked()) {

@@ -281,11 +281,7 @@ public class ParametersWithContextLister {
 
 		parameter.setParent(null);
 
-		// TODO MO-RE rewrite in ParametersLister
-		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.getParameter().equals(parameter));
-		fElementLister.registerChange();
-
-		return result;
+		return fElementLister.removeElement(parameter);
 
 	}
 
@@ -346,10 +342,10 @@ public class ParametersWithContextLister {
 
 		fElementLister.shiftElements(indicesOfElements, shift);
 	}
-	
+
 	public void shiftOneElement(int indexOfElement, int shift) {
 
 		fElementLister.shiftOneElement(indexOfElement, shift);
 	}
-	
+
 }
