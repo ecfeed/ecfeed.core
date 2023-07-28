@@ -1607,9 +1607,4 @@ public final class JavaLanguageHelper {
 		return new TypeAdapterBaseForUserType(type);
 	}
 
-	// TODO MO-RE do we need this ?
-//	protected ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
-//		return new EclipseTypeAdapterForUserType(type);
-//	}
-
 }

@@ -22,7 +22,7 @@ public class SignatureHelper {
 	public static final String SIGNATURE_CONTENT_SEPARATOR = " : "; // name from content
 	public static final String SIGNATURE_ROOT_MARKER = "@";  // informs that the first item is root node
 
-	public static String getLastSegment(String name) { // TODO MO-RE move to 
+	public static String getLastSegment(String name) {
 
 		int index = name.lastIndexOf(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class XmlComparator {
 
-
 	public static boolean areXmlsEqual(String xml1, String xml2) {
 
 		IntegerHolder position1 = new IntegerHolder(0);
@@ -28,6 +27,7 @@ public class XmlComparator {
 			String tag2 = getTag(xml2, position2);
 
 			if (!StringHelper.isEqual(tag1, tag2)) {
+				ExceptionHelper.reportRuntimeException("Tags differ.\n  Tag1: " + tag1 + "  \nTag2: " + tag2);
 				return false; // TODO MO-RE report exception with tags which differ
 			}
 
