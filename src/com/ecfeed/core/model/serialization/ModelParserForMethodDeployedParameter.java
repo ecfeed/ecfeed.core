@@ -104,7 +104,7 @@ public class ModelParserForMethodDeployedParameter {
 			return Optional.empty();
 		}
 
-		String lastSegment = getLastSegment(name);
+		String lastSegment = SignatureHelper.getLastSegment(name);
 
 		BasicParameterNode parameter = 
 				new BasicParameterNode(
@@ -117,11 +117,11 @@ public class ModelParserForMethodDeployedParameter {
 			try {
 				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
 
-//				Optional<BasicParameterNode> basicParameterNode = 
-//						method.getNestedBasicParameters(true).stream()
-//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
-//						.findAny(); //use function from helper 
-				
+				//				Optional<BasicParameterNode> basicParameterNode = 
+				//						method.getNestedBasicParameters(true).stream()
+				//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+				//						.findAny(); //use function from helper 
+
 				AbstractParameterNode basicParameterNode = AbstractParameterNodeHelper.findParameter(linkPath, method);
 
 				if (basicParameterNode != null) {
@@ -141,18 +141,6 @@ public class ModelParserForMethodDeployedParameter {
 		}
 
 		return Optional.of(parameter);
-	}
-
-	private String getLastSegment(String name) { // TODO MO-RE move to 
-
-		int index = name.lastIndexOf(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-		if (index == -1) {
-			return name;
-		}
-
-		String lastSegment = name.substring(index+1);
-		return lastSegment;
 	}
 
 }
