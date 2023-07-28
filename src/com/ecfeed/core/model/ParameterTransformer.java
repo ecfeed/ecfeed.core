@@ -251,7 +251,7 @@ public class ParameterTransformer {
 			String newType, 
 			boolean isChoiceRandomized) {
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(newType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		boolean isCompatible = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
 

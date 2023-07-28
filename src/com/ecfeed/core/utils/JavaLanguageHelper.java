@@ -1568,7 +1568,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	public static ITypeAdapter<?> getAdapter(String type){ // TODO MO-RE rename to getTypeAdapter
+	public static ITypeAdapter<?> getTypeAdapter(String type) {
 		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
 			type = TypeAdapterHelper.USER_TYPE;
 		}

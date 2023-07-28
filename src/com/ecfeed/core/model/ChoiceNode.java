@@ -109,7 +109,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			return getValueString();
 		}
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(typeName);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(typeName);
 
 		String valueString = getValueString();
 

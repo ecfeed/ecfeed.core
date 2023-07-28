@@ -307,7 +307,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(leftParameterType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(leftParameterType);
 
 		IStatementCondition statementCondition = relationStatement.getCondition();
 

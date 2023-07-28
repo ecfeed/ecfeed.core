@@ -231,7 +231,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			IExtLanguageManager extLanguageManager, 
 			String currentDefaultValue) {
 		
-		ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(newType);
+		ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		String newDefaultValue = 
 				adapter.adapt(currentDefaultValue, false, ERunMode.QUIET, extLanguageManager);

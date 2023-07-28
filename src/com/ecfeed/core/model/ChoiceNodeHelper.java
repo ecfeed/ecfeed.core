@@ -218,7 +218,7 @@ public class ChoiceNodeHelper {
 			String newType, 
 			boolean isChoiceRandomized) {
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(newType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
 

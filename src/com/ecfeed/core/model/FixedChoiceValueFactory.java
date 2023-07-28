@@ -50,7 +50,7 @@ public class FixedChoiceValueFactory {
 
 		if (isRandomized) {
 
-			ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(typeName);
+			ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(typeName);
 			convertedValueString = typeAdapter.generateValueAsString(valueString, context);  
 		}
 

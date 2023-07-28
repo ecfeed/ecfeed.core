@@ -163,7 +163,7 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 
 		private void adaptParentChoice(ChoiceNode parentChoiceNode) {
 			if(parentChoiceNode.isAbstract() == false){
-				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(parentChoiceNode.getParameter().getType());
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(parentChoiceNode.getParameter().getType());
 				String newValue = 
 						adapter.adapt(
 								parentChoiceNode.getValueString(), 

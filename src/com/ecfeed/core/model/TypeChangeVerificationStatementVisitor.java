@@ -36,7 +36,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		fConstraintName = constraintName;
 		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
 
-		fNewTypeAdapter = JavaLanguageHelper.getAdapter(newType);
+		fNewTypeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 	}
 
 	@Override
