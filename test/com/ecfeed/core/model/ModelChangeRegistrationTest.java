@@ -49,7 +49,7 @@ public class ModelChangeRegistrationTest {
 
 		changeCounter.registerModelSaved();
 		MethodNode methodNode = new MethodNode("method1", classNode.getModelChangeRegistrator());
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
+		assertFalse(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
 		classNode.addMethod(methodNode);

@@ -48,7 +48,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fTestCasesHolder = new TestCasesHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 
-		setDefaultPropertyValues();
+		// setDefaultPropertyValues();
 	}
 
 	public MethodNode(String name){
@@ -73,15 +73,15 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		super.setName(name);
 	}
 
-	private void setDefaultPropertyValues() {
-
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
-
-		registerChange();
-	}
+//	private void setDefaultPropertyValues() {
+//
+//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER);
+//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
+//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
+//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
+//
+//		registerChange();
+//	}
 
 	@Override
 	public ConstraintNodeListHolder.ConstraintsItr getIterator() {

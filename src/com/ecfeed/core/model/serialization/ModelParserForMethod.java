@@ -149,12 +149,12 @@ public class ModelParserForMethod {
 	}
 
 	private static void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodElement, targetMethodNode); // TODO MO-RE obsolete property ?
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER, methodElement, targetMethodNode); // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);; // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
+//		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode); ; // TODO MO-RE obsolete property ?
 	}
 
 	private static void parseMethodProperty(

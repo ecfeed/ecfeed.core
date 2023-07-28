@@ -369,26 +369,12 @@ public class XmlUpgradeTest {
 				"    <Class name='classNode'>\n" +
 
 				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
 
-				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
-				"        </Method>\n" +
-
+				"        <Method name='method'/>\n" +
 				"    </Class>\n" +
 				"</Model>";
 
@@ -401,25 +387,12 @@ public class XmlUpgradeTest {
 				"    <Class name='classNode'>\n" +
 
 				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
 
-				"        <Method name='method1'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
-				"        </Method>\n" +
+				"        <Method name='method1'/>\n" +
 
 				"    </Class>\n" +
 				"</Model>";

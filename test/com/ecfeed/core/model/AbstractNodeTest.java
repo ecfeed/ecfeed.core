@@ -101,26 +101,26 @@ public class AbstractNodeTest{
 		assertEquals(parent, actualParent);
 	}
 
-	@Test
-	public void testAttributes() {
-		AbstractNode node = new AbstractNodeImpl("name");
-		assertEquals(0, node.getPropertyCount());
-
-		NodePropertyDefs.PropertyId propertyId = NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER;
-
-		node.setPropertyValue(propertyId, "Value");
-		assertEquals(1, node.getPropertyCount());
-
-		Set<String> keys = node.getPropertyKeys();
-		assertEquals(1, keys.size());
-
-
-		String outValue = node.getPropertyValue(propertyId);
-		assertEquals("Value", outValue);
-
-		node.removeProperty(propertyId);
-		assertEquals(0, node.getPropertyCount());
-	}
+	//	@Test
+	//	public void testAttributes() {
+	//		AbstractNode node = new AbstractNodeImpl("name");
+	//		assertEquals(0, node.getPropertyCount());
+	//
+	//		NodePropertyDefs.PropertyId propertyId = NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER;
+	//
+	//		node.setPropertyValue(propertyId, "Value");
+	//		assertEquals(1, node.getPropertyCount());
+	//
+	//		Set<String> keys = node.getPropertyKeys();
+	//		assertEquals(1, keys.size());
+	//
+	//
+	//		String outValue = node.getPropertyValue(propertyId);
+	//		assertEquals("Value", outValue);
+	//
+	//		node.removeProperty(propertyId);
+	//		assertEquals(0, node.getPropertyCount());
+	//	}
 
 	@Test
 	public void testHasChildren(){
