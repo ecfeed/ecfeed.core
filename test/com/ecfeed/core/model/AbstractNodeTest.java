@@ -244,33 +244,33 @@ public class AbstractNodeTest{
 		classNode.addMethod(method);
 		root.addClass(classNode);
 
-		assertEquals(classNode, root.getChild("class"));
-		assertEquals(method, root.getChild("class:method"));
-		assertEquals(method, classNode.getChild("method"));
-		assertEquals(parameter, root.getChild("class:method:parameter"));
-		assertEquals(parameter, classNode.getChild("method:parameter"));
-		assertEquals(parameter, method.getChild("parameter"));
-		assertEquals(expCat, root.getChild("class:method:expCat"));
-		assertEquals(expCat, classNode.getChild("method:expCat"));
-		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(constraint, root.getChild("class:method:constraint"));
-		assertEquals(constraint, classNode.getChild("method:constraint"));
-		assertEquals(constraint, method.getChild("constraint"));
-		assertEquals(testCase, root.getChild("class:method:testCase"));
-		assertEquals(testCase, classNode.getChild("method:testCase"));
-		assertEquals(testCase, method.getChild("testCase"));
-		assertEquals(p, root.getChild("class:method:parameter:p"));
-		assertEquals(p, classNode.getChild("method:parameter:p"));
-		assertEquals(p, method.getChild("parameter:p"));
-		assertEquals(p, parameter.getChild("p"));
+		assertEquals(classNode, root.findChild("class"));
+		assertEquals(method, root.findChild("class:method"));
+		assertEquals(method, classNode.findChild("method"));
+		assertEquals(parameter, root.findChild("class:method:parameter"));
+		assertEquals(parameter, classNode.findChild("method:parameter"));
+		assertEquals(parameter, method.findChild("parameter"));
+		assertEquals(expCat, root.findChild("class:method:expCat"));
+		assertEquals(expCat, classNode.findChild("method:expCat"));
+		assertEquals(expCat, method.findChild("expCat"));
+		assertEquals(constraint, root.findChild("class:method:constraint"));
+		assertEquals(constraint, classNode.findChild("method:constraint"));
+		assertEquals(constraint, method.findChild("constraint"));
+		assertEquals(testCase, root.findChild("class:method:testCase"));
+		assertEquals(testCase, classNode.findChild("method:testCase"));
+		assertEquals(testCase, method.findChild("testCase"));
+		assertEquals(p, root.findChild("class:method:parameter:p"));
+		assertEquals(p, classNode.findChild("method:parameter:p"));
+		assertEquals(p, method.findChild("parameter:p"));
+		assertEquals(p, parameter.findChild("p"));
 
-		IAbstractNode childChoice = root.getChild("class:method:parameter:p:p1");
+		IAbstractNode childChoice = root.findChild("class:method:parameter:p:p1");
 		assertEquals(p1, childChoice);
 
-		assertEquals(p1, classNode.getChild("method:parameter:p:p1"));
-		assertEquals(p1, method.getChild("parameter:p:p1"));
-		assertEquals(p1, parameter.getChild("p:p1"));
-		assertEquals(p1, p.getChild("p1"));
+		assertEquals(p1, classNode.findChild("method:parameter:p:p1"));
+		assertEquals(p1, method.findChild("parameter:p:p1"));
+		assertEquals(p1, parameter.findChild("p:p1"));
+		assertEquals(p1, p.findChild("p1"));
 	}
 
 	@Test

@@ -157,10 +157,10 @@ public class MethodNodeTest {
 		assertTrue(method.getChildren().contains(expCat));
 		assertTrue(method.getChildren().contains(constraint));
 		assertTrue(method.getChildren().contains(testCase));
-		assertEquals(parameter, method.getChild("parameter"));
-		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(testCase, method.getChild("test_case"));
-		assertEquals(constraint, method.getChild("constraint"));
+		assertEquals(parameter, method.findChild("parameter"));
+		assertEquals(expCat, method.findChild("expCat"));
+		assertEquals(testCase, method.findChild("test_case"));
+		assertEquals(constraint, method.findChild("constraint"));
 	}
 
 	@Test
