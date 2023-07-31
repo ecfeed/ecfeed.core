@@ -498,7 +498,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public ChoiceNode getChoice(String qualifiedName) {
 
-		return (ChoiceNode)getChild(qualifiedName);
+		return (ChoiceNode)findChild(qualifiedName);
 	}
 
 	@Override

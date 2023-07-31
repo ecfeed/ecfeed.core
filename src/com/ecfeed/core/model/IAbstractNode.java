@@ -34,7 +34,7 @@ public interface IAbstractNode {
 	public IAbstractNode getContainer();
 	public IAbstractNode getParent();
 	public IAbstractNode getRoot();
-	public IAbstractNode getChild(String qualifiedName);
+	public IAbstractNode findChild(String qualifiedName);
 	public IAbstractNode getSibling(String name);
 	public boolean hasSibling(String name);
 	public int getSubtreeSize();

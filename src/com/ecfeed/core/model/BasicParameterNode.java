@@ -530,7 +530,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	@Override
 	public ChoiceNode getChoice(String qualifiedName) {
 
-		return (ChoiceNode)getChild(qualifiedName);
+		return (ChoiceNode)findChild(qualifiedName);
 	}
 
 	@Override

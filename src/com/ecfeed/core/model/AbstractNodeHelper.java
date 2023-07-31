@@ -266,14 +266,46 @@ public abstract class AbstractNodeHelper  {
 
 		return true;
 	}
-	
+
 	public static boolean twoNodesAreOfTheSameClass(IAbstractNode node1, IAbstractNode node2) {
-		
+
 		if (node1.getClass().equals(node2.getClass())) {
 			return true;
 		}
-		
+
 		return false;
+	}
+
+	public static IAbstractNode findChild(IAbstractNode abstractNode, String qualifiedName) {
+
+		String[] tokens = qualifiedName.split(":");
+		if(tokens.length == 0){
+			return null;
+		}
+
+		if (tokens.length == 1) {
+
+			List<IAbstractNode> children = abstractNode.getChildren();
+
+			for (IAbstractNode child : children) {
+				if (child.getName().equals(tokens[0])) {
+					return child;
+				}
+			}
+		} else {
+
+			IAbstractNode nextChild = abstractNode.findChild(tokens[0]);
+
+			if(nextChild == null) { 
+				return null;
+			}
+
+			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
+			return nextChild.findChild(newName);
+		}
+
+		return null;
 	}
 
 }

@@ -269,7 +269,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		String formattedPath = formatSearchPath(path, parameterPathType);
 
-		IAbstractNode foundAbstractNode = topNode.getChild(formattedPath);
+		IAbstractNode foundAbstractNode = topNode.findChild(formattedPath);
 
 		if (!(foundAbstractNode instanceof AbstractParameterNode)) {
 			return null;
