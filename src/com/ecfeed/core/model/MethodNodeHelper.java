@@ -278,53 +278,53 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createSignature(
-			String methodName,
-			List<String> parameterTypes,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags,
-			IExtLanguageManager extLanguageManager) {
+//	public static String createSignature( // XYX
+//			String methodName,
+//			List<String> parameterTypes,
+//			List<String> parameterNames,
+//			List<Boolean> expectedFlags,
+//			IExtLanguageManager extLanguageManager) {
+//
+//		String signature = new String(methodName) + "(";
+//
+//		String signaturesOfParameters =
+//				createSignaturesOfParameters(
+//						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
+//
+//		signature += signaturesOfParameters;
+//
+//		signature += ")";
+//
+//		return signature;
+//	}
 
-		String signature = new String(methodName) + "(";
-
-		String signaturesOfParameters =
-				createSignaturesOfParameters(
-						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
-
-		signature += signaturesOfParameters;
-
-		signature += ")";
-
-		return signature;
-	}
-
-	private static String createSignaturesOfParameters(
-			List<String> parameterTypes,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags,
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-
-		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
-
-			String parameterType = parameterTypes.get(paramIndex);
-			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
-			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
-
-			String signatureOfOneParameter =
-					AbstractParameterSignatureHelper.createSignature(
-							parameterType, parameterName, expectedFlag, extLanguageManager);
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < parameterTypes.size() - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-	}
+//	private static String createSignaturesOfParameters(
+//			List<String> parameterTypes,
+//			List<String> parameterNames,
+//			List<Boolean> expectedFlags,
+//			IExtLanguageManager extLanguageManager) {
+//
+//		String signature = "";
+//
+//		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
+//
+//			String parameterType = parameterTypes.get(paramIndex);
+//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+//
+//			String signatureOfOneParameter =
+//					AbstractParameterSignatureHelper.createSignature(
+//							parameterType, parameterName, expectedFlag, extLanguageManager);
+//
+//			signature += signatureOfOneParameter;
+//
+//			if (paramIndex < parameterTypes.size() - 1) {
+//				signature += ", ";
+//			}
+//		}
+//
+//		return signature;
+//	}
 
 	public static String createSignaturesOfParameters(
 			MethodNode methodNode,
