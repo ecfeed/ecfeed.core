@@ -121,7 +121,7 @@ public class MethodNodeHelper {
 
 	}
 
-	private static String createSignaturesOfParametersNewStandard(
+	public static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
 			boolean paramNamesAdded,
 			boolean expectedDecorationsAdded, 
@@ -248,161 +248,161 @@ public class MethodNodeHelper {
 		//						extLanguageOfTheResult);
 	}
 
-	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = createSignature(methodNode, isParamNameAdded, true,  extLanguageManager);
+	//
+	//		return signature;
+	//	}
 
-		String signature = createSignature(methodNode, isParamNameAdded, true,  extLanguageManager);
+	//	public static String createSignatureByIntrLanguage(
+	//			String nameInIntrLanguage,
+	//			List<String> parameterTypesInIntrLanguage,
+	//			List<String> parameterNames, 
+	//			List<Boolean> expectedFlags, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+	//
+	//		String signature = new String(nameInExtLanguage) + "(";
+	//
+	//		String signaturesOfParameters = 
+	//				createSignaturesOfParametersByIntrLanguage(
+	//						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
+	//						extLanguageManager);
+	//
+	//		signature += signaturesOfParameters;
+	//
+	//		signature += ")";
+	//
+	//		return signature;
+	//	}
 
-		return signature;
-	}
+	//	public static String createSignature(
+	//			String methodName,
+	//			List<String> parameterTypes,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = new String(methodName) + "(";
+	//
+	//		String signaturesOfParameters =
+	//				createSignaturesOfParameters(
+	//						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
+	//
+	//		signature += signaturesOfParameters;
+	//
+	//		signature += ")";
+	//
+	//		return signature;
+	//	}
 
-	public static String createSignatureByIntrLanguage(
-			String nameInIntrLanguage,
-			List<String> parameterTypesInIntrLanguage,
-			List<String> parameterNames, 
-			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguageManager) {
+	//	private static String createSignaturesOfParameters(
+	//			List<String> parameterTypes,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//
+	//		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
+	//
+	//			String parameterType = parameterTypes.get(paramIndex);
+	//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+	//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+	//
+	//			String signatureOfOneParameter =
+	//					AbstractParameterSignatureHelper.createSignature(
+	//							parameterType, parameterName, expectedFlag, extLanguageManager);
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < parameterTypes.size() - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//	}
 
-		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+	//	public static String createSignaturesOfParameters( // XYX
+	//			MethodNode methodNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//		int paramCount = methodNode.getParametersCount();
+	//
+	//
+	//		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
+	//
+	//			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+	//
+	//			String signatureOfOneParameter = "";
+	//
+	//			if (methodParameterNode instanceof BasicParameterNode) {
+	//
+	//				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+	//
+	//				signatureOfOneParameter = 
+	//						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
+	//								basicParameterNode, 
+	//								ExtendedName.NAME_ONLY, 
+	//								Decorations.YES, 
+	//								TypeIncluded.YES, 
+	//								extLanguageManager);
+	//			} else {
+	//
+	//				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
+	//
+	//				signatureOfOneParameter = 
+	//						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
+	//								compositeParameterNode, 
+	//								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
+	//								extLanguageManager);
+	//			}
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < paramCount - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//
+	//	}	
 
-		String signature = new String(nameInExtLanguage) + "(";
-
-		String signaturesOfParameters = 
-				createSignaturesOfParametersByIntrLanguage(
-						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
-						extLanguageManager);
-
-		signature += signaturesOfParameters;
-
-		signature += ")";
-
-		return signature;
-	}
-
-//	public static String createSignature(
-//			String methodName,
-//			List<String> parameterTypes,
-//			List<String> parameterNames,
-//			List<Boolean> expectedFlags,
-//			IExtLanguageManager extLanguageManager) {
-//
-//		String signature = new String(methodName) + "(";
-//
-//		String signaturesOfParameters =
-//				createSignaturesOfParameters(
-//						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
-//
-//		signature += signaturesOfParameters;
-//
-//		signature += ")";
-//
-//		return signature;
-//	}
-
-//	private static String createSignaturesOfParameters(
-//			List<String> parameterTypes,
-//			List<String> parameterNames,
-//			List<Boolean> expectedFlags,
-//			IExtLanguageManager extLanguageManager) {
-//
-//		String signature = "";
-//
-//		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
-//
-//			String parameterType = parameterTypes.get(paramIndex);
-//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
-//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
-//
-//			String signatureOfOneParameter =
-//					AbstractParameterSignatureHelper.createSignature(
-//							parameterType, parameterName, expectedFlag, extLanguageManager);
-//
-//			signature += signatureOfOneParameter;
-//
-//			if (paramIndex < parameterTypes.size() - 1) {
-//				signature += ", ";
-//			}
-//		}
-//
-//		return signature;
-//	}
-
-	public static String createSignaturesOfParameters(
-			MethodNode methodNode,
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-		int paramCount = methodNode.getParametersCount();
-
-
-		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
-
-			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
-
-			String signatureOfOneParameter = "";
-
-			if (methodParameterNode instanceof BasicParameterNode) {
-
-				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
-
-				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
-								basicParameterNode, 
-								ExtendedName.NAME_ONLY, 
-								Decorations.YES, 
-								TypeIncluded.YES, 
-								extLanguageManager);
-			} else {
-
-				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
-
-				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
-								compositeParameterNode, 
-								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
-								extLanguageManager);
-			}
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < paramCount - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-
-	}	
-
-	private static String createSignaturesOfParametersByIntrLanguage(
-			List<String> parameterTypesInIntrLanguage,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-
-		for (int paramIndex = 0; paramIndex < parameterTypesInIntrLanguage.size(); paramIndex++) {
-
-			String parameterType = parameterTypesInIntrLanguage.get(paramIndex);
-			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
-			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
-
-			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-							parameterType,
-							parameterName,
-							expectedFlag, 
-							extLanguageManager);
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < parameterTypesInIntrLanguage.size() - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-	}
+	//	private static String createSignaturesOfParametersByIntrLanguage(
+	//			List<String> parameterTypesInIntrLanguage,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//
+	//		for (int paramIndex = 0; paramIndex < parameterTypesInIntrLanguage.size(); paramIndex++) {
+	//
+	//			String parameterType = parameterTypesInIntrLanguage.get(paramIndex);
+	//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+	//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+	//
+	//			String signatureOfOneParameter = 
+	//					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//							parameterType,
+	//							parameterName,
+	//							expectedFlag, 
+	//							extLanguageManager);
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < parameterTypesInIntrLanguage.size() - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//	}
 
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 
@@ -433,7 +433,7 @@ public class MethodNodeHelper {
 	}
 
 	public static MethodNode findMethodNode(IAbstractNode anyNode) {
-		
+
 		IAbstractNode parent = anyNode;
 
 		while (parent != null) {
@@ -857,56 +857,56 @@ public class MethodNodeHelper {
 			MethodNode methodNode,
 			NodeMapper nodeMapper, 
 			NodeMapper.MappingDirection mappingDirection) {
-		
+
 		List<TestCaseNode> testCaseNodes = methodNode.getTestCases();
-		
+
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			
+
 			testCaseNode.replaceReferences(nodeMapper, mappingDirection);
 		}
 	}
-	
+
 	public static List<MethodNode> findMentioningMethodNodes(IAbstractNode abstractNode) {
-		
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
-		
+
 		if (methodNode != null) {
 			return new ArrayList<>(Arrays.asList(methodNode));
 		}
-		
+
 		if (isBasicParameterDirectlyUnderRootOrClass(abstractNode)) {
-			
+
 			List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(abstractNode.getParent());
-			
+
 			return mentioningMethodNodes;
 		}
-		
+
 		CompositeParameterNode compositeParameterNode = 
 				CompositeParameterNodeHelper.findTopComposite(abstractNode);
-		
+
 		if (compositeParameterNode == null) {
 			return new ArrayList<>();
 		}
-		
+
 		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(compositeParameterNode);
 		return mentioningMethodNodes;
 	}
 
 	private static boolean isBasicParameterDirectlyUnderRootOrClass(IAbstractNode abstractNode) {
-		
+
 		if (!(abstractNode instanceof BasicParameterNode)) {
 			return false;
 		}
-		
+
 		IAbstractNode parent = abstractNode.getParent();
-		
+
 		if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
 
 		if (parametersParentNode instanceof MethodNode) {
@@ -934,5 +934,5 @@ public class MethodNodeHelper {
 
 		return mentioningNodes;
 	}
-	
+
 }
