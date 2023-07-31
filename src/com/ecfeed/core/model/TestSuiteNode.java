@@ -61,7 +61,7 @@ public class TestSuiteNode extends AbstractNode {
 	//	public TestSuiteNode(Collection<TestCaseNode> testData) {
 	//		super("", null);
 	//
-	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); 
 	//		fTestCaseNodes = new ArrayList<>(testData);
 	//	}
 

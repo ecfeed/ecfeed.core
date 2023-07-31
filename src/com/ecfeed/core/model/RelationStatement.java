@@ -260,7 +260,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		fRightCondition.replaceReferences(nodeMapper, mappingDirection);
 	}
 
-	@Override  // TODO MO-RE obsolete
+	@Override
 	public RelationStatement makeClone() {
 
 		return 
@@ -269,7 +269,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
+	public RelationStatement createCopy(NodeMapper mapper) {
 
 		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
 

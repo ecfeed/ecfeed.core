@@ -30,8 +30,8 @@ public interface IStatement{
 	List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
 	List<String> getLabels(BasicParameterNode methodParameterNode);
 	void derandomize();
-	AbstractStatement makeClone(); // TODO MO-RE obsolete ?
-	AbstractStatement createCopy(NodeMapper mapper); // TODO MO-RE obsolete ?
+	AbstractStatement makeClone();
+	AbstractStatement createCopy(NodeMapper mapper);
 	AbstractStatement makeClone(Optional<NodeMapper> mapper);
 	void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection);
 	String getLeftOperandName();

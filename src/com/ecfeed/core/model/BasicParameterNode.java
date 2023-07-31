@@ -89,7 +89,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		createDefaultProperties();
 	}
 
-	public BasicParameterNode( // TODO MO-RE make private and use factory method instead (also other constructors)
+	public BasicParameterNode(
 			String name,
 			String type,
 			String defaultValue,
@@ -168,15 +168,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public void setDeploymentParameter(BasicParameterNode parameterNode) {
 		fDeploymentParameterNode = parameterNode;
 	}
-
-	//	@Override
-	//	public BasicParameterNode makeClone() {
-	//		BasicParameterNode parameter = makeClone(Optional.empty());
-	//
-	//		parameter.setParent(getParent());
-	//
-	//		return parameter;
-	//	}
 
 	@Override
 	public BasicParameterNode makeClone(Optional<NodeMapper> mapper) {

@@ -37,7 +37,7 @@ public interface IStatementCondition {
 	public void convert(ParameterConversionItem parameterConversionItem);
 	public String getLabel(BasicParameterNode methodParameterNode);
 	public IStatementCondition makeClone();
-	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper); // TODO MO-RE obsolete
+	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper);
 	IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper);
 	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode);
 	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection);

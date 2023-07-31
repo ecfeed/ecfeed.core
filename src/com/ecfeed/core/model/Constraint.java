@@ -586,7 +586,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 	
-	public Constraint createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
+	public Constraint createCopy(NodeMapper mapper) {
 
 		AbstractStatement precondition = fPrecondition.createCopy(mapper);
 		AbstractStatement postcondition = fPostcondition.createCopy(mapper);

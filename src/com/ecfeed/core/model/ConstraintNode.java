@@ -85,7 +85,7 @@ public class ConstraintNode extends AbstractNode {
 	//		return copy;
 	//	}
 
-	public ConstraintNode createCopy(NodeMapper mapper) {// TODO MO-RE obsolete
+	public ConstraintNode createCopy(NodeMapper mapper) {
 
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
 

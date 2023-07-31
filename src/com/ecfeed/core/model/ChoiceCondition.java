@@ -83,13 +83,13 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
+	public ChoiceCondition makeClone() {
 		// choices are not cloned
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
-	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) { // TODO MO-RE obsolete
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
 		ChoiceNode newChoiceNode = convertChoice(mapper);
 

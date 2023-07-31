@@ -144,7 +144,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return fOrigChoiceNode;
 	}
 
-	public ChoiceNode makeClone() { // TODO MO-RE remove ?
+	public ChoiceNode makeClone() {
 
 		ChoiceNode copy = makeCloneUnlink();
 
@@ -156,7 +156,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return copy;
 	}
 
-	public ChoiceNode makeCloneUnlink() { // TODO MO-RE rename ? private ?
+	public ChoiceNode makeCloneUnlink() {
 
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
