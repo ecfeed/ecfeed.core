@@ -427,35 +427,35 @@ public abstract class AbstractParameterSignatureHelper {
 		return type;
 	}
 
-//	public static String getQualifiedName(  // TODO MO-RE use createPathToTopContainerNewStandard instead of this method
-//			AbstractParameterNode abstractParameterNode,
-//			IExtLanguageManager extLanguageManager) {
-//
-//		String qualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
-//
-////		if (extLanguageManager != null) {
-////			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
-////		}
-////
-//		return qualifiedName;
-//	}
+	//	public static String getQualifiedName(  // TODO MO-RE use createPathToTopContainerNewStandard instead of this method
+	//			AbstractParameterNode abstractParameterNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String qualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+	//
+	////		if (extLanguageManager != null) {
+	////			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+	////		}
+	////
+	//		return qualifiedName;
+	//	}
 
-//	// OBSOLETE
-//	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
-//
-//		printObsoleteInfo();
-//
-//		LinkedList<String> segments = new LinkedList<>();
-//
-//		IAbstractNode parent = abstractParameterNode;
-//
-//		do {
-//			segments.addFirst(parent.getName());
-//			parent = parent.getParent();
-//		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
-//
-//		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
-//	}
+	//	// OBSOLETE
+	//	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
+	//
+	//		printObsoleteInfo();
+	//
+	//		LinkedList<String> segments = new LinkedList<>();
+	//
+	//		IAbstractNode parent = abstractParameterNode;
+	//
+	//		do {
+	//			segments.addFirst(parent.getName());
+	//			parent = parent.getParent();
+	//		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+	//
+	//		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+	//	}
 
 	// OBSOLETE
 	public static String getQualifiedName(  // TODO MO-RE convert to create signature
@@ -576,87 +576,87 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-	// OBSOLETE
-	public static String createSignature(
-			CompositeParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
+	//	// OBSOLETE
+	//	public static String createSignature(
+	//			CompositeParameterNode parameter, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		String signatureOfName = createSignatureOfParameterNewStandard(
+	//				parameter,
+	//				ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
+	//				extLanguageManager);
+	//
+	//		String signature = 
+	//				createSignature(
+	//						createSignatureOfParameterTypeNewStandard(parameter, extLanguageManager),
+	//						signatureOfName,
+	//						false,
+	//						extLanguageManager);
+	//
+	//		return signature;
+	//	}	
 
-		printObsoleteInfo();
+	//	// OBSOLETE
+	//	public static String createSignature(
+	//			String parameterType,
+	//			String parameterName,
+	//			Boolean expectedFlag,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		String signature = "";
+	//
+	//		if (expectedFlag != null) {
+	//			String expectedDecoration = createExpectedDecoration(expectedFlag);
+	//			signature += expectedDecoration;
+	//		}
+	//
+	//		if (parameterType != null) {
+	//			signature += parameterType;
+	//		}
+	//
+	//		if (parameterName != null) {
+	//
+	//			signature += extLanguageManager.getTypeSeparator();
+	//			signature += " ";
+	//			signature += parameterName;
+	//		}
+	//
+	//		return signature;
+	//	}
 
-		String signatureOfName = createSignatureOfParameterNewStandard(
-				parameter,
-				ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
-				extLanguageManager);
-
-		String signature = 
-				createSignature(
-						createSignatureOfParameterTypeNewStandard(parameter, extLanguageManager),
-						signatureOfName,
-						false,
-						extLanguageManager);
-
-		return signature;
-	}	
-
-	// OBSOLETE
-	public static String createSignature(
-			String parameterType,
-			String parameterName,
-			Boolean expectedFlag,
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String signature = "";
-
-		if (expectedFlag != null) {
-			String expectedDecoration = createExpectedDecoration(expectedFlag);
-			signature += expectedDecoration;
-		}
-
-		if (parameterType != null) {
-			signature += parameterType;
-		}
-
-		if (parameterName != null) {
-
-			signature += extLanguageManager.getTypeSeparator();
-			signature += " ";
-			signature += parameterName;
-		}
-
-		return signature;
-	}
-
-	// OBSOLETE
-	public static String createSignature(
-			BasicParameterNode parameter, 
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		//		String signature = 
-		//				createSignature(
-		//						createSignatureOfType(parameter, extLanguageManager),
-		//						createSignatureOfParameterName(parameter, extLanguageManager),
-		//						parameter.isExpected(),
-		//						extLanguageManager);
-
-		String signatureOfParameterName = 
-				createSignatureOfParameterNewStandard(
-						parameter,
-						ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
-						extLanguageManager);
-
-		String signature = 
-				createSignature(
-						createSignatureOfType(parameter, extLanguageManager),
-						signatureOfParameterName,
-						parameter.isExpected(),
-						extLanguageManager);
-
-		return signature;
-	}
+	//	// OBSOLETE
+	//	public static String createSignature(
+	//			BasicParameterNode parameter, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		//		String signature = 
+	//		//				createSignature(
+	//		//						createSignatureOfType(parameter, extLanguageManager),
+	//		//						createSignatureOfParameterName(parameter, extLanguageManager),
+	//		//						parameter.isExpected(),
+	//		//						extLanguageManager);
+	//
+	//		String signatureOfParameterName = 
+	//				createSignatureOfParameterNewStandard(
+	//						parameter,
+	//						ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
+	//						extLanguageManager);
+	//
+	//		String signature = 
+	//				createSignature(
+	//						createSignatureOfType(parameter, extLanguageManager),
+	//						signatureOfParameterName,
+	//						parameter.isExpected(),
+	//						extLanguageManager);
+	//
+	//		return signature;
+	//	}
 
 	// OBSOLETE
 	public static String createReverseSignature(

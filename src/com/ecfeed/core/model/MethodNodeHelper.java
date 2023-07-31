@@ -278,7 +278,7 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-//	public static String createSignature( // XYX
+//	public static String createSignature(
 //			String methodName,
 //			List<String> parameterTypes,
 //			List<String> parameterNames,
