@@ -27,10 +27,14 @@ public class GlobalParameterNodeHelperTest {
 		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		globalParameterNode.setParent(rootNode);
 
-		String qualifiedName = AbstractParameterSignatureHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
+		String qualifiedName = AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+				globalParameterNode, new ExtLanguageManagerForJava());
+		
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = AbstractParameterSignatureHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+				globalParameterNode, new ExtLanguageManagerForSimple());
+		
 		assertEquals("global 1", qualifiedName);
 
 

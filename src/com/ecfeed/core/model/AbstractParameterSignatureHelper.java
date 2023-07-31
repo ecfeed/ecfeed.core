@@ -356,7 +356,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		printObsoleteInfo();
 
-		String signature = getQualifiedName(abstractParameterNode, new ExtLanguageManagerForJava());
+		String signature = createPathToTopContainerNewStandard(abstractParameterNode, new ExtLanguageManagerForJava());
 
 		return signature;
 	}
@@ -375,17 +375,17 @@ public abstract class AbstractParameterSignatureHelper {
 		if (context == null) {
 
 			String signatureOfParameter = 
-					getQualifiedName(parameter, new ExtLanguageManagerForJava());
+					createPathToTopContainerNewStandard(parameter, new ExtLanguageManagerForJava());
 
 			return signatureOfParameter;
 		}
 
 		String signatureOfContext = 
-				getQualifiedName(
+				createPathToTopContainerNewStandard(
 						context, new ExtLanguageManagerForJava());
 
 		String signatureOfParameter = 
-				getQualifiedName(
+				createPathToTopContainerNewStandard(
 						parameter, new ExtLanguageManagerForJava());
 
 		return signatureOfContext + LINK_SPECIFIER_TEXT + signatureOfParameter;
@@ -399,7 +399,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		printObsoleteInfo();
 
-		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
+		String qualifiedName = createPathToTopContainerNewStandard(globalParameterNode, extLanguageManager);
 
 		if (signatureType == SignatureHelper.SignatureType.WITHOUT_TYPE) {
 			return qualifiedName;
@@ -427,35 +427,35 @@ public abstract class AbstractParameterSignatureHelper {
 		return type;
 	}
 
-	public static String getQualifiedName(  // TODO MO-RE convert to create signature
-			AbstractParameterNode abstractParameterNode,
-			IExtLanguageManager extLanguageManager) {
+//	public static String getQualifiedName(  // TODO MO-RE use createPathToTopContainerNewStandard instead of this method
+//			AbstractParameterNode abstractParameterNode,
+//			IExtLanguageManager extLanguageManager) {
+//
+//		String qualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+//
+////		if (extLanguageManager != null) {
+////			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+////		}
+////
+//		return qualifiedName;
+//	}
 
-		String qualifiedName = getQualifiedName(abstractParameterNode);
-
-		if (extLanguageManager != null) {
-			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
-		}
-
-		return qualifiedName;
-	}
-
-	// OBSOLETE
-	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
-
-		printObsoleteInfo();
-
-		LinkedList<String> segments = new LinkedList<>();
-
-		IAbstractNode parent = abstractParameterNode;
-
-		do {
-			segments.addFirst(parent.getName());
-			parent = parent.getParent();
-		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
-
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
-	}
+//	// OBSOLETE
+//	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
+//
+//		printObsoleteInfo();
+//
+//		LinkedList<String> segments = new LinkedList<>();
+//
+//		IAbstractNode parent = abstractParameterNode;
+//
+//		do {
+//			segments.addFirst(parent.getName());
+//			parent = parent.getParent();
+//		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+//
+//		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+//	}
 
 	// OBSOLETE
 	public static String getQualifiedName(  // TODO MO-RE convert to create signature
@@ -466,10 +466,10 @@ public abstract class AbstractParameterSignatureHelper {
 		printObsoleteInfo();
 
 		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
-			return getQualifiedName(abstractParameterNode, extLanguageManager);
+			return createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 		}
 
-		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
+		String ownQualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
 
 		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
 
@@ -489,7 +489,7 @@ public abstract class AbstractParameterSignatureHelper {
 				}
 			}
 
-		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
+		String linkingSignature = createPathToTopContainerNewStandard(candidate != null ? candidate : linkingContext, extLanguageManager);
 
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}

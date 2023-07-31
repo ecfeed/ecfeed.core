@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
@@ -167,7 +168,10 @@ public class BasicParameterNodeHelper {
 		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
 
-	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {
+	private static BasicParameterNode findParameterByQualifiedNameRecursive(
+			String parameterName, 
+			IAbstractNode parameterParent) {
+		
 		MethodNode parent = MethodNodeHelper.findMethodNode(parameterParent);
 
 		if (parent == null) {
@@ -177,7 +181,12 @@ public class BasicParameterNodeHelper {
 		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterName)) {
+			
+			String qualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+			
+			if (qualifiedName.equals(parameterName)) {
 				return parameter;
 			}
 		}

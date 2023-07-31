@@ -22,6 +22,7 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -193,7 +194,11 @@ public class ParametersWithContextLister {
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			String qualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+			
+			if (qualifiedName.equals(parameterNameToFind)) {
 				return parameter;
 			}
 

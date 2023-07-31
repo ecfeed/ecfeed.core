@@ -72,7 +72,8 @@ public class MethodParameterNodeHelper {
 		final AbstractParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + AbstractParameterSignatureHelper.getQualifiedName(link, extLanguageManager);
+			signature += "[LINKED]->" + AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+					link, extLanguageManager);
 		}
 
 		return signature;

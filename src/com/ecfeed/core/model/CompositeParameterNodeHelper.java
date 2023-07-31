@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
@@ -259,7 +260,10 @@ public class CompositeParameterNodeHelper {
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedCompositeParameters(true));
 
 		for (CompositeParameterNode parameter : parameters) {
-			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+
+			String name = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
 
 			if (name.equals(parameterName)) {
 				return parameter;
@@ -385,7 +389,7 @@ public class CompositeParameterNodeHelper {
 	}
 
 	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
-		
+
 		if (abstractNode == null) {
 			return null;
 		}

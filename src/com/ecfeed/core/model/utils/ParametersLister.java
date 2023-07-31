@@ -21,6 +21,7 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -93,13 +94,13 @@ public class ParametersLister {
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
 		if (parameterNameToFind.contains(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
-			return findParameterQualified(parameterNameToFind);
+			return findParameterByQualifiedPath(parameterNameToFind);
 		} else {
-			return findParameterNonQualified(parameterNameToFind);
+			return findParameterByNonQualifiedPath(parameterNameToFind);
 		}
 	}
 
-	public AbstractParameterNode findParameterNonQualified(String parameterNameToFind) {
+	public AbstractParameterNode findParameterByNonQualifiedPath(String parameterNameToFind) {
 
 		Optional<AbstractParameterNode> result = fElementLister.getReferenceToElements().stream()
 				.filter(e -> e.getName().equals(parameterNameToFind))
@@ -112,11 +113,15 @@ public class ParametersLister {
 		return null;
 	}
 
-	public AbstractParameterNode findParameterQualified(String parameterNameToFind) {
+	public AbstractParameterNode findParameterByQualifiedPath(String parameterNameToFind) {
 
 		for (AbstractParameterNode parameter : fElementLister.getReferenceToElements()) {
 
-			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			String qualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+			
+			if (qualifiedName.equals(parameterNameToFind)) {
 				return parameter;
 			}
 
