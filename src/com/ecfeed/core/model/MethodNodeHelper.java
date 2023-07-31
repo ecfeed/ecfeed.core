@@ -137,7 +137,7 @@ public class MethodNodeHelper {
 		for (AbstractParameterNode parameter : parameters) {
 
 			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureNewStandard(
+					AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 							parameter,
 							extendedName,
 							parameterDecorations,
@@ -166,7 +166,7 @@ public class MethodNodeHelper {
 			AbstractParameterNode parameter = parameters.get(paramIndex);
 
 			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureNewStandard(
+					AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 							parameter, 
 							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
 							extLanguageManager);
@@ -345,7 +345,7 @@ public class MethodNodeHelper {
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureNewStandard(
+						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 								basicParameterNode, 
 								ExtendedName.NAME_ONLY, 
 								Decorations.YES, 
@@ -356,7 +356,7 @@ public class MethodNodeHelper {
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureNewStandard(
+						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 								compositeParameterNode, 
 								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
 								extLanguageManager);

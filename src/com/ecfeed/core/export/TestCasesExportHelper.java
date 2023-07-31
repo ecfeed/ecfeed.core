@@ -186,7 +186,7 @@ public class TestCasesExportHelper {
 
 			//result = MethodParameterNodeHelper.getName(parameter, extLanguageManager);
 
-			result = AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+			result = AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 					parameterWithContext.getLinkingContext(), // may be parameter with link or linking context
 					ExtendedName.PATH_TO_TOP_CONTAINTER,
 					TypeOfLink.NORMAL,

@@ -179,7 +179,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
 
 		String nameInIntrLanguage = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						linkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -207,7 +207,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
 
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						leftParameterLinkingCondition,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,

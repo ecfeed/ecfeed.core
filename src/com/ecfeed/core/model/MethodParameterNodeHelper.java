@@ -57,7 +57,7 @@ public class MethodParameterNodeHelper {
 
 		//		String name = AbstractParameterSignatureHelper.createSignatureOfParameterName(methodParameterNode, extLanguageManager);
 		String name = 
-				AbstractParameterSignatureHelper.createSignatureNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 						methodParameterNode,
 						ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
 						extLanguageManager);

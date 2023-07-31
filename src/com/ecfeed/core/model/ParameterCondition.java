@@ -274,7 +274,7 @@ public class ParameterCondition implements IStatementCondition {
 		//						fRightParameterNode, fRightParameterLinkingContext);
 
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						fRightParameterLinkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,

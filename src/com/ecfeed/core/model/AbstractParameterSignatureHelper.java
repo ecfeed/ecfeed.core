@@ -52,7 +52,7 @@ public abstract class AbstractParameterSignatureHelper {
 			AbstractParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
 
-		String signature = createSignatureWithLinkNewStandard(
+		String signature = createSignatureOfParameterWithLinkNewStandard(
 				parameter,
 				ExtendedName.NAME_ONLY,
 				TypeOfLink.IRRELEVANT,
@@ -68,14 +68,14 @@ public abstract class AbstractParameterSignatureHelper {
 		return elements[1] + " " + elements[0];
 	}
 
-	public static String createSignatureNewStandard( // TODO MO-RE rename createSignatureOfParameterNewStandard
+	public static String createSignatureOfParameterNewStandard(
 			AbstractParameterNode parameter,
 			ExtendedName extendedNameTypeOfParameter,
 			Decorations decorations,
 			TypeIncluded typeIncluded,
 			IExtLanguageManager extLanguageManager) {
 
-		String signature = createSignatureWithLinkNewStandard(
+		String signature = createSignatureOfParameterWithLinkNewStandard(
 				parameter,
 				extendedNameTypeOfParameter,
 				TypeOfLink.IRRELEVANT,
@@ -88,7 +88,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return signature;
 	}
 
-	public static String createSignatureWithLinkNewStandard( // TODO MO-RE rename createSignatureOfParameterWithLinkNewStandard
+	public static String createSignatureOfParameterWithLinkNewStandard( 
 			AbstractParameterNode parameterWhichHasLink, // may be parameter with link or linking context
 			ExtendedName extendedNameTypeOfParameter,
 			TypeOfLink typeOfLink,
@@ -137,7 +137,7 @@ public abstract class AbstractParameterSignatureHelper {
 		if (context == null) {
 
 			String signatureOfParameterWithLink = 
-					AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+					AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 							parameter,
 							ExtendedName.PATH_TO_TOP_CONTAINTER,
 							TypeOfLink.NORMAL,
@@ -151,7 +151,7 @@ public abstract class AbstractParameterSignatureHelper {
 		}
 
 		String signatureOfParameterWithContext = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						context,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -200,7 +200,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		} else {
 
-			signature = createSignatureNewStandard(
+			signature = createSignatureOfParameterNewStandard(
 					parameter, ExtendedName.PATH_TO_TOP_CONTAINTER, Decorations.NO, TypeIncluded.NO, 
 					new ExtLanguageManagerForJava());
 
@@ -375,18 +375,18 @@ public abstract class AbstractParameterSignatureHelper {
 		if (context == null) {
 
 			String signatureOfParameter = 
-					createSignature(parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
+					createSignature(parameter, new ExtLanguageManagerForJava());
 
 			return signatureOfParameter;
 		}
 
 		String signatureOfContext = 
 				createSignatureWithPathToTopParametersParent(
-						context, new ExtLanguageManagerForJava());  // TODO MO-RE
+						context, new ExtLanguageManagerForJava());
 
 		String signatureOfParameter = 
 				createSignatureWithPathToTopParametersParent(
-						parameter, new ExtLanguageManagerForJava());  // TODO MO-RE
+						parameter, new ExtLanguageManagerForJava());
 
 		return signatureOfContext + LINK_SPECIFIER_TEXT + signatureOfParameter;
 	}
@@ -584,7 +584,7 @@ public abstract class AbstractParameterSignatureHelper {
 
 		printObsoleteInfo();
 
-		String signatureOfName = createSignatureNewStandard(
+		String signatureOfName = createSignatureOfParameterNewStandard(
 				parameter,
 				ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
 				extLanguageManager);
@@ -644,7 +644,7 @@ public abstract class AbstractParameterSignatureHelper {
 		//						extLanguageManager);
 
 		String signatureOfParameterName = 
-				createSignatureNewStandard(
+				createSignatureOfParameterNewStandard(
 						parameter,
 						ExtendedName.NAME_ONLY,	Decorations.NO, TypeIncluded.NO,
 						extLanguageManager);

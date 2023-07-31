@@ -20,333 +20,331 @@ import java.util.List;
 
 public class RemoteTCProviderStandard implements ITCProvider {
 
-    private static final int PROGRESS_UNKNOWN = -1;
-    private IWebServiceClient fWebServiceClient;
-    private WebServiceResponse fWebServiceResponse;
-    private MethodNode fMethodNode;
-    private GenServiceProtocolState fGenServiceProtocolState;
-    private IEcfProgressMonitor fEcfProgressMonitor;
-    private String fBufferedLine;
-    private int fTotalProgress;
+	private static final int PROGRESS_UNKNOWN = -1;
+	private IWebServiceClient fWebServiceClient;
+	private WebServiceResponse fWebServiceResponse;
+	private MethodNode fMethodNode;
+	private GenServiceProtocolState fGenServiceProtocolState;
+	private IEcfProgressMonitor fEcfProgressMonitor;
+	private String fBufferedLine;
+	private int fTotalProgress;
 
 
-    public RemoteTCProviderStandard(IWebServiceClient webServiceClient) {
-        fWebServiceClient = webServiceClient;
-        fGenServiceProtocolState = GenServiceProtocolState.BEFORE_BEG_DATA;
-    }
+	public RemoteTCProviderStandard(IWebServiceClient webServiceClient) {
+		fWebServiceClient = webServiceClient;
+		fGenServiceProtocolState = GenServiceProtocolState.BEFORE_BEG_DATA;
+	}
 
-    @Override
-    public void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) {
+	@Override
+	public void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) {
 
-        RemoteTCProviderInitData remoteTCProviderInitData = (RemoteTCProviderInitData)initData;
-        String requestType = remoteTCProviderInitData.requestType;
-        String requestText = remoteTCProviderInitData.requestText;
+		RemoteTCProviderInitData remoteTCProviderInitData = (RemoteTCProviderInitData)initData;
+		String requestType = remoteTCProviderInitData.requestType;
+		String requestText = remoteTCProviderInitData.requestText;
 
-        fEcfProgressMonitor = progressMonitor;
+		fEcfProgressMonitor = progressMonitor;
 
-        fMethodNode = remoteTCProviderInitData.methodNode;
+		fMethodNode = remoteTCProviderInitData.methodNode;
 
-        fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
+		fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
 
-        if (!fWebServiceResponse.isResponseStatusOk()) {
-            ProviderHelper.reportInvalidResponseException(fWebServiceResponse, true);
-        }
+		if (!fWebServiceResponse.isResponseStatusOk()) {
+			ProviderHelper.reportInvalidResponseException(fWebServiceResponse, true);
+		}
 
-        fTotalProgress = PROGRESS_UNKNOWN;
+		fTotalProgress = PROGRESS_UNKNOWN;
 
-        processInitialTags();
+		processInitialTags();
 
-        if (fEcfProgressMonitor.isCanceled()) {
-            return;
-        }
-    }
+		if (fEcfProgressMonitor.isCanceled()) {
+			return;
+		}
+	}
 
-    @Override
-    public void close() {
+	@Override
+	public void close() {
 
-        try {
-            fWebServiceResponse.getResponseBufferedReader().close();
-        } catch (Exception e) {
-            LogHelperCore.logCatch(e);
-        }
+		try {
+			fWebServiceResponse.getResponseBufferedReader().close();
+		} catch (Exception e) {
+			LogHelperCore.logCatch(e);
+		}
 
-        fWebServiceClient.close();
-    }
+		fWebServiceClient.close();
+	}
 
-    @Override
-    public MethodNode getMethodNode() {
+	@Override
+	public MethodNode getMethodNode() {
 
-        return fMethodNode;
-    }
+		return fMethodNode;
+	}
 
-    @Override
-    public TestCaseNode getNextTestCase() {
+	@Override
+	public TestCaseNode getNextTestCase() {
 
-        while(true) {
+		while(true) {
 
-            if (fEcfProgressMonitor.isCanceled()) {
-                return null;
-            }
+			if (fEcfProgressMonitor.isCanceled()) {
+				return null;
+			}
 
-            String line = readLine(fWebServiceResponse.getResponseBufferedReader());
+			String line = readLine(fWebServiceResponse.getResponseBufferedReader());
 
-            if (line == null) {
-                ExceptionHelper.reportRuntimeException("Truncated data from remote testcases provider."); // TODO
-            }
+			if (line == null) {
+				ExceptionHelper.reportRuntimeException("Truncated data from remote testcases provider."); // TODO
+			}
 
-            IMainSchema mainSchema = MainSchemaParser.parse(line);
+			IMainSchema mainSchema = MainSchemaParser.parse(line);
 
-            if (processProgress(mainSchema)) {
-                continue;
-            }
+			if (processProgress(mainSchema)) {
+				continue;
+			}
 
-            fGenServiceProtocolState = processProtocolState(mainSchema, fGenServiceProtocolState);
+			fGenServiceProtocolState = processProtocolState(mainSchema, fGenServiceProtocolState);
 
-            if (fGenServiceProtocolState == GenServiceProtocolState.AFTER_END_DATA) {
-                fEcfProgressMonitor.setTaskEnd();
-                return null;
-            }
+			if (fGenServiceProtocolState == GenServiceProtocolState.AFTER_END_DATA) {
+				fEcfProgressMonitor.setTaskEnd();
+				return null;
+			}
 
-            if (mainSchema instanceof ResultTestCaseSchema) {
-                return createTestCase((ResultTestCaseSchema)mainSchema);
-            }
-        }
-    }
+			if (mainSchema instanceof ResultTestCaseSchema) {
+				return createTestCase((ResultTestCaseSchema)mainSchema);
+			}
+		}
+	}
 
-    @Override
-    public List<Constraint> getConstraints() {
-        return null;
-    }
+	@Override
+	public List<Constraint> getConstraints() {
+		return null;
+	}
 
-    public void processInitialTags() {
+	public void processInitialTags() {
 
-        fBufferedLine = null;
-        
-        while(true) {
+		fBufferedLine = null;
 
-            if (fEcfProgressMonitor.isCanceled()) {
-                return;
-            }
+		while(true) {
 
-            String line = readLine(fWebServiceResponse.getResponseBufferedReader());
+			if (fEcfProgressMonitor.isCanceled()) {
+				return;
+			}
 
-            if (line == null) {
-                ExceptionHelper.reportRuntimeException("Truncated data from remote testcases provider."); // TODO
-            }
+			String line = readLine(fWebServiceResponse.getResponseBufferedReader());
 
-            IMainSchema mainSchema = MainSchemaParser.parse(line);
+			if (line == null) {
+				ExceptionHelper.reportRuntimeException("Truncated data from remote testcases provider."); // TODO
+			}
 
-            if (processProgress(mainSchema)) {
-                continue;
-            }
+			IMainSchema mainSchema = MainSchemaParser.parse(line);
 
-            fGenServiceProtocolState = processProtocolState(mainSchema, fGenServiceProtocolState);
+			if (processProgress(mainSchema)) {
+				continue;
+			}
 
-            if (fGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_CHUNK) {
-                return;
-            }
-        }
-    }
+			fGenServiceProtocolState = processProtocolState(mainSchema, fGenServiceProtocolState);
 
-    private String readLine(BufferedReader responseBufferedReader) {
+			if (fGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_CHUNK) {
+				return;
+			}
+		}
+	}
 
-        if (fBufferedLine != null) {
-            String tmpLine = new String(fBufferedLine);
-            fBufferedLine = null;
-            return tmpLine;
-        }
+	private String readLine(BufferedReader responseBufferedReader) {
 
-        try {
-            String line = responseBufferedReader.readLine();
-            return line;
+		if (fBufferedLine != null) {
+			String tmpLine = new String(fBufferedLine);
+			fBufferedLine = null;
+			return tmpLine;
+		}
 
-        } catch (IOException e) {
-            ExceptionHelper.reportRuntimeException("Cannot read line from response.", e);
-        }
+		try {
+			String line = responseBufferedReader.readLine();
+			return line;
 
-        return null;
-    }
+		} catch (IOException e) {
+			ExceptionHelper.reportRuntimeException("Cannot read line from response.", e);
+		}
 
-    private boolean processProgress(IMainSchema mainSchema) {
+		return null;
+	}
 
-        if (mainSchema instanceof ResultTotalProgressSchema) {
+	private boolean processProgress(IMainSchema mainSchema) {
 
-            ResultTotalProgressSchema resultTotalProgressSchema = (ResultTotalProgressSchema)mainSchema;
-            fTotalProgress = resultTotalProgressSchema.getTotalProgress();
-            fEcfProgressMonitor.setTotalProgress(fTotalProgress);
-            fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
-            return true;
-        }
+		if (mainSchema instanceof ResultTotalProgressSchema) {
 
-        if (mainSchema instanceof ResultProgressSchema) {
+			ResultTotalProgressSchema resultTotalProgressSchema = (ResultTotalProgressSchema)mainSchema;
+			fTotalProgress = resultTotalProgressSchema.getTotalProgress();
+			fEcfProgressMonitor.setTotalProgress(fTotalProgress);
+			fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
+			return true;
+		}
 
-            ResultProgressSchema resultProgressSchema = (ResultProgressSchema)mainSchema;
-            fEcfProgressMonitor.setCurrentProgress(resultProgressSchema.getProgress());
-            return true;
-        }
+		if (mainSchema instanceof ResultProgressSchema) {
 
-        return false;
-    }
+			ResultProgressSchema resultProgressSchema = (ResultProgressSchema)mainSchema;
+			fEcfProgressMonitor.setCurrentProgress(resultProgressSchema.getProgress());
+			return true;
+		}
 
-    private static GenServiceProtocolState processProtocolState(
-            IMainSchema mainSchema,
-            GenServiceProtocolState currentGenServiceProtocolState) {
+		return false;
+	}
 
-        if (mainSchema instanceof ResultInfoSchema) {
-            return currentGenServiceProtocolState;
-        }
+	private static GenServiceProtocolState processProtocolState(
+			IMainSchema mainSchema,
+			GenServiceProtocolState currentGenServiceProtocolState) {
 
-        if (mainSchema instanceof ResultErrorSchema) {
-            ResultErrorSchema resultErrorSchema = (ResultErrorSchema)mainSchema;
-            ExceptionHelper.reportRuntimeException("Server responded with error: " + resultErrorSchema.getError());
-        }
+		if (mainSchema instanceof ResultInfoSchema) {
+			return currentGenServiceProtocolState;
+		}
 
-        if (currentGenServiceProtocolState == GenServiceProtocolState.BEFORE_BEG_DATA) {
-            return processStateBeforeBegData(mainSchema);
-        }
+		if (mainSchema instanceof ResultErrorSchema) {
+			ResultErrorSchema resultErrorSchema = (ResultErrorSchema)mainSchema;
+			ExceptionHelper.reportRuntimeException("Server responded with error: " + resultErrorSchema.getError());
+		}
 
-        if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_DATA) {
-            return processStateAfterBegData(mainSchema);
-        }
+		if (currentGenServiceProtocolState == GenServiceProtocolState.BEFORE_BEG_DATA) {
+			return processStateBeforeBegData(mainSchema);
+		}
 
-        if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_CHUNK) {
-            return processStateAfterBegChunk(mainSchema);
-        }
+		if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_DATA) {
+			return processStateAfterBegData(mainSchema);
+		}
 
-        if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_END_CHUNK) {
-            return processStateAfterEndChunk(mainSchema);
-        }
+		if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_CHUNK) {
+			return processStateAfterBegChunk(mainSchema);
+		}
 
-        ExceptionHelper.reportRuntimeException("Invalid protocol state.");
-        return null;
-    }
+		if (currentGenServiceProtocolState == GenServiceProtocolState.AFTER_END_CHUNK) {
+			return processStateAfterEndChunk(mainSchema);
+		}
 
-    private static GenServiceProtocolState processStateBeforeBegData(IMainSchema mainSchema) {
+		ExceptionHelper.reportRuntimeException("Invalid protocol state.");
+		return null;
+	}
 
-        if (!(mainSchema instanceof ResultStatusSchema)) {
-            ExceptionHelper.reportRuntimeException("Status line expected.");
-        }
+	private static GenServiceProtocolState processStateBeforeBegData(IMainSchema mainSchema) {
 
-        ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
+		if (!(mainSchema instanceof ResultStatusSchema)) {
+			ExceptionHelper.reportRuntimeException("Status line expected.");
+		}
 
-        String status = resultStatusSchema.getStatus();
+		ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
 
-        if (!GenServiceProtocolHelper.isTagBegData(status)) {
-            ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_BEG_DATA);
-        }
+		String status = resultStatusSchema.getStatus();
 
-        return GenServiceProtocolState.AFTER_BEG_DATA;
-    }
+		if (!GenServiceProtocolHelper.isTagBegData(status)) {
+			ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_BEG_DATA);
+		}
 
-    private static GenServiceProtocolState processStateAfterBegData(
-            IMainSchema mainSchema) {
+		return GenServiceProtocolState.AFTER_BEG_DATA;
+	}
 
-        if (!(mainSchema instanceof ResultStatusSchema)) {
-            ExceptionHelper.reportRuntimeException("Status line expected.");
-        }
+	private static GenServiceProtocolState processStateAfterBegData(
+			IMainSchema mainSchema) {
 
-        ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
+		if (!(mainSchema instanceof ResultStatusSchema)) {
+			ExceptionHelper.reportRuntimeException("Status line expected.");
+		}
 
-        String status = resultStatusSchema.getStatus();
+		ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
 
-        if (!GenServiceProtocolHelper.isTagBegChunk(status)) {
-            ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_BEG_CHUNK);
-        }
+		String status = resultStatusSchema.getStatus();
 
-        return GenServiceProtocolState.AFTER_BEG_CHUNK;
-    }
+		if (!GenServiceProtocolHelper.isTagBegChunk(status)) {
+			ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_BEG_CHUNK);
+		}
 
-    private static GenServiceProtocolState processStateAfterBegChunk(
-            IMainSchema mainSchema) {
+		return GenServiceProtocolState.AFTER_BEG_CHUNK;
+	}
 
-        if (mainSchema instanceof ResultTestCaseSchema) {
-            return GenServiceProtocolState.AFTER_BEG_CHUNK;
-        }
+	private static GenServiceProtocolState processStateAfterBegChunk(
+			IMainSchema mainSchema) {
 
-        if (mainSchema instanceof ResultStatusSchema) {
+		if (mainSchema instanceof ResultTestCaseSchema) {
+			return GenServiceProtocolState.AFTER_BEG_CHUNK;
+		}
 
-            ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
+		if (mainSchema instanceof ResultStatusSchema) {
 
-            String status = resultStatusSchema.getStatus();
+			ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
 
-            if (!GenServiceProtocolHelper.isTagEndChunk(status)) {
-                ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_END_CHUNK);
-            }
+			String status = resultStatusSchema.getStatus();
 
-            return GenServiceProtocolState.AFTER_END_CHUNK;
-        }
+			if (!GenServiceProtocolHelper.isTagEndChunk(status)) {
+				ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_END_CHUNK);
+			}
 
-        ExceptionHelper.reportRuntimeException("Invalid command line.");
-        return null;
-    }
+			return GenServiceProtocolState.AFTER_END_CHUNK;
+		}
 
-    private static GenServiceProtocolState processStateAfterEndChunk(IMainSchema mainSchema) {
+		ExceptionHelper.reportRuntimeException("Invalid command line.");
+		return null;
+	}
 
-        if (!(mainSchema instanceof ResultStatusSchema)) {
-            ExceptionHelper.reportRuntimeException("Status line expected.");
-        }
+	private static GenServiceProtocolState processStateAfterEndChunk(IMainSchema mainSchema) {
 
-        ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
+		if (!(mainSchema instanceof ResultStatusSchema)) {
+			ExceptionHelper.reportRuntimeException("Status line expected.");
+		}
 
-        String status = resultStatusSchema.getStatus();
+		ResultStatusSchema resultStatusSchema = (ResultStatusSchema)mainSchema;
 
-        if (!GenServiceProtocolHelper.isTagEndData(status)) {
-            ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_END_DATA);
-        }
+		String status = resultStatusSchema.getStatus();
 
-        return GenServiceProtocolState.AFTER_END_DATA;
-    }
+		if (!GenServiceProtocolHelper.isTagEndData(status)) {
+			ExceptionHelper.reportRuntimeException("Expected status: " + GenServiceProtocolHelper.TAG_END_DATA);
+		}
 
-    private TestCaseNode createTestCase(ResultTestCaseSchema testCaseSchema) {
+		return GenServiceProtocolState.AFTER_END_DATA;
+	}
 
-// TODO mo-re All methods must be deployed before generating the test case.
-        int parametersCount = 0;
-        
-        if (getMethodNode().isDeployed()) {
-        	parametersCount = getMethodNode().getDeployedParameters().size();
-        } else {
-        	parametersCount = getMethodNode().getChildrenCount();
-        }
+	private TestCaseNode createTestCase(ResultTestCaseSchema testCaseSchema) {
 
-        ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
-        List<ChoiceNode> choiceNodes = new ArrayList<>();
+		int parametersCount = 0;
 
-        for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
-        	
-// TODO mo-re All methods must be deployed before generating the test case.
-        	BasicParameterNode basicParameterNode;
-            
-            if (getMethodNode().isDeployed()) {
-            	basicParameterNode = getMethodNode().getDeployedParameters().get(paramIndex);
-            } else {
-            	AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
-            	
-            	if (abstractParameterNode instanceof CompositeParameterNode) {
-                	continue;
-                }
-            	
-            	basicParameterNode = (BasicParameterNode) abstractParameterNode;
-            }
+		if (getMethodNode().isDeployed()) {
+			parametersCount = getMethodNode().getDeployedParameters().size();
+		} else {
+			parametersCount = getMethodNode().getChildrenCount();
+		}
 
-            String choiceName = choiceSchemas[paramIndex].getName();
-            String choiceValue = choiceSchemas[paramIndex].getValue();
-            ChoiceNode choiceNode;
+		ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
+		List<ChoiceNode> choiceNodes = new ArrayList<>();
 
-            if (basicParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
-                choiceNode = new ChoiceNode(choiceName, choiceValue, basicParameterNode.getModelChangeRegistrator());
-                choiceNode.setParent(basicParameterNode);
-            } else {
-                choiceNode = BasicParameterNodeHelper.findChoice(basicParameterNode, choiceName);
-            }
+		for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
 
-            if (choiceNode == null) {
-                ExceptionHelper.reportRuntimeException("Cannot find choice node for name: " + choiceName + ".");
-            }
+			BasicParameterNode basicParameterNode;
 
-            choiceNodes.add(choiceNode);
-        }
+			if (getMethodNode().isDeployed()) {
+				basicParameterNode = getMethodNode().getDeployedParameters().get(paramIndex);
+			} else {
+				AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
 
-        return new TestCaseNode("TestSuite", null, choiceNodes);
-    }
+				if (abstractParameterNode instanceof CompositeParameterNode) {
+					continue;
+				}
+
+				basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			}
+
+			String choiceName = choiceSchemas[paramIndex].getName();
+			String choiceValue = choiceSchemas[paramIndex].getValue();
+			ChoiceNode choiceNode;
+
+			if (basicParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
+				choiceNode = new ChoiceNode(choiceName, choiceValue, basicParameterNode.getModelChangeRegistrator());
+				choiceNode.setParent(basicParameterNode);
+			} else {
+				choiceNode = BasicParameterNodeHelper.findChoice(basicParameterNode, choiceName);
+			}
+
+			if (choiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find choice node for name: " + choiceName + ".");
+			}
+
+			choiceNodes.add(choiceNode);
+		}
+
+		return new TestCaseNode("TestSuite", null, choiceNodes);
+	}
 
 }
