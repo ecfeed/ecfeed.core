@@ -16,27 +16,35 @@ import java.util.List;
 
 public class XmlComparator {
 
-	public static boolean areXmlsEqual(String xml1, String xml2) {
+	public static String compareXmls(String xml1, String xml2) {
 
-		IntegerHolder position1 = new IntegerHolder(0);
-		IntegerHolder position2 = new IntegerHolder(0);
+			IntegerHolder position1 = new IntegerHolder(0);
+			IntegerHolder position2 = new IntegerHolder(0);
 
-		for(;;) {
+			for(;;) {
 
-			String tag1 = getTag(xml1, position1);
-			String tag2 = getTag(xml2, position2);
+				String tag1 = getTag(xml1, position1);
+				String tag2 = getTag(xml2, position2);
 
-			if (!StringHelper.isEqual(tag1, tag2)) {
-				ExceptionHelper.reportRuntimeException("Tags differ.\n  Tag1: " + tag1 + "  \nTag2: " + tag2);
-				return false; // TODO MO-RE report exception with tags which differ
+				if (!StringHelper.isEqual(tag1, tag2)) {
+					return "Tags differ.\n  Tag1: " + tag1 + "  \n  Tag2: " + tag2;
+				}
+
+				if (tag1 == null || tag2 == null) {
+					break;
+				}
 			}
 
-			if (tag1 == null || tag2 == null) {
-				break;
-			}
+			return null;
 		}
-
-		return true;
+	
+	public static boolean areXmlsEqual(String xml1, String xml2) {
+		
+		if (compareXmls(xml1, xml2) == null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	private static String getTag(String xml, IntegerHolder inOutFromPosition) {

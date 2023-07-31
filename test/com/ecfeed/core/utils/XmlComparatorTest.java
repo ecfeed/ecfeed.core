@@ -11,71 +11,78 @@
 package com.ecfeed.core.utils;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class XmlComparatorTest{
+public class XmlComparatorTest {
 
 	@Test
-	public void shouldCompare1(){
+	public void shouldCompare1() {
 		assertTrue(XmlComparator.areXmlsEqual(null, null));
 	}
 
 	@Test
-	public void shouldCompare2(){
+	public void shouldCompare2() {
 		assertTrue(XmlComparator.areXmlsEqual("<>", "<>"));
 	}	
 
 	@Test
-	public void shouldCompare3(){
+	public void shouldCompare3() {
 		assertFalse(XmlComparator.areXmlsEqual("<X>", "<>"));
 	}	
 
 	@Test
-	public void shouldCompare4(){
+	public void shouldCompare4() {
 		assertFalse(XmlComparator.areXmlsEqual("<X>", "<Y>"));
+
+		String message = XmlComparator.compareXmls("<X>", "<Y>");
+		assertNotNull(message);
 	}	
 
 	@Test
-	public void shouldCompare5(){
+	public void shouldCompare5() {
 		assertTrue(XmlComparator.areXmlsEqual("<X>", "<X>"));
+
+		String message = XmlComparator.compareXmls("<X>", "<X>");
+		assertNull(message);
 	}	
 
 	@Test
-	public void shouldCompare6(){
+	public void shouldCompare6() {
 		assertTrue(XmlComparator.areXmlsEqual("<><>", "<><>"));
 	}	
 
 	@Test
-	public void shouldCompare7(){
+	public void shouldCompare7() {
 		assertTrue(XmlComparator.areXmlsEqual("<><>", "<> <>"));
 	}
 
 	@Test
-	public void shouldCompare8(){
+	public void shouldCompare8() {
 		assertTrue(XmlComparator.areXmlsEqual("<>\t<>", "<> <>"));
 	}
 
 	@Test
-	public void shouldCompare9(){
+	public void shouldCompare9() {
 		assertTrue(XmlComparator.areXmlsEqual("<>\t<>", "<>\n<>"));
 	}	
 
 	@Test
-	public void shouldCompare10(){
+	public void shouldCompare10() {
 		assertTrue(XmlComparator.areXmlsEqual("<><>", "<>\n\t<>"));
 	}
 
 	@Test
-	public void shouldCompare11(){
+	public void shouldCompare11() {
 		assertTrue(XmlComparator.areXmlsEqual("<>          <>", "<>\n\t<>"));
 	}
 
 	@Test
-	public void shouldCompare12(){
+	public void shouldCompare12() {
 		assertFalse(XmlComparator.areXmlsEqual("<>          <x>", "<>\n\t<>"));
 	}	
-
 
 }
