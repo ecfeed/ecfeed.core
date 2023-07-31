@@ -91,7 +91,7 @@ public class ChoiceNodeHelper {
 		}
 
 		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
-		
+
 		if (indexOfChoiceNodeInTestCase < 0) {
 			return null;
 		}
@@ -915,12 +915,12 @@ public class ChoiceNodeHelper {
 		return new ArrayList<ConstraintNode>(result);
 	}
 
-	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
-
-		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
-	}
-
-	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { // TODO MO-RE change result to List
+	//	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+	//
+	//		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
+	//	}
+	//
+	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { 
 	//
 	//		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
 	//
@@ -972,13 +972,14 @@ public class ChoiceNodeHelper {
 	//		result.addAll(testCaseNodes);
 	//	}
 	//
-	private static List<TestCaseNode> getMentioningTestCases2(ChoiceNode choiceNode) { // TODO MO-RE to choice node helper - getMentioningTestCases
 
-		if (choiceNode.isPartOfGlobalParameter()) {
-			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNode);
+	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+
+		if (choiceNodeNotFromTestCase.isPartOfGlobalParameter()) {
+			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNodeNotFromTestCase);
 		}
 
-		return calculateTestCasesToDeleteForLocalNode(choiceNode);
+		return calculateTestCasesToDeleteForLocalNode(choiceNodeNotFromTestCase);
 	}
 
 	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
@@ -1062,5 +1063,5 @@ public class ChoiceNodeHelper {
 			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
 	}
-	
+
 }

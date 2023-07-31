@@ -255,7 +255,7 @@ public abstract class AbstractParameterNodeHelper {
 		return parameter;
 	}
 
-	public static AbstractParameterNode findParameterByRelativePath(  // TODO MO-RE old name findParameterByAbsolutePath
+	public static AbstractParameterNode findParameterByRelativePath(
 			String path, ParameterPathType parameterPathType, IParametersParentNode topNode) {
 
 		if ((parameterPathType == ParameterPathType.PATH_WITHOUT_TOP_NODE) 
