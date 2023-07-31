@@ -375,17 +375,17 @@ public abstract class AbstractParameterSignatureHelper {
 		if (context == null) {
 
 			String signatureOfParameter = 
-					createSignature(parameter, new ExtLanguageManagerForJava());
+					getQualifiedName(parameter, new ExtLanguageManagerForJava());
 
 			return signatureOfParameter;
 		}
 
 		String signatureOfContext = 
-				createSignatureWithPathToTopParametersParent(
+				getQualifiedName(
 						context, new ExtLanguageManagerForJava());
 
 		String signatureOfParameter = 
-				createSignatureWithPathToTopParametersParent(
+				getQualifiedName(
 						parameter, new ExtLanguageManagerForJava());
 
 		return signatureOfContext + LINK_SPECIFIER_TEXT + signatureOfParameter;
@@ -427,7 +427,6 @@ public abstract class AbstractParameterSignatureHelper {
 		return type;
 	}
 
-	// OBSOLETE
 	public static String getQualifiedName(  // TODO MO-RE convert to create signature
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
@@ -701,34 +700,20 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String createParameterSignature(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		String name = abstractParameterNode.getName();
-		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
-
-
-		String type = createSignatureOfType(abstractParameterNode, extLanguageManager);
-
-		String label = type + " " + name;
-		return label;
-	}
-
-	// OBSOLETE
-	public static String createSignature(AbstractParameterNode parameter,  // TODO MO-RE remove this method ?
-			ExtLanguageManagerForJava extLanguageManagerForJava) {
-
-		return getQualifiedName(parameter);
-	}
-
-	// OBSOLETE
-	public static String createSignatureWithPathToTopParametersParent(
-			AbstractParameterNode abstractParameterNode,
-			IExtLanguageManager extLanguageManager) {
-
-		return getQualifiedName(abstractParameterNode, extLanguageManager);
-	}
+	//	public static String createParameterSignature(
+	//			BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		String name = abstractParameterNode.getName();
+	//		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
+	//
+	//
+	//		String type = createSignatureOfType(abstractParameterNode, extLanguageManager);
+	//
+	//		String label = type + " " + name;
+	//		return label;
+	//	}
 
 	private static void printObsoleteInfo() {
 		//		System.out.println("OBSOLETE FUNCTION");
