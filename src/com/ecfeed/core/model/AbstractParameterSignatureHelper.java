@@ -350,16 +350,16 @@ public abstract class AbstractParameterSignatureHelper {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
-	// OBSOLETE
-	private static String createSignatureOfSingleParameterName(
-			AbstractParameterNode abstractParameterNode) {
-
-		printObsoleteInfo();
-
-		String signature = createPathToTopContainerNewStandard(abstractParameterNode, new ExtLanguageManagerForJava());
-
-		return signature;
-	}
+	//	// OBSOLETE
+	//	private static String createSignatureOfSingleParameterName(
+	//			AbstractParameterNode abstractParameterNode) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		String signature = createPathToTopContainerNewStandard(abstractParameterNode, new ExtLanguageManagerForJava());
+	//
+	//		return signature;
+	//	}
 
 	// OBSOLETE
 	public static String createSignatureOfParameterWithContext(
@@ -494,35 +494,35 @@ public abstract class AbstractParameterSignatureHelper {
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
 
-	public static String createPathToCompositeParameterNode(AbstractParameterNode abstractParameterNode) {
-
-		//		return getCompositeName(abstractParameterNode, null);
-
-		printObsoleteInfo();
-
-		AbstractParameterNode currentParameterNode = abstractParameterNode;
-		String compositeName = "";
-
-		for (;;) {
-
-			String currentParameterNodeName = createSignatureOfSingleParameterName(currentParameterNode);
-
-			if (StringHelper.isNullOrEmpty(compositeName)) {
-				compositeName = currentParameterNodeName; 
-			} else {
-				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
-			}
-
-			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-
-			if (parametersParentNode instanceof CompositeParameterNode) {
-				currentParameterNode = (AbstractParameterNode) parametersParentNode;
-				continue;
-			}
-
-			return compositeName;
-		}
-	}
+	//	public static String createPathToCompositeParameterNode(AbstractParameterNode abstractParameterNode) { 
+	//
+	//		//		return getCompositeName(abstractParameterNode, null);
+	//
+	//		printObsoleteInfo();
+	//
+	//		AbstractParameterNode currentParameterNode = abstractParameterNode;
+	//		String compositeName = "";
+	//
+	//		for (;;) {
+	//
+	//			String currentParameterNodeName = createSignatureOfSingleParameterName(currentParameterNode);
+	//
+	//			if (StringHelper.isNullOrEmpty(compositeName)) {
+	//				compositeName = currentParameterNodeName; 
+	//			} else {
+	//				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+	//			}
+	//
+	//			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
+	//
+	//			if (parametersParentNode instanceof CompositeParameterNode) {
+	//				currentParameterNode = (AbstractParameterNode) parametersParentNode;
+	//				continue;
+	//			}
+	//
+	//			return compositeName;
+	//		}
+	//	}
 
 	// OBSOLETE
 	public static String createSignatureOfOneParameterByIntrLanguage(

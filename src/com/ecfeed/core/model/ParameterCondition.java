@@ -261,7 +261,10 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		String name = AbstractParameterSignatureHelper.createPathToCompositeParameterNode(fRightParameterNode);
+		String name = 
+				AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+						fRightParameterNode, new ExtLanguageManagerForJava());
+		
 		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
 		return parameterDescription;
 	}
