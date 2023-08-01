@@ -64,7 +64,6 @@ public class ConstraintNodeListHolder {
 	}
 
 	public void addConstraint(ConstraintNode constraint, int index, IParametersAndConstraintsParentNode parentNode) {
-		constraint.setParent(parentNode); // TODO MO-RE remove this and put in calling methods (this is the convention)
 		fConstraintNodes.add(index, constraint);
 		registerChange();
 	}
