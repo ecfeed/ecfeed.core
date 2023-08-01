@@ -163,19 +163,13 @@ public class FactoryRemoveOperation {
 
 			IAbstractNode abstractParent = node.getParent();
 
-			// TODO MO-RE MERGE
 			if (abstractParent instanceof MethodNode) {
-
-				//return new MethodOperationRemoveConstraint(
-				//		(MethodNode) abstractParent, node, fExtLanguageManager);
 
 				return new OnConstraintOperationRemove(
 						(MethodNode) abstractParent, node, fExtLanguageManager);
 			}
 
 			if (abstractParent instanceof CompositeParameterNode) {
-				//				return new CompositeParameterOperationRemoveConstraint(
-				//						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
 
 				return new OnConstraintOperationRemove(
 						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);

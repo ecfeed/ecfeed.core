@@ -28,7 +28,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ShifterOfListElements;
 
-public class OnCompositeParameterOperationShift extends GenericShiftOperation { // TODO MO-RE implement
+public class OnCompositeParameterOperationShift extends GenericShiftOperation {
 
 	private List<AbstractParameterNode> fParameters;
 
