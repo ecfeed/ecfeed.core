@@ -55,7 +55,7 @@ public abstract class MethodDeployer {
 		return false;
 	}
 
-	public static void copyDeployedParametersWithConversionToOriginals( // TODO MO-RE divide into two functions? 1)convert to originals 2)copy
+	public static void copyDeployedParametersWithConversionToOriginals(
 			MethodNode deployedMethodNode, 
 			MethodNode destinationMethodNode, 
 			NodeMapper nodeMapper) {
@@ -67,15 +67,6 @@ public abstract class MethodDeployer {
 				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
 
 		destinationMethodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
-
-		//		for (ParameterWithLinkingContext parameterWithLinkingContext : deployedParametersWithContexts) {
-		//			System.out.println(ParameterWithLinkingContextHelper.createSignature(parameterWithLinkingContext));
-		//		}
-
-		//		List<ParameterWithLinkingContext> originalParametersWithContexts =
-		//				convertDeployedParametersWithContextsToOriginal(deployedParametersWithContexts, nodeMapper);
-		//		
-		//		methodNode.setOriginalParametersWithContexts(originalParametersWithContexts);
 	}
 
 	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginals(

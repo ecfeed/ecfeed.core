@@ -326,7 +326,7 @@ public class MethodNodeHelper {
 	//		return signature;
 	//	}
 
-	//	public static String createSignaturesOfParameters( // XYX
+	//	public static String createSignaturesOfParameters(
 	//			MethodNode methodNode,
 	//			IExtLanguageManager extLanguageManager) {
 	//

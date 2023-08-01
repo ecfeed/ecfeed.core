@@ -108,7 +108,7 @@ public class TestCaseNode extends AbstractNode {
 		return fChoiceNodes;
 	}
 
-	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
 
 		super(testSuiteName, modelChangeRegistrator);
 		fChoiceNodes = testData;
@@ -300,20 +300,20 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fChoiceNodes);
 	}
 
-	public void updateChoiceReferences( // TODO MO-RE do we need this ?
-			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-
-		int index = 0;
-
-		for (ChoiceNode choiceNode : fChoiceNodes) {
-
-			if (choiceNode.equals(oldChoiceNode)) {
-				fChoiceNodes.set(index, newChoiceNode);
-			}
-
-			index++;
-		}
-	}
+	//	public void updateChoiceReferences(
+	//			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	//
+	//		int index = 0;
+	//
+	//		for (ChoiceNode choiceNode : fChoiceNodes) {
+	//
+	//			if (choiceNode.equals(oldChoiceNode)) {
+	//				fChoiceNodes.set(index, newChoiceNode);
+	//			}
+	//
+	//			index++;
+	//		}
+	//	}
 
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
