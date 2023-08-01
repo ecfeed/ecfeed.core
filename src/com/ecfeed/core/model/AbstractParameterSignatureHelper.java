@@ -494,19 +494,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
 
-	// OBSOLETE
-	public static String getQualifiedName(  // TODO MO-RE convert to create signature
-			AbstractParameterNode abstractParameterNode, 
-			CompositeParameterNode linkingContext) {
-
-		printObsoleteInfo();
-
-		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
-		return qualifiedName;
-	}
-
-	// OBSOLETE
-	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
+	public static String createPathToCompositeParameterNode(AbstractParameterNode abstractParameterNode) {
 
 		//		return getCompositeName(abstractParameterNode, null);
 
