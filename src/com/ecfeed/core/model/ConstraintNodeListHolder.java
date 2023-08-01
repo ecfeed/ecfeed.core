@@ -81,6 +81,7 @@ public class ConstraintNodeListHolder {
 			clonedConstraint.setParent(newParent);
 
 			if (clonedConstraint != null) {
+				clonedConstraint.setParent(newParent);
 				cloneOfConstraintNodeListHolder.addConstraint(clonedConstraint, newParent);
 			}
 		}

@@ -309,12 +309,14 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void addConstraint(ConstraintNode constraint) {
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
@@ -442,17 +444,17 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return false;
 	}
-	
+
 	@Override
 	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
-		
+
 		fParametersLister.shiftElements(indicesOfParameters, shift);
 	}
 
 	@Override
 	public void shiftOneParameter(int indexOfParameter, int shift) {
-		
+
 		fParametersLister.shiftOneElement(indexOfParameter, shift);
 	}
-	
+
 }

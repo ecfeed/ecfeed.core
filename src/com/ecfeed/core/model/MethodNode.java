@@ -73,15 +73,15 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		super.setName(name);
 	}
 
-//	private void setDefaultPropertyValues() {
-//
-//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER);
-//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
-//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
-//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
-//
-//		registerChange();
-//	}
+	//	private void setDefaultPropertyValues() {
+	//
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
+	//
+	//		registerChange();
+	//	}
 
 	@Override
 	public ConstraintNodeListHolder.ConstraintsItr getIterator() {
@@ -321,12 +321,14 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 	public void addConstraint(ConstraintNode constraint) { // TODO MO-RE rename to addConstraintNode
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
