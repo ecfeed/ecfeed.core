@@ -400,5 +400,4 @@ public class ParametersMapperTest {
 		assertEquals(localCompositeParameterNode, linkingParameter);
 	}
 
-	// TODO MO-RE add tests for	ParameterType.EXPECTED
 }
