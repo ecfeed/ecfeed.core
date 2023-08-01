@@ -73,7 +73,7 @@ public class ExpectedValueStatementTest{
 		ChoiceNode c1 = new ChoiceNode("name", "value", null);
 		ChoiceNode c2 = new ChoiceNode("name", "value", null);
 
-		ExpectedValueStatement s1 = new ExpectedValueStatement(par1, null, c1, predicate); // TODO MO-RE compare with composite parameters
+		ExpectedValueStatement s1 = new ExpectedValueStatement(par1, null, c1, predicate);
 		ExpectedValueStatement s2 = new ExpectedValueStatement(par2, null, c2, predicate);
 
 		assertTrue(s1.isEqualTo(s2));

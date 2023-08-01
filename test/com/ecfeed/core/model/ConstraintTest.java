@@ -83,7 +83,7 @@ public class ConstraintTest {
 		// label condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");  // TODO MO-RE leftParameterLinkingContext
+				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
