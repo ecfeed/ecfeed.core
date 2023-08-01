@@ -144,12 +144,9 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 			IAbstractNode abstractParent = constraintNode.getParent();
 
-			// TODO MO-RE merge MethodOperationRemoveConstraint and CompositeParameterOperationRemoveConstraint into one operation 
 			if (abstractParent instanceof MethodNode) {
 
-				IModelOperation operation = 
-						//new MethodOperationRemoveConstraint(
-						//		(MethodNode) abstractParent, constraintNode, extLanguageManager);
+				IModelOperation operation =
 						new OnConstraintOperationRemove(
 								(MethodNode)abstractParent, constraintNode, extLanguageManager);
 
@@ -159,10 +156,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 			if (abstractParent instanceof CompositeParameterNode) {
 
-				IModelOperation operation = 
-						//new CompositeParameterOperationRemoveConstraint(
-						//		(CompositeParameterNode) abstractParent, constraintNode, extLanguageManager);
-
+				IModelOperation operation =
 						new OnConstraintOperationRemove(
 								(CompositeParameterNode)abstractParent, constraintNode, extLanguageManager);
 
@@ -199,8 +193,6 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 			} 
 
-			// TODO MO-RE merge operations ? (regardless of parent)
-
 			if (parent instanceof MethodNode) {
 
 				IModelOperation operation = 
@@ -233,13 +225,13 @@ public class GenericRemoveNodesOperationsAccumulator {
 		for (CompositeParameterNode basicParameterNode : compositeParameterNodes) {
 
 			IParametersParentNode parent = (IParametersParentNode)basicParameterNode.getParent();
-			
+
 			IModelOperation modelOperation = 
-								new OnParameterOperationRemove(
-										parent, basicParameterNode, extLanguageManager);
-		
+					new OnParameterOperationRemove(
+							parent, basicParameterNode, extLanguageManager);
+
 			result.add(modelOperation);
-		
+
 
 			//			if (parent instanceof MethodNode) {
 			//
