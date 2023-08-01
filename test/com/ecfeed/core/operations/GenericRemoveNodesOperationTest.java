@@ -36,6 +36,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -155,10 +156,11 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = new ArrayList<>();
+		
+		deployedParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParametersWithContexts);
 
 		// list of nodes to delete
 
@@ -370,10 +372,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// check created structure
 
@@ -496,10 +498,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1OfGlobalComposite);
-		deployedParameters.add(basicParameterNode2OfGlobalComposite);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1OfGlobalComposite, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2OfGlobalComposite, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -676,10 +678,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1OfGlobalComposite);
-		deployedParameters.add(basicParameterNode2OfGlobalComposite);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1OfGlobalComposite, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2OfGlobalComposite, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -896,10 +898,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -993,10 +995,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// 	Root
 		// 		GlobalBasicParam1
@@ -1194,10 +1196,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -1312,10 +1314,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1405,10 +1407,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1533,10 +1535,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1601,10 +1603,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 

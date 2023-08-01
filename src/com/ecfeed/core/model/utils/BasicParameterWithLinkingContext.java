@@ -18,17 +18,17 @@ public class BasicParameterWithLinkingContext {
 	private BasicParameterNode fBasicParameterNode;
 	private CompositeParameterNode fLinkingContext;
 
-	BasicParameterWithLinkingContext(BasicParameterNode basicParameterNode, CompositeParameterNode linkingContext) {
+	public BasicParameterWithLinkingContext(BasicParameterNode basicParameterNode, CompositeParameterNode linkingContext) {
 
 		fBasicParameterNode = basicParameterNode;
 		fLinkingContext = linkingContext;
 	}
 
-	BasicParameterNode getBasicParameterNode() {
+	public BasicParameterNode getBasicParameterNode() {
 		return fBasicParameterNode;
 	}
 
-	CompositeParameterNode getLinkingParameterNode() {
+	public CompositeParameterNode getLinkingParameterNode() {
 		return fLinkingContext;
 	}
 
