@@ -427,7 +427,7 @@ public abstract class AbstractParameterSignatureHelper {
 		return type;
 	}
 
-	//	public static String getQualifiedName(  // TODO MO-RE use createPathToTopContainerNewStandard instead of this method
+	//	public static String getQualifiedName( 
 	//			AbstractParameterNode abstractParameterNode,
 	//			IExtLanguageManager extLanguageManager) {
 	//
@@ -441,7 +441,7 @@ public abstract class AbstractParameterSignatureHelper {
 	//	}
 
 	//	// OBSOLETE
-	//	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { // TODO MO-RE remove and use createSignatureWithPathToTopParametersParent instead
+	//	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) { 
 	//
 	//		printObsoleteInfo();
 	//

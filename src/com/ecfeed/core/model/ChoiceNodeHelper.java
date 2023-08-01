@@ -981,7 +981,7 @@ public class ChoiceNodeHelper {
 			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNodeNotFromTestCase);
 		}
 
-		return calculateTestCasesToDeleteForLocalNode(choiceNodeNotFromTestCase);
+		return getTestCasesForRelatedMethod(choiceNodeNotFromTestCase);
 	}
 
 	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
@@ -1001,7 +1001,7 @@ public class ChoiceNodeHelper {
 		return new ArrayList<>();
 	}
 
-	public static List<TestCaseNode> calculateTestCasesToDeleteForLocalNode(IAbstractNode abstractNode) { // TODO MO-RE rename
+	public static List<TestCaseNode> getTestCasesForRelatedMethod(IAbstractNode abstractNode) {
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
 
@@ -1019,7 +1019,7 @@ public class ChoiceNodeHelper {
 
 		for (CompositeParameterNode linkedCompositeParameterNode : linkedCompositeParameterNodes) {
 
-			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedCompositeParameterNode);
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedCompositeParameterNode);
 
 			resultTestCaseNodesToDelete.addAll(testCases);
 		}
@@ -1038,7 +1038,7 @@ public class ChoiceNodeHelper {
 
 		for (BasicParameterNode linkedBasicParameterNode : linkedBasicParameterNodes) {
 
-			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedBasicParameterNode);
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedBasicParameterNode);
 
 			resultTestCaseNodesToDelete.addAll(testCases);
 		}
