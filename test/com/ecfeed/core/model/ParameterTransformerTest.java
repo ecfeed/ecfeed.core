@@ -1628,11 +1628,11 @@ public class ParameterTransformerTest {
 
 		RelationStatement relationStatement1 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, null, EMathRelation.EQUAL, value1);  // TODO MO-RE leftParameterLinkingContext
+						methodParameterNode, null, EMathRelation.EQUAL, value1);
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, null, EMathRelation.LESS_THAN, value2); // TODO MO-RE leftParameterLinkingContext
+						methodParameterNode, null, EMathRelation.LESS_THAN, value2);
 
 		Constraint constraint = new Constraint(
 				constraintName, 

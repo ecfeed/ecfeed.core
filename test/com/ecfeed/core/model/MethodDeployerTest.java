@@ -143,8 +143,6 @@ public class MethodDeployerTest {
 				TestHelper.getChoiceNodeFromConstraintPostcondition(deployedMethod);
 
 		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint2.hashCode());
-
-		// TODO MO-RE check parameter
 	}
 
 	@Test
