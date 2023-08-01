@@ -34,7 +34,7 @@ public class MethodParameterNodeHelper {
 	}
 
 	//	// OBSOLETE 
-	//	public static String createSignature( // TODO MO-RE remove - use method from AbstractParameterSignatureHelper
+	//	public static String createSignature(
 	//			BasicParameterNode methodParameterNode,
 	//			IExtLanguageManager extLanguageManager) {
 	//
