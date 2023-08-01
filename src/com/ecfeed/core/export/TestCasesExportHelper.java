@@ -27,7 +27,6 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
-import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -486,7 +485,7 @@ public class TestCasesExportHelper {
 
 		FixedChoiceValueFactory fixedValueFactory = new FixedChoiceValueFactory(null, true);
 
-		String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+		String context = "Model path: " + AbstractNodeHelper.getFullPath(choice, extLanguageManager);
 
 		Object parsedObject = 
 				fixedValueFactory.createValue(

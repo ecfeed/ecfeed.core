@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -306,6 +307,80 @@ public abstract class AbstractNodeHelper  {
 		}
 
 		return null;
+	}
+
+	public static String getNodeTypeName(IAbstractNode abstractNode) {
+
+		if (abstractNode instanceof ClassNode) {
+			return "Class";
+		}
+
+		if (abstractNode instanceof MethodNode) {
+			return "Method";
+		}
+
+		if (abstractNode instanceof BasicParameterNode) {
+			return "MethodParameter";
+		}
+
+		if (abstractNode instanceof ChoiceNode) {
+			return "Choice";
+		}
+
+		if (abstractNode instanceof ConstraintNode) {
+			return "Constraint";
+		}
+
+		if (abstractNode instanceof TestSuiteNode) {
+			return "TestSuite";
+		}
+
+		if (abstractNode instanceof TestCaseNode) {
+			return "TestCase";
+		}
+
+		return "Node";
+	}
+
+	public static String getFullPath(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+
+		List<String> nodeNames = new ArrayList<String>();
+
+		IAbstractNode currentNode = abstractNode;
+
+		for(;;) {
+
+			if (currentNode == null) {
+				return createPath(nodeNames);
+			}
+
+			if (currentNode instanceof RootNode) {
+				nodeNames.add(currentNode.getName());
+			} else {
+				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguageManager));
+			}
+
+			currentNode = currentNode.getParent();
+		}
+	}
+
+	private static String createPath(List<String> nodeNames) {
+
+		String path = "";
+
+		int nodeNamesLength = nodeNames.size();
+
+		for (int index = nodeNamesLength - 1; index >= 0; index--) {
+
+			String nodeName = nodeNames.get(index);
+			path += nodeName;
+
+			if (index > 0) {
+				path += ".";
+			}
+		}
+
+		return path;
 	}
 
 }

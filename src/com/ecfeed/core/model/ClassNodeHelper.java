@@ -56,10 +56,21 @@ public class ClassNodeHelper {
 
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
-		String name = ModelHelper.getNonQualifiedName(classNode.getName());
+		String name = getNonQualifiedName(classNode.getName());
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
 		return name;
+	}
+
+	public static String getNonQualifiedName(String qualifiedName) {
+
+		int lastDotIndex = qualifiedName.lastIndexOf('.');
+
+		if (lastDotIndex == -1) {
+			return qualifiedName;
+		}
+
+		return qualifiedName.substring(lastDotIndex + 1);
 	}
 
 	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
@@ -257,6 +268,13 @@ public class ClassNodeHelper {
 		classNode.addParameter(childCompositeParameterNode);
 
 		return childCompositeParameterNode;
+	}
+
+	public static String getPackageName(String qualifiedName) {
+
+		int lastDotIndex = qualifiedName.lastIndexOf('.');
+
+		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
 	}
 
 }

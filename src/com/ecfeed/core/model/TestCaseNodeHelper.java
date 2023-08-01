@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.NameHelper;
+import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TestCaseNodeHelper {
@@ -410,5 +411,9 @@ public class TestCaseNodeHelper {
 		}
 	}
 
+	public static boolean isValidTestCaseName(String name) {
+
+		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
+	}
 
 }
