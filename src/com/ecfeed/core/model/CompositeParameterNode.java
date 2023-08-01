@@ -178,7 +178,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext // TODO MO-RE remove linking context from upper class/interface
+			AbstractParameterNode linkingContext
 			) {
 
 		fParametersLister.addParameter(parameter, this);
@@ -187,7 +187,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public void addParameter(
 			AbstractParameterNode parameter, 
-			AbstractParameterNode linkingContext,  // TODO MO-RE remove linking context from upper class/interface
+			AbstractParameterNode linkingContext,
 			int index) {
 
 		fParametersLister.addParameter(parameter, index, this);

@@ -512,7 +512,7 @@ public class MethodNodeHelper {
 		return testCaseNode;
 	}
 
-	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts( // TODO MO-RE unit tests
+	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts(
 			MethodNode methodSource) {
 
 		List<ParameterWithLinkingContext> result = new ArrayList<>();
