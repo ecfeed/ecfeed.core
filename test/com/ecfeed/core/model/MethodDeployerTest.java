@@ -266,7 +266,7 @@ public class MethodDeployerTest {
 		assertEquals("S1:P2->RP1", testedSignature2);
 	}
 
-	//	@Test
+	@Test
 	public void deployTwoBasicLinkedParametersWithTheSameNames() {
 
 		MethodNode methodNode = createModelWithTwoBasicLinkedParametersOneAtMethodLevel("P1", "P1");
@@ -278,11 +278,14 @@ public class MethodDeployerTest {
 
 		// check
 
-		//		assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
+		assertEquals(2, deployedMethod.getParametersCount());
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
 		String name1 = deployedParameters.get(0).getName();
 		assertEquals("P1", name1);
+
+		String name2 = deployedParameters.get(0).getName();
+		assertEquals("P1", name2);
 	}
 
 	@Test
