@@ -458,41 +458,41 @@ public abstract class AbstractParameterSignatureHelper {
 	//	}
 
 	// OBSOLETE
-	public static String getQualifiedName(  // TODO MO-RE convert to create signature
-			AbstractParameterNode abstractParameterNode, 
-			CompositeParameterNode linkingContext,
-			IExtLanguageManager extLanguageManager) {
-
-		printObsoleteInfo();
-
-		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
-			return createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
-		}
-
-		String ownQualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
-
-		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-
-		if (abstractParameterNode.isClassParameter()) {
-			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
-		}
-
-		CompositeParameterNode candidate = null;
-
-		parameterLoop:
-			for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
-				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-					if (candidateParametr == abstractParameterNode) {
-						candidate = candidateComposite;
-						break parameterLoop;
-					}
-				}
-			}
-
-		String linkingSignature = createPathToTopContainerNewStandard(candidate != null ? candidate : linkingContext, extLanguageManager);
-
-		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
-	}
+	//	public static String getQualifiedName(
+	//			AbstractParameterNode abstractParameterNode, 
+	//			CompositeParameterNode linkingContext,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		printObsoleteInfo();
+	//
+	//		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
+	//			return createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+	//		}
+	//
+	//		String ownQualifiedName = createPathToTopContainerNewStandard(abstractParameterNode, extLanguageManager);
+	//
+	//		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+	//
+	//		if (abstractParameterNode.isClassParameter()) {
+	//			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
+	//		}
+	//
+	//		CompositeParameterNode candidate = null;
+	//
+	//		parameterLoop:
+	//			for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
+	//				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+	//					if (candidateParametr == abstractParameterNode) {
+	//						candidate = candidateComposite;
+	//						break parameterLoop;
+	//					}
+	//				}
+	//			}
+	//
+	//		String linkingSignature = createPathToTopContainerNewStandard(candidate != null ? candidate : linkingContext, extLanguageManager);
+	//
+	//		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+	//	}
 
 	//	public static String createPathToCompositeParameterNode(AbstractParameterNode abstractParameterNode) { 
 	//
