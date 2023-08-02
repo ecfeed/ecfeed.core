@@ -43,7 +43,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperationTest {
-
+	
 	@Test
 	public void classWithoutChildrenRemove() {
 
@@ -67,8 +67,6 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNodes.size());
 		assertEquals(classNode, classNodes.get(0));
 	}
-
-	// TODO MO-RE remove class with method and parameter
 
 	@Test
 	public void methodsRemove() {
@@ -789,7 +787,7 @@ public class GenericRemoveNodesOperationTest {
 		// global basic parameter
 
 		BasicParameterNode globalBasicParameterNode = 
-				ClassNodeHelper.addGlobalBasicParameter(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
+				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "GP1", "String", null);
 
 		// global choice
 
@@ -1261,9 +1259,6 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, compositeParameterNode1.getConstraints().size());
 	}
 
-	// TODO MO-RE add test for parameter condition P1 = P2
-	// TODO MO-RE add test when all choices from parameter are deleted but parameter remains
-
 	@Test
 	public void choiceNodeRemoveFromMethodBasicParameter() {
 
@@ -1643,7 +1638,7 @@ public class GenericRemoveNodesOperationTest {
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						basicParameterNode, null, EMathRelation.EQUAL, value); // TODO MO-RE leftParameterLinkingContext
+						basicParameterNode, null, EMathRelation.EQUAL, value);
 
 		Constraint constraint = new Constraint(
 				constraintName, 

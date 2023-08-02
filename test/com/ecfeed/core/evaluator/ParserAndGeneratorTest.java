@@ -11,7 +11,7 @@
 //import com.ecfeed.core.model.NodeMapper;
 //import com.ecfeed.core.model.RootNode;
 //
-//public class ParserAndGeneratorTest { // TODO MO-RE separate tests of serialization from tests of generation 
+//public class ParserAndGeneratorTest {  
 //
 //
 //	//	@Test

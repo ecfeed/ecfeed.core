@@ -26,7 +26,7 @@ public class ClassNodeHelper {
 	public static final String CONTAINS_METHOD_WITH_IDENTICAL_NAME = "contains method with identical name";
 
 
-	public static BasicParameterNode addGlobalBasicParameter(
+	public static BasicParameterNode addNewGlobalBasicParameter(
 			ClassNode classNode, 
 			String name, 
 			String type,
