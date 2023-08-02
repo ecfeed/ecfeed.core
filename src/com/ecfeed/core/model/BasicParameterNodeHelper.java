@@ -728,4 +728,20 @@ public class BasicParameterNodeHelper {
 		return linkedParameterSignature;
 	}
 
+	public static List<BasicParameterNode> getMentioningBasicParameterNodes(
+			List<CompositeParameterNode> compositeParametesNodes) {
+
+		List<BasicParameterNode> basicParameterNodesToReturn = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeParametesNodes) {
+
+			List<BasicParameterNode> currentBasicParameterNodes = 
+					CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
+
+			basicParameterNodesToReturn.addAll(currentBasicParameterNodes);
+		}
+
+		return basicParameterNodesToReturn;
+	}
+	
 }

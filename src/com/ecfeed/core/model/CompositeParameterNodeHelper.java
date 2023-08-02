@@ -418,4 +418,21 @@ public class CompositeParameterNodeHelper {
 		}
 	}
 
+	public static List<CompositeParameterNode> getMentioningCompositeParameterNodes(
+			List<CompositeParameterNode> compositeParameterNodes) {
+
+		List<CompositeParameterNode> resultLinkedCompositeParameterNodes = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
+
+			List<CompositeParameterNode> linkedCompositeParameterNodes = 
+					CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
+
+			resultLinkedCompositeParameterNodes.addAll(linkedCompositeParameterNodes);
+		}
+
+		return resultLinkedCompositeParameterNodes;
+	}
+
+
 }
