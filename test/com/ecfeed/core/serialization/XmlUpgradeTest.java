@@ -443,7 +443,7 @@ public class XmlUpgradeTest {
 	//		// constraint
 	//
 	//		AbstractStatement precondition =
-	//				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);  // TODO MO-RE leftParameterLinkingContext
+	//				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);
 	//
 	//		AbstractStatement postcondition =
 	//				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");

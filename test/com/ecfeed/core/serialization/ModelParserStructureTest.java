@@ -2,7 +2,6 @@ package com.ecfeed.core.serialization;
 
 public class ModelParserStructureTest {
 
-	// TODO MO-RE divide test into smaller tests which check concrete feature or data set
 	//    @Test
 	//    public void parseModelWithStructuresAndTestCases() {
 	//
