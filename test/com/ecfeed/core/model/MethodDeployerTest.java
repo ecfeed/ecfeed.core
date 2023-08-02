@@ -435,8 +435,6 @@ public class MethodDeployerTest {
 	@Test
 	public void deployLinkedRootStructure() {
 
-		// TODO MO-RE use helper methods to create and add nodes
-
 		RootNode rootNode = new RootNode("Root", null);
 		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
 		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
@@ -497,8 +495,6 @@ public class MethodDeployerTest {
 
 	@Test
 	public void deployLinkedClassStructure() {
-
-		// TODO MO-RE use helper methods to create and add nodes
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode classNode = new ClassNode("Class", null);
@@ -576,8 +572,6 @@ public class MethodDeployerTest {
 	@Test
 	public void deployLinkedRootStructureWithConstraint() {
 
-		// TODO MO-RE use helper methods to create and add nodes
-
 		RootNode rootNode = new RootNode("Root", null);
 		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
 		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
@@ -614,8 +608,6 @@ public class MethodDeployerTest {
 
 	@Test
 	public void deployLinkedClassStructureWithConstraint() {
-
-		// TODO MO-RE use helper methods to create and add nodes
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode c1 = new ClassNode("Class", null);
@@ -654,8 +646,6 @@ public class MethodDeployerTest {
 	@Test
 	public void deployNestedStructureWithConstraint1() {
 
-		// TODO MO-RE use helper methods to create and add nodes
-
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode c1 = new ClassNode("Class", null);
 		MethodNode c1m1 = new MethodNode("method", null);
@@ -690,8 +680,6 @@ public class MethodDeployerTest {
 
 	@Test
 	public void deployNestedStructureWithConstraint2() {
-
-		// TODO MO-RE use helper methods to create and add nodes
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode c1 = new ClassNode("Class", null);
@@ -943,7 +931,6 @@ public class MethodDeployerTest {
 	//		return methodNode;
 	//	}
 
-	// TODO MO-RE create a test with multiple linking to the same global parameter, model xmlExpectedValue2 is from SatSolverConstraintEvaluatorTest  	
 	//	@Test
 	//	public void TestExpectedValue2() {
 	//		assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
@@ -1015,7 +1002,6 @@ public class MethodDeployerTest {
 	//		return count1;
 	//	}
 
-	// TODO MO-RE 
 	//	@Test
 	//	public void AAATestDeployWithExpectedValue() {
 	//
