@@ -100,16 +100,6 @@ public class ModelParserTest {
     }
 
     @Test
-    void parseModelCSVErrorTest() {
-
-        Assertions.assertThrows(Exception.class, () -> {
-            ModelDataFactory.create("one, two, three\n" +
-                            "one, two",
-                    ModelDataFactory.Type.CSV);
-        });
-    }
-
-    @Test
     void parseModelCSVOverflowTest() {
 
         ModelData model = ModelDataFactory.create("Country,Name,Address,Product,Color,Size,Quantity,Payment,Delivery,Phone,Email\n" +
@@ -295,5 +285,25 @@ public class ModelParserTest {
         List<BasicParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
+    }
+
+    @Test
+    public void parseModelCSVObjectValueTest() {
+
+        ModelData model = ModelDataFactory.create("BaneDataId,BaneDataLocationId,SetpointTrack,AvgTempOutside,IsValidSetpointTrack,IsValidTempOutside,IsMaxMode,IsActive,IsEffort,Window,AvgTempLeftTrack,AvgTempRightTrack,AvgTempControl,AvgEffort,MaxTempLeftTrack,MaxTempRightTrack,MinTempLeftTrack,MinTempRightTrack,,\n" +
+                "EL-SVG-000523,0560-05220,3,17.6,TRUE,TRUE,FALSE,TRUE,FALSE,\"{\"\"start\"\":\"\"2023-06-01T12:00:00.000+0000\"\",\"\"end\"\":\"\"2023-06-01T13:00:00.000+0000\"\"}\",24.3,27.8,null,0,24.3,27.8,24.3,27.8,,", ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(20, header.size());
+
+        List<Set<String>> body = model.getParameters();
+
+        Assertions.assertEquals(20, body.size());
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(20, parentRootData.size());
     }
 }

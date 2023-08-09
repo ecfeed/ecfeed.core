@@ -1,13 +1,15 @@
 package com.ecfeed.core.parser.model;
 
 import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class ModelDataCSV extends ModelDataAbstract {
 
-    private Character separator;
+    private ModelDataCSVLineProcessor processor;
+    private List<List<String>> rawParsed;
 
     public static ModelData getModelData(Path path) {
 
@@ -21,117 +23,88 @@ public class ModelDataCSV extends ModelDataAbstract {
 
     private ModelDataCSV(Path path) {
 
+        processor = ModelDataCSVLineProcessor.get();
+
         create(path);
     }
 
     private ModelDataCSV(String data) {
+
+        processor = ModelDataCSVLineProcessor.get();
 
         create(data);
     }
 
     @Override
     protected void updateProperties() {
-        Map<Character, Long> separators = new HashMap<>();
 
-        separators.put(',', updatePropertiesSeparatorCandidate(','));
-        separators.put(';', updatePropertiesSeparatorCandidate(';'));
+        updatePropertiesSeparator(true, ',');
+        updatePropertiesSeparator(false, ';');
 
-        Character candidate = null;
-        long candidateQuantity = 0;
-
-        for (Map.Entry<Character, Long> entry : separators.entrySet()) {
-            if (entry.getValue() > 0) {
-                if (entry.getValue() > candidateQuantity) {
-                    candidate = entry.getKey();
-                    candidateQuantity = entry.getValue();
-                }
-            }
+        if (this.rawParsed == null) {
+            throw new IllegalArgumentException("The separator could not be determined!");
         }
-
-        if (candidate == null) {
-            throw new IllegalArgumentException("It is not possible to determine the separator character!");
-        }
-
-        this.separator = candidate;
     }
 
-    private long updatePropertiesSeparatorCandidate(char separator) {
+    private void updatePropertiesSeparator(boolean init, Character separator) {
+        Optional<List<List<String>>> candidate = updatePropertiesData(separator);
+
+        if (candidate.isPresent()) {
+            if (init || (this.rawParsed != null && candidate.get().get(0).size() > this.rawParsed.get(0).size())) {
+                this.rawParsed = candidate.get();
+            }
+        }
+    }
+
+    private Optional<List<List<String>>> updatePropertiesData(char separator) {
 
         if (this.raw == null || this.raw.size() < 1) {
-            throw new IllegalArgumentException("The data must contain at least one line.");
+            throw new IllegalArgumentException("The data must contain of at least one line!");
         }
 
-        long quantity = updatePropertiesSeparatorCandidateQuantity(this.raw.get(0), separator);
+        List<List<String>> results = new ArrayList<>();
 
-        if (quantity == 0) {
-            return -1;
+        List<String> header = this.processor.parseHeader(this.raw.get(0), separator);
+
+        results.add(header);
+
+        if (header.size() == 0) {
+            throw new IllegalArgumentException("The file should consist of at least one column!");
         }
 
-        for (String line : this.raw) {
-            if (updatePropertiesSeparatorCandidateQuantity(line, separator) != quantity) {
-                return -1;
+        if (this.raw.size() < 2) {
+            return Optional.of(results);
+        }
+
+        for (int i = 1 ; i < this.raw.size() ; i++) {
+            List<String> body = this.processor.parseBody(this.raw.get(i), separator);
+
+            if (body.size() != header.size()) {
+                return Optional.empty();
             }
+
+            results.add(body);
         }
 
-        return quantity;
-    }
-
-    private long updatePropertiesSeparatorCandidateQuantity(String line, char separator) {
-
-        return line.chars().filter(e -> e == separator).count();
+        return Optional.of(results);
     }
 
     @Override
     protected final void initializeHeader() {
 
-        if (this.raw.size() < 1) {
-            throw new IllegalArgumentException("The data must contain at least one line!");
-        }
-
-        this.header = Arrays.stream(lineUnify(this.raw.get(0))
-                        .split(this.separator.toString()))
-                            .map(String::trim)
-                            .map(this::headerColumnUnify)
-                            .collect(Collectors.toList());
+        this.header = this.rawParsed.get(0);
     }
 
     @Override
     protected final void process() {
 
-        this.raw.stream().skip(1).forEach(this::lineParse);
+        this.rawParsed.stream().skip(1).forEach(this::lineParse);
     }
 
-    private void lineParse(String line) {
-        String[] arg = lineUnify(line).split(this.separator.toString(), -1);
+    private void lineParse(List<String> arg) {
 
-        lineValidate(line, arg.length);
-
-        IntStream.range(0, arg.length).forEach(i -> {
-        	this.body.get(i).add(arg[i]);
+        IntStream.range(0, arg.size()).forEach(i -> {
+        	this.body.get(i).add(arg.get(i));
         });
-    }
-
-    private void lineValidate(String line, int length) {
-
-        if (length != this.body.size()) {
-            throw new IllegalArgumentException("The file is corrupted. "
-            		+ "The line '" + line + "' consists of an incorrect number of elements. " +
-                    "Expected '" + this.body.size() + "'. Got '" + length + "'!");
-        }
-    }
-    
-    private String lineUnify(String line) {
-    	
-    	return line.replace("\r", "");
-    }
-
-    private String headerColumnUnify(String name) {
-        name = name.replaceAll("[^a-zA-Z0-9_]", "_");
-
-        if (Character.isDigit(name.charAt(0))) {
-            name = "_" + name;
-        }
-
-        return name;
     }
 }
