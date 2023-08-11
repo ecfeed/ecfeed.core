@@ -18,7 +18,6 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
@@ -227,17 +226,17 @@ public class ModelParser {
 		} 
 	}
 
-	public ExpectedValueStatement parseExpectedValueStatement(
-			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
-
-		try {
-			Document document = fBuilder.build(istream);
-			return ModelParserForConstraint.parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
-		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
-			return new ExpectedValueStatement(null, null, null, null);
-		} 
-	}
+//	public ExpectedValueStatement parseExpectedValueStatement(
+//			InputStream istream, MethodNode method, ListOfStrings outErrorList) {
+//
+//		try {
+//			Document document = fBuilder.build(istream);
+//			return ModelParserForConstraint.parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
+//		} catch (Exception e) {
+//			outErrorList.add(e.getMessage());
+//			return new ExpectedValueStatement(null, null, null, null);
+//		} 
+//	}
 
 	public StatementArray parseStatementArray(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) {

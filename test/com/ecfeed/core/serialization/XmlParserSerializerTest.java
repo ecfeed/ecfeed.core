@@ -35,7 +35,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelComparator;
@@ -50,7 +49,6 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.SerializationConstants;
-import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -163,11 +161,12 @@ public class XmlParserSerializerTest {
 							"constraint",
 							ConstraintType.ASSIGNMENT,
 							new StaticStatement(true, null),
-							new ExpectedValueStatement(
-									expectedParameter,
-									null,
-									new ChoiceNode("expected", "n", null),
-									new JavaPrimitiveTypePredicate()),
+							AssignmentStatement.createAssignmentWithChoiceCondition(expectedParameter, new ChoiceNode("expected", "n", null)),
+//							new ExpectedValueStatement(
+//									expectedParameter,
+//									null,
+//									new ChoiceNode("expected", "n", null),
+//									new JavaPrimitiveTypePredicate()),
 							null
 							);
 
@@ -608,10 +607,15 @@ public class XmlParserSerializerTest {
 	}
 
 	private AbstractStatement createExpectedStatement(List<BasicParameterNode> parameters) {
+		
 		if(parameters.size() == 0) return null;
 		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(
-				parameter, null, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
+//		return new ExpectedValueStatement(
+//				parameter, null, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
+		
+		
+		ChoiceNode choiceNode = new ChoiceNode("default", createRandomValue(parameter.getType()));
+		return AssignmentStatement.createAssignmentWithChoiceCondition(parameter, choiceNode);
 	}
 
 	private List<BasicParameterNode> getChoicesParentParameters(List<? extends BasicParameterNode> parameters) {

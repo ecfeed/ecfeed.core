@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
@@ -30,7 +31,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintNodeHelper;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelComparator;
@@ -364,7 +364,7 @@ public class XomParserTest {
 		for(int i = 0; i < 10; i++){
 			try{
 				MethodNode m = fModelGenerator.generateMethod(10, 0, 0);
-				ExpectedValueStatement s = fModelGenerator.generateExpectedValueStatement(m);
+				AssignmentStatement s = fModelGenerator.generateExpectedValueStatement(m);
 
 				XomStatementBuilder builder = 
 						new XomStatementBuilder(
@@ -374,7 +374,7 @@ public class XomParserTest {
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
 
-				ExpectedValueStatement parsedS = ModelParserForConstraint.parseExpectedValueStatement(element, m, new ListOfStrings());
+				AssignmentStatement parsedS = ModelParserForConstraint.parseExpectedValueStatement(element, m, new ListOfStrings());
 				assertStatementsEqual(s, parsedS);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());

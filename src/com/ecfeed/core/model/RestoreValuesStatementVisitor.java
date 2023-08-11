@@ -21,20 +21,20 @@ public class RestoreValuesStatementVisitor implements IStatementVisitor {
 		fOriginalValues = originalValues;
 	}
 
-	@Override
-	public Object visit(ExpectedValueStatement statement) throws Exception {
-
-		int hashCode = statement.hashCode();
-
-		String value = fOriginalValues.get(hashCode);
-
-		if (value == null) {
-			return null;
-		}
-
-		statement.getChoice().setValueString(value);
-		return null;
-	}
+//	@Override
+//	public Object visit(ExpectedValueStatement statement) throws Exception {
+//
+//		int hashCode = statement.hashCode();
+//
+//		String value = fOriginalValues.get(hashCode);
+//
+//		if (value == null) {
+//			return null;
+//		}
+//
+//		statement.getChoice().setValueString(value);
+//		return null;
+//	}
 
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {

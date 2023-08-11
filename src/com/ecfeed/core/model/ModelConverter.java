@@ -112,27 +112,28 @@ public class ModelConverter {
 		}
 	}
 
+	// XYX
 	private static void convertConstraintFrom3To4(ConstraintNode constraintNode) {
 
-		Constraint constraint = constraintNode.getConstraint();
-
-		AbstractStatement oldAbstractStatement = constraint.getPostcondition();
-
-		if (!(oldAbstractStatement instanceof ExpectedValueStatement)) {
-			return;
-		}
-
-		constraint.setType(ConstraintType.ASSIGNMENT);
-
-		ExpectedValueStatement oldExpectedValueStatement = (ExpectedValueStatement)oldAbstractStatement;
-
-		BasicParameterNode methodParameterNode = oldExpectedValueStatement.getLeftMethodParameterNode();
-		String value = oldExpectedValueStatement.getChoice().getValueString();
-
-		AbstractStatement newPostcondition =
-				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode, value);
-
-		constraint.setPostcondition(newPostcondition);
+//		Constraint constraint = constraintNode.getConstraint();
+//
+//		AbstractStatement oldAbstractStatement = constraint.getPostcondition();
+//
+//		if (!(oldAbstractStatement instanceof ExpectedValueStatement)) {
+//			return;
+//		}
+//
+//		constraint.setType(ConstraintType.ASSIGNMENT);
+//
+//		ExpectedValueStatement oldExpectedValueStatement = (ExpectedValueStatement)oldAbstractStatement;
+//
+//		BasicParameterNode methodParameterNode = oldExpectedValueStatement.getLeftMethodParameterNode();
+//		String value = oldExpectedValueStatement.getChoice().getValueString();
+//
+//		AbstractStatement newPostcondition =
+//				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode, value);
+//
+//		constraint.setPostcondition(newPostcondition);
 	}
 
 }

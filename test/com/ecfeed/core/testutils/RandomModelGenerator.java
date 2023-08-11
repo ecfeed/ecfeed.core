@@ -17,10 +17,28 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.ecfeed.core.model.*;
 import org.junit.Test;
 
-import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.MethodDeployer;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
+import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
@@ -277,7 +295,41 @@ public class RandomModelGenerator {
 		}
 	}
 
-	public ExpectedValueStatement generateExpectedValueStatement(MethodNode method) {
+//	public ExpectedValueStatement generateExpectedValueStatement(MethodNode method) {
+//		
+//		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
+//
+//		for(AbstractParameterNode abstractParameterNode : method.getParameters()){
+//
+//			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+//				continue;
+//			}
+//
+//			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+//
+//			if(basicParameterNode.isExpected() == true){
+//				parameters.add(basicParameterNode);
+//			}
+//		}
+//
+//		if(parameters.size() == 0){
+//			BasicParameterNode parameter = generateParameter(SUPPORTED_TYPES[rand.nextInt(SUPPORTED_TYPES.length)], true, 0, 1, 1);
+//			method.addParameter(parameter);
+//			parameters.add(parameter);
+//		}
+//
+//		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+//
+//
+//		String value = randomChoiceValue(parameter.getType());
+//		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
+//		ChoiceNode choice = new ChoiceNode(name, value, null);
+//		parameter.addChoice(choice);
+//		return new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
+//	}
+
+	public AssignmentStatement generateExpectedValueStatement(MethodNode method) {
+		
 		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 
 		for(AbstractParameterNode abstractParameterNode : method.getParameters()){
@@ -306,9 +358,10 @@ public class RandomModelGenerator {
 		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
 		ChoiceNode choice = new ChoiceNode(name, value, null);
 		parameter.addChoice(choice);
-		return new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
+		//return new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
+		return AssignmentStatement.createAssignmentWithChoiceCondition(parameter, choice);
 	}
-
+	
 	public StatementArray generateStatementArray(MethodNode method, int depth) {
 
 		StatementArray statement = 
@@ -560,7 +613,7 @@ public class RandomModelGenerator {
 	public void testGenerateExpectedValueStatement(){
 		for(int i = 0; i < 10; i++){
 			MethodNode m = generateMethod(10, 0, 0);
-			ExpectedValueStatement statement = generateExpectedValueStatement(m);
+			AssignmentStatement statement = generateExpectedValueStatement(m);
 			System.out.println(fStringifier.stringify(statement, 0));
 		}
 	}

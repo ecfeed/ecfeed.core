@@ -49,9 +49,9 @@ public class ModelStringifier {
 		if(statement instanceof RelationStatement){
 			return stringify((RelationStatement)statement, indent);
 		}
-		if(statement instanceof ExpectedValueStatement){
-			return stringify((ExpectedValueStatement)statement, indent);
-		}
+//		if(statement instanceof ExpectedValueStatement){
+//			return stringify((ExpectedValueStatement)statement, indent);
+//		}
 		if(statement instanceof StatementArray){
 			return stringify((StatementArray)statement, indent);
 		}
@@ -203,12 +203,12 @@ public class ModelStringifier {
 		return result;
 	}
 
-	public String stringify(ExpectedValueStatement s, int indent){
-		String result = intendentString(indent);
-		result += "Expected value statement ";
-		result += s.getLeftMethodParameterNode().getName() + "[" + s.getLeftMethodParameterNode().getType() + "] " + s.getRelation() + " " + s.getChoice().getValueString();
-		return result;
-	}
+//	public String stringify(ExpectedValueStatement s, int indent){
+//		String result = intendentString(indent);
+//		result += "Expected value statement ";
+//		result += s.getLeftMethodParameterNode().getName() + "[" + s.getLeftMethodParameterNode().getType() + "] " + s.getRelation() + " " + s.getChoice().getValueString();
+//		return result;
+//	}
 
 	public String stringify(StatementArray s, int indent){
 		String result = intendentString(indent);

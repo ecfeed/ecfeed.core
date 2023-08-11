@@ -123,10 +123,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-		if (abstractStatement instanceof ExpectedValueStatement) {
-			return "Expected value statement is not allowed in this version of software.";
-		}
-
 		String errorMessage = checkIfStatementValueIsAdaptable(abstractStatement, extLanguageManager);
 
 		if (errorMessage != null) {
@@ -759,18 +755,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		@Override
-		public Object visit(ExpectedValueStatement statement) throws Exception {
-
-			Set<ChoiceNode> result = new HashSet<>();
-
-			if (statement.isParameterPrimitive()) {
-				result.add(statement.getChoice());
-			}
-
-			return result;
-		}
-
-		@Override
 		public Object visit(RelationStatement statement) throws Exception {
 
 			return statement.getCondition().accept(this);
@@ -821,15 +805,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			for (AbstractStatement s : statement.getStatements()) {
 				set.addAll((Set<BasicParameterNode>)s.accept(this));
 			}
-
-			return set;
-		}
-
-		@Override
-		public Object visit(ExpectedValueStatement statement) throws Exception {
-
-			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
-			set.add(statement.getLeftMethodParameterNode());
 
 			return set;
 		}
@@ -923,12 +898,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		@Override
-		public Object visit(ExpectedValueStatement statement) throws Exception {
-
-			return EMPTY_SET;
-		}
-
-		@Override
 		public Object visit(RelationStatement statement) throws Exception {
 
 			if (fParameter == statement.getLeftParameter()) {
@@ -1000,16 +969,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 					ExceptionHelper.reportRuntimeException("Something is wrong");
 				}
 			}
-
-			return null;
-		}
-
-		@Override
-		public Object visit(ExpectedValueStatement statement) {
-
-			BasicParameterNode leftMethodParameterNode = statement.getLeftMethodParameterNode();
-
-			fMethods.add((MethodNode) leftMethodParameterNode.getParent());
 
 			return null;
 		}

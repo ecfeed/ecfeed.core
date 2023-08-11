@@ -10,14 +10,13 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
 import com.ecfeed.core.model.ChoiceNodeHelper;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
@@ -338,10 +337,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             return -myID;
     }
 
-    @Override
-    public Object visit(ExpectedValueStatement statement) {
-        return null; //TODO
-    }
+//    @Override
+//    public Object visit(ExpectedValueStatement statement) {
+//        return null; //TODO
+//    }
 
     @Override
     public Object visit(StaticStatement statement) {

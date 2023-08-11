@@ -41,11 +41,6 @@ public abstract class AbstractStatementHelper {
 			return;
 		}
 
-		if (statement1 instanceof ExpectedValueStatement && statement2 instanceof ExpectedValueStatement) {
-			ExpectedValueStatementHelper.compareExpectedValueStatements((ExpectedValueStatement)statement1, (ExpectedValueStatement)statement2);
-			return;
-		}
-
 		if (statement1 instanceof AssignmentStatement && statement2 instanceof AssignmentStatement) {
 			AssignmentStatementHelper.compareAssignmentStatements((AssignmentStatement)statement1, (AssignmentStatement)statement2);
 			return;

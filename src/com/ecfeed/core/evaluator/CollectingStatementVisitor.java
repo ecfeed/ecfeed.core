@@ -38,12 +38,6 @@ class CollectingStatementVisitor implements IStatementVisitor {
     }
 
     @Override
-    public Object visit(ExpectedValueStatement statement) {
-        reportUnexpectedTypeException();
-        return null;
-    }
-
-    @Override
     public Object visit(LabelCondition statement) {
         reportUnexpectedTypeException();
         return null;

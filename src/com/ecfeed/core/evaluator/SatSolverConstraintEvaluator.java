@@ -19,7 +19,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	// All relation statements extracted from all provided constraints.
 	private List<RelationStatement> fRelationStatements = new ArrayList<>();
-	private List<Pair<Integer, ExpectedValueStatement>> fOldExpectedValueConstraintsData = new ArrayList<>();
+	private List<Pair<Integer, AssignmentStatement>> fOldExpectedValueConstraintsData = new ArrayList<>();
 	private List<Pair<Integer, AssignmentStatement>> fExpectedValueAssignmentsData = new ArrayList<>();
 
 	private List<BasicParameterNode> fParameters = new ArrayList<>();
@@ -125,21 +125,23 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void collectRelationStatements(Constraint constraint) {
 
-		if (constraint.getPostcondition() instanceof ExpectedValueStatement) {
-			collectRelationStatementsExpectedValue(constraint);
-		} else {
-			collectRelationStatementsOther(constraint);
-		}
+//		if (constraint.getPostcondition() instanceof ExpectedValueStatement) {
+//			collectRelationStatementsExpectedValue(constraint);
+//		} else {
+//			collectRelationStatementsOther(constraint);
+//		}
+		
+		collectRelationStatementsOther(constraint);
 	}
 
-	private void collectRelationStatementsExpectedValue(Constraint constraint) {
-
-		try {
-			constraint.getPrecondition().accept(new CollectingStatementVisitor(fRelationStatements));
-		} catch (Exception e) {
-			ExceptionHelper.reportRuntimeException("Relation statements could not be collected: " + constraint, e);
-		}
-	}
+//	private void collectRelationStatementsExpectedValue(Constraint constraint) {
+//
+//		try {
+//			constraint.getPrecondition().accept(new CollectingStatementVisitor(fRelationStatements));
+//		} catch (Exception e) {
+//			ExceptionHelper.reportRuntimeException("Relation statements could not be collected: " + constraint, e);
+//		}
+//	}
 
 	private void collectRelationStatementsOther(Constraint constraint) {
 
@@ -470,8 +472,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			return;
 		}
 
-		if (postcondition instanceof ExpectedValueStatement) {
-			addExpectedValueStatementToAssignmentsTable(precondition, (ExpectedValueStatement) postcondition);
+		if (postcondition instanceof AssignmentStatement) {
+			addExpectedValueStatementToAssignmentsTable(precondition, (AssignmentStatement) postcondition);
 			return;
 		}
 
@@ -518,7 +520,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		}
 	}
 
-	private void addExpectedValueStatementToAssignmentsTable(AbstractStatement precondition, ExpectedValueStatement expectedValueStatement) {
+	private void addExpectedValueStatementToAssignmentsTable(AbstractStatement precondition, AssignmentStatement expectedValueStatement) {
 
 		try {
 			Integer preconditionId =
@@ -681,11 +683,11 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		Set<Integer> model = new HashSet<>(Ints.asList(fSat4Solver.getModel()));
 
-		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fOldExpectedValueConstraintsData) {
-			if (model.contains(expectedValConstraint.getFirst())) {
-				expectedValConstraint.getSecond().setExpectedValues(testCaseChoices);
-			}
-		}
+//		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fOldExpectedValueConstraintsData) {
+//			if (model.contains(expectedValConstraint.getFirst())) {
+//				expectedValConstraint.getSecond().setExpectedValues(testCaseChoices);
+//			}
+//		}
 
 		for (Pair<Integer, AssignmentStatement> expectedValConstraint : fExpectedValueAssignmentsData) {
 			if (model.contains(expectedValConstraint.getFirst())) {

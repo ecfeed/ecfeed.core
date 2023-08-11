@@ -30,7 +30,6 @@ import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -39,7 +38,6 @@ import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -444,7 +442,7 @@ public class ModelParserForConstraint {
 				parameterNode, parameterContext, relation, label);
 	}
 
-	public static ExpectedValueStatement parseExpectedValueStatement(
+	public static AssignmentStatement parseExpectedValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
@@ -475,14 +473,14 @@ public class ModelParserForConstraint {
 			return null;
 		}
 
-		ChoiceNode condition = new ChoiceNode("expected", valueString, parameterNode.getModelChangeRegistrator());
-		condition.setParent(parameterNode);
+		ChoiceNode choiceForCondition = new ChoiceNode("expected", valueString, parameterNode.getModelChangeRegistrator());
+		choiceForCondition.setParent(parameterNode);
 
-		return new ExpectedValueStatement(
-				parameterNode, parameterContext, condition, new JavaPrimitiveTypePredicate());
+//		return new ExpectedValueStatement(
+//				parameterNode, parameterContext, condition, new JavaPrimitiveTypePredicate());
+		
+		return AssignmentStatement.createAssignmentWithChoiceCondition(parameterNode, choiceForCondition);
 	}
-
-	//-----------------------------------------------------------------------------------------------
 
 	private static CompositeParameterNode getParameterContext(
 			Element element,

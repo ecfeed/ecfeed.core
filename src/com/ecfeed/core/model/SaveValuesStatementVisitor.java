@@ -25,16 +25,16 @@ public class SaveValuesStatementVisitor implements IStatementVisitor {
 		return fInOutHashesAndValues;
 	}
 
-	@Override
-	public Object visit(ExpectedValueStatement statement) throws Exception {
-
-		int hashCode = statement.hashCode();
-
-		String value = statement.getChoice().getValueString();
-
-		fInOutHashesAndValues.put(hashCode, value);
-		return null;
-	}
+//	@Override
+//	public Object visit(ExpectedValueStatement statement) throws Exception {
+//
+//		int hashCode = statement.hashCode();
+//
+//		String value = statement.getChoice().getValueString();
+//
+//		fInOutHashesAndValues.put(hashCode, value);
+//		return null;
+//	}
 
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {

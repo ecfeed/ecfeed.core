@@ -26,24 +26,24 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 		fParameterConversionDefinition = inOutParameterConversionDefinition;
 	}
 
-	@Override
-	public Object visit(ExpectedValueStatement statement) throws Exception {
-
-		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
-
-		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
-			return null;
-		}
-
-		int itemCount = fParameterConversionDefinition.getItemCount();
-
-		for (int index = 0; index < itemCount; index++) {
-			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
-			statement.convert(parameterConversionItem);
-		}
-
-		return null;
-	}
+//	@Override
+//	public Object visit(ExpectedValueStatement statement) throws Exception {
+//
+//		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
+//
+//		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+//			return null;
+//		}
+//
+//		int itemCount = fParameterConversionDefinition.getItemCount();
+//
+//		for (int index = 0; index < itemCount; index++) {
+//			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
+//			statement.convert(parameterConversionItem);
+//		}
+//
+//		return null;
+//	}
 
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {

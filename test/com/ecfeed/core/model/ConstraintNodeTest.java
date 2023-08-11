@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 
 public class ConstraintNodeTest {
@@ -121,7 +120,11 @@ public class ConstraintNodeTest {
 		precondition.addStatement(new StaticStatement(true, null));
 		precondition.addStatement(RelationStatement.createRelationStatementWithChoiceCondition(par1, null, EMathRelation.EQUAL, choice1));
 		precondition.addStatement(RelationStatement.createRelationStatementWithLabelCondition(par1, null, EMathRelation.NOT_EQUAL, "label"));
-		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, null, expectedChoice, new JavaPrimitiveTypePredicate());
+		
+		// XYX
+		//ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, null, expectedChoice, new JavaPrimitiveTypePredicate());
+		AssignmentStatement postcondition = AssignmentStatement.createAssignmentWithChoiceCondition(par2, expectedChoice); 
+				//new ExpectedValueStatement(par2, null, expectedChoice, new JavaPrimitiveTypePredicate());
 
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null), null);
 		method.addConstraint(constraint);

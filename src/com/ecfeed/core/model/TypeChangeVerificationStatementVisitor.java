@@ -39,22 +39,22 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		fNewTypeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 	}
 
-	@Override
-	public Object visit(ExpectedValueStatement statement) throws Exception {
-		
-		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
-
-		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
-			return null;
-		}
-		
-		ChoiceNode choiceNode = statement.getChoice();
-		String valueString = choiceNode.getValueString();
-
-		verifyConversionOfValue(fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
-
-		return null;
-	}
+//	@Override
+//	public Object visit(ExpectedValueStatement statement) throws Exception {
+//		
+//		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
+//
+//		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+//			return null;
+//		}
+//		
+//		ChoiceNode choiceNode = statement.getChoice();
+//		String valueString = choiceNode.getValueString();
+//
+//		verifyConversionOfValue(fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
+//
+//		return null;
+//	}
 
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {

@@ -11,13 +11,11 @@
 package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE;
@@ -35,7 +33,6 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.IStatementVisitor;
@@ -116,23 +113,23 @@ public class XomStatementBuilder implements IStatementVisitor {
 		return targetStatementElement;
 	}
 
-	@Override
-	public Object visit(ExpectedValueStatement statement) throws Exception {
-
-		String parameterName = statement.getLeftOperandName();
-		ChoiceNode condition = statement.getChoice();
-		Attribute parameterAttribute =
-				new Attribute(fStatementParameterAttributeName, parameterName);
-
-		Attribute valueAttribute =
-				new Attribute(STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, condition.getValueString());
-
-		Element targetStatementElement = new Element(CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME);
-		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
-		XomBuilder.encodeAndAddAttribute(targetStatementElement, valueAttribute, fWhiteCharConverter);
-
-		return targetStatementElement;
-	}
+//	@Override
+//	public Object visit(ExpectedValueStatement statement) throws Exception {
+//
+//		String parameterName = statement.getLeftOperandName();
+//		ChoiceNode condition = statement.getChoice();
+//		Attribute parameterAttribute =
+//				new Attribute(fStatementParameterAttributeName, parameterName);
+//
+//		Attribute valueAttribute =
+//				new Attribute(STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, condition.getValueString());
+//
+//		Element targetStatementElement = new Element(CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME);
+//		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
+//		XomBuilder.encodeAndAddAttribute(targetStatementElement, valueAttribute, fWhiteCharConverter);
+//
+//		return targetStatementElement;
+//	}
 
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
