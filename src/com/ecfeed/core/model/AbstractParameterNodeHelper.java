@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -134,6 +135,10 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
 
+		if (globalParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Global parameter node should not be empty.");
+		}
+
 		List<AbstractParameterNode> result = new ArrayList<>();
 
 		IAbstractNode rootNode = RootNodeHelper.findRootNode(globalParameterNode);
@@ -200,32 +205,6 @@ public abstract class AbstractParameterNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
-
-		IAbstractNode currentNode = abstractNode;
-
-		CompositeParameterNode topCompositeParameterNode = null;
-
-		if (abstractNode instanceof CompositeParameterNode) {
-			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
-		}
-
-		for (;;) {
-
-			IAbstractNode parent = currentNode.getParent();
-
-			if (parent == null || parent instanceof ClassNode || parent instanceof RootNode) {
-				return topCompositeParameterNode;
-			}
-
-			if (parent instanceof CompositeParameterNode) {
-				topCompositeParameterNode = (CompositeParameterNode) parent;
-			}
-
-			currentNode = parent;
-		}
-	}
-
 	public static void compareParameterTypes(
 			AbstractParameterNode abstractParameter1,
 			AbstractParameterNode abstractParameter2) {
@@ -239,7 +218,6 @@ public abstract class AbstractParameterNodeHelper {
 
 			ExceptionHelper.reportRuntimeException("Types of nodes do not match: composite parameter vs basic parameter.");
 		}
-
 	}
 
 	private enum ParameterPathType {
@@ -277,7 +255,7 @@ public abstract class AbstractParameterNodeHelper {
 		return parameter;
 	}
 
-	public static AbstractParameterNode findParameterByRelativePath(  // TODO MO-RE old name findParameterByAbsolutePath
+	public static AbstractParameterNode findParameterByRelativePath(
 			String path, ParameterPathType parameterPathType, IParametersParentNode topNode) {
 
 		if ((parameterPathType == ParameterPathType.PATH_WITHOUT_TOP_NODE) 
@@ -290,28 +268,28 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		String formattedPath = formatSearchPath(path, parameterPathType);
-		
-		IAbstractNode foundAbstractNode = topNode.getChild(formattedPath);
-		
+
+		IAbstractNode foundAbstractNode = topNode.findChild(formattedPath);
+
 		if (!(foundAbstractNode instanceof AbstractParameterNode)) {
 			return null;
 		}
-		
+
 		return (AbstractParameterNode) foundAbstractNode;
 	}
 
 	private static String formatSearchPath(String path, ParameterPathType parameterPathType) {
-		
+
 		String formattedPath = path;
 
 		if (path.startsWith(SignatureHelper.SIGNATURE_ROOT_MARKER)) {
 			formattedPath = path.substring(1);
 		}
-		
+
 		if (parameterPathType == ParameterPathType.PATH_CONTAINTS_TOP_NODE) {
 			formattedPath = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, formattedPath);
 		}
-		
+
 		return formattedPath;
 	}
 
@@ -348,4 +326,14 @@ public abstract class AbstractParameterNodeHelper {
 		ExceptionHelper.reportRuntimeException("Unhandled combination of parameter types.");
 	}
 
+	public static List<AbstractParameterNode> findParameters(List<IAbstractNode> selectedNodes) {
+
+		List<AbstractParameterNode> parameters = selectedNodes.stream()
+				.filter(e -> ((e instanceof BasicParameterNode) || (e instanceof CompositeParameterNode)))
+				.map(e -> (AbstractParameterNode)e)
+				.collect(Collectors.toList());
+
+		return parameters;
+	}
+	
 }

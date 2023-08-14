@@ -42,7 +42,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);  // TODO MO-RE leftParameterLinkingContext
+						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
 		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, null);
@@ -72,7 +72,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);  // TODO MO-RE leftParameterLinkingContext
+						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, true, null);
 		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, true, null);
@@ -431,7 +431,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftParam, null, EMathRelation.EQUAL, rightParam, null);  // TODO MO-RE leftParameterLinkingContext
+						leftParam, null, EMathRelation.EQUAL, rightParam, null);
 
 		RelationStatement copy = statement.makeClone();
 

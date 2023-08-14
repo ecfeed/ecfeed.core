@@ -36,13 +36,14 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperationTest {
-
+	
 	@Test
 	public void classWithoutChildrenRemove() {
 
@@ -66,8 +67,6 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNodes.size());
 		assertEquals(classNode, classNodes.get(0));
 	}
-
-	// TODO MO-RE remove class with method and parameter
 
 	@Test
 	public void methodsRemove() {
@@ -151,14 +150,15 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = new ArrayList<>();
+		
+		deployedParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParametersWithContexts.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParametersWithContexts);
 
 		// list of nodes to delete
 
@@ -202,7 +202,7 @@ public class GenericRemoveNodesOperationTest {
 	//
 	//		final String choiceValueString = "AB";
 	//
-	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+	//		BasicParameterNodeHelper.addNewChoice(
 	//				globalParameterNodeOfRoot1, "RC11", choiceValueString, false, null);
 	//
 	//
@@ -212,7 +212,7 @@ public class GenericRemoveNodesOperationTest {
 	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 	//
 	//		BasicParameterNode localParameterNode = 
-	//				ParametersAndConstraintsParentNodeHelper.addLinkedParameterToMethod(methodNode, "MP1", parameterType, globalParameterNodeOfRoot1);
+	//				ParametersAndConstraintsParentNodeHelper.addLinkedParameter(methodNode, "MP1", parameterType, globalParameterNodeOfRoot1);
 	//
 	//		List<IAbstractNode> listOfNodesToDelete = new ArrayList<>();
 	//		listOfNodesToDelete.add(localParameterNode);
@@ -231,7 +231,7 @@ public class GenericRemoveNodesOperationTest {
 	//
 	//		BasicParameterNode globalBasicParameterNode = RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, "GParam1", "String", null);
 	//
-	//		BasicParameterNodeHelper.addNewChoiceToBasicParameter(globalBasicParameterNode, "Choice1", "1", null);
+	//		BasicParameterNodeHelper.addNewChoice(globalBasicParameterNode, "Choice1", "1", null);
 	//		
 	//		// class node 
 	//
@@ -366,14 +366,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// check created structure
 
@@ -492,14 +492,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1OfGlobalComposite);
-		deployedParameters.add(basicParameterNode2OfGlobalComposite);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1OfGlobalComposite, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2OfGlobalComposite, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -672,14 +672,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case 
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1OfGlobalComposite);
-		deployedParameters.add(basicParameterNode2OfGlobalComposite);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1OfGlobalComposite, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2OfGlobalComposite, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -787,17 +787,17 @@ public class GenericRemoveNodesOperationTest {
 		// global basic parameter
 
 		BasicParameterNode globalBasicParameterNode = 
-				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
+				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "GP1", "String", null);
 
 		// global choice
 
 		ChoiceNode globalChoiceNode = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						globalBasicParameterNode, "GC1", "A", false, false, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// local parameter linked to global
 
@@ -808,7 +808,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {globalChoiceNode});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// initial checks
 
@@ -892,14 +892,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -989,14 +989,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// 	Root
 		// 		GlobalBasicParam1
@@ -1171,7 +1171,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		//		Root
 		//		GS11
@@ -1194,10 +1194,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// initial checks
 
@@ -1259,9 +1259,6 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, compositeParameterNode1.getConstraints().size());
 	}
 
-	// TODO MO-RE add test for parameter condition P1 = P2
-	// TODO MO-RE add test when all choices from parameter are deleted but parameter remains
-
 	@Test
 	public void choiceNodeRemoveFromMethodBasicParameter() {
 
@@ -1308,14 +1305,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1401,14 +1398,14 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		MethodNodeHelper.addNewTestCase(methodNode, choicesOfTestCase, true);
+		MethodNodeHelper.addNewTestCase(methodNode, "ts", choicesOfTestCase, true);
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1533,10 +1530,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1601,10 +1598,10 @@ public class GenericRemoveNodesOperationTest {
 
 		// copy parameters to deployed parameters
 
-		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-		deployedParameters.add(basicParameterNode1);
-		deployedParameters.add(basicParameterNode2);
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParameters = new ArrayList<>();
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode1, null));
+		deployedParameters.add(new ParameterWithLinkingContext(basicParameterNode2, null));
+		methodNode.setDeployedParametersWithContexts(deployedParameters);
 
 		// list of nodes to delete
 
@@ -1641,7 +1638,7 @@ public class GenericRemoveNodesOperationTest {
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						basicParameterNode, null, EMathRelation.EQUAL, value); // TODO MO-RE leftParameterLinkingContext
+						basicParameterNode, null, EMathRelation.EQUAL, value);
 
 		Constraint constraint = new Constraint(
 				constraintName, 

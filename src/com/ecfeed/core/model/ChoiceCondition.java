@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -51,7 +52,9 @@ public class ChoiceCondition implements IStatementCondition {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
-		return evaluateChoice(choice);
+		EvaluationResult evaluateChoice = evaluateChoice(choice);
+
+		return evaluateChoice;
 	}
 
 	@Override
@@ -65,7 +68,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 		if (nodeMapper.isPresent()) {
 
-			ChoiceNode clonedChoiceNode = nodeMapper.get().getDestinationNode(fRightChoice);
+			ChoiceNode clonedChoiceNode = convertChoice(nodeMapper.get());
 
 			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
 		}
@@ -74,30 +77,40 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition makeClone() {  // TODO MO-RE obsolete
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightChoice = nodeMapper.getMappedNode(fRightChoice, mappingDirection);
+	}
+
+	@Override
+	public ChoiceCondition makeClone() {
 		// choices are not cloned
 		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
-	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) { // TODO MO-RE obsolete
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		return new ChoiceCondition(updateChoiceReference(mapper), statement);
+		ChoiceNode newChoiceNode = convertChoice(mapper);
+
+		return new ChoiceCondition(newChoiceNode, statement);
 	}
 
-	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
+	private ChoiceNode convertChoice(NodeMapper mapper) {
 
-		ChoiceNode node;
+		ChoiceNode choiceNode;
 
-		if (isSourceLinked()) {
-			node = fRightChoice;
-		} else {
-			node = mapper.getDestinationNode(fRightChoice);
-		}
+		//		if (isSourceLinked()) {
+		//			choiceNode = fRightChoice;
+		//		} else {
+		//			choiceNode = mapper.getDestinationNode(fRightChoice);
+		//		}
 
-		node.setOrigChoiceNode(null);
+		choiceNode = mapper.getDestinationNode(fRightChoice);
 
-		return node;
+		choiceNode.setOrigChoiceNode(null);
+
+		return choiceNode;
 	}
 
 	boolean isSourceLinked() {

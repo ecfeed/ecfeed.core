@@ -85,7 +85,7 @@ public class ConstraintNode extends AbstractNode {
 	//		return copy;
 	//	}
 
-	public ConstraintNode createCopy(NodeMapper mapper) {// TODO MO-RE obsolete
+	public ConstraintNode createCopy(NodeMapper mapper) {
 
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
 
@@ -108,6 +108,10 @@ public class ConstraintNode extends AbstractNode {
 		return copyOfConstraintNode;
 	}
 
+	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
+		fConstraint.replaceReferences(nodeMapper, mappingDirection);
+	}
+	
 	public Constraint getConstraint() {
 
 		return fConstraint;
@@ -196,7 +200,7 @@ public class ConstraintNode extends AbstractNode {
 	//		return false;
 	//	}
 
-	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) { // TODO MO-RE obsolete
+	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
 		ConstraintNode copy = makeClone(Optional.empty());
 		return copy;

@@ -47,7 +47,7 @@ public class OnChoiceOperationSetRandomizedValue extends AbstractModelOperation 
 
 		String type = fChoiceNode.getParameter().getType();
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(type); 
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(type); 
 
 		try {
 			return typeAdapter.adapt(

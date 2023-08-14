@@ -34,7 +34,7 @@ public interface IAbstractNode {
 	public IAbstractNode getContainer();
 	public IAbstractNode getParent();
 	public IAbstractNode getRoot();
-	public IAbstractNode getChild(String qualifiedName);
+	public IAbstractNode findChild(String qualifiedName);
 	public IAbstractNode getSibling(String name);
 	public boolean hasSibling(String name);
 	public int getSubtreeSize();
@@ -42,12 +42,11 @@ public interface IAbstractNode {
 	public String getFullNamePath();
 	public boolean isMatch(IAbstractNode nodeToCompare);
 	public int getMaxIndex();
-	//public abstract IAbstractNode makeClone();
 	public abstract IAbstractNode makeClone(Optional<NodeMapper> nodeMapper);
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 	public void setProperties(NodeProperties nodeProperties);
 	public NodeProperties getProperties();
-	public int getMaxChildIndex(IAbstractNode potentialChild);
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild);
 	public void setPropertyValue(NodePropertyDefs.PropertyId propertyId, String value);
 	public void setPropertyDefaultValue(NodePropertyDefs.PropertyId propertyId);
 	public String getPropertyValue(NodePropertyDefs.PropertyId propertyId);

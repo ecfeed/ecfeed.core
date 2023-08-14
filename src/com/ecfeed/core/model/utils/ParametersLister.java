@@ -21,6 +21,7 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -50,7 +51,7 @@ public class ParametersLister {
 		parameter.setParent(parent);
 		fElementLister.addElement(parameter, index);
 	}
-	
+
 	public void addParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
 		for (AbstractParameterNode methodParameterNode : parameters) {
@@ -65,7 +66,7 @@ public class ParametersLister {
 	}
 
 	public List<AbstractParameterNode> getReferenceToParameters() {
-		
+
 		return fElementLister.getReferenceToElements();
 	}
 
@@ -93,13 +94,13 @@ public class ParametersLister {
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
 		if (parameterNameToFind.contains(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
-			return findParameterQualified(parameterNameToFind);
+			return findParameterByQualifiedPath(parameterNameToFind);
 		} else {
-			return findParameterNonQualified(parameterNameToFind);
+			return findParameterByNonQualifiedPath(parameterNameToFind);
 		}
 	}
 
-	public AbstractParameterNode findParameterNonQualified(String parameterNameToFind) {
+	public AbstractParameterNode findParameterByNonQualifiedPath(String parameterNameToFind) {
 
 		Optional<AbstractParameterNode> result = fElementLister.getReferenceToElements().stream()
 				.filter(e -> e.getName().equals(parameterNameToFind))
@@ -112,11 +113,15 @@ public class ParametersLister {
 		return null;
 	}
 
-	public AbstractParameterNode findParameterQualified(String parameterNameToFind) {
+	public AbstractParameterNode findParameterByQualifiedPath(String parameterNameToFind) {
 
 		for (AbstractParameterNode parameter : fElementLister.getReferenceToElements()) {
 
-			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			String qualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+			
+			if (qualifiedName.equals(parameterNameToFind)) {
 				return parameter;
 			}
 
@@ -144,10 +149,10 @@ public class ParametersLister {
 			if (parameter.getName().equals(parameterName)) {
 				return index;
 			}
-			
+
 			index++;
 		}
-		
+
 		return -1;
 	}
 
@@ -201,9 +206,7 @@ public class ParametersLister {
 
 		parameter.setParent(null);
 
-		// TODO MO-RE rewrite in ParametersLister
-		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.equals(parameter));
-		fElementLister.registerChange();
+		boolean result = fElementLister.removeElement(parameter);
 
 		return result;
 	}
@@ -215,11 +218,8 @@ public class ParametersLister {
 
 	public void replaceParameters(List<AbstractParameterNode> parameters, IAbstractNode parent) {
 
-		// TODO MO-RE rewrite in ParametersLister
 		fElementLister.clear();
 		addParameters(parameters, parent);
-
-		fElementLister.registerChange();
 	}
 
 	public String generateNewParameterName(String startParameterName) {
@@ -262,6 +262,16 @@ public class ParametersLister {
 		}
 
 		return true;
+	}
+
+	public void shiftElements(List<Integer> indicesOfElements, int shift) {
+
+		fElementLister.shiftElements(indicesOfElements, shift);
+	}
+
+	public void shiftOneElement(int indexOfElement, int shift) {
+
+		fElementLister.shiftOneElement(indexOfElement, shift);
 	}
 
 }

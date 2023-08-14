@@ -46,7 +46,6 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 		fNewIndex = index != -1 ? index : parametersParentNode.getParameters().size();
 
 		fTestCasesParentNode = MethodNodeHelper.findMethodNode(parametersParentNode);
-		fRemovedTestCases = getCurrentTestCases();
 	}
 
 	private ArrayList<TestCaseNode> getCurrentTestCases() {
@@ -77,6 +76,8 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 
+		fRemovedTestCases = getCurrentTestCases();
+		
 		if (fTestCasesParentNode != null) {
 			fTestCasesParentNode.removeAllTestCases();
 		}
@@ -98,7 +99,7 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 		public void execute() {
 			
 			if (fTestCasesParentNode != null) {
-				fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
+				fTestCasesParentNode.setTestCases(fRemovedTestCases);
 			}
 			
 			super.execute();

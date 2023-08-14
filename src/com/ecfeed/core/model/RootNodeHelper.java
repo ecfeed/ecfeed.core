@@ -20,10 +20,11 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	public static final String CLASS_NEW_NAME = "TestClass";
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
-	public static BasicParameterNode addNewBasicParameterToRoot(
+	public static BasicParameterNode addNewBasicParameter(
 			RootNode rootNode, 
 			String name, 
 			String type,
@@ -43,20 +44,7 @@ public class RootNodeHelper {
 		return globalParameterNode;
 	}
 
-	//	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
-	//			RootNode rootNode, 
-	//			String name, 
-	//			IModelChangeRegistrator modelChangeRegistrator) {
-	//
-	//		CompositeParameterNode compositeParameterNode = 
-	//				new CompositeParameterNode(name, modelChangeRegistrator);
-	//
-	//		rootNode.addParameter(compositeParameterNode);
-	//
-	//		return compositeParameterNode;
-	//	}
-
-	public static CompositeParameterNode addNewCompositeParameterToRoot(
+	public static CompositeParameterNode addNewCompositeParameter(
 			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
@@ -70,7 +58,7 @@ public class RootNodeHelper {
 		return globalParameterNode;
 	}
 
-	public static ClassNode addNewClassNodeToRoot(
+	public static ClassNode addNewClassNode(
 			RootNode rootNode,
 			String className, 
 			boolean setParent,
@@ -111,9 +99,15 @@ public class RootNodeHelper {
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 
-		String newName = RootNodeHelper.generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
 
 		return newName;
+	}
+
+	public static String generateNewClassName(RootNode rootNode) {
+
+		String fullClassName = CLASS_NEW_NAME;
+		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName);
 	}
 
 	public static String generateUniqueClassNameFromClassNameCore(RootNode rootNode, String startClassNameCore) {

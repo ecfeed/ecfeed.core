@@ -10,7 +10,9 @@
 
 package com.ecfeed.core.generators;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 
@@ -69,17 +71,31 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 	}
 
 	@Override
+	public void setAllowedValues(Object[] allowedValues) {
+		
+		List<Integer> allowedIntegers = new ArrayList<>();
+		
+		for (Object allowedValue : allowedValues) {
+			
+			allowedIntegers.add((Integer) allowedValue);
+		}
+		
+		fAllowedValues = allowedIntegers.toArray(new Integer[allowedIntegers.size()]);
+	}
+	
+	@Override
 	public Object getDefaultValue() {
 		return fDefaultValue;
 	}
 
-	public void setDefaultValue(Object defaultValue) {
+	public void setDefaultValue(Integer defaultValue) {
+		
 		int tmpDefaultValue = (int)defaultValue;
 
 		checkRange(tmpDefaultValue, fMinValue, fMaxValue);
 
 		if (fAllowedValues != null) {
-			checkAllowedValues(fDefaultValue, fAllowedValues);
+			checkAllowedValues(defaultValue, fAllowedValues);
 		}
 
 		fDefaultValue = (int)tmpDefaultValue;

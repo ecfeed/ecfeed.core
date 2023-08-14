@@ -83,7 +83,7 @@ public class ConstraintTest {
 		// label condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");  // TODO MO-RE leftParameterLinkingContext
+				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -94,7 +94,7 @@ public class ConstraintTest {
 		relationStatement =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);
-		
+
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -105,7 +105,7 @@ public class ConstraintTest {
 		relationStatement =
 				RelationStatement.createRelationStatementWithParameterCondition(
 						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);
-		
+
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -526,7 +526,7 @@ public class ConstraintTest {
 
 		AbstractStatement mentioningStatement = 
 				RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, EMathRelation.EQUAL, choice);
-		
+
 		AbstractStatement notMentioningStatement = new StaticStatement(false, null);
 
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, notMentioningStatement, null).mentions(parameter));
@@ -649,7 +649,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter1, null, EMathRelation.EQUAL, "A"); // TODO MO-RE leftParameterLinkingContext 
+						parameter1, null, EMathRelation.EQUAL, "A"); 
 
 		return precondition;
 	}

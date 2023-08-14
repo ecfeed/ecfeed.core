@@ -18,6 +18,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -178,7 +179,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
 
 		String nameInIntrLanguage = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						linkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -206,7 +207,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
 
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						leftParameterLinkingCondition,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -250,7 +251,16 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}
 
-	@Override  // TODO MO-RE obsolete
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fLeftParameter = nodeMapper.getMappedNode(fLeftParameter, mappingDirection); 
+		fLeftParameterLinkingContext  = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
+
+		fRightCondition.replaceReferences(nodeMapper, mappingDirection);
+	}
+
+	@Override
 	public RelationStatement makeClone() {
 
 		return 
@@ -259,7 +269,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
+	public RelationStatement createCopy(NodeMapper mapper) {
 
 		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
 

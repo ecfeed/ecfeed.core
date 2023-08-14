@@ -157,10 +157,10 @@ public class MethodNodeTest {
 		assertTrue(method.getChildren().contains(expCat));
 		assertTrue(method.getChildren().contains(constraint));
 		assertTrue(method.getChildren().contains(testCase));
-		assertEquals(parameter, method.getChild("parameter"));
-		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(testCase, method.getChild("test_case"));
-		assertEquals(constraint, method.getChild("constraint"));
+		assertEquals(parameter, method.findChild("parameter"));
+		assertEquals(expCat, method.findChild("expCat"));
+		assertEquals(testCase, method.findChild("test_case"));
+		assertEquals(constraint, method.findChild("constraint"));
 	}
 
 	@Test
@@ -717,7 +717,7 @@ public class MethodNodeTest {
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
-		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode, "choice1", "0", false, true, null);
 
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
@@ -771,13 +771,13 @@ public class MethodNodeTest {
 		BasicParameterNode basicParameterNode1 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode1, "choice1", "0", false, true, null);
 
 		BasicParameterNode basicParameterNode2 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode2, "choice2", "0", false, true, null);
 
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
@@ -831,7 +831,7 @@ public class MethodNodeTest {
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode, "choice1", "0", false, true, null);
 
 		NodeMapper nodeMapper1 = new NodeMapper();
@@ -862,21 +862,21 @@ public class MethodNodeTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalComposite = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "GS1", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
 
 		BasicParameterNode globalBasicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalComposite, "GP1", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameterNode, "GC1", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "CLL1", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "CLL1", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "M1", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "M1", true, null);
 
 		CompositeParameterNode localCompositeParameterNode = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "LS1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalComposite);
 

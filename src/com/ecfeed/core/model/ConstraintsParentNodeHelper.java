@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.BooleanHolder;
 
 public abstract class ConstraintsParentNodeHelper {
@@ -46,5 +49,38 @@ public abstract class ConstraintsParentNodeHelper {
 			}
 		}
 	}
+
+	public static List<ConstraintNode> findChildConstraints(IConstraintsParentNode constraintsParentNode) {
+
+		return findChildConstraintsRecursive(constraintsParentNode);
+	}
+
+	private static List<ConstraintNode> findChildConstraintsRecursive(IConstraintsParentNode constraintsParentNode) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<IAbstractNode> children = constraintsParentNode.getChildren();
+
+		for (IAbstractNode child : children) {
+
+			if (child instanceof ConstraintNode) {
+				resultConstraintNodes.add((ConstraintNode) child);
+			}
+		}
+
+		for (IAbstractNode child : children) {
+
+			if (child instanceof CompositeParameterNode) {
+				List<ConstraintNode> constraintNodesOfChild = 
+						findChildConstraintsRecursive((CompositeParameterNode) child);
+
+				resultConstraintNodes.addAll(constraintNodesOfChild);
+			}
+		}
+
+
+		return resultConstraintNodes;
+	}
+
 
 }

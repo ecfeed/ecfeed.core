@@ -170,22 +170,22 @@ public abstract class AbstractNode implements IAbstractNode {
 	@Override
 	public IAbstractNode getContainer() {
 		IAbstractNode container;
-		
+
 		container = MethodNodeHelper.findMethodNode(this);
-		
+
 		if (container != null) {
 			return container;
 		}
-		
+
 		container = ClassNodeHelper.findClassNode(this);
-		
+
 		if (container != null) {
 			return container;
 		}
-		
+
 		return RootNodeHelper.findRootNode(this);
 	}
-	
+
 	@Override
 	public IAbstractNode getParent() {
 
@@ -199,36 +199,9 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public IAbstractNode getChild(String qualifiedName) { // TODO MO-RE rename to find child and move to helper
+	public IAbstractNode findChild(String qualifiedName) {
 
-		String[] tokens = qualifiedName.split(":");
-		if(tokens.length == 0){
-			return null;
-		}
-
-		if (tokens.length == 1) {
-
-			List<IAbstractNode> children = getChildren();
-
-			for (IAbstractNode child : children) {
-				if (child.getName().equals(tokens[0])) {
-					return child;
-				}
-			}
-		} else {
-
-			IAbstractNode nextChild = getChild(tokens[0]);
-
-			if(nextChild == null) { 
-				return null;
-			}
-
-			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
-			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
-			return nextChild.getChild(newName);
-		}
-
-		return null;
+		return AbstractNodeHelper.findChild(this, qualifiedName);
 	}
 
 	@Override
@@ -383,7 +356,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild) {
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild) {
 
 		return getChildren().size();
 	}

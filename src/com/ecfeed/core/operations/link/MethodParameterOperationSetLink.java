@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
@@ -48,7 +49,11 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 
 		}
 
-		public SetLinkOperation(BasicParameterNode target, BasicParameterNode link, IExtLanguageManager extLanguageManager) {
+		public SetLinkOperation(
+				BasicParameterNode target, 
+				BasicParameterNode link, 
+				IExtLanguageManager extLanguageManager) {
+			
 			super(OperationNames.SET_LINK, extLanguageManager);
 			fTarget = target;
 			fNewLink = link;
@@ -74,10 +79,25 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 
 	}
 
-	public MethodParameterOperationSetLink(BasicParameterNode target, BasicParameterNode link, IExtLanguageManager extLanguageManager) {
-		super(OperationNames.SET_LINK, true, target, target, extLanguageManager);
-		addOperation(new SetLinkOperation(target, link, extLanguageManager));
-		MethodNode methodNode = (MethodNode) target.getParent();
-		addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
+	public MethodParameterOperationSetLink(
+			BasicParameterNode localBasicParameter, 
+			BasicParameterNode link, 
+			IExtLanguageManager extLanguageManager) {
+		
+		super(
+				OperationNames.SET_LINK, 
+				true, 
+				localBasicParameter, 
+				localBasicParameter, 
+				extLanguageManager);
+		
+		addOperation(new SetLinkOperation(localBasicParameter, link, extLanguageManager));
+		
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(localBasicParameter);
+		
+		OnMethodOperationRemoveInconsistentChildren operation = 
+				new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager);
+		
+		addOperation(operation);
 	}
 }

@@ -26,8 +26,9 @@ import com.ecfeed.core.operations.GenericShiftOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
-public class OnCompositeParameterOperationShift extends GenericShiftOperation { // TODO MO-RE implement
+public class OnCompositeParameterOperationShift extends GenericShiftOperation {
 
 	private List<AbstractParameterNode> fParameters;
 
@@ -61,19 +62,19 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	@Override
 	public void execute() {
 		BasicParameterNode basicParameterNode = (BasicParameterNode)fParameters.get(0);
-		
+
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 
-		if(shiftAllowed(getShiftedElements(), getShift()) == false){
+		if(shiftIsAllowed(getShiftedElements(), getShift()) == false){
 
 			ExceptionHelper.reportRuntimeException(
 					ClassNodeHelper.createMethodNameDuplicateMessage(
 							method.getClassNode(),  method, false, getExtLanguageManager()));
 		}
 		List<Integer> indices = calculateIndices(fParameters, getShiftedElements());
-		shiftElements(fParameters, indices, getShift());
+		ShifterOfListElements.shiftElements(fParameters, indices, getShift());
 		for(TestCaseNode testCase : method.getTestCases()){
-			shiftElements(testCase.getTestData(), indices, getShift());
+			ShifterOfListElements.shiftElements(testCase.getTestData(), indices, getShift());
 		}
 	}
 
@@ -83,15 +84,15 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	}
 
 	@Override
-	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
-		if(super.shiftAllowed(shifted, shift) == false) return false;
+	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift){
+		if(super.shiftIsAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
-		
+
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 		List<String> parameterTypes = ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = calculateIndices(method.getParameters(), shifted);
-		shiftElements(parameterTypes, indices, shift);
+		ShifterOfListElements.shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
 
@@ -112,7 +113,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation { 
 	@Override
 	protected int minAllowedShift(List<? extends IAbstractNode> shifted, boolean up){
 		int shift = up ? -1 : 1;
-		while(shiftAllowed(shifted, shift) == false){
+		while(shiftIsAllowed(shifted, shift) == false){
 			shift += up ? -1 : 1;
 			int borderIndex = (borderNode(shifted, shift) != null) ? borderNode(shifted, shift).getMyIndex() + shift : -1;
 			if(borderIndex < 0 || borderIndex >= borderNode(shifted, shift).getMaxIndex()){

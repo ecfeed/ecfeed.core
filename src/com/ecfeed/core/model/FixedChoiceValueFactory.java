@@ -31,7 +31,7 @@ public class FixedChoiceValueFactory {
 	public Object createValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		if(choice.getParameter() != null) {
-			String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+			String context = "Model path: " + AbstractNodeHelper.getFullPath(choice, extLanguageManager);
 			
 			return createValue(
 					choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType(), context);
@@ -50,7 +50,7 @@ public class FixedChoiceValueFactory {
 
 		if (isRandomized) {
 
-			ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(typeName);
+			ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(typeName);
 			convertedValueString = typeAdapter.generateValueAsString(valueString, context);  
 		}
 

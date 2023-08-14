@@ -18,6 +18,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -187,6 +188,13 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightParameterNode = nodeMapper.getMappedNode(fRightParameterNode, mappingDirection); 
+		fRightParameterLinkingContext = nodeMapper.getMappedNode(fRightParameterLinkingContext, mappingDirection); 
+	}
+
+	@Override
 	public ParameterCondition makeClone() {
 
 		// parameters are not cloned
@@ -253,7 +261,10 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		String name = AbstractParameterSignatureHelper.getCompositeName(fRightParameterNode);
+		String name = 
+				AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+						fRightParameterNode, new ExtLanguageManagerForJava());
+		
 		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
 		return parameterDescription;
 	}
@@ -266,7 +277,7 @@ public class ParameterCondition implements IStatementCondition {
 		//						fRightParameterNode, fRightParameterLinkingContext);
 
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						fRightParameterLinkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -295,10 +306,10 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	public AbstractParameterNode getRightParameterLinkingContext() {
-		
+
 		return fRightParameterLinkingContext;
 	}
-	
+
 	@Override
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
@@ -413,12 +424,12 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
-		
+
 		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
 				fRightParameterNode, fRightParameterLinkingContext, topParentNode)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

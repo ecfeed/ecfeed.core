@@ -181,10 +181,10 @@ public class CompositeParameterNodeTest {
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode("method", null);
 
 		BasicParameterNode basicParameterNode = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						compositeParameterNode, "par1", "int", "0", true, null);
 
-		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode, "choice1", "0", false, true, null);
 
 		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);

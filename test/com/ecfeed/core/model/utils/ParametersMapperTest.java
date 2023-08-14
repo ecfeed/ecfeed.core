@@ -41,18 +41,18 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// parameter 1 of method 
 
 		BasicParameterNode methodParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
+		MethodParameterNodeHelper.addNewChoice(methodParameterNode1, "MC1", "MC1");
 
 		// 	Root
 		// 		Class
@@ -87,30 +87,30 @@ public class ParametersMapperTest {
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// parameter 1 of method 
 
 		BasicParameterNode methodParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode1, "MC1", "MC1");
+		MethodParameterNodeHelper.addNewChoice(methodParameterNode1, "MC1", "MC1");
 
 		// parameter 2 of method
 
 		BasicParameterNode methodParameterNode2 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP2", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(methodParameterNode2, "MC2", "MC2");
+		MethodParameterNodeHelper.addNewChoice(methodParameterNode2, "MC2", "MC2");
 
 		// composite parameter 1
 
 		CompositeParameterNode compositeParameterNode1 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "S1", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "S1", true, null);
 
 		// parameter 1 of composite 1
 
@@ -118,7 +118,7 @@ public class ParametersMapperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P11", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode1OfComposite1, "C1", "C1");
+		MethodParameterNodeHelper.addNewChoice(basicParameterNode1OfComposite1, "C1", "C1");
 
 		// parameter 2 of composite 1
 
@@ -126,7 +126,7 @@ public class ParametersMapperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P12", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode2Ofcomposite1, "C2", "C2");
+		MethodParameterNodeHelper.addNewChoice(basicParameterNode2Ofcomposite1, "C2", "C2");
 
 		// parameter 0 of composite 1
 
@@ -134,7 +134,7 @@ public class ParametersMapperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode1, "P10", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode0OfComposite1, "C0", "C0");
+		MethodParameterNodeHelper.addNewChoice(basicParameterNode0OfComposite1, "C0", "C0");
 
 		// composite 2
 
@@ -148,7 +148,7 @@ public class ParametersMapperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						compositeParameterNode2, "P21", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(basicParameterNode1OfComposite2, "C1", "C1");
+		MethodParameterNodeHelper.addNewChoice(basicParameterNode1OfComposite2, "C1", "C1");
 
 		// 	Root
 		// 		Class
@@ -273,22 +273,22 @@ public class ParametersMapperTest {
 		BasicParameterNode rootParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(rootNode, "RP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(rootParameterNode1, "RC1", "RC1");
+		MethodParameterNodeHelper.addNewChoice(rootParameterNode1, "RC1", "RC1");
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
 
 		// class parameter node 
 
 		BasicParameterNode classParameterNode1 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(classNode, "CP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(classParameterNode1, "CC1", "CC1");
+		MethodParameterNodeHelper.addNewChoice(classParameterNode1, "CC1", "CC1");
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// parameter 1 of method 
 
@@ -349,7 +349,7 @@ public class ParametersMapperTest {
 		RootNode rootNode = new RootNode("Root", null);
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(rootNode, "GS1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(rootNode, "GS1");
 
 		// parameter 1 of composite with choice
 
@@ -357,20 +357,20 @@ public class ParametersMapperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
 						globalCompositeParameterNode1, "GP1", "String");
 
-		MethodParameterNodeHelper.addNewChoiceToMethodParameter(rootParameterNode1, "GC1", "GC1");
+		MethodParameterNodeHelper.addNewChoice(rootParameterNode1, "GC1", "GC1");
 
 		// class node
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "Class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
 
 		// method node
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "Method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
 		// local composite
 
 		CompositeParameterNode localCompositeParameterNode = 
-				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameterToParent(methodNode, "S1");
+				ParametersAndConstraintsParentNodeHelper.addNewCompositeParameter(methodNode, "S1");
 
 		localCompositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode1);
 
@@ -400,5 +400,4 @@ public class ParametersMapperTest {
 		assertEquals(localCompositeParameterNode, linkingParameter);
 	}
 
-	// TODO MO-RE add tests for	ParameterType.EXPECTED
 }

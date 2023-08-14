@@ -31,15 +31,15 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForTestCase implements IModelParserForTestCase {
+public class ModelParserForTestCase {
 
-	public Optional<TestCaseNode> parseTestCase(
+	public static TestCaseNode parseTestCase(
 			Element element, MethodNode method, ListOfStrings errorList) {
 
 		TestCaseNode targetTestCaseNode = createAndInitializeTestCase(element, method, errorList);
 
 		if (targetTestCaseNode == null) {
-			return Optional.empty();
+			return null;
 		}
 
 		List<Element> choiceElements = getChoiceElements(element);
@@ -47,22 +47,22 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		if (deployedParameters.size() != choiceElements.size()) {
 			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(targetTestCaseNode.getName()));
-			return Optional.empty();
+			return null;
 		}
 
 		Optional<List<ChoiceNode>> testData = parseTestData(choiceElements, deployedParameters, errorList);
 
 		if (!testData.isPresent()) {
-			return Optional.empty();
+			return null;
 		}
 
 		targetTestCaseNode.setTestData(testData.get());
 		targetTestCaseNode.setDescription(ModelParserHelper.parseComments(element));
 
-		return Optional.ofNullable(targetTestCaseNode);
+		return targetTestCaseNode;
 	}
 
-	private TestCaseNode createAndInitializeTestCase (Element testCaseElement, MethodNode method, ListOfStrings errorList) {
+	private static TestCaseNode createAndInitializeTestCase (Element testCaseElement, MethodNode method, ListOfStrings errorList) {
 
 		String name = parseTestCaseName(testCaseElement, errorList);
 
@@ -74,7 +74,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		return targetTestCaseNode;
 	}
 
-	private Optional<List<ChoiceNode>> parseTestData(
+	private static Optional<List<ChoiceNode>> parseTestData(
 			List<Element> parameterElements, 
 			List<ParameterWithLinkingContext> parameters,
 			ListOfStrings errorList) {
@@ -98,7 +98,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		return Optional.of(testData);
 	}
 
-	private Optional<ChoiceNode> parseChoiceElement(
+	private static Optional<ChoiceNode> parseChoiceElement(
 			Element choiceElement, 
 			ParameterWithLinkingContext parameterWithLinkingContext,
 			ListOfStrings errorList) {
@@ -129,7 +129,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 	}
 
-	private Optional<ChoiceNode>  parseNewExpectedChoiceNode(
+	private static Optional<ChoiceNode>  parseNewExpectedChoiceNode(
 			Element choiceElement, 
 			ListOfStrings errorList,
 			BasicParameterNode choicesParentParameter) {
@@ -161,7 +161,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		return Optional.of(testValue);
 	}
 
-	private Optional<ChoiceNode> parseExistingChoiceNode(
+	private static Optional<ChoiceNode> parseExistingChoiceNode(
 			Element choiceElement,
 			BasicParameterNode choicesParentParameter, 
 			ListOfStrings errorList) {
@@ -186,13 +186,13 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		return Optional.of(choiceNode);
 	}
 
-	private List<Element> getChoiceElements(Element element) {
+	private static List<Element> getChoiceElements(Element element) {
 		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
 		List<Element> parameterElements = ModelParserHelper.getIterableChildren(element, elementTypes);
 		return parameterElements;
 	}
 
-	private String parseTestCaseName(Element element, ListOfStrings errorList) {
+	private static String parseTestCaseName(Element element, ListOfStrings errorList) {
 
 		try {
 			ModelParserHelper.assertNameEqualsExpectedName(
@@ -206,88 +206,5 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 			return null;
 		}
 	}
-
-
-	//	public Optional<TestCaseNode> parseTestCase(
-	//			Element element, MethodNode method, ListOfStrings errorList) {
-	//
-	//		String name = parseTestCaseName(element, errorList);
-	//		
-	//		if (name == null) {
-	//			return Optional.empty();
-	//		}
-	//
-	//		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
-	//		List<Element> parameterElements = ModelParserHelper.getIterableChildren(element, elementTypes);
-	//		
-	//		List<BasicParameterNode> parameters;
-	//
-	//		if (method.isDeployed()) {
-	//			parameters = method.getDeployedParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
-	//		} else {
-	//			try {
-	//				parameters = method.getParametersAsBasic();
-	//			} catch (Exception e ) {
-	//				return Optional.empty();
-	//			}
-	//		}
-	//
-	//		List<ChoiceNode> testData = new ArrayList<>();
-	//
-	//		if (parameters.size() != parameterElements.size()) {
-	//			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(name));
-	//			return Optional.empty();
-	//		}
-	//
-	//		for (int i = 0; i < parameterElements.size(); i++) {
-	//			Element testParameterElement = parameterElements.get(i);
-	//			BasicParameterNode parameter = parameters.get(i);
-	//			ChoiceNode testValue = null;
-	//
-	//			if (testParameterElement.getLocalName().equals(SerializationConstants.TEST_PARAMETER_NODE_NAME)) {
-	//				String choiceName;
-	//
-	//				try {
-	//					choiceName = ModelParserHelper.getAttributeValue(
-	//							testParameterElement, SerializationHelperVersion1.getChoiceAttributeName(), 
-	//							errorList);
-	//				} catch (ParserException e) {
-	//					return Optional.empty();
-	//				}
-	//
-	//				testValue = parameter.getChoice(choiceName);
-	//				if (testValue == null) {
-	//					errorList.add(Messages.PARTITION_DOES_NOT_EXIST(parameter.getName(), choiceName));
-	//					return Optional.empty();
-	//				}
-	//
-	//			} else if (testParameterElement.getLocalName().equals(SerializationConstants.EXPECTED_PARAMETER_NODE_NAME)) {
-	//				String valueString;
-	//
-	//				try {
-	//					valueString = 
-	//							ModelParserHelper.getAttributeValue(
-	//									testParameterElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, errorList);
-	//				} catch (ParserException e) {
-	//					return Optional.empty();
-	//				}
-	//
-	//				if (valueString == null) {
-	//					errorList.add(Messages.MISSING_VALUE_ATTRIBUTE_IN_TEST_CASE_ELEMENT);
-	//					return Optional.empty();
-	//				}
-	//
-	//				testValue = new ChoiceNode(AssignmentStatement.ASSIGNMENT_CHOICE_NAME, valueString, parameter.getModelChangeRegistrator());
-	//				testValue.setParent(parameter);
-	//			}
-	//
-	//			testData.add(testValue);
-	//		}
-	//
-	//		TestCaseNode targetTestCaseNode = new TestCaseNode(name, method.getModelChangeRegistrator(), testData);
-	//		targetTestCaseNode.setDescription(ModelParserHelper.parseComments(element));
-	//
-	//		return Optional.ofNullable(targetTestCaseNode);
-	//	}
 
 }

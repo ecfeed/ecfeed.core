@@ -34,11 +34,11 @@ public class ChoicesParentNodeHelperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C1", "1");
 
 		ChoiceNode choiceNode2 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C2", "1");
 
 		ChoiceNode choiceNode21 = 
@@ -92,15 +92,15 @@ public class ChoicesParentNodeHelperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C1", "1");
 
 		ChoiceNode choiceNode2 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C2", "1");
 
 		ChoiceNode choiceNode3 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C3", "1");
 
 
@@ -150,7 +150,7 @@ public class ChoicesParentNodeHelperTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
-				MethodParameterNodeHelper.addNewChoiceToMethodParameter(
+				MethodParameterNodeHelper.addNewChoice(
 						methodParameterNode1, "C1", "1");
 
 		ChoiceNode choiceNode2 = 

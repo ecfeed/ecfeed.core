@@ -15,16 +15,15 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.junit.Test;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.serialization.IModelParserForMethod;
+import com.ecfeed.core.model.serialization.ElementToNodeMapper;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
-import com.ecfeed.core.model.serialization.ModelParserHelper;
+import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.TestHelper;
@@ -262,26 +261,24 @@ public class LanguageMethodParserTest {
 
 		Element element = document.getRootElement();
 
-		IModelParserForMethod modelParserForMethod = 
-				ModelParserHelper.createStandardModelParserForMethod();
-
 		ListOfStrings errorList = new ListOfStrings();
 
 		ClassNode classNode = new ClassNode("Class1", null);
-		Optional<MethodNode> optMethodNodeFromXml = Optional.empty();
+		MethodNode methodNodeFromXml = null;
 
 		try {
-			optMethodNodeFromXml = 
-					modelParserForMethod.parseMethod(
-							element, classNode, errorList);
+			methodNodeFromXml = 
+					ModelParserForMethod.parseMethod(
+							element, classNode, new ElementToNodeMapper(), errorList);
 		} catch (Exception e) {
 			outErrorList.add(e.getMessage());
 		}
 
-		if (!optMethodNodeFromXml.isPresent()) {
+		if (methodNodeFromXml == null) {
 			ExceptionHelper.reportRuntimeException("Failed to convert method from xml.");
 		}
-		return optMethodNodeFromXml.get();
+		
+		return methodNodeFromXml;
 	}
 
 	private String createXmlForMethodWithThreeParameters() {

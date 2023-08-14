@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -249,5 +250,137 @@ public abstract class AbstractNodeHelper  {
 			ExceptionHelper.reportRuntimeException(errorMessage + " " + collection1.size() + " vs " + collection2.size() + ".");
 		}
 	}
-	
+
+	public static boolean containsNodesOfTheSameType(List<IAbstractNode> listOfNodes) {
+
+		if (listOfNodes == null || listOfNodes.size() == 0) { 
+			return false;
+		}
+
+		Class<?> type = listOfNodes.get(0).getClass();
+
+		for (IAbstractNode node : listOfNodes) {
+			if (node.getClass().equals(type) == false) { 
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean twoNodesAreOfTheSameClass(IAbstractNode node1, IAbstractNode node2) {
+
+		if (node1.getClass().equals(node2.getClass())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static IAbstractNode findChild(IAbstractNode abstractNode, String qualifiedName) {
+
+		String[] tokens = qualifiedName.split(":");
+		if(tokens.length == 0){
+			return null;
+		}
+
+		if (tokens.length == 1) {
+
+			List<IAbstractNode> children = abstractNode.getChildren();
+
+			for (IAbstractNode child : children) {
+				if (child.getName().equals(tokens[0])) {
+					return child;
+				}
+			}
+		} else {
+
+			IAbstractNode nextChild = abstractNode.findChild(tokens[0]);
+
+			if(nextChild == null) { 
+				return null;
+			}
+
+			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
+			return nextChild.findChild(newName);
+		}
+
+		return null;
+	}
+
+	public static String getNodeTypeName(IAbstractNode abstractNode) {
+
+		if (abstractNode instanceof ClassNode) {
+			return "Class";
+		}
+
+		if (abstractNode instanceof MethodNode) {
+			return "Method";
+		}
+
+		if (abstractNode instanceof BasicParameterNode) {
+			return "MethodParameter";
+		}
+
+		if (abstractNode instanceof ChoiceNode) {
+			return "Choice";
+		}
+
+		if (abstractNode instanceof ConstraintNode) {
+			return "Constraint";
+		}
+
+		if (abstractNode instanceof TestSuiteNode) {
+			return "TestSuite";
+		}
+
+		if (abstractNode instanceof TestCaseNode) {
+			return "TestCase";
+		}
+
+		return "Node";
+	}
+
+	public static String getFullPath(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+
+		List<String> nodeNames = new ArrayList<String>();
+
+		IAbstractNode currentNode = abstractNode;
+
+		for(;;) {
+
+			if (currentNode == null) {
+				return createPath(nodeNames);
+			}
+
+			if (currentNode instanceof RootNode) {
+				nodeNames.add(currentNode.getName());
+			} else {
+				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguageManager));
+			}
+
+			currentNode = currentNode.getParent();
+		}
+	}
+
+	private static String createPath(List<String> nodeNames) {
+
+		String path = "";
+
+		int nodeNamesLength = nodeNames.size();
+
+		for (int index = nodeNamesLength - 1; index >= 0; index--) {
+
+			String nodeName = nodeNames.get(index);
+			path += nodeName;
+
+			if (index > 0) {
+				path += ".";
+			}
+		}
+
+		return path;
+	}
+
 }

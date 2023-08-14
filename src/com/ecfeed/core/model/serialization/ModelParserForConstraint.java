@@ -26,12 +26,15 @@ import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
@@ -42,14 +45,12 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForConstraint implements IModelParserForConstraint {
+public class ModelParserForConstraint {
 
-	//private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
-
-	public ModelParserForConstraint() {
-	}
-
-	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
+	public static ConstraintNode parseConstraint(
+			Element element, 
+			IParametersAndConstraintsParentNode parent, 
+			ListOfStrings errorList) {
 
 		String name;
 
@@ -58,7 +59,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
 		ConstraintType constraintType = getConstraintType(element, errorList);
@@ -70,7 +71,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				(ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME).size() != 1)) {
 
 			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-			return Optional.empty();
+			return null;
 		}
 
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME)) {
@@ -81,7 +82,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 					precondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-					return Optional.empty();
+					return null;
 				}
 			}
 		}
@@ -92,17 +93,17 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 					postcondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-					return Optional.empty();
+					return null;
 				}
 			} else {
 				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-				return Optional.empty();
+				return null;
 			}
 		}
 
 		if (!precondition.isPresent() || !postcondition.isPresent()) {
 			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
-			return Optional.empty();
+			return null;
 		}
 
 		Constraint constraint =
@@ -117,10 +118,10 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		targetConstraint.setDescription(ModelParserHelper.parseComments(element));
 
-		return Optional.ofNullable(targetConstraint);
+		return targetConstraint;
 	}
 
-	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) {
+	private static ConstraintType getConstraintType(Element element, ListOfStrings errorList) {
 
 		String type = element.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_TYPE);
 
@@ -139,7 +140,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return constraintType;
 	}
 
-	public Optional<AbstractStatement> parseStatement(
+	public static Optional<AbstractStatement> parseStatement(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
 			ListOfStrings errorList) {
@@ -178,7 +179,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 	}
 
-	public StatementArray parseStatementArray(
+	public static StatementArray parseStatementArray(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
 			ListOfStrings errorList) {
@@ -218,7 +219,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return statementArray;
 	}
 
-	public StaticStatement parseStaticStatement(
+	public static StaticStatement parseStaticStatement(
 			Element element,
 			IModelChangeRegistrator modelChangeRegistrator,
 			ListOfStrings errorList) {
@@ -240,8 +241,10 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 	}
 
-	public AbstractStatement parseChoiceStatement(
-			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
+	public static AbstractStatement parseChoiceStatement(
+			Element element, 
+			IParametersAndConstraintsParentNode parent, 
+			ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
@@ -286,7 +289,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				(parameterNode, parameterContext, relation, choice);
 	}
 
-	public AbstractStatement parseParameterStatement(
+	public static AbstractStatement parseParameterStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
@@ -339,7 +342,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				parameterNode, parameterContext, relation, rightParameterNode, rightParameterContext);
 	}
 
-	public AbstractStatement parseValueStatement(
+	public static AbstractStatement parseValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
@@ -379,7 +382,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				parameterNode, parameterContext, relation, value);
 	}
 
-	private boolean isOkExpectedPropertyOfParameter(
+	private static boolean isOkExpectedPropertyOfParameter(
 			BasicParameterNode leftParameterNode,
 			EMathRelation relation,
 			ListOfStrings errorList) {
@@ -402,7 +405,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return true;
 	}
 
-	public RelationStatement parseLabelStatement(
+	public static RelationStatement parseLabelStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
@@ -441,7 +444,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				parameterNode, parameterContext, relation, label);
 	}
 
-	public ExpectedValueStatement parseExpectedValueStatement(
+	public static ExpectedValueStatement parseExpectedValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
@@ -481,18 +484,18 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 	//-----------------------------------------------------------------------------------------------
 
-	private CompositeParameterNode getParameterContext(
+	private static CompositeParameterNode getParameterContext(
 			Element element,
 			IParametersAndConstraintsParentNode parent,
 			String elementName) {
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, elementName);
-		
+
 		if (pathToParameter == null) {
 			return null;
 		}
 
-		AbstractParameterNode context = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
+		AbstractParameterNode context = findParameterForPathWhichStartsFromTopAllowedNode(pathToParameter, parent);
 
 		return (CompositeParameterNode) context;
 	}
@@ -514,31 +517,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	//		return calculatedParentNode;
 	//	}
 
-	private BasicParameterNode getParameter(
+	private static BasicParameterNode getParameter(
 			Element element,
 			String attributeName,
 			IParametersAndConstraintsParentNode parent,
 			CompositeParameterNode parameterContext,
-			//			boolean primary,
 			ListOfStrings errorList) {
-
-		//		String serialization;
-		//		if (primary) {
-		//			serialization = SerializationHelperVersion1.getStatementParameterAttributeName();
-		//		} else {
-		//			serialization = SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
-		//		}
 
 		String pathToParameter = ModelParserHelper.getAttributeValue(element, attributeName, errorList);
 
-		//		BasicParameterNode parameter;
-		//		if (parameterContext != null) {
-		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parameterContext, parameterName);
-		//		} else {
-		//			parameter = BasicParameterNodeHelper.getParameterFromPath(parent, parameterName);
-		//		}
-
-		AbstractParameterNode parameter = AbstractParameterNodeHelper.findParameter(pathToParameter, parent);
+		AbstractParameterNode parameter = findParameterForPathWhichStartsFromTopAllowedNode(pathToParameter, parent);
 
 		if (parameter == null) {
 			errorList.add("Cannot find parameter: " + pathToParameter + " for parsed attribute: " + attributeName + ".");
@@ -549,5 +537,24 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		}
 
 		return (BasicParameterNode) parameter;
+	}
+
+	private static AbstractParameterNode findParameterForPathWhichStartsFromTopAllowedNode(
+			String pathToParameterRelativeToTopParametersParent,
+			IParametersAndConstraintsParentNode parent) {
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(parent);
+
+		if (methodNode != null) {
+			return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, methodNode);
+		}
+
+		CompositeParameterNode topComposite = CompositeParameterNodeHelper.findTopComposite(parent);
+
+		if (topComposite != null) {
+			return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, topComposite);
+		}
+
+		return AbstractParameterNodeHelper.findParameter(pathToParameterRelativeToTopParametersParent, parent);
 	}
 }

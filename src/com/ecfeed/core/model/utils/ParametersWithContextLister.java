@@ -13,6 +13,7 @@ package com.ecfeed.core.model.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
@@ -21,6 +22,7 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -192,7 +194,11 @@ public class ParametersWithContextLister {
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (AbstractParameterSignatureHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
+			String qualifiedName = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
+			
+			if (qualifiedName.equals(parameterNameToFind)) {
 				return parameter;
 			}
 
@@ -281,12 +287,20 @@ public class ParametersWithContextLister {
 
 		parameter.setParent(null);
 
-		// TODO MO-RE rewrite in ParametersLister
-		boolean result = fElementLister.getReferenceToElements().removeIf(e -> e.getParameter().equals(parameter));
-		fElementLister.registerChange();
+		Predicate<ParameterWithLinkingContext> predicateParameterEquals = new Predicate<ParameterWithLinkingContext>() {
 
-		return result;
+			@Override
+			public boolean test(ParameterWithLinkingContext t) {
 
+				if (t.getParameter().equals(parameter)) {
+					return true;
+				}
+
+				return false;
+			}
+		};
+
+		return fElementLister.removeIf(predicateParameterEquals);
 	}
 
 	public void removeAllParameters() {
@@ -340,6 +354,16 @@ public class ParametersWithContextLister {
 		}
 
 		return true;
+	}
+
+	public void shiftElements(List<Integer> indicesOfElements, int shift) {
+
+		fElementLister.shiftElements(indicesOfElements, shift);
+	}
+
+	public void shiftOneElement(int indexOfElement, int shift) {
+
+		fElementLister.shiftOneElement(indexOfElement, shift);
 	}
 
 }

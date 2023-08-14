@@ -93,7 +93,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 		if (fChild instanceof BasicParameterNode) {
 
 			NodeMapper nodeMapper = new NodeMapper();
-			
+
 			BasicParameterNode globalParameter = 
 					((BasicParameterNode)fChild).makeClone(Optional.of(nodeMapper));
 
@@ -107,7 +107,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 		if (fChild instanceof CompositeParameterNode) {
 
 			NodeMapper nodeMapper = new NodeMapper();
-			
+
 			CompositeParameterNode globalParameter = 
 					((CompositeParameterNode)fChild).makeClone(Optional.of(nodeMapper));
 
@@ -187,9 +187,29 @@ public class AddChildOperationCreator implements IModelVisitor {
 
 
 	@Override
-	public Object visit(TestSuiteNode node) throws Exception {
-		reportOperationNotSupportedException();
-		return null;
+	public Object visit(TestSuiteNode testSuiteNode) throws Exception {
+
+		MethodNode methodNode = testSuiteNode.getMethod();
+		
+		TestCaseNode newTestCase = createNewTestCase(testSuiteNode);
+
+		return 
+				new OnTestCaseOperationAddToMethod(
+						methodNode, 
+						newTestCase, 
+						-1,
+						Optional.empty(),
+						fExtLanguageManager);
+	}
+
+	private TestCaseNode createNewTestCase(TestSuiteNode testSuiteNode) {
+		
+		TestCaseNode newTestCase = (TestCaseNode) fChild.makeClone(Optional.empty());
+		
+		String newName = testSuiteNode.getName();
+		newTestCase.setName(newName);
+		
+		return newTestCase;
 	}
 
 	@Override
@@ -220,7 +240,7 @@ public class AddChildOperationCreator implements IModelVisitor {
 		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
 
 		NodeMapper nodeMapper = new NodeMapper();
-		
+
 		IAbstractNode globalParameter =
 				((AbstractParameterNode)abstractParameterNode).makeClone(Optional.of(nodeMapper));
 

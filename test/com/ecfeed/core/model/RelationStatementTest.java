@@ -69,14 +69,14 @@ public class RelationStatementTest {
 		if (okExpected) {
 			try {
 				RelationStatement.createRelationStatementWithParameterCondition(
-						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);  // TODO MO-RE leftParameterLinkingContext
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);
 			} catch (Exception e) {
 				fail();
 			}
 		} else {
 			try {
 				RelationStatement.createRelationStatementWithParameterCondition(
-						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);  // TODO MO-RE leftParameterLinkingContext
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);
 				fail();
 			} catch (Exception e) {
 			}
@@ -113,7 +113,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode1 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
 
-		ChoiceNode choice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode choice1 = BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode1, "choice", "1", false, true, null);
 
 		RelationStatement statement1 = 
@@ -125,7 +125,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode2 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
 
-		ChoiceNode choice2 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode choice2 = BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode2, "choice", "1", false, true, null);
 
 		assertTrue(statement1.isConsistent(methodNode1));
@@ -170,14 +170,14 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp", "String", "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "gp", "String", "", true, null);
 
-		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameter, "choice", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		BasicParameterNode basicParameterNode1 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
@@ -207,21 +207,21 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		CompositeParameterNode globalCompositeParameter = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameter,"gp", "String", "", false, null);
 
-		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode globalChoice1 = BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameter, "choice", "1", false, true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameter = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode1, "ls", true, null);
 
 		localCompositeParameter.setLinkToGlobalParameter(globalCompositeParameter);
 
@@ -246,7 +246,7 @@ public class RelationStatementTest {
 		BasicParameterNode localBasicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "String", "X", true, null);
 
-		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoice(
 				localBasicParameterNode, "lchoice", "1", false, true, null);
 
 		RelationStatement statement3 = 
@@ -269,23 +269,23 @@ public class RelationStatementTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 
 		CompositeParameterNode localCompositeParameter = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode1, "ls", true, null);
 
 		BasicParameterNode localBasicParameter1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameter,"lp1", "String", "", false, null);
 
-		ChoiceNode localChoice1 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode localChoice1 = BasicParameterNodeHelper.addNewChoice(
 				localBasicParameter1, "choice", "1", false, true, null);
 
 
 		BasicParameterNode localBasicParameter2 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameter,"lp2", "String", "", false, null);
 
 		RelationStatement statement1 = 
@@ -321,13 +321,13 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode11 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode11, "choice11", "1", false, true, null);
 
 		BasicParameterNode basicParameterNode12 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par12", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode12, "choice12", "1", false, true, null);
 
 		RelationStatement statement1 = 
@@ -343,7 +343,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode21 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode2, "par21", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode21, "choice21", "1", false, true, null);
 
 		RelationStatement statement2 = 
@@ -359,14 +359,14 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 
 		BasicParameterNode globalBasicParameter1 = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp1", "String", "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "gp1", "String", "", true, null);
 
 		BasicParameterNode globalBasicParameter2 = 
-				RootNodeHelper.addNewBasicParameterToRoot(rootNode, "gp2", "String", "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "gp2", "String", "", true, null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
 
 		BasicParameterNode basicParameterNode11 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
@@ -388,7 +388,7 @@ public class RelationStatementTest {
 
 		// parameter from other method
 
-		MethodNode methodNode2 = ClassNodeHelper.addNewMethodToClass(classNode, "method2", true, null);
+		MethodNode methodNode2 = ClassNodeHelper.addNewMethod(classNode, "method2", true, null);
 
 		BasicParameterNode basicParameterNode21 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode2, "par21", "int", "0", true, null);
@@ -411,44 +411,44 @@ public class RelationStatementTest {
 		// the first global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter1 = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter11 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameter1,"gp1", "String", "", false, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameter11, "choice", "1", false, true, null);
 
 		// the second global structure with parameter
 
 		CompositeParameterNode globalCompositeParameter2 = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "gs", true, null);
 
 		BasicParameterNode globalBasicParameter21 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameter2,"gp2", "String", "", false, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameter21, "choice", "1", false, true, null);
 
 		// class and method
 
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
-		MethodNode methodNode1 = ClassNodeHelper.addNewMethodToClass(classNode, "method1", true, null);
+		MethodNode methodNode1 = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
 
 		// linked parameter 1
 
 		CompositeParameterNode localCompositeParameter11 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls11", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode1, "ls11", true, null);
 
 		localCompositeParameter11.setLinkToGlobalParameter(globalCompositeParameter1);
 
 		// linked parameter 2
 
 		CompositeParameterNode localCompositeParameter12 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode1, "ls12", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode1, "ls12", true, null);
 
 		localCompositeParameter12.setLinkToGlobalParameter(globalCompositeParameter2);
 
@@ -462,10 +462,10 @@ public class RelationStatementTest {
 
 		// the second method
 
-		MethodNode methodNode2 = ClassNodeHelper.addNewMethodToClass(classNode, "method2", true, null);
+		MethodNode methodNode2 = ClassNodeHelper.addNewMethod(classNode, "method2", true, null);
 
 		CompositeParameterNode localCompositeParameter21 = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode2, "ls", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode2, "ls", true, null);
 
 		localCompositeParameter21.setLinkToGlobalParameter(globalCompositeParameter1);
 
@@ -488,7 +488,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode11 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
 
-		ChoiceNode choiceNode11 = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode choiceNode11 = BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode11, "choice11", "1", false, true, null);
 
 		choiceNode11.addLabel("label1");
@@ -496,7 +496,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode12 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par12", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode12, "choice12", "1", false, true, null);
 
 		RelationStatement statement1 = 
@@ -520,7 +520,7 @@ public class RelationStatementTest {
 		BasicParameterNode basicParameterNode11 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode1, "par11", "int", "0", true, null);
 
-		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		BasicParameterNodeHelper.addNewChoice(
 				basicParameterNode11, "choice11", "11", false, true, null);
 
 		RelationStatement statement1 = 
@@ -542,13 +542,13 @@ public class RelationStatementTest {
 		RootNode rootNode = new RootNode("root", null);
 		
 		CompositeParameterNode globalCompositeParameter = 
-				RootNodeHelper.addNewCompositeParameterToRoot(rootNode, "gs", true, null);
+				RootNodeHelper.addNewCompositeParameter(rootNode, "gs", true, null);
 		
 		BasicParameterNode globalBasicParameter1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameter,"gp1", "String", "", false, null);
 
-		ChoiceNode globalChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode globalChoice = BasicParameterNodeHelper.addNewChoice(
 				globalBasicParameter1, "gc1", "1", false, true, null);
 
 		RelationStatement statement1 = 
@@ -562,7 +562,7 @@ public class RelationStatementTest {
 		// invalid parameter
 		
 		BasicParameterNode globalBasicParameter2 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						globalCompositeParameter,"lp2", "String", "", false, null);
 		
 		RelationStatement statement2 = 
@@ -577,18 +577,18 @@ public class RelationStatementTest {
 
 		RootNode rootNode = new RootNode("root", null);
 		
-		ClassNode classNode = RootNodeHelper.addNewClassNodeToRoot(rootNode, "class", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 		
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
 		
 		CompositeParameterNode localCompositeParameter = 
-				MethodNodeHelper.addNewCompositeParameterToMethod(methodNode, "ls", true, null);
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "ls", true, null);
 		
 		BasicParameterNode localBasicParameter1 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameter,"gp1", "String", "", false, null);
 
-		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+		ChoiceNode localChoice = BasicParameterNodeHelper.addNewChoice(
 				localBasicParameter1, "gc1", "1", false, true, null);
 
 		RelationStatement statement1 = 
@@ -602,7 +602,7 @@ public class RelationStatementTest {
 		// invalid parameter
 		
 		BasicParameterNode localBasicParameter2 = 
-				CompositeParameterNodeHelper.addNewBasicParameterToComposite(
+				CompositeParameterNodeHelper.addNewBasicParameter(
 						localCompositeParameter,"lp2", "String", "", false, null);
 		
 		RelationStatement statement2 = 

@@ -18,7 +18,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.*;
 
-public class ModelTestUtils { // TODO MO-RE use ModelComparator
+public class ModelTestUtils {
 
 	public static void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
 		ModelStringifier stringifier = new ModelStringifier();

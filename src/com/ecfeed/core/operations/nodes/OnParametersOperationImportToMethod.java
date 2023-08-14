@@ -92,7 +92,7 @@ public class OnParametersOperationImportToMethod extends GenericOperationImportP
 
 		@Override
 		public void execute() {
-			fMethodNode.replaceTestCases(fRemovedTestCases);
+			fMethodNode.setTestCases(fRemovedTestCases);
 			super.execute();
 		}
 

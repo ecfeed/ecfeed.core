@@ -85,7 +85,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 
 				String type = parameter.getType();
 
-				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(type);
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(type);
 
 				String newValue = 
 						adapter.adapt(

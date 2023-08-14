@@ -131,7 +131,7 @@ public class ParametersParentNodeHelper {
 		return parameterTypes;
 	}
 
-//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
 	public static List<AbstractParameterNode> getNestedAbstractParameters(IParametersParentNode parent, boolean follow) {
 		List<AbstractParameterNode> nodes = new ArrayList<>();
@@ -189,4 +189,21 @@ public class ParametersParentNodeHelper {
 				.map(e -> (CompositeParameterNode) e)
 				.collect(Collectors.toList());
 	}
+
+	//	public static IParametersParentNode findParametersParentNode(IAbstractNode abstractNode) {
+	//
+	//		IAbstractNode parent = abstractNode;
+	//
+	//		while (parent != null) {
+	//
+	//			if (parent instanceof IParametersParentNode) {
+	//				return (IParametersParentNode) parent;
+	//			}
+	//
+	//			parent = parent.getParent();
+	//		}
+	//
+	//		return null;
+	//	}
+
 }

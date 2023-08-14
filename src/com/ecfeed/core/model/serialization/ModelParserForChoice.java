@@ -13,24 +13,18 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
 
-import java.util.Optional;
-
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForChoice implements IModelParserForChoice {
+public class ModelParserForChoice {
 
-	private IModelChangeRegistrator fModelChangeRegistrator;
-
-	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
-		fModelChangeRegistrator = modelChangeRegistrator;
-	}
-
-	public Optional<ChoiceNode> parseChoice(
-			Element element, ListOfStrings errorList) {
+	public static ChoiceNode parseChoice(
+			Element element,
+			IModelChangeRegistrator modelChangeRegistrator,
+			ListOfStrings errorList) {
 
 		String name, value;
 		boolean isRandomized;
@@ -42,22 +36,22 @@ public class ModelParserForChoice implements IModelParserForChoice {
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
 		} catch (Exception e) {
 			errorList.add(e.getMessage());
-			return Optional.empty();
+			return null;
 		}
 
-		ChoiceNode choice = new ChoiceNode(name, value, fModelChangeRegistrator);
+		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element)) {
 
 			if (child.getLocalName() == SerializationHelperVersion1.getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, errorList);
-				if (node.isPresent()) {
-					choice.addChoice(node.get());
+				ChoiceNode node = parseChoice(child, modelChangeRegistrator, errorList);
+				if (node != null) {
+					choice.addChoice(node);
 				} else {
 					errorList.add("Cannot parse choice.");
-					return Optional.empty();
+					return null;
 				}
 			}
 
@@ -66,7 +60,7 @@ public class ModelParserForChoice implements IModelParserForChoice {
 			}
 		}
 
-		return Optional.ofNullable(choice);
+		return choice;
 	}
 
 }

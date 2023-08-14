@@ -10,14 +10,28 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.TestCasesFilteringDirection;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestCaseHelper {
 
+	public static List<TestCase> createListOfTestCases(List<TestCaseNode> testCasesNodes) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCaseNode testCaseNode : testCasesNodes) {
+
+			TestCase testCase = testCaseNode.getTestCase();
+			result.add(testCase);
+		}
+
+		return result;
+	}
 
 	public static TestCase createTestCase(TestCaseNode testCaseNode) {
 
@@ -93,4 +107,66 @@ public class TestCaseHelper {
 		return testDomainWithOneTestCase;
 	}
 
+	public static boolean qualifyTestCaseNode(
+			TestCase testCase, 
+			List<Constraint> constraints,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		if (TestCaseHelper.isTestCaseAmbiguous(testCase, constraints)) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		boolean testCaseQualified = qualifyTestCaseByConstraints(testCase, constraints);
+		
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE 
+				&& testCaseQualified == true) {
+			
+			return true;
+		}
+		
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE 
+				&& testCaseQualified == false) {
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	private static boolean qualifyTestCaseByConstraints(TestCase testCase, List<Constraint> constraints) {
+		
+		for (Constraint constraint : constraints) {
+
+			ConstraintType constraintType = constraint.getType();
+
+			if (constraintType == ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			if (!qualifyTestCaseNodeByOneConstraint(testCase, constraint)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static boolean qualifyTestCaseNodeByOneConstraint(
+			TestCase testCase, Constraint constraint) {
+
+		EvaluationResult evaluationResult =  constraint.evaluate(testCase.getListOfChoiceNodes());
+
+		if (evaluationResult == EvaluationResult.TRUE) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }
