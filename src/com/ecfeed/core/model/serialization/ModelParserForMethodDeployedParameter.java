@@ -34,8 +34,7 @@ public class ModelParserForMethodDeployedParameter {
 			MethodNode methodNode,
 			ListOfStrings errorList) {
 
-		AbstractParameterNode parameter = parseDeployedNode(
-				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, methodNode, errorList);
+		AbstractParameterNode parameter = parseParameter(parameterElement, methodNode, errorList);
 
 		AbstractParameterNode linkingContext = parseDeployedNode(
 				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, methodNode, errorList);
@@ -49,12 +48,36 @@ public class ModelParserForMethodDeployedParameter {
 		return parameterWithLinkingContext;
 	}
 
+	private static AbstractParameterNode parseParameter(
+			Element parameterElement, MethodNode methodNode, ListOfStrings errorList) {
+		
+		AbstractParameterNode parameter = 
+				parseDeployedNode(
+						parameterElement, 
+						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, 
+						methodNode, 
+						errorList);
+		
+		if (parameter != null) {
+			return parameter;
+		}
+
+		parameter = 
+				parseDeployedNode(
+						parameterElement, 
+						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER_OLD, 
+						methodNode, 
+						errorList);
+		
+		return parameter;
+	}
+
 	private static AbstractParameterNode parseDeployedNode(
 			Element parameterElement,
 			String attributeName,
 			MethodNode methodNode,
 			ListOfStrings errorList) {
-
+		
 		String path = "";
 
 		path = parameterElement.getAttributeValue(attributeName);

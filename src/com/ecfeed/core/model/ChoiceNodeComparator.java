@@ -1,11 +1,10 @@
 package com.ecfeed.core.model;
 
+import java.util.Comparator;
+
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RelationMatcher;
-
-import java.util.Comparator;
 
 public class ChoiceNodeComparator implements Comparator<ChoiceNode> {
 
