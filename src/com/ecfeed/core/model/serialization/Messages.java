@@ -37,8 +37,7 @@ public class Messages {
 	}
 
 	public static String MALFORMED_CONSTRAINT_NODE_DEFINITION(String methodName, String constraintName) {
-		return "Error while parsing constraint " + constraintName + " in method " + methodName 
-				+ ". Constraint tag must contain Precondition and Postcondition children, that consist of single statement.";
+		return "Error while parsing constraint " + constraintName + " in method " + methodName + "."; 
 	}
 
 	public static String WRONG_STATEMENT_ARRAY_OPERATOR(String methodName, String operator) {
@@ -64,7 +63,7 @@ public class Messages {
 
 	public static String WRONG_NUMBER_OF_TEST_PAREMETERS(String testSuiteName){
 		return "Number of test parameters in test case of " + testSuiteName 
-				+ "suite is different than number of parameters in parent method";
+				+ "suite is different than number of deployed parameters in parent method";
 	}
 
 	public static String TEST_VALUE_NAME_ATTRIBUTE_MISSING(String testSuiteName) {

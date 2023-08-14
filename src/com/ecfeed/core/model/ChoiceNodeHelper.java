@@ -91,7 +91,7 @@ public class ChoiceNodeHelper {
 		}
 
 		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
-		
+
 		if (indexOfChoiceNodeInTestCase < 0) {
 			return null;
 		}
@@ -135,7 +135,7 @@ public class ChoiceNodeHelper {
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
-			Optional<NodeMapper> mapper) {
+			Optional<NodeMapper> nodeMapper) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -147,15 +147,15 @@ public class ChoiceNodeHelper {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
-			if (mapper.isPresent()) {
-				mapper.get().addMappings(choiceNode, clonedChoiceNode);
+			if (nodeMapper.isPresent()) {
+				nodeMapper.get().addMappings(choiceNode, clonedChoiceNode);
 			}
 
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, mapper);
+			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, nodeMapper);
 		}
 	}
 
@@ -218,7 +218,7 @@ public class ChoiceNodeHelper {
 			String newType, 
 			boolean isChoiceRandomized) {
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(newType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
 
@@ -344,7 +344,9 @@ public class ChoiceNodeHelper {
 			return choiceQualifiedName;
 		}
 
-		String parameterCompositeName = AbstractParameterSignatureHelper.getQualifiedName(basicParameterNode, extLanguageManager);
+		String parameterCompositeName = 
+				AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+						basicParameterNode, extLanguageManager);
 
 		if (basicParameterNode.isExpected()) {
 			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
@@ -915,12 +917,12 @@ public class ChoiceNodeHelper {
 		return new ArrayList<ConstraintNode>(result);
 	}
 
-	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
-
-		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
-	}
-
-	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { // TODO MO-RE change result to List
+	//	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+	//
+	//		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
+	//	}
+	//
+	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { 
 	//
 	//		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
 	//
@@ -972,18 +974,19 @@ public class ChoiceNodeHelper {
 	//		result.addAll(testCaseNodes);
 	//	}
 	//
-	private static List<TestCaseNode> getMentioningTestCases2(ChoiceNode choiceNode) { // TODO MO-RE to choice node helper - getMentioningTestCases
 
-		if (choiceNode.isPartOfGlobalParameter()) {
-			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNode);
+	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+
+		if (choiceNodeNotFromTestCase.isPartOfGlobalParameter()) {
+			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNodeNotFromTestCase);
 		}
 
-		return calculateTestCasesToDeleteForLocalNode(choiceNode);
+		return getTestCasesForRelatedMethod(choiceNodeNotFromTestCase);
 	}
 
 	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
 
-		CompositeParameterNode compositeParameterNode = AbstractParameterNodeHelper.getTopComposite(globalChoiceNode);
+		CompositeParameterNode compositeParameterNode = CompositeParameterNodeHelper.findTopComposite(globalChoiceNode);
 
 		if (compositeParameterNode != null) {
 			return calculateTestCasesForChoiceOfGlobalComposite(compositeParameterNode);
@@ -998,7 +1001,7 @@ public class ChoiceNodeHelper {
 		return new ArrayList<>();
 	}
 
-	public static List<TestCaseNode> calculateTestCasesToDeleteForLocalNode(IAbstractNode abstractNode) { // TODO MO-RE rename
+	public static List<TestCaseNode> getTestCasesForRelatedMethod(IAbstractNode abstractNode) {
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
 
@@ -1016,7 +1019,7 @@ public class ChoiceNodeHelper {
 
 		for (CompositeParameterNode linkedCompositeParameterNode : linkedCompositeParameterNodes) {
 
-			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedCompositeParameterNode);
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedCompositeParameterNode);
 
 			resultTestCaseNodesToDelete.addAll(testCases);
 		}
@@ -1035,7 +1038,7 @@ public class ChoiceNodeHelper {
 
 		for (BasicParameterNode linkedBasicParameterNode : linkedBasicParameterNodes) {
 
-			List<TestCaseNode> testCases = ChoiceNodeHelper.calculateTestCasesToDeleteForLocalNode(linkedBasicParameterNode);
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedBasicParameterNode);
 
 			resultTestCaseNodesToDelete.addAll(testCases);
 		}
@@ -1062,5 +1065,5 @@ public class ChoiceNodeHelper {
 			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
 	}
-	
+
 }

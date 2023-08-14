@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ERunMode;
@@ -306,7 +307,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(leftParameterType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(leftParameterType);
 
 		IStatementCondition statementCondition = relationStatement.getCondition();
 
@@ -477,6 +478,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		postcondition.derandomize();
 
 	}
+	
 	public AbstractStatement getPrecondition() {
 
 		return fPrecondition;
@@ -583,8 +585,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
-
-	public Constraint createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
+	
+	public Constraint createCopy(NodeMapper mapper) {
 
 		AbstractStatement precondition = fPrecondition.createCopy(mapper);
 		AbstractStatement postcondition = fPostcondition.createCopy(mapper);
@@ -598,6 +600,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement postcondition = fPostcondition.makeClone(mapper);
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+	
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+		
+		fPrecondition.replaceReferences(mapper, mappingDirection);
+		fPostcondition.replaceReferences(mapper, mappingDirection);
 	}
 	
 	public void verifyConversionOfParameterFromToType(
@@ -1044,4 +1052,22 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 	}
+
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		
+		AbstractStatement precondition = getPrecondition();
+		
+		if (!precondition.isConsistent(topParentNode)) {
+			return false;
+		}
+
+		AbstractStatement postcondition = getPostcondition();
+		
+		if (!postcondition.isConsistent(topParentNode)) {
+			return false;
+		}
+		
+		return true;
+	}
+
 }

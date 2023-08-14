@@ -114,10 +114,10 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild){
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialChild){
 		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodNode) return getMethods().size();
-		return super.getMaxChildIndex(potentialChild);
+		return super.getMaxChildIndexAfterAddingNewChildNode(potentialChild);
 	}
 
 	public void setName(String qualifiedName) {
@@ -483,6 +483,18 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
+		
+		fParametersLister.shiftElements(indicesOfParameters, shift);
+	}
+
+	@Override
+	public void shiftOneParameter(int indexOfParameter, int shift) {
+		
+		fParametersLister.shiftOneElement(indexOfParameter, shift);
 	}
 
 }

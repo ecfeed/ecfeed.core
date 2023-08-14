@@ -190,7 +190,7 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 
 	private void adaptChoices(IChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
-		ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(fNewTypeInIntrLanguage);
+		ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(fNewTypeInIntrLanguage);
 		while(it.hasNext()){
 			adaptOneChoice(it, adapter);
 		}

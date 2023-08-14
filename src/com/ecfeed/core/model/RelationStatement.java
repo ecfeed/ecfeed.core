@@ -18,6 +18,7 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -67,15 +68,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
-
-	public static RelationStatement createRelationStatementWithParameterCondition(
-			BasicParameterNode leftParameter,
-			CompositeParameterNode leftParameterLinkingContext,
-			EMathRelation relation,
-			BasicParameterNode rightParameter) {
-
-		return createRelationStatementWithParameterCondition(leftParameter, leftParameterLinkingContext, relation, rightParameter, null);
 	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
@@ -187,7 +179,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
 
 		String nameInIntrLanguage = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						linkingContext,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -203,7 +195,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return createSignature(new ExtLanguageManagerForJava());
 	}
 
 	@Override
@@ -213,9 +205,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftBasicParameterNode = getLeftParameter();
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
-		
+
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						leftParameterLinkingCondition,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,
@@ -240,7 +232,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		if (mapper.isPresent()) {
 			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
 
@@ -252,14 +244,23 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			return clonedStatement;
 		}
-		
+
 		RelationStatement relationStatement = new RelationStatement(
 				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
-		
+
 		return relationStatement;
 	}
-	
-	@Override  // TODO MO-RE obsolete
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fLeftParameter = nodeMapper.getMappedNode(fLeftParameter, mappingDirection); 
+		fLeftParameterLinkingContext  = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
+
+		fRightCondition.replaceReferences(nodeMapper, mappingDirection);
+	}
+
+	@Override
 	public RelationStatement makeClone() {
 
 		return 
@@ -268,7 +269,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete
+	public RelationStatement createCopy(NodeMapper mapper) {
 
 		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
 
@@ -604,6 +605,22 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		}
 
 		return result;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameter, fLeftParameterLinkingContext, parentMethodNode)) {
+
+			return false;
+		}
+
+		if (!fRightCondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	//	@Override

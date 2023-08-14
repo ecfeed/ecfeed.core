@@ -73,7 +73,7 @@ public class OnMethodOperationRemoveInconsistentChildren extends AbstractModelOp
 		public void execute() {
 
 			setOneNodeToSelect(fMethodNode);
-			fMethodNode.replaceTestCases(fOriginalTestCases);
+			fMethodNode.setTestCases(fOriginalTestCases);
 			fMethodNode.replaceConstraints(fOriginalConstraints);
 			markModelUpdated();
 		}

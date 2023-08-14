@@ -36,6 +36,8 @@ public interface IParameterDefinition {
 	 */
 	public Object[] getAllowedValues();
 	
+	public void setAllowedValues(Object[] allowedValues);
+	
 	/*
 	 * Checks if provided value is valid for this parameter
 	 */

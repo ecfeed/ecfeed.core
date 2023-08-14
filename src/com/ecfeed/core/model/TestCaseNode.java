@@ -16,11 +16,12 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 
 public class TestCaseNode extends AbstractNode {
 
-	List<ChoiceNode> fTestData;
+	List<ChoiceNode> fChoiceNodes;
 
 	@Override
 	public String getNonQualifiedName() {
@@ -93,7 +94,7 @@ public class TestCaseNode extends AbstractNode {
 
 		List<ChoiceNode> testdata = new ArrayList<>();
 
-		for (ChoiceNode choice : fTestData) {
+		for (ChoiceNode choice : fChoiceNodes) {
 			testdata.add(choice);
 		}
 
@@ -104,13 +105,13 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public List<ChoiceNode> getChoices() { 
-		return fTestData;
+		return fChoiceNodes;
 	}
 
-	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
 
 		super(testSuiteName, modelChangeRegistrator);
-		fTestData = testData;
+		fChoiceNodes = testData;
 	}
 
 	public MethodNode getMethod() {
@@ -156,19 +157,19 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public List<ChoiceNode> getTestData() {
-		return fTestData;
+		return fChoiceNodes;
 	}
 
 	public void setTestData(List<ChoiceNode> testData) {
-		fTestData = testData;
+		fChoiceNodes = testData;
 	}
 
 	public void replaceValue(int index, ChoiceNode newValue) {
-		fTestData.set(index, newValue);
+		fChoiceNodes.set(index, newValue);
 	}
 
 	public boolean mentions(ChoiceNode choice) {
-		for(ChoiceNode p : fTestData){
+		for(ChoiceNode p : fChoiceNodes){
 			if(p.isMatchIncludingParents(choice)){
 				return true;
 			}
@@ -296,23 +297,23 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCase getTestCase() {
-		return new TestCase(fTestData);
+		return new TestCase(fChoiceNodes);
 	}
 
-	public void updateChoiceReferences( // TODO MO-RE do we need this ?
-			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-
-		int index = 0;
-
-		for (ChoiceNode choiceNode : fTestData) {
-
-			if (choiceNode.equals(oldChoiceNode)) {
-				fTestData.set(index, newChoiceNode);
-			}
-
-			index++;
-		}
-	}
+	//	public void updateChoiceReferences(
+	//			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	//
+	//		int index = 0;
+	//
+	//		for (ChoiceNode choiceNode : fChoiceNodes) {
+	//
+	//			if (choiceNode.equals(oldChoiceNode)) {
+	//				fChoiceNodes.set(index, newChoiceNode);
+	//			}
+	//
+	//			index++;
+	//		}
+	//	}
 
 	@Override
 	public List<IAbstractNode> getDirectChildren() {
@@ -325,4 +326,20 @@ public class TestCaseNode extends AbstractNode {
 		return false;
 	}
 
+	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fChoiceNodes) {
+
+			fChoiceNodes.set(index, nodeMapper.getMappedNode(choiceNode, mappingDirection));
+
+			index++;
+		}
+	}
+
+	public void shiftElements(List<Integer> indices, int shift) {
+
+		ShifterOfListElements.shiftElements(fChoiceNodes, indices, shift);
+	}
 }

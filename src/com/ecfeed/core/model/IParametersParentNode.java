@@ -38,17 +38,14 @@ public interface IParametersParentNode extends IAbstractNode {
 
 	public String generateNewParameterName(String startParameterName);
 
-	//----------------------------------------------------------------------------
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift);
+	public void shiftOneParameter(int indexOfParameter, int shift);
 
-	default List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) { // TODO MO-RE remove ?
-		return ParametersParentNodeHelper.getNestedAbstractParameters(this, follow);
-	}
-
-	default List<BasicParameterNode> getNestedBasicParameters(boolean follow) { // TODO MO-RE remove ?
+	default List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
 		return ParametersParentNodeHelper.getNestedBasicParameters(this, follow);
 	}
 
-	default List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) { // TODO MO-RE move to helper ?
+	default List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
 		return ParametersParentNodeHelper.getNestedCompositeParameters(this, follow);
 	}
 

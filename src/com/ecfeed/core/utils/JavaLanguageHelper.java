@@ -1568,7 +1568,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	public static ITypeAdapter<?> getAdapter(String type){ // TODO MO-RE rename to getTypeAdapter
+	public static ITypeAdapter<?> getTypeAdapter(String type) {
 		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
 			type = TypeAdapterHelper.USER_TYPE;
 		}
@@ -1606,10 +1606,5 @@ public final class JavaLanguageHelper {
 	private static ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
 		return new TypeAdapterBaseForUserType(type);
 	}
-
-	// TODO MO-RE do we need this ?
-//	protected ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
-//		return new EclipseTypeAdapterForUserType(type);
-//	}
 
 }

@@ -79,7 +79,7 @@ public class OnChoiceOperationSetValue extends AbstractModelOperation {
 			return null;
 		}
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(type); 
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(type); 
 
 		try {
 			return typeAdapter.adapt(

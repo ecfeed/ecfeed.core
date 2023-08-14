@@ -10,55 +10,49 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.utils.MethodsWithResultsOfGenerations;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnBasicParameterOperationRemove extends AbstractModelOperation {
+public class OnParameterOperationRemove extends AbstractModelOperation {
 
 	private static final String REMOVE_BASIC_PARAMETER = "Remove basic parameter";
 
-	private MethodNode fMethodNode;
-	private BasicParameterNode fBasicParameterNode;
+	private IParametersParentNode fParent;
+	private AbstractParameterNode fBasicParameterNode;
 	private int fParameterIndex;
 
-	private List<TestCaseNode> fOriginalTestCases;
-	private List<BasicParameterNode> fOriginalDeployedParameters;
+	private MethodsWithResultsOfGenerations fMethodsWithResultsOfGenerations;
 
-	public OnBasicParameterOperationRemove(
-			MethodNode methodNode,
-			BasicParameterNode basicParameterNode,
+	public OnParameterOperationRemove(
+			IParametersParentNode parent,
+			AbstractParameterNode basicParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		super(REMOVE_BASIC_PARAMETER, extLanguageManager);
 
-		fMethodNode = methodNode;
+		fParent = parent;
 		fBasicParameterNode = basicParameterNode;
 
-		fOriginalTestCases = new ArrayList<>();
-		fOriginalDeployedParameters = new ArrayList<>();
+		fMethodsWithResultsOfGenerations = new MethodsWithResultsOfGenerations();
 	}
 
 	@Override
 	public void execute() {
 
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(fBasicParameterNode);
+		fMethodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
+		fMethodsWithResultsOfGenerations.clearResultsForAllMethods();
+
 		fParameterIndex = fBasicParameterNode.getMyIndex();
-
-		fOriginalTestCases.clear();
-		fOriginalTestCases.addAll(fMethodNode.getTestCases());
-		fMethodNode.removeAllTestCases();
-
-		fOriginalDeployedParameters.clear();
-		fOriginalDeployedParameters.addAll(fMethodNode.getDeployedParameters());
-		fMethodNode.removeAllDeployedParameters();
-
-		fMethodNode.removeParameter(fBasicParameterNode);
+		fParent.removeParameter(fBasicParameterNode);
 
 		markModelUpdated();
 	}
@@ -76,26 +70,25 @@ public class OnBasicParameterOperationRemove extends AbstractModelOperation {
 	private class OperationAddParameter extends AbstractModelOperation {
 
 		public OperationAddParameter(IExtLanguageManager extLanguageManager) {
-			super(AbstractModelOperation.createReverseOperationName(REMOVE_BASIC_PARAMETER), extLanguageManager);
+			super(AbstractModelOperation.createReverseOperationName(
+					REMOVE_BASIC_PARAMETER), extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
 
-			setOneNodeToSelect(fMethodNode);
+			setOneNodeToSelect(fParent);
 
 			OnParameterOperationAddToParent onParameterOperationAddToParent = 
 					new OnParameterOperationAddToParent(
-							fMethodNode,
+							fParent,
 							fBasicParameterNode,
 							fParameterIndex,
 							getExtLanguageManager());
 
 			onParameterOperationAddToParent.execute();
 
-			fMethodNode.replaceTestCases(fOriginalTestCases);
-			fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
-
+			fMethodsWithResultsOfGenerations.restoreResultsForAllMethods();
 			markModelUpdated();
 		}
 

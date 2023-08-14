@@ -212,7 +212,7 @@ public class ParametersMapper {
 		ExtendedName extendedNameOfParameter = ExtendedName.PATH_TO_TOP_CONTAINTER; 
 		
 		String signatureNew = 
-				AbstractParameterSignatureHelper.createSignatureWithLinkNewStandard(
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
 						parameterNodeWhichHasLink,
 						ExtendedName.PATH_TO_TOP_CONTAINTER,
 						TypeOfLink.NORMAL,

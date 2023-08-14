@@ -157,7 +157,7 @@ public class ConstraintNodeHelper {
 		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
 
 		NodeMapper nodeMapper = new NodeMapper();
-		
+
 		for (ConstraintNode constraint : constraints) {
 
 			ConstraintNode clonedConstraint = constraint.makeClone(Optional.of(nodeMapper));
@@ -201,5 +201,100 @@ public class ConstraintNodeHelper {
 		NameHelper.compareNames(constraint1.getName(), constraint2.getName());
 		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
-	
+
+	public static List<ConstraintNode> getMentioningConstraintNodes(
+			List<CompositeParameterNode> compositeParameterNodes,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodesToDelete = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
+
+			List<ConstraintNode> currentConstraintNodes = 
+					getMentioningConstraintsForCompositeParameter(compositeParameterNode, basicParameterNodesToDelete);
+
+			resultConstraintNodesToDelete.addAll(currentConstraintNodes);
+		}
+
+		return resultConstraintNodesToDelete;
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForCompositeParameter(
+			CompositeParameterNode compositeParameterNode,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		if (compositeParameterNode.isGlobalParameter()) {
+			return getMentioningConstraintsForGlobalParameter(compositeParameterNode, basicParameterNodesToDelete);
+		}
+
+		return getMentioningConstraintsForLocalParameter(compositeParameterNode, basicParameterNodesToDelete);
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForGlobalParameter(
+			CompositeParameterNode globalCompositeParameterNode,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<CompositeParameterNode> linkedCompositeParameterNodes =
+				CompositeParameterNodeHelper.getLinkedCompositeParameters(globalCompositeParameterNode);
+
+		for (CompositeParameterNode compositeParameterNode : linkedCompositeParameterNodes) {
+
+			List<ConstraintNode> currentConstraintNodes = 
+					getMentioningConstraintsForLocalParameter(
+							compositeParameterNode, basicParameterNodesToDelete);
+
+			resultConstraintNodes.addAll(currentConstraintNodes);
+		}
+
+		return resultConstraintNodes;
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForLocalParameter(
+			CompositeParameterNode compositeParameterNode, 
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodesToDelete = new ArrayList<>();
+
+		List<ConstraintNode> constraintsFromParentStructures = 
+				getConstraintsFromParentCompositesAndMethod(compositeParameterNode);
+
+		for (ConstraintNode constraintNode : constraintsFromParentStructures) {
+
+			if (constraintNode.mentionsAnyOfParameters(basicParameterNodesToDelete)) {
+				resultConstraintNodesToDelete.add(constraintNode);
+			}
+		}
+
+		return resultConstraintNodesToDelete;
+	}
+
+	private static List<ConstraintNode> getConstraintsFromParentCompositesAndMethod(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		IAbstractNode parent = compositeParameterNode.getParent();
+
+		if (!(parent instanceof IConstraintsParentNode)) {
+			return new ArrayList<>();
+		}
+
+		for(;;) {
+
+			IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) parent;
+
+			List<ConstraintNode> constraintNodes = constraintsParentNode.getConstraintNodes();
+
+			resultConstraintNodes.addAll(constraintNodes);
+
+			parent = constraintsParentNode.getParent();
+
+			if (parent == null || !(parent instanceof IConstraintsParentNode)) {
+				return resultConstraintNodes;
+			}
+		}
+	}
+
 }

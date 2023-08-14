@@ -164,7 +164,7 @@ abstract class ModelDataAbstract implements ModelData {
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
         	List<ChoiceNode> choices = new ArrayList<>();
-        	DataType type = DataTypeFactory.create();
+        	DataType type = DataTypeFactory.create(false);
 
             int j = 0;
             for (String choice : this.body.get(i)) {

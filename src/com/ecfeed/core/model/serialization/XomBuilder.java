@@ -27,11 +27,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_NA
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTIES_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_TYPE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_VALUE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
@@ -57,13 +52,13 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -94,19 +89,22 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(RootNode rootNode) throws Exception {
+
 		Element targetRootElement = createTargetRootElement(rootNode);
 
 		for (ClassNode classNode : rootNode.getClasses()) {
 
 			if (shouldSerializeNode(classNode)) {
-				targetRootElement.appendChild((Element) visit(classNode));
+				Element classElement = (Element) visit(classNode);
+				targetRootElement.appendChild(classElement);
 			}
 		}
 
 		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetRootElement.appendChild(createTargetParameterElement(parameterNode));
+				Element parameterElement = createTargetParameterElement(parameterNode);
+				targetRootElement.appendChild(parameterElement);
 			}
 		}
 
@@ -115,19 +113,22 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ClassNode classNode) throws Exception {
+
 		Element targetClassElement = createTargetClassElement(classNode);
 
 		for (MethodNode methodNode : classNode.getMethods()) {
 
 			if (shouldSerializeNode(methodNode)) {
-				targetClassElement.appendChild((Element) visit(methodNode));
+				Element methodElement = (Element) visit(methodNode);
+				targetClassElement.appendChild(methodElement);
 			}
 		}
 
 		for (AbstractParameterNode parameterNode : classNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetClassElement.appendChild(createTargetParameterElement(parameterNode));
+				Element parameterElement = createTargetParameterElement(parameterNode);
+				targetClassElement.appendChild(parameterElement);
 			}
 		}
 
@@ -136,67 +137,67 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(MethodNode methodNode) throws Exception {
+
 		Element targetMethodElement = createTargetMethodElement(methodNode);
 
 		for (AbstractParameterNode parameterNode : methodNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetMethodElement.appendChild((Element) parameterNode.accept(this));
+				Element parameterElement = (Element) parameterNode.accept(this);
+				targetMethodElement.appendChild(parameterElement);
 			}
 		}
 
 		for (ConstraintNode constraintNode : methodNode.getConstraintNodes()) {
 
 			if (shouldSerializeNode(constraintNode)) {
-				targetMethodElement.appendChild((Element) constraintNode.accept(this));
+				Element constraintElement = (Element) constraintNode.accept(this);
+				targetMethodElement.appendChild(constraintElement);
 			}
 		}
 
 		for (TestCaseNode testCaseNode : methodNode.getTestCases()) {
 
 			if (shouldSerializeNode(testCaseNode)) {
-				targetMethodElement.appendChild((Element)testCaseNode.accept(this));
+				Element testCaseElement = (Element)testCaseNode.accept(this);
+				targetMethodElement.appendChild(testCaseElement);
 			}
 		}
 
 		Element deployedParametersElement = createDeployedParametersElement(methodNode);
-		
+
 		if (deployedParametersElement != null) {
 			targetMethodElement.appendChild(deployedParametersElement);
 		}
-
-		//		if (methodNode.isDeployed()) {
-		//			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
-		//
-		//				targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
-		//			} else {
-		//				LogHelperCore.logError("The number of deployed parameters is inconsistent.");
-		//			}
-		//		}
 
 		return targetMethodElement;
 	}
 
 	@Override
 	public Object visit(BasicParameterNode parameterNode)  throws Exception {
+
 		Element targetParamElement;
 
 		if (parameterNode.isGlobalParameter()) {
+
 			targetParamElement = createTargetGlobalBasicParameterElement(parameterNode);
 
 			for (ChoiceNode choiceNode : parameterNode.getChoices()) {
 
 				if (shouldSerializeNode(choiceNode)) {
-					targetParamElement.appendChild((Element) choiceNode.accept(this));
+					Element choiceElement = (Element) choiceNode.accept(this);
+					targetParamElement.appendChild(choiceElement);
 				}
 			}
 		} else {
+
 			targetParamElement = createTargetBasicMethodParameterElement(parameterNode);
 
 			for (ChoiceNode choiceNode : parameterNode.getRealChoices()) {
 
 				if (shouldSerializeNode(choiceNode)) {
-					targetParamElement.appendChild((Element)choiceNode.accept(this));
+					Element choiceElement = (Element)choiceNode.accept(this);
+					targetParamElement.appendChild(choiceElement);
 				}
 			}
 		}
@@ -206,6 +207,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(CompositeParameterNode parameterNode)  throws Exception {
+
 		Element targetParamElement;
 
 		if (parameterNode.isGlobalParameter()) {
@@ -215,12 +217,14 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
-			targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
+			Element parameterElement = createTargetParameterElement(parameterParsed);
+			targetParamElement.appendChild(parameterElement);
 		}
 
 		for (ConstraintNode constraintNode : parameterNode.getConstraintNodes()) {
 			if (shouldSerializeNode(constraintNode)) {
-				targetParamElement.appendChild((Element) constraintNode.accept(this));
+				Element constraintElement = (Element) constraintNode.accept(this);
+				targetParamElement.appendChild(constraintElement);
 			}
 		}
 
@@ -235,6 +239,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
+
 		Element targetTestCaseElement = createTargetTestCaseElement(node);
 
 		for (ChoiceNode choiceNode : node.getTestData()) {
@@ -248,33 +253,60 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	@Override
-	public Object visit(ConstraintNode node) throws Exception{
-		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
+	public Object visit(ConstraintNode constraintNode) throws Exception{
 
-		ConstraintType constraintType = node.getConstraint().getType();
+		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, constraintNode);
+
+		ConstraintType constraintType = constraintNode.getConstraint().getType();
 		addConstraintTypeAttribute(constraintType, targetConstraintElement);
 
-		AbstractStatement precondition = node.getConstraint().getPrecondition();
-		AbstractStatement postcondition = node.getConstraint().getPostcondition();
-
-		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
-		preconditionElement.appendChild((Element)precondition.accept(
-				new XomStatementBuilder(
-						node.getParent(),
-						getStatementParameterAttributeName(),
-						getStatementChoiceAttributeName())));
-
-		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
-		postconditionElement.appendChild((Element)postcondition.accept(
-				new XomStatementBuilder(
-						node.getParent(),
-						getStatementParameterAttributeName(),
-						getStatementChoiceAttributeName())));
-
+		Element preconditionElement = createPreconditionElement(constraintNode);
 		targetConstraintElement.appendChild(preconditionElement);
+
+		Element postconditionElement = createPostconditionElement(constraintNode);
 		targetConstraintElement.appendChild(postconditionElement);
 
 		return targetConstraintElement;
+	}
+
+	private Element createPostconditionElement(ConstraintNode constraintNode) throws Exception {
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		XomStatementBuilder statementBuildingVisitor = new XomStatementBuilder(
+				constraintNode.getParent(),
+				getStatementParameterAttributeName(),
+				getStatementChoiceAttributeName());
+
+		Element statementElementOfPostcondition = 
+				(Element)postcondition.accept(statementBuildingVisitor);
+
+		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);		
+		postconditionElement.appendChild(statementElementOfPostcondition);
+
+		return postconditionElement;
+	}
+
+	private Element createPreconditionElement(ConstraintNode constraintNode) throws Exception {
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		//String signature = precondition.createSignature(new ExtLanguageManagerForJava());
+
+		XomStatementBuilder statementBuildingVisitor = 
+				new XomStatementBuilder(
+						constraintNode.getParent(),
+						getStatementParameterAttributeName(),
+						getStatementChoiceAttributeName());
+
+		Element statementElementOfPrecondition = 
+				(Element)precondition.accept(
+						statementBuildingVisitor);
+
+		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
+		preconditionElement.appendChild(statementElementOfPrecondition);
+
+		return preconditionElement;
 	}
 
 	@Override
@@ -335,9 +367,9 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetDeployedParameterElement(ParameterWithLinkingContext parameterWithLinkingContext) {
-		
+
 		BasicParameterNode parameter = (BasicParameterNode) parameterWithLinkingContext.getParameter();
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Unexpected empty parameter.");
 		}
@@ -352,9 +384,9 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 
 		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
-		
+
 		if (linkingContext != null) {
-			
+
 			String pathOfContext = createPath(linkingContext);
 
 			encodeAndAddAttribute(
@@ -409,6 +441,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
+
 		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
@@ -438,10 +471,16 @@ public abstract class XomBuilder implements IModelVisitor {
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLinkToGlobalParameter() != null) {
-			String qualifiedName = 
-					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
+
+		if (linkToGlobalParameter != null) {
+			//			String qualifiedName = 
+			//					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+			//							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+
+			String qualifiedName = AbstractParameterSignatureHelper.createPathToRootNewStandard(linkToGlobalParameter, new ExtLanguageManagerForJava());
+			//node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
 					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, qualifiedName), 
@@ -452,25 +491,29 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetMethodCompositeParameterElement(CompositeParameterNode node) {
+
 		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
 			addParameterProperties(node, targetCompositeParameterElement);
 		}
 
-		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetCompositeParameterElement, node);
-		}
+		//		if (fSerializatorParams.getSerializeComments()) {
+		//			appendTypeComments(targetCompositeParameterElement, node);
+		//		}
 
 		encodeAndAddAttribute(
 				targetCompositeParameterElement,
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLinkToGlobalParameter() != null) {
+		AbstractParameterNode linkToGlobalParameter = node.getLinkToGlobalParameter();
+
+		if (linkToGlobalParameter != null) {
+
 			String path = 
-					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-							node.getLinkToGlobalParameter(), new ExtLanguageManagerForJava());
+					AbstractParameterSignatureHelper.createPathToRootNewStandard(
+							linkToGlobalParameter, new ExtLanguageManagerForJava());
 
 			encodeAndAddAttribute(
 					targetCompositeParameterElement,
@@ -512,15 +555,16 @@ public abstract class XomBuilder implements IModelVisitor {
 	//	}
 
 	private Element createTargetGlobalCompositeParameterElement(CompositeParameterNode node) {
+
 		Element targetGlobalParamElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
 			addParameterProperties(node, targetGlobalParamElement);
 		}
 
-		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetGlobalParamElement, node);
-		}
+		//		if (fSerializatorParams.getSerializeComments()) {
+		//			appendTypeComments(targetGlobalParamElement, node);
+		//		}
 
 		return targetGlobalParamElement;
 	}
@@ -554,11 +598,11 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createDeployedParametersElement(MethodNode methodNode) {
 
 		List<ParameterWithLinkingContext> deployedParameters = methodNode.getDeployedParametersWithLinkingContexts();
-		
+
 		if (deployedParameters.size() == 0) {
 			return null;
 		}
-		
+
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_TAG);
 
 		for (ParameterWithLinkingContext parameterWithContext : deployedParameters) {
@@ -618,45 +662,44 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	private void addMethodProperties(MethodNode methodNode, Element targetElement) {
 
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodNode, targetElement);
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM,  methodNode, targetElement);
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodNode, targetElement);
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodNode, targetElement);
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodNode, targetElement);
-		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM,  methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodNode, targetElement);
+		//		addMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodNode, targetElement);
 	}
 
-	private void addMethodProperty(NodePropertyDefs.PropertyId propertyId,  MethodNode methodNode, Element targetElement) {
-
-		String value = methodNode.getPropertyValue(propertyId);
-
-		if (value == null) {
-			return;
-		}
-
-		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
-	}
+	//	private void addMethodProperty(NodePropertyDefs.PropertyId propertyId,  MethodNode methodNode, Element targetElement) {
+	//
+	//		String value = methodNode.getPropertyValue(propertyId);
+	//
+	//		if (value == null) {
+	//			return;
+	//		}
+	//
+	//		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
+	//	}
 
 	private void addParameterProperties(AbstractParameterNode abstractParameterNode, Element targetElement) {
-
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, abstractParameterNode, targetElement);
-		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_ACTION, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, abstractParameterNode, targetElement);
+		//		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_ACTION, abstractParameterNode, targetElement);
 	}
 
-	private void addParameterProperty(
-			NodePropertyDefs.PropertyId propertyId,
-			AbstractParameterNode abstractParameterNode,
-			Element targetElement) {
-
-		String value = abstractParameterNode.getPropertyValue(propertyId);
-		if (value == null) {
-			return;
-		}
-		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
-	}
+	//	private void addParameterProperty(
+	//			NodePropertyDefs.PropertyId propertyId,
+	//			AbstractParameterNode abstractParameterNode,
+	//			Element targetElement) {
+	//
+	//		String value = abstractParameterNode.getPropertyValue(propertyId);
+	//		if (value == null) {
+	//			return;
+	//		}
+	//		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
+	//	}
 
 	private Element createAbstractElement(String nodeTag, IAbstractNode node) {
 
@@ -716,23 +759,11 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	private void appendTypeComments(Element element, BasicParameterNode node) {
 
-		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
-		Element commentElement;
+		String typeComments = node.getTypeComments();
 
-		if (commentElements.size() > 0) {
-			commentElement = commentElements.get(0);
-		} else {
-			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
-			element.appendChild(commentElement);
+		if (StringHelper.isNullOrEmpty(typeComments)) {
+			return;
 		}
-
-		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
-
-		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
-		commentElement.appendChild(typeComments);
-	}
-
-	private void appendTypeComments(Element element, AbstractParameterNode node) {
 
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;
@@ -744,10 +775,46 @@ public abstract class XomBuilder implements IModelVisitor {
 			element.appendChild(commentElement);
 		}
 
-		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+		Element typeCommentsElement = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
 
-		commentElement.appendChild(typeComments);
+		typeCommentsElement.appendChild(fWhiteCharConverter.encode(typeComments));
+		commentElement.appendChild(typeCommentsElement);
 	}
+
+	//	private void appendTypeComments(Element element, BasicParameterNode node) {
+	//
+	//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+	//		Element commentElement;
+	//
+	//		if (commentElements.size() > 0) {
+	//			commentElement = commentElements.get(0);
+	//		} else {
+	//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+	//			element.appendChild(commentElement);
+	//		}
+	//
+	//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+	//
+	//		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
+	//		commentElement.appendChild(typeComments);
+	//	}
+
+	//	private void appendTypeComments(Element element, AbstractParameterNode node) {
+	//
+	//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+	//		Element commentElement;
+	//
+	//		if (commentElements.size() > 0) {
+	//			commentElement = commentElements.get(0);
+	//		} else {
+	//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+	//			element.appendChild(commentElement);
+	//		}
+	//
+	//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+	//
+	//		commentElement.appendChild(typeComments);
+	//	}
 
 	//	private void appendTypeComments(Element element, BasicParameterNode node) {
 	//
@@ -793,50 +860,50 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetRootElement;
 	}
 
-	private String getPropertyName(NodePropertyDefs.PropertyId propertyId) {
+	//	private String getPropertyName(NodePropertyDefs.PropertyId propertyId) {
+	//
+	//		return NodePropertyDefs.getPropertyName(propertyId);
+	//	}
 
-		return NodePropertyDefs.getPropertyName(propertyId);
-	}
+	//	private String getPropertyType(NodePropertyDefs.PropertyId propertyId) {
+	//
+	//		return NodePropertyDefs.getPropertyType(propertyId);
+	//	}	
 
-	private String getPropertyType(NodePropertyDefs.PropertyId propertyId) {
+	//	private void appendProperty(String key, String type, String value, Element targetElement) {
+	//
+	//		Element propertiesBlock = getPropertiesBlock(targetElement);
+	//		Element propertyElement = createCommonPropertyElement(key, type, value);
+	//
+	//		propertiesBlock.appendChild(propertyElement);
+	//	}	
 
-		return NodePropertyDefs.getPropertyType(propertyId);
-	}	
+	//	private Element getPropertiesBlock(Element parentElement) {
+	//
+	//		Elements propiertiesBlocks = parentElement.getChildElements(PROPERTIES_BLOCK_TAG_NAME);
+	//
+	//		if (propiertiesBlocks.size() == 0) {
+	//			Element propertiesBlock = new Element(PROPERTIES_BLOCK_TAG_NAME);
+	//			parentElement.appendChild(propertiesBlock);
+	//			return propertiesBlock;
+	//		}
+	//
+	//		return propiertiesBlocks.get(0);
+	//	}
 
-	private void appendProperty(String key, String type, String value, Element targetElement) {
-
-		Element propertiesBlock = getPropertiesBlock(targetElement);
-		Element propertyElement = createCommonPropertyElement(key, type, value);
-
-		propertiesBlock.appendChild(propertyElement);
-	}	
-
-	private Element getPropertiesBlock(Element parentElement) {
-
-		Elements propiertiesBlocks = parentElement.getChildElements(PROPERTIES_BLOCK_TAG_NAME);
-
-		if (propiertiesBlocks.size() == 0) {
-			Element propertiesBlock = new Element(PROPERTIES_BLOCK_TAG_NAME);
-			parentElement.appendChild(propertiesBlock);
-			return propertiesBlock;
-		}
-
-		return propiertiesBlocks.get(0);
-	}
-
-	private Element createCommonPropertyElement(String name, String type, String value) {
-
-		Element targetPropertyElement = new Element(PROPERTY_TAG_NAME);
-
-		Attribute attributeName = new Attribute(PROPERTY_ATTRIBUTE_NAME, name);
-		targetPropertyElement.addAttribute(attributeName);
-
-		Attribute attributeType = new Attribute(PROPERTY_ATTRIBUTE_TYPE, type);
-		targetPropertyElement.addAttribute(attributeType);
-
-		Attribute attributeValue = new Attribute(PROPERTY_ATTRIBUTE_VALUE, value);
-		targetPropertyElement.addAttribute(attributeValue);
-
-		return targetPropertyElement;
-	}
+	//	private Element createCommonPropertyElement(String name, String type, String value) {
+	//
+	//		Element targetPropertyElement = new Element(PROPERTY_TAG_NAME);
+	//
+	//		Attribute attributeName = new Attribute(PROPERTY_ATTRIBUTE_NAME, name);
+	//		targetPropertyElement.addAttribute(attributeName);
+	//
+	//		Attribute attributeType = new Attribute(PROPERTY_ATTRIBUTE_TYPE, type);
+	//		targetPropertyElement.addAttribute(attributeType);
+	//
+	//		Attribute attributeValue = new Attribute(PROPERTY_ATTRIBUTE_VALUE, value);
+	//		targetPropertyElement.addAttribute(attributeValue);
+	//
+	//		return targetPropertyElement;
+	//	}
 }

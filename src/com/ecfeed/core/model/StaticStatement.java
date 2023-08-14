@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -84,10 +85,14 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	public AbstractStatement makeClone(Optional<NodeMapper> mapper) {
-		
+
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
+	@Override
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+	}
+	
 	@Override
 	public StaticStatement makeClone() {
 		return new StaticStatement(fValue, getModelChangeRegistrator());
@@ -182,6 +187,11 @@ public class StaticStatement extends AbstractStatement {
 	@Override
 	public CompositeParameterNode getLeftParameterLinkingContext() {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		return true;
 	}
 
 	//	@Override

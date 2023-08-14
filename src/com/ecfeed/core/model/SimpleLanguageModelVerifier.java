@@ -366,9 +366,9 @@ public class SimpleLanguageModelVerifier {
 
 	public static String createMessageWithNodeName(IAbstractNode abstractNode, String errorMessage) {
 
-		String fullPath = ModelHelper.getFullPath(abstractNode, new ExtLanguageManagerForJava());
+		String fullPath = AbstractNodeHelper.getFullPath(abstractNode, new ExtLanguageManagerForJava());
 
-		String nodeTypeName = ModelHelper.getNodeTypeName(abstractNode);
+		String nodeTypeName = AbstractNodeHelper.getNodeTypeName(abstractNode);
 
 		String message = errorMessage + "\n" + nodeTypeName	+ ": " + fullPath + ".";
 

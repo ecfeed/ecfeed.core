@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
 
-	public static BasicParameterNode addNewBasicParameterToComposite(
+	public static BasicParameterNode addNewBasicParameter(
 			CompositeParameterNode compositeParameterNode, 
 			String name, 
 			String type,
@@ -28,20 +29,25 @@ public class CompositeParameterNodeHelper {
 		return basicParameterNode;
 	}
 
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameter(
 			CompositeParameterNode parentCompositeParameterNode, 
-			String childCompositeName, 
+			String childCompositeName,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode childCompositeParameterNode = 
 				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
+
+		if (setParent) {
+			childCompositeParameterNode.setParent(parentCompositeParameterNode);
+		}
 
 		parentCompositeParameterNode.addParameter(childCompositeParameterNode);
 
 		return childCompositeParameterNode;
 	}
 
-	public static CompositeParameterNode addNewCompositeParameterNodeToCompositeParameter(
+	public static CompositeParameterNode addNewCompositeParameterNode(
 			CompositeParameterNode compositeParameterNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode parameterNode = new CompositeParameterNode (name, modelChangeRegistrator);
@@ -254,7 +260,10 @@ public class CompositeParameterNodeHelper {
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedCompositeParameters(true));
 
 		for (CompositeParameterNode parameter : parameters) {
-			String name = AbstractParameterSignatureHelper.getQualifiedName(parameter);
+
+			String name = 
+					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+							parameter, new ExtLanguageManagerForJava());
 
 			if (name.equals(parameterName)) {
 				return parameter;
@@ -263,29 +272,29 @@ public class CompositeParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static List<CompositeParameterNode> getChildCompositeParameterNodes(IParametersParentNode parentNode) {
-		
+
 		List<AbstractParameterNode> childAbstractParameterNodes = parentNode.getParameters();
-		
+
 		List<CompositeParameterNode> childCompositeParameterNodes = 
 				filterCompositeParameterNodes(childAbstractParameterNodes);
-		
+
 		return childCompositeParameterNodes;
 	}
 
 	public static List<CompositeParameterNode> filterCompositeParameterNodes(
 			List<AbstractParameterNode> abstractParameterNodes) {
-		
+
 		List<CompositeParameterNode> compositeParameterNodes = new ArrayList<>();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
-			
+
 			if (abstractParameterNode instanceof CompositeParameterNode) {
 				compositeParameterNodes.add((CompositeParameterNode) abstractParameterNode);
 			}
 		}
-		
+
 		return compositeParameterNodes;
 	}
 
@@ -297,7 +306,10 @@ public class CompositeParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Composite parameter names do not match.");
 		}
 
-		if (compositeParameterNode1.getParametersCount() != compositeParameterNode2.getParametersCount()) {
+		int parametersCount1 = compositeParameterNode1.getParametersCount();
+		int parametersCount2 = compositeParameterNode2.getParametersCount();
+
+		if (parametersCount1 != parametersCount2) {
 			ExceptionHelper.reportRuntimeException("Count of parameters does not match.");
 		}
 
@@ -315,6 +327,8 @@ public class CompositeParameterNodeHelper {
 
 		List<ConstraintNode> constraintNodes1 = compositeParameterNode1.getConstraintNodes();
 		List<ConstraintNode> constraintNodes2 = compositeParameterNode2.getConstraintNodes();
+
+		AbstractNodeHelper.compareSizes(constraintNodes1, constraintNodes2, "Number of constraints differs.");
 
 		for (int i =0; i < constraintNodes1.size(); ++i) {
 
@@ -350,5 +364,75 @@ public class CompositeParameterNodeHelper {
 			}
 		}
 	}
+
+	public static List<MethodNode> getMentioningMethodNodes(CompositeParameterNode compositeParameterNode) {
+
+		if (compositeParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty composite parameter node is not allowed.");
+		}
+
+		List<MethodNode> resultMethodNodes = new ArrayList<>();
+
+		List<AbstractParameterNode> linkedParameters =
+				AbstractParameterNodeHelper.getLinkedParameters(compositeParameterNode);
+
+		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+
+			if (methodNode != null) {
+				resultMethodNodes.add(methodNode);
+			}
+		}
+
+		return resultMethodNodes;
+	}
+
+	public static CompositeParameterNode findTopComposite(IAbstractNode abstractNode) {
+
+		if (abstractNode == null) {
+			return null;
+		}
+
+		IAbstractNode currentNode = abstractNode;
+
+		CompositeParameterNode topCompositeParameterNode = null;
+
+		if (abstractNode instanceof CompositeParameterNode) {
+			topCompositeParameterNode = (CompositeParameterNode) abstractNode;
+		}
+
+		for (;;) {
+
+			IAbstractNode parent = currentNode.getParent();
+
+			if (parent == null || parent instanceof ClassNode || parent instanceof RootNode) {
+				return topCompositeParameterNode;
+			}
+
+			if (parent instanceof CompositeParameterNode) {
+				topCompositeParameterNode = (CompositeParameterNode) parent;
+			}
+
+			currentNode = parent;
+		}
+	}
+
+	public static List<CompositeParameterNode> getMentioningCompositeParameterNodes(
+			List<CompositeParameterNode> compositeParameterNodes) {
+
+		List<CompositeParameterNode> resultLinkedCompositeParameterNodes = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
+
+			List<CompositeParameterNode> linkedCompositeParameterNodes = 
+					CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
+
+			resultLinkedCompositeParameterNodes.addAll(linkedCompositeParameterNodes);
+		}
+
+		return resultLinkedCompositeParameterNodes;
+	}
+
 
 }

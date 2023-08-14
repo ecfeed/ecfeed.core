@@ -20,54 +20,56 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	public static final String CLASS_NEW_NAME = "TestClass";
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
-	public static BasicParameterNode addNewGlobalBasicParameterToRoot(
+	public static BasicParameterNode addNewBasicParameter(
 			RootNode rootNode, 
 			String name, 
 			String type,
+			String defaultValue,
+			boolean setParent,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
-				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
 
-		rootNode.addParameter(globalParameterNode);
-
-		return globalParameterNode;
-	}
-
-	public static CompositeParameterNode addNewGlobalCompositeParameterToRoot(
-			RootNode rootNode, 
-			String name, 
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		CompositeParameterNode compositeParameterNode = 
-				new CompositeParameterNode(name, modelChangeRegistrator);
-
-		rootNode.addParameter(compositeParameterNode);
-
-		return compositeParameterNode;
-	}
-
-	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
-			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
-
-		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
-		
 		if (setParent) {
 			globalParameterNode.setParent(rootNode);
 		}
-		
+
 		rootNode.addParameter(globalParameterNode);
-		
+
 		return globalParameterNode;
 	}
 
-	public static ClassNode addNewClassNodeToRoot(
-			RootNode rootNode, String className, IModelChangeRegistrator modelChangeRegistrator) {
+	public static CompositeParameterNode addNewCompositeParameter(
+			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
-		ClassNode classNode = new ClassNode("Class1", modelChangeRegistrator);
+		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
+
+		rootNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static ClassNode addNewClassNode(
+			RootNode rootNode,
+			String className, 
+			boolean setParent,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ClassNode classNode = new ClassNode(className, modelChangeRegistrator);
+		
+		if (setParent) {
+			classNode.setParent(classNode);
+		}
+		
 		rootNode.addClass(classNode);
 
 		return classNode;
@@ -97,9 +99,15 @@ public class RootNodeHelper {
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 
-		String newName = RootNodeHelper.generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
 
 		return newName;
+	}
+
+	public static String generateNewClassName(RootNode rootNode) {
+
+		String fullClassName = CLASS_NEW_NAME;
+		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName);
 	}
 
 	public static String generateUniqueClassNameFromClassNameCore(RootNode rootNode, String startClassNameCore) {

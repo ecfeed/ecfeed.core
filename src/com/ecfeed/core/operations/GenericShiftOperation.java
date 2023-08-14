@@ -12,11 +12,11 @@ package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
@@ -25,21 +25,21 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private List<? extends IAbstractNode> fCollection;
 
 	public GenericShiftOperation(List<? extends IAbstractNode> collection, IAbstractNode shifted, boolean up, IExtLanguageManager extLanguageManager){
-		
+
 		this(collection, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
 	public GenericShiftOperation(
 			List<? extends IAbstractNode> collection, List<? extends IAbstractNode> shifted, boolean up, IExtLanguageManager extLanguageManager){
-		
+
 		this(collection, shifted, 0, extLanguageManager);
-		
+
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
 	public GenericShiftOperation(List<? extends IAbstractNode> collection, List<? extends IAbstractNode> shifted, int shift, IExtLanguageManager extLanguageManager){
 		super(OperationNames.MOVE, extLanguageManager);
-		shift = shiftAllowed(shifted, shift) ? shift : 0;
+		shift = shiftIsAllowed(shifted, shift) ? shift : 0;
 		fNodesToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;
 		fShiftSize = shift;
@@ -49,10 +49,10 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	public void execute() {
 
 		setNodesToSelect();
-		
+
 		List<Integer> indices = calculateIndices(fCollection, fNodesToBeShifted);
-		shiftElements(fCollection, indices, fShiftSize);
-		
+		ShifterOfListElements.shiftElements(fCollection, indices, fShiftSize);
+
 		markModelUpdated();
 	}
 
@@ -79,7 +79,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	protected int minAllowedShift(List<? extends IAbstractNode> shifted, boolean up){
 		int shift = up ? -1 : 1;
-		return shiftAllowed(shifted, shift) ? shift : 0; 
+		return shiftIsAllowed(shifted, shift) ? shift : 0; 
 	}
 
 	protected boolean haveSameParent(List<? extends IAbstractNode> shifted) {
@@ -116,26 +116,26 @@ public class GenericShiftOperation extends AbstractModelOperation {
 		return indices;
 	}
 
-	protected void shiftElements(List<?> list, List<Integer> indices, int shift){
-		Collections.sort(indices);
-		if(shift > 0){
-			Collections.reverse(indices);
-		}
+	//	protected void shiftElements(List<?> list, List<Integer> indices, int shift){
+	//		Collections.sort(indices);
+	//		if(shift > 0){
+	//			Collections.reverse(indices);
+	//		}
+	//
+	//		for(int i = 0; i < indices.size(); i++){
+	//			shiftElement(list, indices.get(i), shift);
+	//		}
+	//	}
+	//	protected void shiftElement(List<?> list, int index, int shift) {
+	//
+	//		int minIndex = Math.min(index, index+shift);
+	//		int maxIndex = Math.max(index, index+shift) + ((shift < 0) ? 1:0);
+	//		List<?> rotated = list.subList(minIndex, (shift > 0) ? maxIndex + 1 : maxIndex);
+	//		int rotation = (shift>0) ? -1 : 1;
+	//		Collections.rotate(rotated, rotation);
+	//	}
 
-		for(int i = 0; i < indices.size(); i++){
-			shiftElement(list, indices.get(i), shift);
-		}
-	}
-	protected void shiftElement(List<?> list, int index, int shift) {
-
-		int minIndex = Math.min(index, index+shift);
-		int maxIndex = Math.max(index, index+shift) + ((shift < 0) ? 1:0);
-		List<?> rotated = list.subList(minIndex, (shift > 0) ? maxIndex + 1 : maxIndex);
-		int rotation = (shift>0) ? -1 : 1;
-		Collections.rotate(rotated, rotation);
-	}
-
-	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
+	protected boolean shiftIsAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(areInstancesOfSameClass(shifted) == false){
 			return false;
 		}
@@ -168,7 +168,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	}
 
 	private void setNodesToSelect() {
-		
+
 
 		setNodesToSelect(fNodesToBeShifted);
 	}

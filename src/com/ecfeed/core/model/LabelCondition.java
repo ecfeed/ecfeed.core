@@ -13,7 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -98,6 +100,10 @@ public class LabelCondition implements IStatementCondition {
 		return new LabelCondition(fRightLabel, statement);
 	}
 
+	@Override
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+	}
+	
 	@Override
 	public LabelCondition makeClone() {
 		return new LabelCondition(fRightLabel, fParentRelationStatement);
@@ -201,6 +207,35 @@ public class LabelCondition implements IStatementCondition {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		
+		BasicParameterNode basicParameterNode = getParameterWhichKeepsChoices();
+		
+		if (basicParameterNode == null) {
+			return false;
+		}
+		
+		Set<String> labels = basicParameterNode.getAllLabels();
+		
+		if (labels.contains(fRightLabel)) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	private BasicParameterNode getParameterWhichKeepsChoices() {
+		
+		BasicParameterNode basicParameterNode = fParentRelationStatement.getLeftParameter();
+		AbstractParameterNode linkingContext = fParentRelationStatement.getLeftParameterLinkingContext();
+		
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(basicParameterNode, linkingContext);
+		
+		return parameterWithChoices;
 	}
 
 	//	@Override

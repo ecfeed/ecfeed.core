@@ -12,7 +12,6 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class TestSuiteNode extends AbstractNode {
 	private Set<TestCaseNode> fTestCaseNodes;
-	private boolean fDisplayLimitExceeded; // TODO MO-RE remove this flag (display does not belong here)
 
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -22,7 +21,6 @@ public class TestSuiteNode extends AbstractNode {
 		}
 
 		fTestCaseNodes = new HashSet<>();
-		fDisplayLimitExceeded = false;
 	}
 
 	public TestSuiteNode(
@@ -61,7 +59,7 @@ public class TestSuiteNode extends AbstractNode {
 	//	public TestSuiteNode(Collection<TestCaseNode> testData) {
 	//		super("", null);
 	//
-	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); 
 	//		fTestCaseNodes = new ArrayList<>(testData);
 	//	}
 
@@ -92,16 +90,6 @@ public class TestSuiteNode extends AbstractNode {
 		MethodNode methodNode = (MethodNode) parent;
 
 		return methodNode.getTestSuites().indexOf(this);
-	}
-
-
-	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
-		fDisplayLimitExceeded  = displayLimitExceeded;
-	}
-
-	public boolean getDisplayLimitExceededFlag() {
-
-		return fDisplayLimitExceeded;
 	}
 
 	public void addTestCase(TestCaseNode testCaseNode) {

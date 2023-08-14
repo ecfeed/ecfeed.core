@@ -167,7 +167,7 @@ public class OnParameterOperationSetExpected extends AbstractModelOperation {
 				}
 				
 				if (parent instanceof ITestCasesParentNode) {
-					((ITestCasesParentNode)parent).replaceTestCases(fOriginalTestCases);
+					((ITestCasesParentNode)parent).setTestCases(fOriginalTestCases);
 				}
 			}
 			

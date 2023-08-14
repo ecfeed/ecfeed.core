@@ -11,7 +11,6 @@
 package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -112,14 +111,15 @@ public class TestCasesHolder {
 		registerChange();
 	}
 
-	public void replaceTestCases(List<TestCaseNode> testCases){ // TODO MO-RE fix test suites after changing test cases
+	public void replaceTestCases(List<TestCaseNode> testCases, MethodNode parent) {
 
 		fTestCaseNodes.clear();
-		
-		if (testCases != null) {
-			fTestCaseNodes.addAll(testCases);
+
+		for (TestCaseNode testCaseNode : testCases) {
+			
+			addTestCase(testCaseNode, parent);
 		}
-		
+
 		registerChange();
 	}
 
@@ -171,9 +171,9 @@ public class TestCasesHolder {
 		return names;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+	public List<TestCaseNode> getTestCases(String testSuiteName) {
 
-		ArrayList<TestCaseNode> result = new ArrayList<TestCaseNode>();
+		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 
 		for (TestCaseNode testCaseNode : fTestCaseNodes) {
 
@@ -181,6 +181,7 @@ public class TestCasesHolder {
 				result.add(testCaseNode);
 			}
 		}
+
 		return result;
 	}
 

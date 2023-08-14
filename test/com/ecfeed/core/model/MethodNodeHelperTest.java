@@ -20,10 +20,14 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.TestCasesFilteringDirection;
 
 public class MethodNodeHelperTest {
 
@@ -133,7 +137,7 @@ public class MethodNodeHelperTest {
 
 
 	@Test
-	public void signatureCreateTest(){
+	public void signatureCreateTest() {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
@@ -171,19 +175,39 @@ public class MethodNodeHelperTest {
 		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava());
 		assertEquals("method_1(int, double)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, true, new ExtLanguageManagerForJava());
+		//signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, true, new ExtLanguageManagerForJava());
+		
+		signature = 
+				MethodNodeHelper.createSignature(
+						methodNode, true, true, new ExtLanguageManagerForJava());
+		
 		assertEquals("method_1(param1 : int, param2[EXP] : double)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, false, new ExtLanguageManagerForJava());
+		// signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, false, new ExtLanguageManagerForJava());
+		
+		signature = 
+				MethodNodeHelper.createSignature(
+						methodNode, false, true, new ExtLanguageManagerForJava());
+		
 		assertEquals("method_1(int, [EXP]double)", signature);
 
 		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number, Number)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, true, new ExtLanguageManagerForSimple());
+		// signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, true, new ExtLanguageManagerForSimple());
+		
+		signature = 
+				MethodNodeHelper.createSignature(
+						methodNode, true, true, new ExtLanguageManagerForSimple());
+		
 		assertEquals("method 1(param1 : Number, param2[EXP] : Number)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, false, new ExtLanguageManagerForSimple());
+		// signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, false, new ExtLanguageManagerForSimple());
+		
+		signature = 
+				MethodNodeHelper.createSignature(
+						methodNode, false, true, new ExtLanguageManagerForSimple());
+		
 		assertEquals("method 1(Number, [EXP]Number)", signature);
 
 		signature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
@@ -356,16 +380,26 @@ public class MethodNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethodToClass(classNode, "method_1", true, null); 
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method_1", true, null); 
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "param_1", "int", "0", true, null);
 
 		MethodNodeHelper.addNewBasicParameter(methodNode, "param_2", "double", "0", true, null);
 
-		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
+		//String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
+		
+		String signature =  
+				MethodNodeHelper.createSignaturesOfParametersNewStandard(
+						methodNode, true, true, new ExtLanguageManagerForJava());
+		
 		assertEquals("param_1 : int, param_2 : double", signature);
 
-		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
+		//signature = MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
+		
+		signature = 
+				MethodNodeHelper.createSignaturesOfParametersNewStandard(
+						methodNode, true, true, new ExtLanguageManagerForSimple());
+		
 		assertEquals("param_1 : Number, param_2 : Number", signature);
 	}
 
@@ -633,4 +667,301 @@ public class MethodNodeHelperTest {
 
 		assertNull(resultMethodParameterNode);
 	}
+
+	@Test
+	public void shouldFilterNotRandomizedTestCasesForPositiveFilters() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice2", "2", false, true, null);
+
+		// constraint
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, choiceNode1);
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition, postcondition, null);
+
+		List<Constraint> constraints = new ArrayList<>();
+		constraints.add(constraint);
+
+		// list of test cases
+
+		List<TestCase> srcTestCases = new ArrayList<TestCase>();
+
+		// test case 1
+
+		List<ChoiceNode> choiceNodes1 = new ArrayList<>();
+		choiceNodes1.add(choiceNode1);
+		TestCase testCase1 = new TestCase(choiceNodes1);
+		srcTestCases.add(testCase1);
+
+		// test case 2
+
+		List<ChoiceNode> choiceNodes2 = new ArrayList<>();
+		choiceNodes2.add(choiceNode2);
+		TestCase testCase2 = new TestCase(choiceNodes2);
+		srcTestCases.add(testCase2);
+
+		IntegerHolder countOfAddedTestCases = new IntegerHolder(0);
+
+		// filter 
+
+		List<TestCase> filteredTestCases = 
+				MethodNodeHelper.filterTestCases(
+						methodNode, 
+						srcTestCases,
+						"suite2",
+						constraints, 
+						TestCasesFilteringDirection.POSITIVE,
+						true, 
+						countOfAddedTestCases);
+
+		// check
+
+		assertEquals(1, (int)countOfAddedTestCases.get());
+		assertEquals(1, filteredTestCases.size());
+
+		TestCase dstTestCase = filteredTestCases.get(0);
+		ChoiceNode dstChoiceNode = dstTestCase.getListOfChoiceNodes().get(0);
+		assertEquals(choiceNode1.getName(), dstChoiceNode.getName());
+	}
+
+	@Test
+	public void shouldFilterNotRandomizedTestCasesForNegativeFilters() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice2", "2", false, true, null);
+
+		// constraint
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, choiceNode1);
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition, postcondition, null);
+
+		List<Constraint> constraints = new ArrayList<>();
+		constraints.add(constraint);
+
+		// list of test cases
+
+		List<TestCase> srcTestCases = new ArrayList<TestCase>();
+
+		// test case 1
+
+		List<ChoiceNode> choiceNodes1 = new ArrayList<>();
+		choiceNodes1.add(choiceNode1);
+		TestCase testCase1 = new TestCase(choiceNodes1);
+		srcTestCases.add(testCase1);
+
+		// test case 2
+
+		List<ChoiceNode> choiceNodes2 = new ArrayList<>();
+		choiceNodes2.add(choiceNode2);
+		TestCase testCase2 = new TestCase(choiceNodes2);
+		srcTestCases.add(testCase2);
+
+		IntegerHolder countOfAddedTestCases = new IntegerHolder(0);
+
+		// filter 
+
+		List<TestCase> filteredTestCases = 
+				MethodNodeHelper.filterTestCases(
+						methodNode, 
+						srcTestCases,
+						"suite2",
+						constraints, 
+						TestCasesFilteringDirection.NEGATIVE,
+						true, 
+						countOfAddedTestCases);
+
+		// check
+
+		assertEquals(1, (int)countOfAddedTestCases.get());
+		assertEquals(1, filteredTestCases.size());
+
+		TestCase dstTestCase = filteredTestCases.get(0);
+		ChoiceNode dstChoiceNode = dstTestCase.getListOfChoiceNodes().get(0);
+		assertEquals(choiceNode2.getName(), dstChoiceNode.getName());
+	}
+
+	@Test
+	public void shouldFilterRandomizedTestCasesIncludingAmbiguous() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1:2", true, true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice2", "2:3", true, true, null);
+
+		// list of constraints
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, choiceNode1);
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition, postcondition, null);
+
+		List<Constraint> constraints = new ArrayList<>();
+		constraints.add(constraint);
+
+		// list of test cases
+
+		List<TestCase> srcTestCases = new ArrayList<TestCase>();
+
+		// test case 1
+
+		List<ChoiceNode> choiceNodes1 = new ArrayList<>();
+		choiceNodes1.add(choiceNode1);
+		TestCase testCase1 = new TestCase(choiceNodes1);
+		srcTestCases.add(testCase1);
+
+		// test case 2
+
+		List<ChoiceNode> choiceNodes2 = new ArrayList<>();
+		choiceNodes2.add(choiceNode2);
+		TestCase testCase2 = new TestCase(choiceNodes2);
+		srcTestCases.add(testCase2);
+
+		IntegerHolder countOfAddedTestCases = new IntegerHolder(0);
+
+		// filter with ambiguous test cases
+
+		List<TestCase> filteredTestCases = 
+				MethodNodeHelper.filterTestCases(
+						methodNode, 
+						srcTestCases,
+						"suite2",
+						constraints, 
+						TestCasesFilteringDirection.POSITIVE,
+						true, 
+						countOfAddedTestCases);
+
+		// check
+
+		assertEquals(2, (int)countOfAddedTestCases.get());
+		assertEquals(2, filteredTestCases.size());
+	}
+
+	@Test
+	public void shouldFilterRandomizedTestCaseExcludingAmbiguous() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1:2", true, true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice2", "2:3", true, true, null);
+
+		// list of constraints
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, choiceNode1);
+
+		Constraint constraint = new Constraint(
+				"constraint", ConstraintType.BASIC_FILTER, precondition, postcondition, null);
+
+		List<Constraint> constraints = new ArrayList<>();
+		constraints.add(constraint);
+
+		// list of test cases
+
+		List<TestCase> srcTestCases = new ArrayList<TestCase>();
+
+		// test case 1
+
+		List<ChoiceNode> choiceNodes1 = new ArrayList<>();
+		choiceNodes1.add(choiceNode1);
+		TestCase testCase1 = new TestCase(choiceNodes1);
+		srcTestCases.add(testCase1);
+
+		// test case 2
+
+		List<ChoiceNode> choiceNodes2 = new ArrayList<>();
+		choiceNodes2.add(choiceNode2);
+		TestCase testCase2 = new TestCase(choiceNodes2);
+		srcTestCases.add(testCase2);
+
+		IntegerHolder countOfAddedTestCases = new IntegerHolder(0);
+
+		// filter with ambiguous test cases
+
+		List<TestCase> filteredTestCases = 
+				MethodNodeHelper.filterTestCases(
+						methodNode, 
+						srcTestCases,
+						"suite2",
+						constraints, 
+						TestCasesFilteringDirection.POSITIVE,
+						false, 
+						countOfAddedTestCases);
+
+		// check
+
+		assertEquals(1, (int)countOfAddedTestCases.get());
+		assertEquals(1, filteredTestCases.size());
+	}
+
 }

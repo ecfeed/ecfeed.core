@@ -26,7 +26,7 @@ public class ClassNodeHelper {
 	public static final String CONTAINS_METHOD_WITH_IDENTICAL_NAME = "contains method with identical name";
 
 
-	public static BasicParameterNode addGlobalBasicParameterToClass(
+	public static BasicParameterNode addNewGlobalBasicParameter(
 			ClassNode classNode, 
 			String name, 
 			String type,
@@ -40,15 +40,15 @@ public class ClassNodeHelper {
 		return globalParameterNode;
 	}
 
-	public static MethodNode addNewMethodToClass(
+	public static MethodNode addNewMethod(
 			ClassNode classNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		MethodNode methodNode = new MethodNode(name, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			methodNode.setParent(classNode);
 		}
-		
+
 		classNode.addMethod(methodNode);
 
 		return methodNode;
@@ -56,10 +56,21 @@ public class ClassNodeHelper {
 
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
-		String name = ModelHelper.getNonQualifiedName(classNode.getName());
+		String name = getNonQualifiedName(classNode.getName());
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
 		return name;
+	}
+
+	public static String getNonQualifiedName(String qualifiedName) {
+
+		int lastDotIndex = qualifiedName.lastIndexOf('.');
+
+		if (lastDotIndex == -1) {
+			return qualifiedName;
+		}
+
+		return qualifiedName.substring(lastDotIndex + 1);
 	}
 
 	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
@@ -224,7 +235,7 @@ public class ClassNodeHelper {
 
 		return null;
 	}
-	
+
 	public static void compareClasses(ClassNode classNode1, ClassNode classNode2) {
 
 		NameHelper.compareNames(classNode1.getName(), classNode2.getName());
@@ -238,6 +249,32 @@ public class ClassNodeHelper {
 			AbstractNodeHelper.compareParents(methodNode1, classNode1, methodNode2, classNode2);
 			MethodNodeHelper.compareMethods(methodNode1, methodNode2);
 		}
+	}
+
+	public static CompositeParameterNode addNewCompositeParameter(
+			ClassNode classNode, 
+			String childCompositeName, 
+			boolean setParent, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+
+		CompositeParameterNode childCompositeParameterNode = 
+				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
+
+		if (setParent) {
+			childCompositeParameterNode.setParent(classNode);
+		}
+
+		classNode.addParameter(childCompositeParameterNode);
+
+		return childCompositeParameterNode;
+	}
+
+	public static String getPackageName(String qualifiedName) {
+
+		int lastDotIndex = qualifiedName.lastIndexOf('.');
+
+		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
 	}
 
 }

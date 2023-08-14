@@ -10,29 +10,41 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class XmlComparator {
 
+	public static String compareXmls(String xml1, String xml2) {
 
-	public static boolean areXmlsEqual(String xml1, String xml2) {
+			IntegerHolder position1 = new IntegerHolder(0);
+			IntegerHolder position2 = new IntegerHolder(0);
 
-		IntegerHolder position1 = new IntegerHolder(0);
-		IntegerHolder position2 = new IntegerHolder(0);
+			for(;;) {
 
-		for(;;) {
+				String tag1 = getTag(xml1, position1);
+				String tag2 = getTag(xml2, position2);
 
-			String tag1 = getTag(xml1, position1);
-			String tag2 = getTag(xml2, position2);
+				if (!StringHelper.isEqual(tag1, tag2)) {
+					return "Tags differ.\n  Tag1: " + tag1 + "  \n  Tag2: " + tag2;
+				}
 
-			if (!StringHelper.isEqual(tag1, tag2)) {
-				return false; // TODO MO-RE report exception with tags which differ
+				if (tag1 == null || tag2 == null) {
+					break;
+				}
 			}
 
-			if (tag1 == null || tag2 == null) {
-				break;
-			}
+			return null;
 		}
-
-		return true;
+	
+	public static boolean areXmlsEqual(String xml1, String xml2) {
+		
+		if (compareXmls(xml1, xml2) == null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	private static String getTag(String xml, IntegerHolder inOutFromPosition) {
@@ -59,5 +71,40 @@ public class XmlComparator {
 
 		return tag;
 	}
+
+	public static boolean containsConsecutiveTags(String xml, String stringWithTagsToFind) {
+
+		List<String> tagsFromXml = convertXmlToListOfTags(xml);
+		List<String> tagsToFind = convertXmlToListOfTags(stringWithTagsToFind);;
+
+		int indexOfSublist = Collections.indexOfSubList(tagsFromXml, tagsToFind);
+
+		if (indexOfSublist < 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private static List<String> convertXmlToListOfTags(String xml) {
+
+		List<String> result = new ArrayList<>();
+
+		IntegerHolder position = new IntegerHolder(0);
+
+		for(;;) {
+
+			String tag = getTag(xml, position);
+
+			if (tag == null) {
+				break;
+			}
+
+			result.add(tag);
+		}
+
+		return result;
+	}
+
 
 }

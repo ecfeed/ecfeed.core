@@ -109,7 +109,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			return getValueString();
 		}
 
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getAdapter(typeName);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(typeName);
 
 		String valueString = getValueString();
 
@@ -144,8 +144,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return fOrigChoiceNode;
 	}
 
-	public ChoiceNode makeClone() { // TODO MO-RE remove ?
-		
+	public ChoiceNode makeClone() {
+
 		ChoiceNode copy = makeCloneUnlink();
 
 		if(isClone())
@@ -155,9 +155,9 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 		return copy;
 	}
-	
-	public ChoiceNode makeCloneUnlink() { // TODO MO-RE rename ? private ?
-		
+
+	public ChoiceNode makeCloneUnlink() {
+
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
@@ -176,7 +176,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(Optional<NodeMapper> nodeMapper) {
-		
+
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
@@ -186,15 +186,15 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		for (ChoiceNode choice : getChoices()) {
 			copy.addChoice(choice.makeClone(nodeMapper));
 		}
-		
+
 		for (String label : fLabels) {
 			copy.addLabel(label);
 		}
-		
+
 		if (nodeMapper.isPresent()) {
 			nodeMapper.get().addMappings(this, copy);
 		}
-		
+
 		return copy;
 	}
 
@@ -498,7 +498,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public ChoiceNode getChoice(String qualifiedName) {
 
-		return (ChoiceNode)getChild(qualifiedName);
+		return (ChoiceNode)findChild(qualifiedName);
 	}
 
 	@Override

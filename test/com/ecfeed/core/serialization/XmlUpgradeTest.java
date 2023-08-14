@@ -10,17 +10,21 @@
 
 package com.ecfeed.core.serialization;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.model.serialization.ParserException;
-import com.ecfeed.core.utils.*;
-import org.junit.Test;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.ecfeed.core.model.ModelConverter;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.serialization.ModelParser;
+import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.StringHelper;
 
 public class XmlUpgradeTest {
 
@@ -164,7 +168,7 @@ public class XmlUpgradeTest {
 			// because method with non unique name cannot be added to class.
 
 			parsedModel = parser.parseModel(istream, null, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -365,32 +369,12 @@ public class XmlUpgradeTest {
 				"    <Class name='classNode'>\n" +
 
 				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
-				"                <Properties>\n" +
-				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
-				"                </Properties>\n" +
-				"                <Comments>\n" +
-				"                    <TypeComments/>\n" +
-				"                </Comments>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
 
-				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
-				"        </Method>\n" +
-
+				"        <Method name='method'/>\n" +
 				"    </Class>\n" +
 				"</Model>";
 
@@ -403,31 +387,12 @@ public class XmlUpgradeTest {
 				"    <Class name='classNode'>\n" +
 
 				"        <Method name='method'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
 				"            <Parameter name='par1' type='int' isExpected='false' expected='1' linked='false'>\n" +
-				"                <Properties>\n" +
-				"                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
-				"                </Properties>\n" +
-				"                <Comments>\n" +
-				"                    <TypeComments/>\n" +
-				"                </Comments>\n" +
 				"                <Choice name='choice11' value='11' isRandomized='false'/>\n" +
 				"            </Parameter>\n" +
 				"        </Method>\n" +
 
-				"        <Method name='method1'>\n" +
-				"            <Properties>\n" +
-				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
-				"                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
-				"                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
-				"                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
-				"            </Properties>\n" +
-				"        </Method>\n" +
+				"        <Method name='method1'/>\n" +
 
 				"    </Class>\n" +
 				"</Model>";
@@ -478,7 +443,7 @@ public class XmlUpgradeTest {
 	//		// constraint
 	//
 	//		AbstractStatement precondition =
-	//				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);  // TODO MO-RE leftParameterLinkingContext
+	//				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);
 	//
 	//		AbstractStatement postcondition =
 	//				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");

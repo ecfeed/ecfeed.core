@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,15 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.TestCasesFilteringDirection;
 import com.ecfeed.core.utils.TypeHelper;
 
 public class MethodNodeHelper {
@@ -117,7 +121,7 @@ public class MethodNodeHelper {
 
 	}
 
-	private static String createSignaturesOfParametersNewStandard(
+	public static String createSignaturesOfParametersNewStandard(
 			MethodNode methodNode,
 			boolean paramNamesAdded,
 			boolean expectedDecorationsAdded, 
@@ -133,7 +137,7 @@ public class MethodNodeHelper {
 		for (AbstractParameterNode parameter : parameters) {
 
 			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureNewStandard(
+					AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 							parameter,
 							extendedName,
 							parameterDecorations,
@@ -162,7 +166,7 @@ public class MethodNodeHelper {
 			AbstractParameterNode parameter = parameters.get(paramIndex);
 
 			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureNewStandard(
+					AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
 							parameter, 
 							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
 							extLanguageManager);
@@ -244,161 +248,161 @@ public class MethodNodeHelper {
 		//						extLanguageOfTheResult);
 	}
 
-	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = createSignature(methodNode, isParamNameAdded, true,  extLanguageManager);
+	//
+	//		return signature;
+	//	}
 
-		String signature = createSignature(methodNode, isParamNameAdded, true,  extLanguageManager);
+	//	public static String createSignatureByIntrLanguage(
+	//			String nameInIntrLanguage,
+	//			List<String> parameterTypesInIntrLanguage,
+	//			List<String> parameterNames, 
+	//			List<Boolean> expectedFlags, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+	//
+	//		String signature = new String(nameInExtLanguage) + "(";
+	//
+	//		String signaturesOfParameters = 
+	//				createSignaturesOfParametersByIntrLanguage(
+	//						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
+	//						extLanguageManager);
+	//
+	//		signature += signaturesOfParameters;
+	//
+	//		signature += ")";
+	//
+	//		return signature;
+	//	}
 
-		return signature;
-	}
+	//	public static String createSignature(
+	//			String methodName,
+	//			List<String> parameterTypes,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = new String(methodName) + "(";
+	//
+	//		String signaturesOfParameters =
+	//				createSignaturesOfParameters(
+	//						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
+	//
+	//		signature += signaturesOfParameters;
+	//
+	//		signature += ")";
+	//
+	//		return signature;
+	//	}
 
-	public static String createSignatureByIntrLanguage(
-			String nameInIntrLanguage,
-			List<String> parameterTypesInIntrLanguage,
-			List<String> parameterNames, 
-			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguageManager) {
+	//	private static String createSignaturesOfParameters(
+	//			List<String> parameterTypes,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//
+	//		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
+	//
+	//			String parameterType = parameterTypes.get(paramIndex);
+	//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+	//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+	//
+	//			String signatureOfOneParameter =
+	//					AbstractParameterSignatureHelper.createSignature(
+	//							parameterType, parameterName, expectedFlag, extLanguageManager);
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < parameterTypes.size() - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//	}
 
-		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+	//	public static String createSignaturesOfParameters(
+	//			MethodNode methodNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//		int paramCount = methodNode.getParametersCount();
+	//
+	//
+	//		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
+	//
+	//			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+	//
+	//			String signatureOfOneParameter = "";
+	//
+	//			if (methodParameterNode instanceof BasicParameterNode) {
+	//
+	//				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+	//
+	//				signatureOfOneParameter = 
+	//						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
+	//								basicParameterNode, 
+	//								ExtendedName.NAME_ONLY, 
+	//								Decorations.YES, 
+	//								TypeIncluded.YES, 
+	//								extLanguageManager);
+	//			} else {
+	//
+	//				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
+	//
+	//				signatureOfOneParameter = 
+	//						AbstractParameterSignatureHelper.createSignatureOfParameterNewStandard(
+	//								compositeParameterNode, 
+	//								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
+	//								extLanguageManager);
+	//			}
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < paramCount - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//
+	//	}	
 
-		String signature = new String(nameInExtLanguage) + "(";
-
-		String signaturesOfParameters = 
-				createSignaturesOfParametersByIntrLanguage(
-						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
-						extLanguageManager);
-
-		signature += signaturesOfParameters;
-
-		signature += ")";
-
-		return signature;
-	}
-
-	public static String createSignature(
-			String methodName,
-			List<String> parameterTypes,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags,
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = new String(methodName) + "(";
-
-		String signaturesOfParameters =
-				createSignaturesOfParameters(
-						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
-
-		signature += signaturesOfParameters;
-
-		signature += ")";
-
-		return signature;
-	}
-
-	private static String createSignaturesOfParameters(
-			List<String> parameterTypes,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags,
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-
-		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
-
-			String parameterType = parameterTypes.get(paramIndex);
-			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
-			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
-
-			String signatureOfOneParameter =
-					AbstractParameterSignatureHelper.createSignature(
-							parameterType, parameterName, expectedFlag, extLanguageManager);
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < parameterTypes.size() - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-	}
-
-	public static String createSignaturesOfParameters(
-			MethodNode methodNode,
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-		int paramCount = methodNode.getParametersCount();
-
-
-		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
-
-			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
-
-			String signatureOfOneParameter = "";
-
-			if (methodParameterNode instanceof BasicParameterNode) {
-
-				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
-
-				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureNewStandard(
-								basicParameterNode, 
-								ExtendedName.NAME_ONLY, 
-								Decorations.YES, 
-								TypeIncluded.YES, 
-								extLanguageManager);
-			} else {
-
-				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
-
-				signatureOfOneParameter = 
-						AbstractParameterSignatureHelper.createSignatureNewStandard(
-								compositeParameterNode, 
-								ExtendedName.NAME_ONLY, Decorations.NO, TypeIncluded.YES, 
-								extLanguageManager);
-			}
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < paramCount - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-
-	}	
-
-	private static String createSignaturesOfParametersByIntrLanguage(
-			List<String> parameterTypesInIntrLanguage,
-			List<String> parameterNames,
-			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguageManager) {
-
-		String signature = "";
-
-		for (int paramIndex = 0; paramIndex < parameterTypesInIntrLanguage.size(); paramIndex++) {
-
-			String parameterType = parameterTypesInIntrLanguage.get(paramIndex);
-			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
-			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
-
-			String signatureOfOneParameter = 
-					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
-							parameterType,
-							parameterName,
-							expectedFlag, 
-							extLanguageManager);
-
-			signature += signatureOfOneParameter;
-
-			if (paramIndex < parameterTypesInIntrLanguage.size() - 1) {
-				signature += ", ";
-			}
-		}
-
-		return signature;
-	}
+	//	private static String createSignaturesOfParametersByIntrLanguage(
+	//			List<String> parameterTypesInIntrLanguage,
+	//			List<String> parameterNames,
+	//			List<Boolean> expectedFlags, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String signature = "";
+	//
+	//		for (int paramIndex = 0; paramIndex < parameterTypesInIntrLanguage.size(); paramIndex++) {
+	//
+	//			String parameterType = parameterTypesInIntrLanguage.get(paramIndex);
+	//			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+	//			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+	//
+	//			String signatureOfOneParameter = 
+	//					AbstractParameterSignatureHelper.createSignatureOfOneParameterByIntrLanguage(
+	//							parameterType,
+	//							parameterName,
+	//							expectedFlag, 
+	//							extLanguageManager);
+	//
+	//			signature += signatureOfOneParameter;
+	//
+	//			if (paramIndex < parameterTypesInIntrLanguage.size() - 1) {
+	//				signature += ", ";
+	//			}
+	//		}
+	//
+	//		return signature;
+	//	}
 
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 
@@ -429,6 +433,7 @@ public class MethodNodeHelper {
 	}
 
 	public static MethodNode findMethodNode(IAbstractNode anyNode) {
+
 		IAbstractNode parent = anyNode;
 
 		while (parent != null) {
@@ -459,7 +464,7 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addNewCompositeParameterToMethod(
+	public static CompositeParameterNode addNewCompositeParameter(
 			MethodNode methodNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
@@ -488,14 +493,15 @@ public class MethodNodeHelper {
 			basicParameterNode.setParent(methodNode);
 		}
 
-		methodNode.addParameter(basicParameterNode);
+		methodNode.addParameter(basicParameterNode, false);
 
 		return basicParameterNode;
 	}
 
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, String testCaseName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
+	public static TestCaseNode addNewTestCase(
+			MethodNode methodNode, String testSuiteName, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
 
-		TestCaseNode testCaseNode = new TestCaseNode(testCaseName, null, choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
 		if (setParent) {
 			testCaseNode.setParent(methodNode);
@@ -506,13 +512,7 @@ public class MethodNodeHelper {
 		return testCaseNode;
 	}
 
-	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase, boolean setParent) {
-
-		TestCaseNode testCaseNode = addNewTestCase(methodNode, "Test case", choicesOfTestCase, setParent);
-		return testCaseNode;
-	}
-
-	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts( // TODO MO-RE unit tests
+	public static List<ParameterWithLinkingContext> getNestedBasicParametersWithLinkingContexts(
 			MethodNode methodSource) {
 
 		List<ParameterWithLinkingContext> result = new ArrayList<>();
@@ -766,4 +766,173 @@ public class MethodNodeHelper {
 		MethodNodeHelper.compareMethodConstraints(method1, method2);
 		MethodNodeHelper.compareTestCases(method1, method2);
 	}
+
+	public static List<TestCase> filterTestCases(
+			MethodNode methodNode, 
+			List<TestCase> srcTestCases,
+			String dstTestSuiteName,
+			List<Constraint> constraints, 
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases, 
+			IntegerHolder outCountOfAddedTestCases) {
+
+		List<TestCase> filteredTestCaseNodes = new ArrayList<>();
+
+		for (TestCase srcTestCase : srcTestCases) {
+
+			boolean isTestCaseQualified = 
+					TestCaseHelper.qualifyTestCaseNode(
+							srcTestCase, constraints, testCasesFilteringDirection, includeAmbiguousTestCases);
+
+			if (isTestCaseQualified) {
+				filteredTestCaseNodes.add(srcTestCase);
+
+				outCountOfAddedTestCases.increment();
+			}
+		}
+
+		return filteredTestCaseNodes;
+	}
+
+	public																																																																																																																																																																																		 static boolean qualifyTestCaseNode(
+			TestCase testCase, 
+			List<Constraint> constraints,
+			TestCasesFilteringDirection testCasesFilteringDirection,
+			boolean includeAmbiguousTestCases) {
+
+		if (TestCaseHelper.isTestCaseAmbiguous(testCase, constraints)) {
+
+			if (includeAmbiguousTestCases) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		boolean result = qualifyTestCaseByConstraints(testCase, constraints);
+
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.POSITIVE	&& result == true) {
+			return true;
+		}
+
+		if (testCasesFilteringDirection == TestCasesFilteringDirection.NEGATIVE	&& result == false) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean qualifyTestCaseByConstraints(
+			TestCase testCase, List<Constraint> constraints) {
+
+		for (Constraint constraint : constraints) {
+
+			ConstraintType constraintType = constraint.getType();
+
+			if (constraintType == ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			if (!qualifyTestCaseNodeByOneConstraint(testCase, constraint)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static boolean qualifyTestCaseNodeByOneConstraint(
+			TestCase testCase, Constraint constraint) {
+
+		EvaluationResult evaluationResult =  constraint.evaluate(testCase.getListOfChoiceNodes());
+
+		if (evaluationResult == EvaluationResult.TRUE) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static void replaceReferncesInTestCases(
+			MethodNode methodNode,
+			NodeMapper nodeMapper, 
+			NodeMapper.MappingDirection mappingDirection) {
+
+		List<TestCaseNode> testCaseNodes = methodNode.getTestCases();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			testCaseNode.replaceReferences(nodeMapper, mappingDirection);
+		}
+	}
+
+	public static List<MethodNode> findMentioningMethodNodes(IAbstractNode abstractNode) {
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
+
+		if (methodNode != null) {
+			return new ArrayList<>(Arrays.asList(methodNode));
+		}
+
+		if (isBasicParameterDirectlyUnderRootOrClass(abstractNode)) {
+
+			List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(abstractNode.getParent());
+
+			return mentioningMethodNodes;
+		}
+
+		CompositeParameterNode compositeParameterNode = 
+				CompositeParameterNodeHelper.findTopComposite(abstractNode);
+
+		if (compositeParameterNode == null) {
+			return new ArrayList<>();
+		}
+
+		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(compositeParameterNode);
+		return mentioningMethodNodes;
+	}
+
+	private static boolean isBasicParameterDirectlyUnderRootOrClass(IAbstractNode abstractNode) {
+
+		if (!(abstractNode instanceof BasicParameterNode)) {
+			return false;
+		}
+
+		IAbstractNode parent = abstractNode.getParent();
+
+		if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
+
+		if (parametersParentNode instanceof MethodNode) {
+
+			List<MethodNode> methodNodes = new ArrayList<>();
+
+			methodNodes.add((MethodNode) parametersParentNode);
+
+			return methodNodes;
+		}
+
+		if (parametersParentNode instanceof RootNode) {
+			return new ArrayList<>();
+		}
+
+		CompositeParameterNode compositeParameterNode =
+				CompositeParameterNodeHelper.findTopComposite(parametersParentNode);
+
+		if (compositeParameterNode == null) {
+			return new ArrayList<>();
+		}
+
+		List<MethodNode> mentioningNodes = 
+				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
+
+		return mentioningNodes;
+	}
+
 }

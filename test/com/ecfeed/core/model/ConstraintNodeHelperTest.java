@@ -39,39 +39,6 @@ public class ConstraintNodeHelperTest {
 		assertEquals("c_1 : false => false", signature);
 	}
 
-	//	@Test
-	//	public void createSignatureTest2() {
-	//
-	//		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
-	//		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-	//
-	//		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
-	//
-	//		AbstractStatement precondition1 =
-	//				RelationStatement.createRelationStatementWithValueCondition(
-	//						parameter1, null, EMathRelation.EQUAL, "A");  // TODO MO-RE leftParameterLinkingContext
-	//
-	//		AbstractStatement precondition = precondition1;
-	//
-	//		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
-	//
-	//		AbstractStatement postcondition1 =
-	//				RelationStatement.createRelationStatementWithValueCondition(
-	//						parameter2, null, EMathRelation.EQUAL, "C");  // TODO MO-RE leftParameterLinkingContext
-	//
-	//		AbstractStatement postcondition = postcondition1;
-	//
-	//		Constraint constraint = new Constraint("co_1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
-	//
-	//		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
-	//
-	//		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
-	//		assertEquals("co_1 : par 1=A => par 2=C", signature);
-	//
-	//		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
-	//		assertEquals("co_1 : par_1=A => par_2=C", signature);
-	//	}
-
 	@Test
 	public void createSignatureTest2() {
 
@@ -82,7 +49,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement precondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter1, null, EMathRelation.EQUAL, "A");  // TODO MO-RE leftParameterLinkingContext
+						parameter1, null, EMathRelation.EQUAL, "A");
 
 		AbstractStatement precondition = precondition1;
 
@@ -90,7 +57,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement postcondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter2, null, EMathRelation.EQUAL, "C");  // TODO MO-RE leftParameterLinkingContext
+						parameter2, null, EMathRelation.EQUAL, "C");
 
 		AbstractStatement postcondition = postcondition1;
 

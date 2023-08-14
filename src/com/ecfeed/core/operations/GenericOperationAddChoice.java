@@ -117,7 +117,7 @@ public class GenericOperationAddChoice extends CompositeOperation {
 			if (choice.isAbstract() == false) {
 
 				String type = fChoicesParentNode.getParameter().getType();
-				ITypeAdapter<?> adapter = JavaLanguageHelper.getAdapter(type);
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(type);
 				String newValue = 
 						adapter.adapt(
 								choice.getValueString(), 

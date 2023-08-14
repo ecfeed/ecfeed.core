@@ -35,11 +35,11 @@ public class TestCaseNodeHelperTest {
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "", true, null);
 
 		ChoiceNode choiceNode1 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode1, "choice_1", "value", false, true, null);
 
 		ChoiceNode choiceNode2 = 
-				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
+				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode2, "choice_2", "value", false, true, null);
 
 		List<ChoiceNode> choiceNodesOfTestCase = new ArrayList<ChoiceNode>();

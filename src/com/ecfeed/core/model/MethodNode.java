@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		fTestCasesHolder = new TestCasesHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 
-		setDefaultPropertyValues();
+		// setDefaultPropertyValues();
 	}
 
 	public MethodNode(String name){
@@ -72,15 +73,15 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		super.setName(name);
 	}
 
-	private void setDefaultPropertyValues() {
-
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
-
-		registerChange();
-	}
+	//	private void setDefaultPropertyValues() {
+	//
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER);
+	//		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM);
+	//
+	//		registerChange();
+	//	}
 
 	@Override
 	public ConstraintNodeListHolder.ConstraintsItr getIterator() {
@@ -202,7 +203,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 
 		ConstraintNodeListHolder clonedConstraintHolder = 
 				fConstraintNodeListHolder.makeClone(clonedMethodNode, nodeMapper);
-		
+
 		clonedMethodNode.fConstraintNodeListHolder = clonedConstraintHolder;
 	}
 
@@ -245,7 +246,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			}
 
 			AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
-			
+
 			AbstractParameterNode clonedLinkingContext = cloneLinkingContext(linkingContext, nodeMapper);
 
 			if (clonedLinkingContext != null) {
@@ -318,14 +319,16 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return sibling;
 	}
 
-	public void addConstraint(ConstraintNode constraint) { // TODO MO-RE rename to addConstraintNode
+	public void addConstraint(ConstraintNode constraint) {
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
 
+		constraint.setParent(this);
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
@@ -343,6 +346,14 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void addTestCase(TestCaseNode testCaseNode) {
 
 		fTestCasesHolder.addTestCase(testCaseNode, this);
+	}
+
+	public void addTestCases(List<TestCaseNode> testCaseNodes) {
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			addTestCase(testCaseNode);
+		}
 	}
 
 	public void removeTestCase(TestCaseNode testCaseNode) {
@@ -476,6 +487,24 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fTestCasesHolder.getTestSuiteNodes();
 	}
 
+	public List<String> getNamesOfTestSuites() {
+
+		Set<String> setOfNames = new HashSet<>();
+
+		List<TestSuiteNode> testSuiteNodes = getTestSuites();
+
+		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
+			setOfNames.add(testSuiteNode.getName());
+		}
+
+		List<String> listOfNames = new ArrayList<>(setOfNames);
+
+		Collections.sort(listOfNames);
+
+		return listOfNames;
+	}
+
+
 	public boolean hasParameters() {
 		if (getParameters().isEmpty()) {
 			return false; 
@@ -490,7 +519,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
+	public List<TestCaseNode> getTestCases(String testSuiteName) {
 
 		return fTestCasesHolder.getTestCases(testSuiteName);
 	}
@@ -583,17 +612,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	public void removeAllTestCases() {
 
 		fTestCasesHolder.removeAllTestCases();
-		//		fTestCaseNodes.clear();
-		//		fTestSuiteNodes.clear();
-		//		registerChange();
 	}
 
 	@Override
-	public void replaceTestCases(List<TestCaseNode> testCases){
-		fTestCasesHolder.replaceTestCases(testCases);
-		//		fTestCaseNodes.clear();
-		//		fTestCaseNodes.addAll(testCases);
-		//		registerChange();
+	public void setTestCases(List<TestCaseNode> testCaseNodes) {
+
+		fTestCasesHolder.replaceTestCases(testCaseNodes, this);
 	}
 
 	@Override
@@ -609,21 +633,21 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	}
 
 	@Override
-	public int getMaxChildIndex(IAbstractNode potentialChild) {
+	public int getMaxChildIndexAfterAddingNewChildNode(IAbstractNode potentialNewChild) {
 
-		if (potentialChild instanceof BasicParameterNode) {
+		if (potentialNewChild instanceof BasicParameterNode) {
 			return getParameters().size();
 		}
 
-		if (potentialChild instanceof ConstraintNode) {
+		if (potentialNewChild instanceof ConstraintNode) {
 			return getConstraintNodes().size();
 		}
 
-		if (potentialChild instanceof TestCaseNode) { 
+		if (potentialNewChild instanceof TestCaseNode) { 
 			return getTestCases().size();
 		}
 
-		return super.getMaxChildIndex(potentialChild);
+		return super.getMaxChildIndexAfterAddingNewChildNode(potentialNewChild);
 	}
 
 	@Override
@@ -708,7 +732,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return fDeployedParametersHolder != null && fDeployedParametersHolder.getParametersCount() > 0;
 	}
 
-	public final List<BasicParameterNode> getDeployedParameters() { // TODO MO-RE remove this and replace with getDeployedParametersWithLinkingContexs
+	public final List<BasicParameterNode> getDeployedParameters() {
 
 		if (isDeployed()) {
 			return fDeployedParametersHolder.getParametersAsBasic();
@@ -775,7 +799,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
 
-		fParametersHolder.addParameter(parameter, this);
+		fParametersHolder.addParameter(parameter, this, false);
+	}
+
+	public void addParameter(AbstractParameterNode parameter, boolean checkName) {
+
+		fParametersHolder.addParameter(parameter, this, checkName);
 	}
 
 	@Override
@@ -783,7 +812,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			AbstractParameterNode parameter, 
 			AbstractParameterNode linkingContext) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, this);
+		fParametersHolder.addParameter(parameter, linkingContext, this, false);
 	}
 
 	@Override
@@ -792,28 +821,19 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 			AbstractParameterNode linkingContext,
 			int index) {
 
-		fParametersHolder.addParameter(parameter, linkingContext, index, this);
+		fParametersHolder.addParameter(parameter, linkingContext, index, this, false);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
-		fParametersHolder.addParameter(parameter, null, index, this);
+		fParametersHolder.addParameter(parameter, null, index, this, false);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
 
-		fParametersHolder.addParameters(parameters, this);
-	}
-
-	public void setDeployedParameters(List<BasicParameterNode> parameters) { // TODO MO-RE remove ? - deployed parameter should have linking contexts even if null 
-
-		if (fDeployedParametersHolder == null) {
-			fDeployedParametersHolder = new ParametersWithContextLister(getModelChangeRegistrator());
-		} 
-
-		fDeployedParametersHolder.setBasicParameters(parameters, this);
+		fParametersHolder.addParameters(parameters, this, false);
 	}
 
 	public void setDeployedParametersWithContexts(List<ParameterWithLinkingContext> deployedParametersWithContexts) {
@@ -925,4 +945,13 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return false;
 	}
 
+	@Override
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift) {
+		fParametersHolder.shiftElements(indicesOfParameters, shift);
+	}
+
+	@Override
+	public void shiftOneParameter(int indexOfParameter, int shift) {
+		fParametersHolder.shiftOneElement(indexOfParameter, shift);
+	}
 }

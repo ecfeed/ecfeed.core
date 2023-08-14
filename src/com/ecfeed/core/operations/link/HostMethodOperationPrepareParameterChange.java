@@ -110,7 +110,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 				setOneNodeToSelect(fTarget);
 				MethodNode methodNode = (MethodNode) fTarget.getParent();
 
-				methodNode.replaceTestCases(fOriginalTestCases);
+				methodNode.setTestCases(fOriginalTestCases);
 				methodNode.replaceConstraints(fOriginalConstraints);
 				reparentConstraints(methodNode);
 			}
