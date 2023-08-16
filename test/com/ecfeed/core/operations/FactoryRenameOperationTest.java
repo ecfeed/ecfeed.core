@@ -21,7 +21,6 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.TestHelper;
@@ -383,7 +382,7 @@ public class FactoryRenameOperationTest {
 			operation.execute();
 			fail();
 		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, JavaLanguageHelper.SPACES_ARE_NOT_ALLOWED_IN_NAME);
+			TestHelper.checkExceptionMessage(e, "Spaces are not allowed in text");
 		}
 
 		// rename in java mode - invalid name 1 - should fail

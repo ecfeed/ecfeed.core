@@ -127,15 +127,15 @@ public class ModelParserForMethod {
 			List<ParameterWithLinkingContext> inOutParametersWithContexts,
 			ListOfStrings inOutErrorList) {
 
-		List<Element> iterableChildren = 
+		List<Element> childElements = 
 				ModelParserHelper.getIterableChildren(
 						deploymentElement, SerializationHelperVersion1.getBasicParameterNodeName());
 
-		for (Element childNested : iterableChildren) {
-
+		for (Element childElement : childElements) {
+			
 			ParameterWithLinkingContext parameterWithLinkingContext = 
 					ModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
-							childNested, targetMethodNode, inOutErrorList);
+							childElement, targetMethodNode, inOutErrorList);
 
 			if (parameterWithLinkingContext != null) {
 				inOutParametersWithContexts.add(parameterWithLinkingContext);

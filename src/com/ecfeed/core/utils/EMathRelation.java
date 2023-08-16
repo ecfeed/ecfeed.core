@@ -263,6 +263,18 @@ public enum EMathRelation{
 
 	}
 
+	public static boolean isMatch(EMathRelation relation, boolean leftValue, boolean rightValue) {
+
+		switch(relation) {
+			case EQUAL:
+				return leftValue == rightValue;
+			case NOT_EQUAL:
+				return leftValue != rightValue;
+			default:
+				return false;
+		}
+	}
+
 	public static boolean isEqualityMatch(EMathRelation relation, String actualValue, String valueToMatch) {
 
 		switch(relation) {
@@ -284,15 +296,18 @@ public enum EMathRelation{
 	}	
 
 	public static boolean isEqualityMatchForBooleans(EMathRelation relation, String actualValue, String valueToMatch) {
+		Boolean leftValue = JavaLanguageHelper.parseBooleanValue(actualValue);
 
-		if (JavaLanguageHelper.parseBooleanValue(actualValue) == null) {
+		if (leftValue == null) {
 			return false;
 		}
 
-		if (JavaLanguageHelper.parseBooleanValue(valueToMatch) == null) {
+		Boolean rightValue = JavaLanguageHelper.parseBooleanValue(valueToMatch);
+
+		if (rightValue == null) {
 			return false;
 		}		
 
-		return isEqualityMatch(relation, actualValue, valueToMatch);
+		return isMatch(relation, leftValue, rightValue);
 	}
 }

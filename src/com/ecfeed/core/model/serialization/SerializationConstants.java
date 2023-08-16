@@ -51,6 +51,7 @@ public class SerializationConstants {
 	public static final String PARAMETER_LINK_ATTRIBUTE_NAME = "link";
 	public static final String VALUE_ATTRIBUTE = "value";
 	public static final String METHOD_DEPLOYED_PATH_OF_PARAMETER = "pathOfParameter";
+	public static final String METHOD_DEPLOYED_PATH_OF_PARAMETER_OLD = "PathOfParameter";
 	public static final String METHOD_DEPLOYED_PATH_OF_CONTEXT = "pathOfContext";
 	
 	public static final String NULL_VALUE_STRING_REPRESENTATION = "/null";
