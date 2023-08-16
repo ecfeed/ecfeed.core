@@ -268,13 +268,17 @@ public enum EMathRelation{
 		switch(relation) {
 
 		case EQUAL:
+		case GREATER_EQUAL:
+		case LESS_EQUAL:
 			return StringHelper.isEqual(actualValue, valueToMatch);
 
 		case NOT_EQUAL:
+		case GREATER_THAN:
+		case LESS_THAN:
 			return !(StringHelper.isEqual(actualValue, valueToMatch));
 
 		default:
-			ExceptionHelper.reportRuntimeException("Invalid relation: " + relation.toString() + " in match for equality.");
+			ExceptionHelper.reportRuntimeException("Invalid relation: " + relation + " in match for equality.");
 			return false;
 		}
 	}	
