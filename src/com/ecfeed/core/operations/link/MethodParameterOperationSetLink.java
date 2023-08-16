@@ -10,8 +10,7 @@
 
 package com.ecfeed.core.operations.link;
 
-import java.util.List;
-
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
@@ -26,9 +25,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterOperationSetLink extends CompositeOperation {
 
 	private class SetLinkOperation extends AbstractModelOperation{
-		private BasicParameterNode fTarget;
-		private BasicParameterNode fNewLink;
-		private BasicParameterNode fCurrentLink;
+		private AbstractParameterNode fTarget;
+		private AbstractParameterNode fNewLink;
+		private AbstractParameterNode fCurrentLink;
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
@@ -50,10 +49,10 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 		}
 
 		public SetLinkOperation(
-				BasicParameterNode target, 
-				BasicParameterNode link, 
+				AbstractParameterNode target, 
+				AbstractParameterNode link, 
 				IExtLanguageManager extLanguageManager) {
-			
+
 			super(OperationNames.SET_LINK, extLanguageManager);
 			fTarget = target;
 			fNewLink = link;
@@ -64,11 +63,11 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 
 			setOneNodeToSelect(fTarget);
 
-			MethodNode method = (MethodNode) fTarget.getParent();
-			List<String> types = method.getParameterTypes();
-			types.set(fTarget.getMyIndex(), fNewLink.getType());
+			//MethodNode method = (MethodNode) fTarget.getParent();
+			//List<String> types = method.getParameterTypes();
+			//types.set(fTarget.getMyIndex(), fNewLink.getType());
 
-			fCurrentLink = (BasicParameterNode) fTarget.getLinkToGlobalParameter();
+			fCurrentLink = (AbstractParameterNode) fTarget.getLinkToGlobalParameter();
 			fTarget.setLinkToGlobalParameter(fNewLink);
 		}
 
@@ -83,21 +82,22 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 			BasicParameterNode localBasicParameter, 
 			BasicParameterNode link, 
 			IExtLanguageManager extLanguageManager) {
-		
+
 		super(
 				OperationNames.SET_LINK, 
 				true, 
 				localBasicParameter, 
 				localBasicParameter, 
 				extLanguageManager);
-		
-		addOperation(new SetLinkOperation(localBasicParameter, link, extLanguageManager));
-		
+
+		SetLinkOperation setLinkOperation = new SetLinkOperation(localBasicParameter, link, extLanguageManager);
+		addOperation(setLinkOperation);
+
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(localBasicParameter);
-		
+
 		OnMethodOperationRemoveInconsistentChildren operation = 
 				new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager);
-		
+
 		addOperation(operation);
 	}
 }
