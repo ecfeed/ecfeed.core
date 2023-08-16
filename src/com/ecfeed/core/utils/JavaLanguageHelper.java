@@ -139,7 +139,16 @@ public final class JavaLanguageHelper {
 	public static String verifySeparatorsInText(String text) {
 
 		if (text.contains(" ")) {
-			return "Spaces are not allowed in text.";
+
+			String trimmedText = StringHelper.cutToMaxSize(text, 60);
+
+			String finishingTag = "";
+
+			if (trimmedText.length() < text.length()) {
+				finishingTag = "...";
+			}
+
+			return "Spaces are not allowed in text: " + trimmedText + finishingTag;
 		}
 
 		return null;
