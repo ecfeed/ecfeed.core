@@ -14,6 +14,7 @@ import java.util.LinkedList;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -181,11 +182,11 @@ public abstract class AbstractParameterSignatureHelper {
 			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = createSignatureToRootNewStandard(abstractParameterNode);
+		String qualifiedName = createSignatureToRootNewStandard(abstractParameterNode, extLanguageManager);
 
-		if (extLanguageManager != null) {
-			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
-		}
+		//		if (extLanguageManager != null) {
+		//			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		//		}
 
 		return qualifiedName;
 	}
@@ -311,14 +312,21 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	private static String createSignatureToRootNewStandard(
-			AbstractParameterNode abstractParameterNode) { 
+			AbstractParameterNode abstractParameterNode,
+			IExtLanguageManager extLanguageManager) { 
 
 		LinkedList<String> segments = new LinkedList<>();
 
 		IAbstractNode parent = abstractParameterNode;
 
 		do {
-			segments.addFirst(parent.getName());
+			String name = parent.getName();
+
+			if (!(parent instanceof RootNode)) {
+				name = ExtLanguageManagerHelper.convertTextFromIntrToExtLanguage(name, extLanguageManager);
+			}
+
+			segments.addFirst(name);
 			parent = parent.getParent();
 		} while (parent != null);
 

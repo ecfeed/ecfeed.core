@@ -58,7 +58,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeAndParseNestedStructures() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		// class and method
 
@@ -157,7 +157,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeAndParseNestedLocalStructureWithConstraintAtStructureLevel() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		// class and method
 
@@ -442,7 +442,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeAndParseNestedStructureWithParameterOneLevelDeeperThanConstraint() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		// class and method
 
@@ -837,7 +837,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeAndParseDoubleLinkedStructureAndConstraintWithParameterCondition() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		// global structures
 
@@ -908,13 +908,13 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@root:GS1\"/>";
+			String tags1 = "<Structure name=\"LS1\" linked=\"true\" link=\"@Root\\swith\\sspaces:GS1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
 			}
 
-			String tags2 = "<Structure name=\"LS2\" linked=\"true\" link=\"@root:GS1\"/>";
+			String tags2 = "<Structure name=\"LS2\" linked=\"true\" link=\"@Root\\swith\\sspaces:GS1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
@@ -922,13 +922,13 @@ public class ModelSerializerAndParserTest {
 
 			String tags3 =
 					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
-							"  <Premise>\n" + 
-							"    <ParameterStatement rightParameter=\"@root:GS1:GS2:GP1\" rightParameterContext=\"LS2\" parameter=\"@root:GS1:GS2:GP1\" parameterContext=\"LS1\" relation=\"equal\"/>\n" + 
-							"  </Premise>\n" + 
-							"  <Consequence>\n" + 
-							"    <StaticStatement value=\"true\"/>\n" + 
-							"  </Consequence>\n" + 
-							"</Constraint>";
+					"                <Premise>\n" + 
+					"                    <ParameterStatement rightParameter=\"@Root\\swith\\sspaces:GS1:GS2:GP1\" rightParameterContext=\"LS2\" parameter=\"@Root\\swith\\sspaces:GS1:GS2:GP1\" parameterContext=\"LS1\" relation=\"equal\"/>\n" + 
+					"                </Premise>\n" + 
+					"                <Consequence>\n" + 
+					"                    <StaticStatement value=\"true\"/>\n" + 
+					"                </Consequence>\n" + 
+					"            </Constraint>"; 
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags3)) {
 				fail();
@@ -951,7 +951,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeAndParseLinkedParametersAndConstraintWithParameterCondition() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		// global parameter1 with choice
 
@@ -1023,27 +1023,27 @@ public class ModelSerializerAndParserTest {
 			serializer.serialize(rootNode);
 			String xml = ostream.toString();
 
-			String tags1 = "<Parameter name=\"P1\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@root:GP1\"/>";
+			String tags1 = "<Parameter name=\"P1\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@Root\\swith\\sspaces:GP1\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags1)) {
 				fail();
 			}
 
-			String tags2 = "<Parameter name=\"P2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@root:GP2\"/>";
+			String tags2 = "<Parameter name=\"P2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"@Root\\swith\\sspaces:GP2\"/>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags2)) {
 				fail();
 			}
 
 			String tags3 =
-					"<Constraint name=\"constraint\" type=\"EF\">\n" + 
-							"  <Premise>\n" + 
-							"    <ParameterStatement rightParameter=\"P2\" parameter=\"P1\" relation=\"equal\"/>\n" + 
-							"  </Premise>\n" + 
-							"  <Consequence>\n" + 
-							"    <StaticStatement value=\"true\"/>\n" + 
-							"  </Consequence>\n" + 
-							"</Constraint>";
+						"<Constraint name=\"constraint\" type=\"EF\">\n" + 
+						"                <Premise>\n" + 
+						"                    <ParameterStatement rightParameter=\"P2\" parameter=\"P1\" relation=\"equal\"/>\n" + 
+						"                </Premise>\n" + 
+						"                <Consequence>\n" + 
+						"                    <StaticStatement value=\"true\"/>\n" + 
+						"                </Consequence>\n" + 
+						"</Constraint>";
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags3)) {
 				fail();
@@ -1150,7 +1150,7 @@ public class ModelSerializerAndParserTest {
 	@Test 
 	public void shouldSerializeDeployedLinkedParametersWithConflictingNamesAndMultipleLinks() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		CompositeParameterNode globalCompositeParameterNode1 = 
 				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
@@ -1208,11 +1208,11 @@ public class ModelSerializerAndParserTest {
 
 			String tags = 
 					"<Deployment>\n" + 
-							"  <Parameter pathOfParameter=\"@root:GS1:GP\" pathOfContext=\"LS1\"/>\n" + 
-							"  <Parameter pathOfParameter=\"@root:GS1:GS2:GP\" pathOfContext=\"LS1\"/>\n" + 
-							"  <Parameter pathOfParameter=\"@root:GS1:GP\" pathOfContext=\"LS2\"/>\n" + 
-							"  <Parameter pathOfParameter=\"@root:GS1:GS2:GP\" pathOfContext=\"LS2\"/>\n" + 
-							"</Deployment>";
+					"  <Parameter pathOfParameter=\"@Root\\swith\\sspaces:GS1:GP\" pathOfContext=\"LS1\"/>\n" + 
+					"  <Parameter pathOfParameter=\"@Root\\swith\\sspaces:GS1:GS2:GP\" pathOfContext=\"LS1\"/>\n" + 
+					"  <Parameter pathOfParameter=\"@Root\\swith\\sspaces:GS1:GP\" pathOfContext=\"LS2\"/>\n" + 
+					"  <Parameter pathOfParameter=\"@Root\\swith\\sspaces:GS1:GS2:GP\" pathOfContext=\"LS2\"/>\n" + 
+					"</Deployment>"; 
 
 			if (!XmlComparator.containsConsecutiveTags(xml, tags)) {
 				fail();
@@ -1235,7 +1235,7 @@ public class ModelSerializerAndParserTest {
 	@Test
 	public void shouldSerializeDeployedLocalParametersWithConflictingNames() {
 
-		RootNode rootNode = new RootNode("root", null, ModelVersionDistributor.getCurrentSoftwareVersion());
+		RootNode rootNode = new RootNode("Root with spaces", null, ModelVersionDistributor.getCurrentSoftwareVersion());
 
 		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
 
