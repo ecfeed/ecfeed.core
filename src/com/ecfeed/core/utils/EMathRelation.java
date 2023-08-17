@@ -266,10 +266,18 @@ public enum EMathRelation{
 	public static boolean isMatch(EMathRelation relation, boolean leftValue, boolean rightValue) {
 
 		switch(relation) {
+			case GREATER_THAN:
+				return leftValue && !rightValue;
+			case LESS_THAN:
+				return !leftValue && rightValue;
 			case EQUAL:
 				return leftValue == rightValue;
 			case NOT_EQUAL:
 				return leftValue != rightValue;
+			case GREATER_EQUAL:
+				return (leftValue && !rightValue) || (leftValue == rightValue);
+			case LESS_EQUAL:
+				return (!leftValue && rightValue) || (leftValue == rightValue);
 			default:
 				return false;
 		}
@@ -280,13 +288,9 @@ public enum EMathRelation{
 		switch(relation) {
 
 		case EQUAL:
-		case GREATER_EQUAL:
-		case LESS_EQUAL:
 			return StringHelper.isEqual(actualValue, valueToMatch);
 
 		case NOT_EQUAL:
-		case GREATER_THAN:
-		case LESS_THAN:
 			return !(StringHelper.isEqual(actualValue, valueToMatch));
 
 		default:
