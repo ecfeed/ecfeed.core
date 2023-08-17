@@ -156,9 +156,9 @@ public class ConstraintNodeHelperTest {
 				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "choice1", "1", false, true, null);
 
-		// constraint with choice condition
+		// constraint 1 with choice condition
 
-		RelationStatement precondition =
+		RelationStatement precondition1 =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						basicParameterNode, null, 
 						EMathRelation.EQUAL, 
@@ -167,11 +167,22 @@ public class ConstraintNodeHelperTest {
 		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
 
 		Constraint constraint1 = new Constraint(
-				"constraint1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
 
 		ConstraintNode constraintNode1 = 
 				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
 
+		// constraint 2 - static statements
+		
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+		
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+		
 		List<ConstraintNode> mentioningConstraintNodes = 
 				ConstraintNodeHelper.getMentioningConstraintNodes(basicParameterNode);
 
