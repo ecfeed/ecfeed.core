@@ -145,9 +145,9 @@ public class ConstraintNodeHelperTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class1", true, null);
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
 
-		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method1", true, null);
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
@@ -173,18 +173,74 @@ public class ConstraintNodeHelperTest {
 				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
 
 		// constraint 2 - static statements
-		
+
 		Constraint constraint2 = new Constraint(
 				"constraint1", 
 				ConstraintType.EXTENDED_FILTER, 
 				new StaticStatement(EvaluationResult.TRUE), 
 				new StaticStatement(EvaluationResult.TRUE), 
 				null);
-		
+
 		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
-		
+
 		List<ConstraintNode> mentioningConstraintNodes = 
 				ConstraintNodeHelper.getMentioningConstraintNodes(basicParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
+	}
+
+	@Test
+	public void getMentioningConstraintNodesForCompositeParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
+
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "str1", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameter(compositeParameterNode, "par1", "String", "", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		// constraint 1 with choice condition
+
+		RelationStatement precondition1 =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		// constraint 2 - static statements
+
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(compositeParameterNode);
 
 		assertEquals(1, mentioningConstraintNodes.size());
 

@@ -204,15 +204,10 @@ public class ConstraintNodeHelper {
 
 	public static List<ConstraintNode> getMentioningConstraintNodes(AbstractParameterNode abstractParameterNode) {
 
-		if (abstractParameterNode instanceof CompositeParameterNode) {
-			ExceptionHelper.reportRuntimeException("Not implemented for structures.");
-			return null;
-		}
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
 
 		List<BasicParameterNode> basicParameterNodes = 
-				createListOfBasicParameterNodes(abstractParameterNode);
-
-		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+				createListOfChildBasicParameterNodes(abstractParameterNode);
 
 		List<ConstraintNode> constraintsFromParentStructures = 
 				getConstraintsFromParentCompositesAndMethod(abstractParameterNode);
@@ -225,10 +220,9 @@ public class ConstraintNodeHelper {
 		}
 
 		return resultConstraintNodes;
-
 	}
 
-	private static List<BasicParameterNode> createListOfBasicParameterNodes(
+	private static List<BasicParameterNode> createListOfChildBasicParameterNodes(
 			AbstractParameterNode abstractParameterNode) {
 
 		List<BasicParameterNode> result = new ArrayList<>();
@@ -238,8 +232,12 @@ public class ConstraintNodeHelper {
 			return result;
 		}
 
-		// TODO
-		return null;
+		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) abstractParameterNode;
+
+		List<BasicParameterNode> basicParameterNodes = 
+				CompositeParameterNodeHelper.getChildBasicParameterNodes(compositeParameterNode);
+
+		return basicParameterNodes;
 	}
 
 	public static List<ConstraintNode> getMentioningConstraintNodes(
