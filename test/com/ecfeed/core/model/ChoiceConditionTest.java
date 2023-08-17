@@ -512,13 +512,13 @@ public class ChoiceConditionTest {
 
 		evaluateOne(leftParam, "true", EMathRelation.LESS_THAN, "true", AssertType.FALSE);
 		evaluateOne(leftParam, "true", EMathRelation.LESS_THAN, "false", AssertType.FALSE);
-		evaluateOne(leftParam, "true", EMathRelation.LESS_EQUAL, "true", AssertType.FALSE);
+		evaluateOne(leftParam, "true", EMathRelation.LESS_EQUAL, "true", AssertType.TRUE);
 		evaluateOne(leftParam, "true", EMathRelation.LESS_EQUAL, "false", AssertType.FALSE);
 
 		evaluateOne(leftParam, "true", EMathRelation.GREATER_THAN, "true", AssertType.FALSE);
-		evaluateOne(leftParam, "true", EMathRelation.GREATER_THAN, "false", AssertType.FALSE);
-		evaluateOne(leftParam, "true", EMathRelation.GREATER_EQUAL, "true", AssertType.FALSE);
-		evaluateOne(leftParam, "true", EMathRelation.GREATER_EQUAL, "false", AssertType.FALSE);
+		evaluateOne(leftParam, "true", EMathRelation.GREATER_THAN, "false", AssertType.TRUE);
+		evaluateOne(leftParam, "true", EMathRelation.GREATER_EQUAL, "true", AssertType.TRUE);
+		evaluateOne(leftParam, "true", EMathRelation.GREATER_EQUAL, "false", AssertType.TRUE);
 	}
 
 	@Test

@@ -113,7 +113,7 @@ public class ConstraintTest {
 	}
 
 	@Test
-	public void createSignatureWithAssignmetStatementTest() {
+	public void createSignatureWithAssignmentStatementTest() {
 
 		BasicParameterNode methodParameterNode1 =
 				new BasicParameterNode("par1", "int", "1", true, null);

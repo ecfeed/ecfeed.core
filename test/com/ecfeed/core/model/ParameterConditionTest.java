@@ -258,13 +258,13 @@ public class ParameterConditionTest {
 
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.LESS_THAN, "true", AssertType.FALSE);
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.LESS_THAN, "false", AssertType.FALSE);
-		evaluateOne(leftParam, rightParam, "true", EMathRelation.LESS_EQUAL, "true", AssertType.FALSE);
+		evaluateOne(leftParam, rightParam, "true", EMathRelation.LESS_EQUAL, "true", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.LESS_EQUAL, "false", AssertType.FALSE);
 
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_THAN, "true", AssertType.FALSE);
-		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_THAN, "false", AssertType.FALSE);
-		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_EQUAL, "true", AssertType.FALSE);
-		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_EQUAL, "false", AssertType.FALSE);
+		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_THAN, "false", AssertType.TRUE);
+		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_EQUAL, "true", AssertType.TRUE);
+		evaluateOne(leftParam, rightParam, "true", EMathRelation.GREATER_EQUAL, "false", AssertType.TRUE);
 	}
 
 	@Test
