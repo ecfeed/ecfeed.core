@@ -263,32 +263,51 @@ public enum EMathRelation{
 
 	}
 
+	public static boolean isMatch(EMathRelation relation, boolean leftValue, boolean rightValue) {
+
+		switch(relation) {
+			case EQUAL:
+				return leftValue == rightValue;
+			case NOT_EQUAL:
+				return leftValue != rightValue;
+			default:
+				return false;
+		}
+	}
+
 	public static boolean isEqualityMatch(EMathRelation relation, String actualValue, String valueToMatch) {
 
 		switch(relation) {
 
 		case EQUAL:
+		case GREATER_EQUAL:
+		case LESS_EQUAL:
 			return StringHelper.isEqual(actualValue, valueToMatch);
 
 		case NOT_EQUAL:
+		case GREATER_THAN:
+		case LESS_THAN:
 			return !(StringHelper.isEqual(actualValue, valueToMatch));
 
 		default:
-			ExceptionHelper.reportRuntimeException("Invalid relation: " + relation.toString() + " in match for equality.");
+			ExceptionHelper.reportRuntimeException("Invalid relation: " + relation + " in match for equality.");
 			return false;
 		}
 	}	
 
 	public static boolean isEqualityMatchForBooleans(EMathRelation relation, String actualValue, String valueToMatch) {
+		Boolean leftValue = JavaLanguageHelper.parseBooleanValue(actualValue);
 
-		if (JavaLanguageHelper.parseBooleanValue(actualValue) == null) {
+		if (leftValue == null) {
 			return false;
 		}
 
-		if (JavaLanguageHelper.parseBooleanValue(valueToMatch) == null) {
+		Boolean rightValue = JavaLanguageHelper.parseBooleanValue(valueToMatch);
+
+		if (rightValue == null) {
 			return false;
 		}		
 
-		return isEqualityMatch(relation, actualValue, valueToMatch);
+		return isMatch(relation, leftValue, rightValue);
 	}
 }
