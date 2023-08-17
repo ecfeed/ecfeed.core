@@ -317,18 +317,20 @@ public abstract class AbstractParameterSignatureHelper {
 
 		LinkedList<String> segments = new LinkedList<>();
 
-		IAbstractNode parent = abstractParameterNode;
+		IAbstractNode currentNode = abstractParameterNode;
 
 		do {
-			String name = parent.getName();
+			String name = currentNode.getName();
 
-			if (!(parent instanceof RootNode)) {
+			if (!(currentNode instanceof RootNode)) {
 				name = ExtLanguageManagerHelper.convertTextFromIntrToExtLanguage(name, extLanguageManager);
 			}
 
 			segments.addFirst(name);
-			parent = parent.getParent();
-		} while (parent != null);
+
+			currentNode = currentNode.getParent();
+
+		} while (currentNode != null);
 
 		String signature = String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 		String signatureWithRootMarker = SignatureHelper.SIGNATURE_ROOT_MARKER + signature;
