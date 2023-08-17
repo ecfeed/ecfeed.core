@@ -13,9 +13,12 @@ package com.ecfeed.core.model;
 import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
@@ -135,6 +138,48 @@ public class ConstraintNodeHelperTest {
 
 		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
 		assertEquals("Composite:c_1 : false => false", signature);
+	}
+
+	@Test
+	public void getMentioningConstraintNodesForBasicParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method1", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		// constraint with choice condition
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(basicParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
 	}
 
 }

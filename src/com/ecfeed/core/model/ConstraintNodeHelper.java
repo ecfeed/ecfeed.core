@@ -202,6 +202,46 @@ public class ConstraintNodeHelper {
 		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
+	public static List<ConstraintNode> getMentioningConstraintNodes(AbstractParameterNode abstractParameterNode) {
+
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			ExceptionHelper.reportRuntimeException("Not implemented for structures.");
+			return null;
+		}
+
+		List<BasicParameterNode> basicParameterNodes = 
+				createListOfBasicParameterNodes(abstractParameterNode);
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<ConstraintNode> constraintsFromParentStructures = 
+				getConstraintsFromParentCompositesAndMethod(abstractParameterNode);
+
+		for (ConstraintNode constraintNode : constraintsFromParentStructures) {
+
+			if (constraintNode.mentionsAnyOfParameters(basicParameterNodes)) {
+				resultConstraintNodes.add(constraintNode);
+			}
+		}
+
+		return resultConstraintNodes;
+
+	}
+
+	private static List<BasicParameterNode> createListOfBasicParameterNodes(
+			AbstractParameterNode abstractParameterNode) {
+
+		List<BasicParameterNode> result = new ArrayList<>();
+
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			result.add((BasicParameterNode) abstractParameterNode);
+			return result;
+		}
+
+		// TODO
+		return null;
+	}
+
 	public static List<ConstraintNode> getMentioningConstraintNodes(
 			List<CompositeParameterNode> compositeParameterNodes,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
@@ -271,7 +311,7 @@ public class ConstraintNodeHelper {
 	}
 
 	private static List<ConstraintNode> getConstraintsFromParentCompositesAndMethod(
-			CompositeParameterNode compositeParameterNode) {
+			AbstractParameterNode compositeParameterNode) {
 
 		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
 
