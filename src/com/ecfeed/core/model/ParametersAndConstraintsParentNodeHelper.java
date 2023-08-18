@@ -31,21 +31,21 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return dstParamNameParts[0];
 	}
 
-	public static Collection<ConstraintNode> getAffectedConstraints( // XYX REMOVE
-			CompositeParameterNode methodParameter) {
-
-		Set<ConstraintNode> constraints = new HashSet<>();
-
-		IAbstractNode container = methodParameter.getParent();
-
-		while ((container != null) && (container instanceof IParametersAndConstraintsParentNode)) {
-
-			constraints.addAll(((IParametersAndConstraintsParentNode) container).getConstraintNodes());
-			container = container.getParent();
-		}
-
-		return constraints;
-	}
+	//	public static Collection<ConstraintNode> getAffectedConstraints(
+	//			CompositeParameterNode methodParameter) {
+	//
+	//		Set<ConstraintNode> constraints = new HashSet<>();
+	//
+	//		IAbstractNode container = methodParameter.getParent();
+	//
+	//		while ((container != null) && (container instanceof IParametersAndConstraintsParentNode)) {
+	//
+	//			constraints.addAll(((IParametersAndConstraintsParentNode) container).getConstraintNodes());
+	//			container = container.getParent();
+	//		}
+	//
+	//		return constraints;
+	//	}
 
 	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
