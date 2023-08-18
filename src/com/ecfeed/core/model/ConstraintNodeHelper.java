@@ -11,8 +11,10 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -203,6 +205,30 @@ public class ConstraintNodeHelper {
 	}
 
 	public static List<ConstraintNode> getMentioningConstraintNodes(AbstractParameterNode abstractParameterNode) {
+
+		if (!abstractParameterNode.isGlobalParameter()) {
+			return getMentioningParameterNodesIntr(abstractParameterNode);
+		}
+
+		Set<ConstraintNode> resultConstraintNodes = new HashSet<>();
+
+		List<BasicParameterNode> globalBasicParameterNodes = 
+				createListOfChildBasicParameterNodes(abstractParameterNode);
+
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(abstractParameterNode);
+		List<ConstraintNode> constraintNodes = MethodNodeHelper.getConstraints(methodNodes);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			if (constraintNode.mentionsAnyOfParameters(globalBasicParameterNodes)) {
+				resultConstraintNodes.add(constraintNode);
+			}
+		}
+
+		return new ArrayList<>(resultConstraintNodes);
+	}
+
+	private static List<ConstraintNode> getMentioningParameterNodesIntr(AbstractParameterNode abstractParameterNode) {
 
 		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
 

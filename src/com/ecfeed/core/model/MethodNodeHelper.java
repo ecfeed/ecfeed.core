@@ -866,46 +866,61 @@ public class MethodNodeHelper {
 		}
 	}
 
-	public static List<MethodNode> findMentioningMethodNodes(IAbstractNode abstractNode) {
+	public static List<MethodNode> findMentioningMethodNodes(AbstractParameterNode abstractParameterNode) {
 
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
+		MethodNode localMethodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
 
-		if (methodNode != null) {
-			return new ArrayList<>(Arrays.asList(methodNode));
+		if (localMethodNode != null) {
+			return new ArrayList<>(Arrays.asList(localMethodNode));
 		}
 
-		if (isBasicParameterDirectlyUnderRootOrClass(abstractNode)) {
+		RootNode rootNode = RootNodeHelper.findRootNode(abstractParameterNode);
 
-			List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(abstractNode.getParent());
+		List<MethodNode> allMethods = RootNodeHelper.getAllMethodNodes(rootNode);
 
-			return mentioningMethodNodes;
+		List<MethodNode> result = new ArrayList<>();
+
+		for (MethodNode methodNode : allMethods) {
+
+			if (methodMentionsParameter(methodNode, abstractParameterNode)) {
+				result.add(methodNode);
+			}
 		}
 
-		CompositeParameterNode compositeParameterNode = 
-				CompositeParameterNodeHelper.findTopComposite(abstractNode);
+		return result;
 
-		if (compositeParameterNode == null) {
-			return new ArrayList<>();
-		}
-
-		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(compositeParameterNode);
-		return mentioningMethodNodes;
+		//		if (isBasicParameterDirectlyUnderRootOrClass(abstractNode)) {
+		//
+		//			List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(abstractNode.getParent());
+		//
+		//			return mentioningMethodNodes;
+		//		}
+		//
+		//		CompositeParameterNode compositeParameterNode = 
+		//				CompositeParameterNodeHelper.findTopComposite(abstractNode);
+		//
+		//		if (compositeParameterNode == null) {
+		//			return new ArrayList<>();
+		//		}
+		//
+		//		List<MethodNode> mentioningMethodNodes = findMentioningMethodNodes(compositeParameterNode);
+		//		return mentioningMethodNodes;
 	}
 
-	private static boolean isBasicParameterDirectlyUnderRootOrClass(IAbstractNode abstractNode) {
-
-		if (!(abstractNode instanceof BasicParameterNode)) {
-			return false;
-		}
-
-		IAbstractNode parent = abstractNode.getParent();
-
-		if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
-			return true;
-		}
-
-		return false;
-	}
+	//	private static boolean isBasicParameterDirectlyUnderRootOrClass(IAbstractNode abstractNode) {
+	//
+	//		if (!(abstractNode instanceof BasicParameterNode)) {
+	//			return false;
+	//		}
+	//
+	//		IAbstractNode parent = abstractNode.getParent();
+	//
+	//		if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
 	public static List<MethodNode> findMentioningMethodNodes(IParametersParentNode parametersParentNode) {
 
@@ -933,6 +948,37 @@ public class MethodNodeHelper {
 				CompositeParameterNodeHelper.getMentioningMethodNodes(compositeParameterNode);
 
 		return mentioningNodes;
+	}
+
+	public static List<ConstraintNode> getConstraints(List<MethodNode> methodNodes) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		for (MethodNode methodNode : methodNodes) {
+			resultConstraintNodes.addAll(methodNode.getConstraintNodes());
+		}
+
+		return resultConstraintNodes;
+	}
+
+	public static boolean methodMentionsParameter(
+			MethodNode methodNode,
+			AbstractParameterNode abstractParameterNode) {
+
+		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+
+		// remark: links only at the top 
+
+		for (AbstractParameterNode currentAbstractParameterNode : methodParameters) {
+
+			AbstractParameterNode link = currentAbstractParameterNode.getLinkToGlobalParameter();
+
+			if (link != null && link == abstractParameterNode) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
