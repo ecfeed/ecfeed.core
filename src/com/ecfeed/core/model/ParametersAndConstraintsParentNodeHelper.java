@@ -31,7 +31,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return dstParamNameParts[0];
 	}
 
-	public static Collection<ConstraintNode> getAffectedConstraints(
+	public static Collection<ConstraintNode> getAffectedConstraints( // XYX REMOVE
 			CompositeParameterNode methodParameter) {
 
 		Set<ConstraintNode> constraints = new HashSet<>();

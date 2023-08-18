@@ -267,6 +267,7 @@ public class ConstraintNodeHelper {
 	}
 
 	public static List<ConstraintNode> getMentioningConstraintNodes(
+
 			List<CompositeParameterNode> compositeParameterNodes,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
