@@ -28,7 +28,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -58,7 +57,7 @@ public class ModelParserTest {
 
 			checkAssignmentsInModel(parsedModel);
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			fail();
 		}
 	}

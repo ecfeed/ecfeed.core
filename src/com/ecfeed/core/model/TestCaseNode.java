@@ -16,10 +16,12 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ShifterOfListElements;
 
 
 public class TestCaseNode extends AbstractNode {
-	List<ChoiceNode> fTestData;
+
+	List<ChoiceNode> fChoiceNodes;
 
 	@Override
 	public String getNonQualifiedName() {
@@ -50,17 +52,11 @@ public class TestCaseNode extends AbstractNode {
 
 		MethodNode methodNode = (MethodNode) parent;
 
-		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
-		oldTestSuiteNode.removeTestCase(this);
-		
-		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
-			methodNode.removeTestSuite(oldTestSuiteNode);
-		}
+		methodNode.removeTestCase(this);
 
 		super.setName(newNameInIntrLanguage);
-		
-		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
-		newTestSuiteNode.addTestCase(this);
+
+		methodNode.addTestCase(this);
 	}
 
 	@Override
@@ -82,21 +78,40 @@ public class TestCaseNode extends AbstractNode {
 		return 0;
 	}
 
+	//	@Override
+	//	public TestCaseNode makeClone(){
+	//		List<ChoiceNode> testdata = new ArrayList<>();
+	//		for(ChoiceNode choice : fTestData){
+	//			testdata.add(choice);
+	//		}
+	//		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
+	//		copy.setProperties(getProperties());
+	//		return copy;
+	//	}
+
 	@Override
-	public TestCaseNode makeClone(){
+	public TestCaseNode makeClone(Optional<NodeMapper> nodeMapper) {
+
 		List<ChoiceNode> testdata = new ArrayList<>();
-		for(ChoiceNode choice : fTestData){
+
+		for (ChoiceNode choice : fChoiceNodes) {
 			testdata.add(choice);
 		}
+
 		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
+
 		return copy;
 	}
 
-	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
+	public List<ChoiceNode> getChoices() { 
+		return fChoiceNodes;
+	}
+
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
 
 		super(testSuiteName, modelChangeRegistrator);
-		fTestData = testData;
+		fChoiceNodes = testData;
 	}
 
 	public MethodNode getMethod() {
@@ -127,7 +142,7 @@ public class TestCaseNode extends AbstractNode {
 		List<BasicParameterNode> methodParameters;
 
 		if (getMethod().isDeployed()) {
-			methodParameters = getMethod().getDeployedMethodParameters();
+			methodParameters = getMethod().getDeployedParameters();
 		} else {
 			methodParameters = getMethod().getParametersAsBasic();
 		}
@@ -141,16 +156,20 @@ public class TestCaseNode extends AbstractNode {
 		return abstractParameterNode;
 	}
 
-	public List<ChoiceNode> getTestData(){
-		return fTestData;
+	public List<ChoiceNode> getTestData() {
+		return fChoiceNodes;
+	}
+
+	public void setTestData(List<ChoiceNode> testData) {
+		fChoiceNodes = testData;
 	}
 
 	public void replaceValue(int index, ChoiceNode newValue) {
-		fTestData.set(index, newValue);
+		fChoiceNodes.set(index, newValue);
 	}
 
 	public boolean mentions(ChoiceNode choice) {
-		for(ChoiceNode p : fTestData){
+		for(ChoiceNode p : fChoiceNodes){
 			if(p.isMatchIncludingParents(choice)){
 				return true;
 			}
@@ -172,7 +191,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCaseNode getCopy(MethodNode method){
-		TestCaseNode tcase = makeClone();
+		TestCaseNode tcase = makeClone(Optional.empty());
 		if(tcase.correctTestCase(method)){
 			tcase.setParent(method);
 			return tcase;
@@ -187,7 +206,7 @@ public class TestCaseNode extends AbstractNode {
 			return true;
 		}
 
-		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
+		List<BasicParameterNode> parameters = parentMethodNode.getDeployedParameters();
 
 		if (parameters.size() != getTestData().size()) {
 			return false;
@@ -278,22 +297,49 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCase getTestCase() {
-		return new TestCase(fTestData);
+		return new TestCase(fChoiceNodes);
 	}
 
-	public void updateChoiceReferences( // TODO MO-RE do we need this ?
-			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	//	public void updateChoiceReferences(
+	//			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	//
+	//		int index = 0;
+	//
+	//		for (ChoiceNode choiceNode : fChoiceNodes) {
+	//
+	//			if (choiceNode.equals(oldChoiceNode)) {
+	//				fChoiceNodes.set(index, newChoiceNode);
+	//			}
+	//
+	//			index++;
+	//		}
+	//	}
+
+	@Override
+	public List<IAbstractNode> getDirectChildren() {
+		return getChildren();
+	}
+
+	@Override
+	public boolean canAddChild(IAbstractNode child) {
+
+		return false;
+	}
+
+	public void replaceReferences(NodeMapper nodeMapper, NodeMapper.MappingDirection mappingDirection) {
 
 		int index = 0;
 
-		for (ChoiceNode choiceNode : fTestData) {
+		for (ChoiceNode choiceNode : fChoiceNodes) {
 
-			if (choiceNode.equals(oldChoiceNode)) {
-				fTestData.set(index, newChoiceNode);
-			}
+			fChoiceNodes.set(index, nodeMapper.getMappedNode(choiceNode, mappingDirection));
 
 			index++;
 		}
 	}
 
+	public void shiftElements(List<Integer> indices, int shift) {
+
+		ShifterOfListElements.shiftElements(fChoiceNodes, indices, shift);
+	}
 }

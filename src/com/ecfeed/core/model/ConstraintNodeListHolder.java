@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ConstraintNodeListHolder {
@@ -23,17 +24,17 @@ public class ConstraintNodeListHolder {
 
 	private List<ConstraintNode> fConstraintNodes;
 	IModelChangeRegistrator fModelChangeRegistrator;
-	
+
 	public ConstraintNodeListHolder(IModelChangeRegistrator modelChangeRegistrator) {
-		
+
 		fModelChangeRegistrator = modelChangeRegistrator;
 		fConstraintNodes = new ArrayList<>();
 	}
-	
+
 	public ConstraintNodeListHolder.ConstraintsItr getIterator() {
 		return new ConstraintsItrImpl(fConstraintNodes.iterator());
 	}
-	
+
 	public boolean hasNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
 		return ((ConstraintsItrImpl)contIterator).fIterator.hasNext();
@@ -49,11 +50,11 @@ public class ConstraintNodeListHolder {
 		((ConstraintsItrImpl)contIterator).fIterator.remove();
 		registerChange();
 	}	
-	
+
 	public List<ConstraintNode> getConstraintNodes() { 
 		return fConstraintNodes;
 	}
-	
+
 	public int getConstraintListSize() { 
 		return fConstraintNodes.size();
 	}
@@ -61,23 +62,26 @@ public class ConstraintNodeListHolder {
 	public void addConstraint(ConstraintNode constraint, IParametersAndConstraintsParentNode parentNode) {
 		addConstraint(constraint, fConstraintNodes.size(), parentNode);
 	}
-	
+
 	public void addConstraint(ConstraintNode constraint, int index, IParametersAndConstraintsParentNode parentNode) {
-		constraint.setParent(parentNode);
 		fConstraintNodes.add(index, constraint);
 		registerChange();
 	}
-	
-	public ConstraintNodeListHolder makeClone(IParametersAndConstraintsParentNode parent) {
-		
+
+	public ConstraintNodeListHolder makeClone(
+			IParametersAndConstraintsParentNode newParent, Optional<NodeMapper> nodeMapper) {
+
 		ConstraintNodeListHolder cloneOfConstraintNodeListHolder = 
 				new ConstraintNodeListHolder(fModelChangeRegistrator);
-		
-		for(ConstraintNode constraint : fConstraintNodes){
-			ConstraintNode clonedConstraint = constraint.getCopy(parent);
-			
+
+		for (ConstraintNode constraint : fConstraintNodes) {
+
+			ConstraintNode clonedConstraint = constraint.makeClone(nodeMapper);
+			clonedConstraint.setParent(newParent);
+
 			if (clonedConstraint != null) {
-				cloneOfConstraintNodeListHolder.addConstraint(constraint, parent);
+				clonedConstraint.setParent(newParent);
+				cloneOfConstraintNodeListHolder.addConstraint(clonedConstraint, newParent);
 			}
 		}
 
@@ -94,7 +98,7 @@ public class ConstraintNodeListHolder {
 
 		return result;
 	}
-	
+
 	public List<Constraint> getConstraints(String name) {
 
 		List<Constraint> constraints = new ArrayList<Constraint>();
@@ -122,16 +126,16 @@ public class ConstraintNodeListHolder {
 	}
 
 	public Set<String> getConstraintsNames() {
-		
+
 		Set<String> names = new HashSet<String>();
-		
+
 		for (ConstraintNode constraint : fConstraintNodes) {
 			names.add(constraint.getName());
 		}
-		
+
 		return names;
 	}
-	
+
 	public boolean removeConstraint(ConstraintNode constraint) {
 
 		constraint.setParent(null);
@@ -142,23 +146,23 @@ public class ConstraintNodeListHolder {
 	}
 
 	public boolean isChoiceMentioned(ChoiceNode choice) {
-		
+
 		for (ConstraintNode constraint : fConstraintNodes) {
-			
+
 			if (constraint.mentions(choice)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
 		for (ConstraintNode constraint : fConstraintNodes) {
-			
+
 			if (constraint.mentions(parameter)) {
 				result.add(constraint);
 			}
@@ -172,7 +176,7 @@ public class ConstraintNodeListHolder {
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
 		for (ConstraintNode constraint : fConstraintNodes) {
-			
+
 			if (constraint.mentions(parameter, label)) {
 				result.add(constraint);
 			}
@@ -180,13 +184,13 @@ public class ConstraintNodeListHolder {
 
 		return result;
 	}
-	
+
 	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
 		for (ConstraintNode constraint : fConstraintNodes) {
-			
+
 			if (constraint.mentions(choice)) {
 				result.add(constraint);
 			}
@@ -194,27 +198,27 @@ public class ConstraintNodeListHolder {
 
 		return result;
 	}
-	
+
 	public boolean isParameterMentioned(BasicParameterNode parameter) {
-		
+
 		for (ConstraintNode constraint : fConstraintNodes) {
-			
+
 			if (constraint.mentions(parameter)) {
 				return true;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	public void replaceConstraints(List<ConstraintNode> constraints){
-		
+
 		fConstraintNodes.clear();
 		fConstraintNodes.addAll(constraints);
-		
+
 		registerChange();
 	}
-	
+
 	public void removeMentioningConstraints(BasicParameterNode methodParameter) {
 
 		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
@@ -231,7 +235,7 @@ public class ConstraintNodeListHolder {
 
 		registerChange();
 	}
-	
+
 	public void removeAllConstraints() {
 
 		fConstraintNodes.clear();
@@ -246,7 +250,7 @@ public class ConstraintNodeListHolder {
 
 		fModelChangeRegistrator.registerChange();
 	}
-	
+
 	private static class ConstraintsItrImpl implements ConstraintNodeListHolder.ConstraintsItr {
 
 		Iterator<ConstraintNode> fIterator;
@@ -258,7 +262,7 @@ public class ConstraintNodeListHolder {
 	}
 
 	public void setConstraints(List<ConstraintNode> constraints) {
-		
+
 		fConstraintNodes.clear();
 		fConstraintNodes.addAll(constraints);
 	}

@@ -22,8 +22,8 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -122,13 +122,13 @@ public class GenericOperationRename extends AbstractModelOperation {
 			}
 		}
 		
-		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
-
 		if (fTargetAbstractNode instanceof TestSuiteNode) {
 			setNewNameInChildTestCases(newQualifiedNameInIntrLanguage);
-		} 
+		}
+		
+		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);		
 
-		RootNode rootNode = ModelHelper.findRoot(fTargetAbstractNode);
+		RootNode rootNode = RootNodeHelper.findRootNode(fTargetAbstractNode);
 
 		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
 

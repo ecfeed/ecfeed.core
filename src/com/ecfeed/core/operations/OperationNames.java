@@ -33,6 +33,7 @@ public interface OperationNames {
 	public static final String ADD_PARAMETER = "Add parameter";
 	public static final String ADD_TEST_CASE = "Add test case";
 	public static final String ADD_TEST_SUITES = "Add test suites";
+	public static final String ADD_FILTERED_TEST_SUITES = "Add filtered test suites";
 	public static final String ADD_TEST_CASES = "Add test cases";
 	public static final String CONVERT_METHOD = "Convert method";
 	public static final String MAKE_CONSISTENT = "Make method consistent";

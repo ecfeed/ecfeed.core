@@ -255,16 +255,21 @@ public class StringHelper {
 				.replaceAll("public", "")
 				.replaceAll("void", "");
 
-		String simplifiedSignature;
+		String signatureSimplified;
 
 		if (signatureWithoutModifiers.contains("(")) {
-			simplifiedSignature = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
+			signatureSimplified = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
 		} else {
-			simplifiedSignature = signatureWithoutModifiers;
+			signatureSimplified = signatureWithoutModifiers;
 		}
 
-		String packageWithClass = simplifiedSignature
-				.substring(0, simplifiedSignature.lastIndexOf('.'));
+		String packageWithClass;
+
+		if (signatureSimplified.contains(".")) {
+			packageWithClass = signatureSimplified.substring(0, signatureSimplified.lastIndexOf('.'));
+		} else {
+			packageWithClass = "";
+		}
 
 		return packageWithClass.trim();
 	}
@@ -546,4 +551,39 @@ public class StringHelper {
 		return result;
 	}
 
+	public static String isEqualByLines(String[] expectedResultLines, String[] resultLines) {
+
+
+		int minLines = Math.min(expectedResultLines.length, resultLines.length);
+
+		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
+
+			String expectedLine = expectedResultLines[lineIndex];
+			expectedLine = expectedLine.replace("\r", "");
+
+			String resultLine = resultLines[lineIndex];
+			resultLine = resultLine.replace("\r", "");
+
+			if (!StringHelper.isEqual(expectedLine, resultLine)) {
+				return ("Line: " + (lineIndex + 1) + " differs.");
+			}
+		}
+		
+		if (expectedResultLines.length != resultLines.length) {
+			return "Count of lines does not match";
+		}
+		
+		return null;
+	}	
+
+	public static void compareStrings(String str1, String str2, String errorMessage) {
+
+		if (StringHelper.isEqual(str1, str2)) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException(errorMessage);
+	}
+
+	
 }

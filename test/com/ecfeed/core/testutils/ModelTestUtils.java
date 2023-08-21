@@ -23,7 +23,8 @@ public class ModelTestUtils {
 	public static void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
 		ModelStringifier stringifier = new ModelStringifier();
 		if(!n.isMatch(n1)){
-			fail("Parsed element differs from original\n" + stringifier.stringify(n, 0) + "\n" + stringifier.stringify(n1, 0));
+			String message = "Parsed element differs from original\n" + stringifier.stringify(n, 0) + "\n" + stringifier.stringify(n1, 0);
+			fail(message);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class ModelTestUtils {
 		case METHOD: return new MethodNode(name, null);
 		case PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
 		case METHOD_PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
-		case GLOBAL_PARAMETER: return new BasicParameterNode(name, "int", null);
+		case GLOBAL_PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
 		case PROJECT: return new RootNode(name, null);
 		case TEST_CASE: return new TestCaseNode(name, null, new ArrayList<ChoiceNode>());
 		}

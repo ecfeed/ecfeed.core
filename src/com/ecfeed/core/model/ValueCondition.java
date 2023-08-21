@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -102,6 +104,11 @@ public class ValueCondition implements IStatementCondition {
 		return fParentRelationStatement;
 	}
 
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
+	}
+
 	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
@@ -116,6 +123,16 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public boolean adapt(List<ChoiceNode> values) {
 		return false;
+	}
+
+	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+
+		return new ValueCondition(fRightValue, statement);
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
 	}
 
 	@Override
@@ -229,6 +246,27 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (parameterWithChoices != null)
+			return true;
+
+		//		if (BasicParameterNodeHelper.valueOfChoiceNodeExists(parameterWithChoices, fRightValue)) {
+		//			return true;
+		//		}
+
+		return false;
 	}
 
 	//	@Override

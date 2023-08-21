@@ -42,7 +42,7 @@ public class ValueConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, statementRelation, value);
+						methodParameterNode, null, statementRelation, value); 
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 
@@ -72,7 +72,7 @@ public class ValueConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, statementRelation, value);
+						methodParameterNode, null, statementRelation, value);
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 		choiceNode.setRandomizedValue(true);
@@ -99,7 +99,7 @@ public class ValueConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, statementRelation, value);
+						methodParameterNode, null, statementRelation, value);
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 		choiceNode.setRandomizedValue(true);
@@ -562,7 +562,7 @@ public class ValueConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						methodParameterNode, EMathRelation.EQUAL, "ABC");
+						methodParameterNode, null, EMathRelation.EQUAL, "ABC");
 
 		RelationStatement copy = statement.makeClone();
 

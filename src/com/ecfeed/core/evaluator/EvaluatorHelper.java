@@ -45,7 +45,6 @@ public class EvaluatorHelper {
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
             choiceToSolverIdMappings.eqPut(basicParameterNode, choiceID);
-            return;
         }
 
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
@@ -66,6 +65,11 @@ public class EvaluatorHelper {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode atomicValue : choicesMappingsBucket.getSanitizedToAtomic(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
+
+                    if (atomicID == null) {
+                        continue;
+                    }
+
                     final int[] clause = {-atomicID, sanitizedID};
                     satSolver.addSat4Clause(clause); // atomicID => sanitizedID
                     bigClause.add(atomicID);
@@ -82,13 +86,17 @@ public class EvaluatorHelper {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode sanitizedValue : choicesMappingsBucket.getInputToSanitized(basicParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
+
+                    if (sanitizedID == null) {
+                        continue;
+                    }
+
                     satSolver.addSat4Clause(new int[]{-sanitizedID, inputID}); // sanitizedID => inputID
                     bigClause.add(sanitizedID);
                 }
                 bigClause.add(-inputID);
                 satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
             }
-
 
         satSolver.addSat4Clause(new int[]{-prefixVars.get(0)});
         satSolver.addSat4Clause(new int[]{prefixVars.get(n)}); //at least one value should be taken

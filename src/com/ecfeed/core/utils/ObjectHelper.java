@@ -48,4 +48,18 @@ public class ObjectHelper {
 		return false;
 	}
 
+	public static void compareValues(Object value1, Object value2) {
+
+		boolean result = true;
+		if(value1 == null){
+			result = (value2 == null);
+		}
+		else{
+			result = value1.equals(value2);
+		}
+		if(!result){
+			ExceptionHelper.reportRuntimeException("Value " + value1 + " differ from " + value2);
+		}
+	}
+	
 }

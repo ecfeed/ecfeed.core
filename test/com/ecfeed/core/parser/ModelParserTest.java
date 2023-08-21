@@ -1,19 +1,23 @@
 package com.ecfeed.core.parser;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.parser.model.ModelData;
-import com.ecfeed.core.parser.model.ModelDataFactory;
-import org.junit.Assert;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Set;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ModelChangeRegistrator;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.parser.model.ModelData;
+import com.ecfeed.core.parser.model.ModelDataFactory;
 
 public class ModelParserTest {
 
     @Test
-    public void parseModelCSVTest() {
+    void parseModelCSVTest() {
 
         ModelData model = ModelDataFactory.create("Country,Name,Address,Product,Color,Size,Quantity,Payment,Delivery,Phone,Email\n" +
                         "Poland,John Doe,Timmersloher Landstraße 300. D-12129 Kuhdorf,hoodie,black,S,53,VISA,standard,+48123456789,Z761@c92.com\n" +
@@ -58,51 +62,41 @@ public class ModelParserTest {
         List<String> header = model.getHeader();
         List<Set<String>> body = model.getParameters();
 
-        Assert.assertEquals(37, data.size());
-        Assert.assertTrue(data.stream().filter(e -> e.equals("Country,Name,Address,Product,Color,Size,Quantity,Payment,Delivery,Phone,Email")).count() > 0);
+        Assertions.assertEquals(37, data.size());
+        Assertions.assertTrue(data.stream().anyMatch(e -> e.equals("Country,Name,Address,Product,Color,Size,Quantity,Payment,Delivery,Phone,Email")));
 
-        Assert.assertEquals(11, header.size());
+        Assertions.assertEquals(11, header.size());
 
-        Assert.assertEquals(11, body.size());
-        Assert.assertEquals(6, body.get(0).size());
-        Assert.assertEquals(4, body.get(1).size());
-        Assert.assertEquals(3, body.get(2).size());
-        Assert.assertEquals(2, body.get(3).size());
-        Assert.assertEquals(5, body.get(4).size());
-        Assert.assertEquals(5, body.get(5).size());
-        Assert.assertEquals(18, body.get(6).size());
-        Assert.assertEquals(4, body.get(7).size());
-        Assert.assertEquals(3, body.get(8).size());
-        Assert.assertEquals(3, body.get(9).size());
-        Assert.assertEquals(36, body.get(10).size());
+        Assertions.assertEquals(11, body.size());
+        Assertions.assertEquals(6, body.get(0).size());
+        Assertions.assertEquals(4, body.get(1).size());
+        Assertions.assertEquals(3, body.get(2).size());
+        Assertions.assertEquals(2, body.get(3).size());
+        Assertions.assertEquals(5, body.get(4).size());
+        Assertions.assertEquals(5, body.get(5).size());
+        Assertions.assertEquals(18, body.get(6).size());
+        Assertions.assertEquals(4, body.get(7).size());
+        Assertions.assertEquals(3, body.get(8).size());
+        Assertions.assertEquals(3, body.get(9).size());
+        Assertions.assertEquals(36, body.get(10).size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
         List<BasicParameterNode> parentRootData = model.parse(parentRoot);
 
-        Assert.assertEquals(11, parentRootData.size());
-        Assert.assertTrue(parentRootData.get(0) instanceof BasicParameterNode);
+        Assertions.assertEquals(11, parentRootData.size());
+        Assertions.assertNotNull(parentRootData.get(0));
 
         ClassNode parentClass = new ClassNode("test", parentRoot.getModelChangeRegistrator());
         List<BasicParameterNode> parentClassData = model.parse(parentClass);
 
-        Assert.assertEquals(11, parentClassData.size());
-        Assert.assertTrue(parentClassData.get(0) instanceof BasicParameterNode);
+        Assertions.assertEquals(11, parentClassData.size());
+        Assertions.assertNotNull(parentClassData.get(0));
 
         MethodNode parentMethod = new MethodNode("test", parentRoot.getModelChangeRegistrator());
         List<BasicParameterNode> parentMethodData = model.parse(parentMethod);
 
-        Assert.assertEquals(11, parentMethodData.size());
-        Assert.assertTrue(parentMethodData.get(0) instanceof BasicParameterNode);
-    }
-
-    @Test
-    void parseModelCSVErrorTest() {
-
-        Assertions.assertThrows(Exception.class, () -> {
-            ModelDataFactory.create("one, two, three\n" +
-                            "one, two",
-                    ModelDataFactory.Type.CSV);
-        });
+        Assertions.assertEquals(11, parentMethodData.size());
+        Assertions.assertNotNull(parentMethodData.get(0));
     }
 
     @Test
@@ -153,5 +147,163 @@ public class ModelParserTest {
 
         Assertions.assertEquals(3, model.getHeaderAffected().size());
         Assertions.assertTrue(model.getWarning().isPresent());
+    }
+
+    @Test
+    public void parseModelCSVSeparatorTest() {
+
+        ModelData model = ModelDataFactory.create("Country;Name;Address;Product;Color;Size;Quantity;Payment;Delivery;Phone;Email\n" +
+                        "Poland;John Doe;Timmersloher Landstraße 300. D-12129 Kuhdorf;hoodie;black;S;53;VISA;standard;+48123456789;Z761@c92.com\n" +
+                        "Luxembourg;Ola Nordmann;Tollbodgata 138. 0484 Langtvekkistan;t-shirt;red;XS;40;cash on delivery;PostNL;+47123456789;pV5@gt2.net",
+                ModelDataFactory.Type.CSV);
+
+        List<String> data = model.getRaw();
+        List<String> header = model.getHeader();
+        List<Set<String>> body = model.getParameters();
+
+        Assertions.assertEquals(3, data.size());
+        Assertions.assertTrue(data.stream().anyMatch(e -> e.equals("Country;Name;Address;Product;Color;Size;Quantity;Payment;Delivery;Phone;Email")));
+
+        Assertions.assertEquals(11, header.size());
+
+        Assertions.assertEquals(11, body.size());
+        Assertions.assertEquals(2, body.get(0).size());
+        Assertions.assertEquals(2, body.get(1).size());
+        Assertions.assertEquals(2, body.get(2).size());
+        Assertions.assertEquals(2, body.get(3).size());
+        Assertions.assertEquals(2, body.get(4).size());
+        Assertions.assertEquals(2, body.get(5).size());
+        Assertions.assertEquals(2, body.get(6).size());
+        Assertions.assertEquals(2, body.get(7).size());
+        Assertions.assertEquals(2, body.get(8).size());
+        Assertions.assertEquals(2, body.get(9).size());
+        Assertions.assertEquals(2, body.get(10).size());
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(11, parentRootData.size());
+        Assertions.assertNotNull(parentRootData.get(0));
+
+        ClassNode parentClass = new ClassNode("test", parentRoot.getModelChangeRegistrator());
+        List<BasicParameterNode> parentClassData = model.parse(parentClass);
+
+        Assertions.assertEquals(11, parentClassData.size());
+        Assertions.assertNotNull(parentClassData.get(0));
+
+        MethodNode parentMethod = new MethodNode("test", parentRoot.getModelChangeRegistrator());
+        List<BasicParameterNode> parentMethodData = model.parse(parentMethod);
+
+        Assertions.assertEquals(11, parentMethodData.size());
+        Assertions.assertNotNull(parentMethodData.get(0));
+    }
+
+    @Test
+    public void parseModelCSVSeparatorMixFailureTest() {
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ModelDataFactory.create("Country;Name;Address;Product;Color;Size;Quantity;Payment;Delivery;Phone;Email\n" +
+                        "Poland;John Doe,Timmersloher Landstraße 300. D-12129 Kuhdorf,hoodie;black;S;53;VISA;standard;+48123456789;Z761@c92.com\n" +
+                        "Luxembourg,Ola Nordmann;Tollbodgata 138. 0484 Langtvekkistan;t-shirt;red;XS;40;cash on delivery;PostNL;+47123456789;pV5@gt2.net",
+                ModelDataFactory.Type.CSV));
+    }
+
+    @Test
+    public void parseModelCSVTrimTest() {
+
+        ModelData model = ModelDataFactory.create(" Country ;  Name ; Address;  Product;Color  ; Size ;    Quantity;Payment    ; Delivery; Phone; Email  \n" +
+                        "Poland;John Doe;Timmersloher Landstraße 300. D-12129 Kuhdorf;hoodie;black;S;53;VISA;standard;+48123456789;Z761@c92.com\n" +
+                        "Luxembourg;Ola Nordmann;Tollbodgata 138. 0484 Langtvekkistan;t-shirt;red;XS;40;cash on delivery;PostNL;+47123456789;pV5@gt2.net",
+                ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(11, header.size());
+
+        for (String column : header) {
+            if (column.startsWith(" ") || column.endsWith(" ")) {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    public void parseModelCSVParseColumnNameTrimTest() {
+
+        ModelData model = ModelDataFactory.create(" C o u ntry ;  Nam  e ; Ad dress;  Pr o duct;Co lor  ; S ize ;    Quan tity;Pa yment    ; Deliv ery; P hone; Emai l  ",
+                ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(11, header.size());
+
+        for (String column : header) {
+            if (column.startsWith(" ") || column.endsWith(" ")) {
+                Assertions.fail();
+            }
+        }
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(11, parentRootData.size());
+    }
+
+    @Test
+    public void parseModelCSVParseColumnNameNonAlphanumericalTest() {
+
+        ModelData model = ModelDataFactory.create("År;Orgnr;Gjeldende navn;Antall (obligatorisk manntall);Omsetningsoppg Grunnl Sum Samlet Omsetning Innenfor;Grunnl  Oms Utenfor Mva;4_15 Omsetningsoppg Grunnl Inng Mva (Alle satser)#1;7_02 Rene Fasts Grunnl Sum Avgpl Omsetning;7_15 Rene Fasts Grunnl Inng Mva (Alle Satser);Antall Terminer Postert;filnavn_O_ORGNR_Mva",
+                ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(11, header.size());
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(11, parentRootData.size());
+    }
+
+    @Test
+    public void parseModelCSVEmptyFieldTest() {
+
+        ModelData model = ModelDataFactory.create("År;Orgnr;Gjeldende navn;Antall (obligatorisk manntall);Omsetningsoppg Grunnl Sum Samlet Omsetning Innenfor;Grunnl  Oms Utenfor Mva;4_15 Omsetningsoppg Grunnl Inng Mva (Alle satser)#1;7_02 Rene Fasts Grunnl Sum Avgpl Omsetning;7_15 Rene Fasts Grunnl Inng Mva (Alle Satser);Antall Terminer Postert;filnavn_O_ORGNR_Mva\n" +
+                "2022;812917714;aoga;1;;;;0;0;;\n" +
+                "2022;927227592;bogb;1;0;0;0;0;0;4;\n" +
+                "2022;311166980;cogc;1;210189;0;0;207739;0;6;\n" +
+                "2022;913216032;dogd;1;798053;0;170900;0;0;1;\n" +
+                "2022;832645257;eoge;1;821000;0;19200;821000;19200;6;\n" +
+                "2022;314802977;fogf;1;;;;0;0;;\n" +
+                "2022;851627162;gogg;1;321880;0;219021;0;0;1;\n" +
+                "2022;804499342;hogh;1;;;;0;0;;", ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(11, header.size());
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(11, parentRootData.size());
+    }
+
+    @Test
+    public void parseModelCSVObjectValueTest() {
+
+        ModelData model = ModelDataFactory.create("BaneDataId,BaneDataLocationId,SetpointTrack,AvgTempOutside,IsValidSetpointTrack,IsValidTempOutside,IsMaxMode,IsActive,IsEffort,Window,AvgTempLeftTrack,AvgTempRightTrack,AvgTempControl,AvgEffort,MaxTempLeftTrack,MaxTempRightTrack,MinTempLeftTrack,MinTempRightTrack,,\n" +
+                "EL-SVG-000523,0560-05220,3,17.6,TRUE,TRUE,FALSE,TRUE,FALSE,\"{\"\"start\"\":\"\"2023-06-01T12:00:00.000+0000\"\",\"\"end\"\":\"\"2023-06-01T13:00:00.000+0000\"\"}\",24.3,27.8,null,0,24.3,27.8,24.3,27.8,,", ModelDataFactory.Type.CSV);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertEquals(20, header.size());
+
+        List<Set<String>> body = model.getParameters();
+
+        Assertions.assertEquals(20, body.size());
+
+        RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+
+        Assertions.assertEquals(20, parentRootData.size());
     }
 }

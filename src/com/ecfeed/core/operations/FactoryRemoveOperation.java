@@ -25,18 +25,15 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
-import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
-import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
+import com.ecfeed.core.operations.nodes.OnParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
+public class FactoryRemoveOperation {
 
 	private static class UnsupportedModelOperation implements IModelOperation{
 
@@ -75,12 +72,10 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 	private static class RemoveOperationVisitor implements IModelVisitor{
 
 		private boolean fValidate;
-		private ITypeAdapterProvider fAdapterProvider;
 		IExtLanguageManager fExtLanguageManager;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
+		public RemoveOperationVisitor(boolean validate, IExtLanguageManager extLanguageManager) {
 			fValidate = validate;
-			fAdapterProvider = adapterProvider;
 			fExtLanguageManager = extLanguageManager;
 		}
 
@@ -114,13 +109,13 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof MethodNode) {
 
-				return new OnBasicParameterOperationRemove(
+				return new OnParameterOperationRemove(
 						(MethodNode)node.getParent(), node, fExtLanguageManager);
 			}
 
 			if (parent instanceof CompositeParameterNode) {
 
-				return new OnParameterOperationRemoveFromComposite(
+				return new OnParameterOperationRemove(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 
@@ -135,16 +130,15 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof MethodNode) {
 
-				return new OnCompositeParameterOperationRemove(
+				return new OnParameterOperationRemove(
 						(MethodNode)node.getParent(), 
 						(CompositeParameterNode)node, 
-						fValidate, 
 						fExtLanguageManager);
 			} 
 
 			if (parent instanceof CompositeParameterNode) {
 
-				return new OnParameterOperationRemoveFromComposite(
+				return new OnParameterOperationRemove(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 
@@ -169,19 +163,13 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			IAbstractNode abstractParent = node.getParent();
 
-			// TODO MO-RE MERGE
 			if (abstractParent instanceof MethodNode) {
-
-				//return new MethodOperationRemoveConstraint(
-				//		(MethodNode) abstractParent, node, fExtLanguageManager);
 
 				return new OnConstraintOperationRemove(
 						(MethodNode) abstractParent, node, fExtLanguageManager);
 			}
 
 			if (abstractParent instanceof CompositeParameterNode) {
-				//				return new CompositeParameterOperationRemoveConstraint(
-				//						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
 
 				return new OnConstraintOperationRemove(
 						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
@@ -203,20 +191,19 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
 
-			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
+			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fValidate, fExtLanguageManager);
 		}
 
 	}
 
 	public static IModelOperation getRemoveOperation(
 			IAbstractNode node, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate, 
 			IExtLanguageManager extLanguageManager){
 
 		try {
 			RemoveOperationVisitor removeOperationVisitor = 
-					new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager);
+					new RemoveOperationVisitor(validate, extLanguageManager);
 
 			return (IModelOperation)node.accept(removeOperationVisitor);
 		} catch (Exception e) {

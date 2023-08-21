@@ -34,11 +34,11 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -61,10 +61,9 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			BasicParameterNode target, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
-			ITypeAdapterProvider adapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
-		super(target, newTypeInIntrLanguage, parameterConversionDefinition, adapterProvider, extLanguageManager);
+		super(target, newTypeInIntrLanguage, parameterConversionDefinition, extLanguageManager);
 
 		if (newTypeInIntrLanguage == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
@@ -226,9 +225,13 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 		}
 	}
 
-	private void setAdaptedValueAsDefault(BasicParameterNode methodParameterNode, String newType,
-			IExtLanguageManager extLanguageManager, String currentDefaultValue) {
-		ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(newType);
+	private void setAdaptedValueAsDefault(
+			BasicParameterNode methodParameterNode, 
+			String newType,
+			IExtLanguageManager extLanguageManager, 
+			String currentDefaultValue) {
+		
+		ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		String newDefaultValue = 
 				adapter.adapt(currentDefaultValue, false, ERunMode.QUIET, extLanguageManager);
@@ -270,7 +273,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			if (parent instanceof ITestCasesParentNode) {
 				
 				ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
-				testCasesParentNode.replaceTestCases(fOriginalTestCases);
+				testCasesParentNode.setTestCases(fOriginalTestCases);
 			}
 			parametersAndConstraintsParentNode.replaceConstraints(fOriginalConstraints);
 			
@@ -289,7 +292,6 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 					fMethodParameterNode, 
 					getNewType(), 
 					fParameterConversionDefinition, 
-					getTypeAdapterProvider(), 
 					getExtLanguageManager());
 		}
 

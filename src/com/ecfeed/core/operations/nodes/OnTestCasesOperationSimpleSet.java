@@ -40,7 +40,7 @@ public class OnTestCasesOperationSimpleSet extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		fMethodNode.replaceTestCases(fTestCases);
+		fMethodNode.setTestCases(fTestCases);
 		markModelUpdated();
 	}
 

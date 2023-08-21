@@ -64,8 +64,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(rootBasic);
         methodComposite.setLinkToGlobalParameter(rootComposite);
@@ -78,9 +78,9 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(3, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), rootBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), rootCompositeBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(2).get(0)), rootCompositeCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), rootBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), rootCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(2).get(0)), rootCompositeCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(null);
         methodComposite.setLinkToGlobalParameter(null);
@@ -93,8 +93,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
     }
 
     @Test
@@ -113,8 +113,8 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(classBasic);
         methodComposite.setLinkToGlobalParameter(classComposite);
@@ -127,9 +127,9 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(3, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), classBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), classCompositeBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(2).get(0)), classCompositeCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), classBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), classCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(2).get(0)), classCompositeCompositeBasicChoice);
 
         methodBasic.setLinkToGlobalParameter(null);
         methodComposite.setLinkToGlobalParameter(null);
@@ -142,14 +142,14 @@ public class AbstractParameterLinkTest {
         domain = methodDeployed.getTestDomain();
 
         assertEquals(2, domain.size());
-        assertSame(mapper.getMappedNodeSource(domain.get(0).get(0)), methodBasicChoice);
-        assertSame(mapper.getMappedNodeSource(domain.get(1).get(0)), methodCompositeBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(0).get(0)), methodBasicChoice);
+        assertSame(mapper.getSourceNode(domain.get(1).get(0)), methodCompositeBasicChoice);
     }
 
     private void getModel() {
         rootNode = new RootNode("Root", null);
 
-        rootBasic = new BasicParameterNode("Basic", "int", null);
+        rootBasic = new BasicParameterNode("Basic", "int", "0", false, null);
         rootNode.addParameter(rootBasic);
         rootBasicChoice = new ChoiceNode("B1", "1");
         rootBasic.addChoice(rootBasicChoice);
@@ -157,7 +157,7 @@ public class AbstractParameterLinkTest {
         rootComposite = new CompositeParameterNode("Composite", null);
         rootNode.addParameter(rootComposite);
 
-        rootCompositeBasic = new BasicParameterNode("CompositeBasic", "int", null);
+        rootCompositeBasic = new BasicParameterNode("CompositeBasic", "int", "0", false, null);
         rootComposite.addParameter(rootCompositeBasic);
         rootCompositeBasicChoice = new ChoiceNode("CB1", "2");
         rootCompositeBasic.addChoice(rootCompositeBasicChoice);
@@ -165,7 +165,7 @@ public class AbstractParameterLinkTest {
         rootCompositeComposite = new CompositeParameterNode("CompositeComposite", null);
         rootComposite.addParameter(rootCompositeComposite);
 
-        rootCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", null);
+        rootCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", "0", false, null);
         rootCompositeComposite.addParameter(rootCompositeCompositeBasic);
         rootCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         rootCompositeCompositeBasic.addChoice(rootCompositeCompositeBasicChoice);
@@ -173,7 +173,7 @@ public class AbstractParameterLinkTest {
         classNode = new ClassNode("Class", null);
         rootNode.addClass(classNode);
 
-        classBasic = new BasicParameterNode("Basic", "int", null);
+        classBasic = new BasicParameterNode("Basic", "int", "0", false, null);
         classNode.addParameter(classBasic);
         classBasicChoice = new ChoiceNode("B1", "1");
         classBasic.addChoice(classBasicChoice);
@@ -181,7 +181,7 @@ public class AbstractParameterLinkTest {
         classComposite = new CompositeParameterNode("Composite", null);
         classNode.addParameter(classComposite);
 
-        classCompositeBasic = new BasicParameterNode("CompositeBasic", "int", null);
+        classCompositeBasic = new BasicParameterNode("CompositeBasic", "int", "0", false, null);
         classComposite.addParameter(classCompositeBasic);
         classCompositeBasicChoice = new ChoiceNode("CB1", "2");
         classCompositeBasic.addChoice(classCompositeBasicChoice);
@@ -189,14 +189,14 @@ public class AbstractParameterLinkTest {
         classCompositeComposite = new CompositeParameterNode("CompositeComposite", null);
         classComposite.addParameter(classCompositeComposite);
 
-        classCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", null);
+        classCompositeCompositeBasic = new BasicParameterNode("CompositeCompositeBasic", "int", "0", false, null);
         classCompositeComposite.addParameter(classCompositeCompositeBasic);
         classCompositeCompositeBasicChoice = new ChoiceNode("CCB1", "3");
         classCompositeCompositeBasic.addChoice(classCompositeCompositeBasicChoice);
 
-        methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+        methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
 
-        methodBasic = new BasicParameterNode("MethodBasic", "int", null);
+        methodBasic = new BasicParameterNode("MethodBasic", "int", "0", false, null);
         methodNode.addParameter(methodBasic);
         methodBasicChoice = new ChoiceNode("MB1", "4");
         methodBasic.addChoice(methodBasicChoice);
@@ -204,7 +204,7 @@ public class AbstractParameterLinkTest {
         methodComposite = new CompositeParameterNode("MethodComposite", null);
         methodNode.addParameter(methodComposite);
 
-        methodCompositeBasic = new BasicParameterNode("MethodCompositeBasic", "int", null);
+        methodCompositeBasic = new BasicParameterNode("MethodCompositeBasic", "int", "0", false, null);
         methodComposite.addParameter(methodCompositeBasic);
         methodCompositeBasicChoice = new ChoiceNode("MCB1", "5");
         methodCompositeBasic.addChoice(methodCompositeBasicChoice);

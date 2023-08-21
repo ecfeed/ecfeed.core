@@ -72,7 +72,8 @@ public class ConstraintTest {
 		// value condition
 
 		RelationStatement relationStatement =
-				RelationStatement.createRelationStatementWithValueCondition(methodParameterNode1, EMathRelation.EQUAL, "5");
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, "5");
 
 		constraint.setPostcondition(relationStatement);
 
@@ -82,7 +83,7 @@ public class ConstraintTest {
 		// label condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, EMathRelation.EQUAL, "label1");
+				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, null, EMathRelation.EQUAL, "label1");
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -91,7 +92,9 @@ public class ConstraintTest {
 		// choice condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);
+
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -100,7 +103,9 @@ public class ConstraintTest {
 		// parameter condition
 
 		relationStatement =
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(
+						methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2, null);
+
 		constraint.setPostcondition(relationStatement);
 
 		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
@@ -163,7 +168,7 @@ public class ConstraintTest {
 		//  postcondition - assignment with parameter conditions
 
 		AssignmentStatement assignmentStatementWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1, null);
 
 		postconditionStatementArray.addStatement(assignmentStatementWithParameterCondition);
 
@@ -192,6 +197,7 @@ public class ConstraintTest {
 		RelationStatement relationStatementWithChoice =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						methodParameterNode1,
+						null,
 						EMathRelation.EQUAL,
 						choiceNode1);
 
@@ -305,6 +311,7 @@ public class ConstraintTest {
 		RelationStatement relationStatementWithChoiceAndEqual =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						methodParameterNode1,
+						null,
 						EMathRelation.EQUAL,
 						choiceNode1);
 
@@ -361,7 +368,7 @@ public class ConstraintTest {
 
 		assignmentStatement =
 				AssignmentStatement.createAssignmentWithParameterCondition(
-						methodParameterNode2, methodParameterNode1);
+						methodParameterNode2, methodParameterNode1, null);
 
 		StatementArray statementArray1 = new StatementArray(StatementArrayOperator.ASSIGN, null);
 		statementArray1.addStatement(assignmentStatement);
@@ -518,7 +525,8 @@ public class ConstraintTest {
 		parameter.addChoice(choice);
 
 		AbstractStatement mentioningStatement = 
-				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, EMathRelation.EQUAL, choice);
+
 		AbstractStatement notMentioningStatement = new StaticStatement(false, null);
 
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, notMentioningStatement, null).mentions(parameter));
@@ -591,7 +599,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, EMathRelation.EQUAL, choice11);
+						parameter1, null, EMathRelation.EQUAL, choice11);
 
 
 		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
@@ -600,7 +608,7 @@ public class ConstraintTest {
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, EMathRelation.EQUAL, choice2);
+						parameter2, null, EMathRelation.EQUAL, choice2);
 
 		MethodNode methodNode = new MethodNode("methodNode", null);
 		methodNode.addParameter(parameter1);
@@ -641,7 +649,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter1, EMathRelation.EQUAL, "A");
+						parameter1, null, EMathRelation.EQUAL, "A"); 
 
 		return precondition;
 	}
@@ -652,7 +660,7 @@ public class ConstraintTest {
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter2, EMathRelation.EQUAL, "C");
+						parameter2, null, EMathRelation.EQUAL, "C");
 
 		return postcondition;
 	}
@@ -663,7 +671,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, EMathRelation.EQUAL, choiceNode);
+						parameter1, null, EMathRelation.EQUAL, choiceNode);
 
 		return precondition;
 	}
@@ -674,7 +682,7 @@ public class ConstraintTest {
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, EMathRelation.EQUAL, choiceNode);
+						parameter2, null, EMathRelation.EQUAL, choiceNode);
 
 		return postcondition;
 	}
@@ -684,7 +692,7 @@ public class ConstraintTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithParameterCondition(
-						parameter1, EMathRelation.EQUAL, parameter2);
+						parameter1, null, EMathRelation.EQUAL, parameter2, null);
 
 		return precondition;
 	}
@@ -704,11 +712,11 @@ public class ConstraintTest {
 
 		AbstractStatement precondition = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter, EMathRelation.EQUAL, c1);
+						parameter, null, EMathRelation.EQUAL, c1);
 
 		AbstractStatement postcondition = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter, EMathRelation.EQUAL, c2);
+						parameter, null, EMathRelation.EQUAL, c2);
 
 		Constraint constraint = 
 				new Constraint(
@@ -744,11 +752,11 @@ public class ConstraintTest {
 
 		AbstractStatement precondition = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter, EMathRelation.EQUAL, c1);
+						parameter, null, EMathRelation.EQUAL, c1);
 
 		AbstractStatement postcondition = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter, EMathRelation.EQUAL, c2);
+						parameter, null, EMathRelation.EQUAL, c2);
 
 		Constraint constraint = 
 				new Constraint(

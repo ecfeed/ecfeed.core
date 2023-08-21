@@ -10,15 +10,24 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
-
-import static org.junit.Assert.*;
+import com.ecfeed.core.utils.EvaluationResult;
 
 public class MethodNodeTest {
 
@@ -70,6 +79,22 @@ public class MethodNodeTest {
 		assertTrue(method.getParameterTypes().contains("type1"));
 		assertTrue(method.getParameterTypes().contains("type2"));
 	}
+
+	//	@Test
+	//	public void addTwoParametersWithTheSameName() {
+	//
+	//		MethodNode methodNode1 = new MethodNode("method1");
+	//
+	//		MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+	//
+	//		try { 
+	//			MethodNodeHelper.addNewBasicParameter(methodNode1, "par", "int", "0", true, null);
+	//			fail();
+	//
+	//		} catch (Exception e) {
+	//			TestHelper.checkExceptionMessage(e, "Parameter with the same name already exists.");
+	//		}
+	//	}
 
 	@Test
 	public void addConstraint(){
@@ -132,10 +157,10 @@ public class MethodNodeTest {
 		assertTrue(method.getChildren().contains(expCat));
 		assertTrue(method.getChildren().contains(constraint));
 		assertTrue(method.getChildren().contains(testCase));
-		assertEquals(parameter, method.getChild("parameter"));
-		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(testCase, method.getChild("test_case"));
-		assertEquals(constraint, method.getChild("constraint"));
+		assertEquals(parameter, method.findChild("parameter"));
+		assertEquals(expCat, method.findChild("expCat"));
+		assertEquals(testCase, method.findChild("test_case"));
+		assertEquals(constraint, method.findChild("constraint"));
 	}
 
 	@Test
@@ -424,7 +449,7 @@ public class MethodNodeTest {
 						"constraint",
 						ConstraintType.EXTENDED_FILTER,
 						RelationStatement.createRelationStatementWithChoiceCondition(
-								parameter, EMathRelation.EQUAL, choice), new StaticStatement(false, null), null);
+								parameter, null, EMathRelation.EQUAL, choice), new StaticStatement(false, null), null);
 
 		Constraint notMentioningConstraint =
 				new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(false, null), new StaticStatement(false, null), null);
@@ -653,6 +678,230 @@ public class MethodNodeTest {
 
 		foundTestSuite1 = method.findTestSuite(testSuiteName1);
 		assertNull(foundTestSuite1);
+	}
+
+	@Test
+	public void copyMethodTest() {
+
+		MethodNode method = new MethodNode("method", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
+		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		par1.addChoice(choice1);
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
+		expectedChoice1.setParent(par2);
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
+		expectedChoice2.setParent(par2);
+		TestCaseNode testCase1 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
+		TestCaseNode testCase2 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice2));
+
+		method.addParameter(par1);
+		method.addParameter(par2);
+		method.addConstraint(constraint1);
+		method.addConstraint(constraint2);
+		method.addTestCase(testCase1);
+		method.addTestCase(testCase2);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode copy = method.makeClone(Optional.of(nodeMapper));
+		MethodNodeHelper.compareMethods(method, copy);
+	}
+
+	@Test
+	public void cloneMethodWithChoiceConditionConstraintTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		ChoiceNode choiceNode = BasicParameterNodeHelper.addNewChoice(
+				basicParameterNode, "choice1", "0", false, true, null);
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = RelationStatement.createRelationStatementWithChoiceCondition(
+				basicParameterNode, null, EMathRelation.EQUAL, choiceNode);
+
+		Constraint constraint = 
+				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
+
+		ConstraintNode constraintNode = new ConstraintNode("Constraint", constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper));
+
+		BasicParameterNode clonedBasicParameter = (BasicParameterNode) clonedMethodNode.getParameter(0);
+		assertNotEquals(clonedBasicParameter, basicParameterNode);
+		assertEquals(clonedBasicParameter.getParent(), clonedMethodNode);
+
+		ChoiceNode clonedChoiceNode = clonedBasicParameter.getChoices().get(0);
+		assertNotEquals(clonedChoiceNode, choiceNode);
+		assertEquals(clonedChoiceNode.getParent(), clonedBasicParameter);
+
+		ConstraintNode clonedConstraintNode = clonedMethodNode.getConstraintNodes().get(0);
+		assertNotEquals(clonedConstraintNode, constraintNode);
+		assertEquals(clonedConstraintNode.getParent(), clonedMethodNode);
+
+		Constraint clonedConstraint = clonedConstraintNode.getConstraint();
+		assertNotEquals(clonedConstraint, constraint);
+
+		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
+		assertNotEquals(clonedPostcondition, postcondition);
+
+		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
+		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter);
+
+		ChoiceCondition clonedChoiceCondition = (ChoiceCondition) clonedPostcondition.getCondition();
+		ChoiceNode clonedChoiceNodeFromConstraint = clonedChoiceCondition.getRightChoice();
+		assertEquals(clonedChoiceNodeFromConstraint, clonedChoiceNode);
+
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
+	}
+
+	@Test
+	public void cloneMethodWithParameterConditionConstraintTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoice(
+				basicParameterNode1, "choice1", "0", false, true, null);
+
+		BasicParameterNode basicParameterNode2 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoice(
+				basicParameterNode2, "choice2", "0", false, true, null);
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = RelationStatement.createRelationStatementWithParameterCondition(
+				basicParameterNode1, null, EMathRelation.EQUAL, basicParameterNode2, null);
+
+		Constraint constraint = 
+				new Constraint("Constraint", ConstraintType.BASIC_FILTER, precondition, postcondition ,null);
+
+		ConstraintNode constraintNode = new ConstraintNode("Constraint", constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper));
+
+		BasicParameterNode clonedBasicParameter1 = (BasicParameterNode) clonedMethodNode.getParameter(0);
+		assertNotEquals(clonedBasicParameter1, basicParameterNode1);
+		assertEquals(clonedBasicParameter1.getParent(), clonedMethodNode);
+
+		BasicParameterNode clonedBasicParameter2 = (BasicParameterNode) clonedMethodNode.getParameter(1);
+		assertNotEquals(clonedBasicParameter2, basicParameterNode2);
+		assertEquals(clonedBasicParameter2.getParent(), clonedMethodNode);
+
+		ConstraintNode clonedConstraintNode = clonedMethodNode.getConstraintNodes().get(0);
+		assertNotEquals(clonedConstraintNode, constraintNode);
+		assertEquals(clonedConstraintNode.getParent(), clonedMethodNode);
+
+		Constraint clonedConstraint = clonedConstraintNode.getConstraint();
+		assertNotEquals(clonedConstraint, constraint);
+
+		RelationStatement clonedPostcondition = (RelationStatement) clonedConstraint.getPostcondition();
+		assertNotEquals(clonedPostcondition, postcondition);
+
+		BasicParameterNode clonedLeftParameterNodeFromConstraint = clonedPostcondition.getLeftParameter();
+		assertEquals(clonedLeftParameterNodeFromConstraint, clonedBasicParameter1);
+
+		ParameterCondition clonedParameterCondition = (ParameterCondition) clonedPostcondition.getCondition();
+		BasicParameterNode clonedParameter2NodeFromConstraint = clonedParameterCondition.getRightParameterNode();
+		assertEquals(clonedParameter2NodeFromConstraint, clonedBasicParameter2);
+
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
+	}
+
+	@Test
+	public void copyMethodWithDeployedParameters() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoice(
+				basicParameterNode, "choice1", "0", false, true, null);
+
+		NodeMapper nodeMapper1 = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper1);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper1);
+
+		BasicParameterNode deployedParameter = 
+				(BasicParameterNode) methodNode.getDeployedParametersWithLinkingContexts().get(0).getParameter();
+		assertEquals(deployedParameter.getParent(), methodNode);
+
+		NodeMapper nodeMapper2 = new NodeMapper();
+		MethodNode clonedMethodNode = methodNode.makeClone(Optional.of(nodeMapper2));
+
+		BasicParameterNode clonedDeployedParameter = 
+				(BasicParameterNode) clonedMethodNode.getDeployedParametersWithLinkingContexts().get(0).getParameter();
+
+		assertEquals(clonedDeployedParameter.getParent(), clonedMethodNode);
+
+		ChoiceNode clonedDeployedChoice = clonedDeployedParameter.getChoices().get(0);
+		assertEquals(clonedDeployedChoice.getParent(), clonedDeployedParameter);
+
+		MethodNodeHelper.compareMethods(methodNode, clonedMethodNode);
+	}
+
+	@Test
+	public void copyMethodWithDeployedParametersAndLinkingContext() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		CompositeParameterNode globalComposite = 
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GS1", true, null);
+
+		BasicParameterNode globalBasicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameter(
+						globalComposite, "GP1", "int", "0", true, null);
+
+		BasicParameterNodeHelper.addNewChoice(
+				globalBasicParameterNode, "GC1", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "CLL1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "M1", true, null);
+
+		CompositeParameterNode localCompositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LS1", true, null);
+
+		localCompositeParameterNode.setLinkToGlobalParameter(globalComposite);
+
+		// deployment
+
+		NodeMapper nodeMapper1 = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper1);
+
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper1);
+
+		List<ParameterWithLinkingContext> deployedParameterWithLinkingContexts = 
+				methodNode.getDeployedParametersWithLinkingContexts();
+
+		ParameterWithLinkingContext firstDeployedParameterWithLinkingContext = 
+				deployedParameterWithLinkingContexts.get(0);
+
+		assertEquals(firstDeployedParameterWithLinkingContext.getParameter(), globalBasicParameterNode);
+		assertEquals(firstDeployedParameterWithLinkingContext.getLinkingContext(), localCompositeParameterNode);
+
+		// clone
+
+		NodeMapper nodeMapper2 = new NodeMapper();
+		RootNode clonedRootNode = rootNode.makeClone(Optional.of(nodeMapper2));
+
+		RootNodeHelper.compareRootNodes(rootNode, clonedRootNode);
 	}
 
 }

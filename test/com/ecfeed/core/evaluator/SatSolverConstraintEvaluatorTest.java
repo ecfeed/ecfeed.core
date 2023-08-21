@@ -3,6 +3,7 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
+import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -17,9 +18,7 @@ import static org.junit.Assert.fail;
 
 public class SatSolverConstraintEvaluatorTest {
 
-    private int countGeneratedTestCases(String xmlModel) {
-        IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
-
+    private int countGeneratedTestCases(String xmlModel, IAlgorithm<ChoiceNode> algorithm) {
         NodeMapper mapper = new NodeMapper();
 
         MethodNode method1 = getMethod(xmlModel);
@@ -85,102 +84,112 @@ public class SatSolverConstraintEvaluatorTest {
 
     @Test
     public void TestOrderOfInts() {
-        assertEquals(9 * 8 * 7 * 6 / 2 / 3 / 4, countGeneratedTestCases(xmlOrderOfInts));
+        assertEquals(9 * 8 * 7 * 6 / 2 / 3 / 4, countGeneratedTestCases(xmlOrderOfInts, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestInequalityOfInts() {
-        assertEquals(6 * 3 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlInequalityOfInts));
+        assertEquals(6 * 3 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlInequalityOfInts, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestNondistinctValuesInts() {
-        assertEquals(4 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlNondistinctValuesInts));
+        assertEquals(4 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlNondistinctValuesInts, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestDeeperConstraints1() {
-        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints1));
+        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints1, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestDeeperConstraints2() {
-        assertEquals(4 * 4 * 4 * 4 - 4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints2));
+        assertEquals(4 * 4 * 4 * 4 - 4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints2, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestDeeperConstraints3() {
-        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints3));
+        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints3, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestExpectedValue1() {
-        assertEquals(2, countGeneratedTestCases(xmlExpectedValue1));
+        assertEquals(2, countGeneratedTestCases(xmlExpectedValue1, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestExpectedValue2() {
-        assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
+        assertEquals(4, countGeneratedTestCases(xmlExpectedValue2, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestRanges1() {
-        assertEquals(4, countGeneratedTestCases(xmlRanges1));
+        assertEquals(4, countGeneratedTestCases(xmlRanges1, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestRanges2() {
-        assertEquals(6, countGeneratedTestCases(xmlRanges2));
+        assertEquals(6, countGeneratedTestCases(xmlRanges2, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestRanges3() {
-        assertEquals(4, countGeneratedTestCases(xmlRanges3));
+        assertEquals(4, countGeneratedTestCases(xmlRanges3, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestRangesDouble() {
-        assertEquals(7, countGeneratedTestCases(xmlRangesDouble));
+        assertEquals(7, countGeneratedTestCases(xmlRangesDouble, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestRangesDoubleSmall() {
-        assertEquals(0, countGeneratedTestCases(xmlRangesDoubleSmall));
+        assertEquals(0, countGeneratedTestCases(xmlRangesDoubleSmall, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestMixedTypeOrder() {
-        assertEquals(10, countGeneratedTestCases(xmlMixedTypeOrder));
+        assertEquals(10, countGeneratedTestCases(xmlMixedTypeOrder, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestNastyRanges() {
-        assertEquals(2, countGeneratedTestCases(xmlNastyRanges));
+        assertEquals(2, countGeneratedTestCases(xmlNastyRanges, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestMixedTypeEq1() {
-        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq1));
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq1, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestMixedTypeEq2() {
-        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq2));
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq2, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestMixedTypeEq3() {
-        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq3));
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq3, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestMixedTypeOverflow() {
-        assertEquals(0, countGeneratedTestCases(xmlMixedTypeOverflow));
+        assertEquals(0, countGeneratedTestCases(xmlMixedTypeOverflow, new CartesianProductAlgorithm<>()));
     }
 
     @Test
     public void TestCmpFixedVsRange() {
-        assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange));
+        assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange, new CartesianProductAlgorithm<>()));
+    }
+
+    @Test
+    public void TestRandomAlgorithmLimitAdaptive() {
+        assertEquals(2 * 2, countGeneratedTestCases(xmlRandomGenerator, new RandomAlgorithm<>(100, false, true)));
+    }
+
+    @Test
+    public void TestRandomAlgorithmLimit() {
+        assertEquals(2 * 2, countGeneratedTestCases(xmlRandomGenerator, new RandomAlgorithm<>(100, false, false)));
     }
 
     private String xmlOrderOfInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
@@ -1503,5 +1512,39 @@ public class SatSolverConstraintEvaluatorTest {
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
+
+    private String xmlRandomGenerator = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"nowecos\" version=\"5\">\n" +
+            "    <Class name=\"TestClass1\">\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"a\" type=\"String\" isExpected=\"false\" expected=\"\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"a1\" value=\"a1\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"a2\" value=\"a2\" isRandomized=\"false\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"b\" type=\"String\" isExpected=\"false\" expected=\"\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"b1\" value=\"b1\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"b2\" value=\"b2\" isRandomized=\"false\"/>\n" +
+            "            </Parameter>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>";
 
 }

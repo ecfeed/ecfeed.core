@@ -25,16 +25,25 @@ public class OnClassOperationAddToRoot extends AbstractModelOperation {
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
+	private boolean fGenerateUniqueName;
 
-	public OnClassOperationAddToRoot(RootNode target, ClassNode classToAdd, IExtLanguageManager extLanguageManager) {
-		this(target, classToAdd, -1, extLanguageManager);
+	public OnClassOperationAddToRoot(RootNode target, ClassNode classToAdd, boolean generateUniqeName, IExtLanguageManager extLanguageManager) {
+		this(target, classToAdd, -1, generateUniqeName, extLanguageManager);
 	}
 	
-	public OnClassOperationAddToRoot(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguageManager) {
+	public OnClassOperationAddToRoot(
+			RootNode rootNode, 
+			ClassNode classToAdd, 
+			int addIndex, 
+			boolean generateUniqueName, 
+			IExtLanguageManager extLanguageManager) {
+		
 		super(OperationNames.ADD_CLASS, extLanguageManager);
+		
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;
+		fGenerateUniqueName = generateUniqueName;
 	}
 
 	@Override
@@ -43,6 +52,11 @@ public class OnClassOperationAddToRoot extends AbstractModelOperation {
 		setOneNodeToSelect(fRootNode);
 
 		final IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		
+		if (fGenerateUniqueName) {
+			String newName = RootNodeHelper.generateUniqueClassName(fRootNode, fclassToAdd.getName());
+			fclassToAdd.setName(newName);
+		}
 
 		String name = ClassNodeHelper.getQualifiedName(fclassToAdd, extLanguageManager);
 

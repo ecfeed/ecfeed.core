@@ -11,25 +11,32 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public interface IStatement{
-	public String createSignature(IExtLanguageManager extLanguageManager);
-	public EvaluationResult evaluate(List<ChoiceNode> values);
-	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices);
-	public boolean isEqualTo(IStatement statement);
-	public Object accept(IStatementVisitor visitor) throws Exception;
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
-	public boolean isAmbiguous(List<List<ChoiceNode>> values);
-	public List<ChoiceNode> getChoices();
-	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
-	public List<String> getLabels(BasicParameterNode methodParameterNode);
-	public void derandomize();
-	public AbstractStatement makeClone();
+	String createSignature(IExtLanguageManager extLanguageManager);
+	EvaluationResult evaluate(List<ChoiceNode> values);
+	boolean setExpectedValues(List<ChoiceNode> testCaseChoices);
+	boolean isEqualTo(IStatement statement);
+	Object accept(IStatementVisitor visitor) throws Exception;
+	boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
+	boolean isAmbiguous(List<List<ChoiceNode>> values);
+	List<ChoiceNode> getChoices();
+	List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
+	List<String> getLabels(BasicParameterNode methodParameterNode);
+	void derandomize();
+	AbstractStatement makeClone();
 	AbstractStatement createCopy(NodeMapper mapper);
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
-	
+	AbstractStatement makeClone(Optional<NodeMapper> mapper);
+	void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection);
+	String getLeftOperandName();
+	BasicParameterNode getLeftParameter();
+	CompositeParameterNode getLeftParameterLinkingContext();
+	boolean mentions(int methodParameterIndex);
+	boolean isConsistent(IParametersAndConstraintsParentNode topParentNode);
 }

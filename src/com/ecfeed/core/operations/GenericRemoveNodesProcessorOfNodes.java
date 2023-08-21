@@ -10,21 +10,19 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
@@ -35,12 +33,11 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private NodesByType fAffectedNodesByType;
 
 	public GenericRemoveNodesProcessorOfNodes(
-			Set<IAbstractNode> selectedNodes, 
-			ITypeAdapterProvider typeAdapterProvider, 
+			Collection<? extends IAbstractNode> nodesToRemove,
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		fSelectedNodes = selectedNodes;
+		fSelectedNodes = createSetOfNodesToRemove(nodesToRemove);
 		fAffectedNodesByType = new NodesByType();
 
 		removeNodesWithAncestorsOnList(fSelectedNodes);
@@ -51,7 +48,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 				extLanguageManager, 
 				validate);
 
-		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
+		if (fAffectedNodesByType.getTestSuites().size() > 0) {
 			ExceptionHelper.reportRuntimeException("Test suites not expected.");
 		}
 	}
@@ -60,12 +57,21 @@ public class GenericRemoveNodesProcessorOfNodes {
 		return fAffectedNodesByType;
 	}
 
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedNodesByType.getConstraints();
-	}
+	//	public Set<ConstraintNode> getAffectedConstraints() {
+	//		return fAffectedNodesByType.getConstraints();
+	//	}
+	//
+	//	public Set<TestCaseNode> getAffectedTestCases() {
+	//		return fAffectedNodesByType.getTestCaseNodes();
+	//	}
 
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedNodesByType.getTestCaseNodes();
+	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
+
+		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
+
+		removeNodesWithAncestorsOnList(setOfNodes);
+
+		return setOfNodes;
 	}
 
 	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {
@@ -126,13 +132,13 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private static void processTestSuitesAndTestCases(
 			NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
 
-		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuiteNodes();
+		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuites();
 
 		if (!testSuiteNodes.isEmpty()) {
 			processTestSuites(testSuiteNodes, outAffectedNodes);
 		}
 
-		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
+		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCases();
 
 		if (!testCaseNodes.isEmpty()) {
 			processTestCases(testCaseNodes, outAffectedNodes);
@@ -153,9 +159,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 		Set<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
 		if (!choiceNodes.isEmpty()) {
-			processChoicesFilteringConstraintsAndTestCases(
-					choiceNodes, 
-					inOutAffectedNodes);
+			GenericRemoveNodesProcessorOfChoices.processChoices(choiceNodes, inOutAffectedNodes);
 		}
 	}
 
@@ -208,56 +212,12 @@ public class GenericRemoveNodesProcessorOfNodes {
 		}
 	}
 
-	private static void processChoicesFilteringConstraintsAndTestCases(
-			Set<ChoiceNode> choiceNodes, 
-			NodesByType inOutAffectedNodes) {
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			accumulateAffectedConstraints(choiceNode, inOutAffectedNodes);
-
-			accumulateAffectedTestCases(choiceNode, inOutAffectedNodes);
-
-			inOutAffectedNodes.addNode(choiceNode);
-		}
-	}
 
 	private static void processClasses(Set<ClassNode> classsNodes, NodesByType outAffectedNodesByType) {
 
 		for (ClassNode classNode : classsNodes) {
 			outAffectedNodesByType.addNode(classNode);
 		}
-	}
-
-	private static void accumulateAffectedConstraints(
-			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
-
-		if (abstractNode instanceof ChoiceNode) {
-
-			List<ConstraintNode> mentioningConstraintNodes = 
-					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		} 
-
-		if (abstractNode instanceof BasicParameterNode) {
-
-			List<ConstraintNode> mentioningConstraintNodes = 
-					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		}
-	}
-
-	private static void accumulateAffectedTestCases(
-			ChoiceNode choiceNode, NodesByType inOutAffectedNodes) {
-
-		Set<TestCaseNode> mentioningTestCaseNodes = 
-				ChoiceNodeHelper.getMentioningTestCases(choiceNode);
-
-		inOutAffectedNodes.addTestCases(mentioningTestCaseNodes);
 	}
 
 }

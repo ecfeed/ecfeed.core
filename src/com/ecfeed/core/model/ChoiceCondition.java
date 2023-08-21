@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -50,12 +52,34 @@ public class ChoiceCondition implements IStatementCondition {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
-		return evaluateChoice(choice);
+		EvaluationResult evaluateChoice = evaluateChoice(choice);
+
+		return evaluateChoice;
 	}
 
 	@Override
 	public boolean adapt(List<ChoiceNode> values) {
 		return false;
+	}
+
+	@Override
+	public ChoiceCondition makeClone(
+			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
+
+		if (nodeMapper.isPresent()) {
+
+			ChoiceNode clonedChoiceNode = convertChoice(nodeMapper.get());
+
+			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
+		}
+
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightChoice = nodeMapper.getMappedNode(fRightChoice, mappingDirection);
 	}
 
 	@Override
@@ -67,21 +91,26 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		return new ChoiceCondition(updateChoiceReference(mapper), statement);
+		ChoiceNode newChoiceNode = convertChoice(mapper);
+
+		return new ChoiceCondition(newChoiceNode, statement);
 	}
 
-	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
-		ChoiceNode node;
+	private ChoiceNode convertChoice(NodeMapper mapper) {
 
-		if (isSourceLinked()) {
-			node = fRightChoice;
-		} else {
-			node = mapper.getMappedNodeDeployment(fRightChoice);
-		}
+		ChoiceNode choiceNode;
 
-		node.setOrigChoiceNode(null);
+		//		if (isSourceLinked()) {
+		//			choiceNode = fRightChoice;
+		//		} else {
+		//			choiceNode = mapper.getDestinationNode(fRightChoice);
+		//		}
 
-		return node;
+		choiceNode = mapper.getDestinationNode(fRightChoice);
+
+		choiceNode.setOrigChoiceNode(null);
+
+		return choiceNode;
 	}
 
 	boolean isSourceLinked() {
@@ -97,30 +126,6 @@ public class ChoiceCondition implements IStatementCondition {
 
 		return !(node instanceof MethodNode);
 	}
-
-	//	@Override
-	//	public boolean updateReferences(IParametersParentNode methodNode) {
-	//
-	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fParentRelationStatement.getLeftParameter());
-	//
-	//		BasicParameterNode basicParameterNode = 
-	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
-	//						compositeName, methodNode);
-	//
-	//		//		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-	//		//		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
-	//
-	//		String choiceName = fRightChoice.getQualifiedName();
-	//
-	//		ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
-	//
-	//		if (choiceNode == null) {
-	//			return false;
-	//		}
-	//
-	//		fRightChoice = choiceNode;
-	//		return true;
-	//	}
 
 	@Override
 	public Object getCondition(){
@@ -191,6 +196,11 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
+	}
+
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
 	}
 
 	public ChoiceNode getRightChoice() {
@@ -392,6 +402,25 @@ public class ChoiceCondition implements IStatementCondition {
 		if (fRightChoice == oldChoiceNode) {
 			fRightChoice = newChoiceNode;
 		}
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (BasicParameterNodeHelper.choiceNodeExists(parameterWithChoices, fRightChoice)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	//	@Override

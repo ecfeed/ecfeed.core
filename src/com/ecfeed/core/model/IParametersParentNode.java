@@ -15,9 +15,11 @@ import java.util.List;
 public interface IParametersParentNode extends IAbstractNode {
 
 	public void addParameter(AbstractParameterNode parameter);	
+	public void addParameter(AbstractParameterNode parameter, AbstractParameterNode linkingContext);
 	public void addParameter(AbstractParameterNode parameter, int index);
+	public void addParameter(AbstractParameterNode parameter, AbstractParameterNode linkingContext, int index);
 	public void addParameters(List<AbstractParameterNode> parameters);
-	
+
 	public boolean removeParameter(AbstractParameterNode parameter);
 	public void replaceParameters(List<AbstractParameterNode> parameters);
 
@@ -35,8 +37,16 @@ public interface IParametersParentNode extends IAbstractNode {
 	public List<String> getParametersNames();
 
 	public String generateNewParameterName(String startParameterName);
-	
-	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow);
-	public List<CompositeParameterNode> getNestedCompositeParameters(boolean follow);
-	public List<BasicParameterNode> getNestedBasicParameters(boolean follow);
+
+	public void shiftParameters(List<Integer> indicesOfParameters, int shift);
+	public void shiftOneParameter(int indexOfParameter, int shift);
+
+	default List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+		return ParametersParentNodeHelper.getNestedBasicParameters(this, follow);
+	}
+
+	default List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
+		return ParametersParentNodeHelper.getNestedCompositeParameters(this, follow);
+	}
+
 }

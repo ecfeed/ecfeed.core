@@ -14,17 +14,18 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -188,7 +189,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		String rightParameterType = parameterCondition.getRightParameterNode().getType();
 
-		if (!relationStatement.isRightParameterTypeAllowed(rightParameterType)) {
+		BasicParameterNode leftParameter = relationStatement.getLeftParameter();
+		String leftParameterType =  leftParameter.getType();
+		
+		if (!RelationStatementHelper.isRightParameterTypeAllowed(rightParameterType, leftParameterType)) {
 			return "Parameter type mismatch.";
 		}
 
@@ -303,8 +307,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(leftParameterType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(leftParameterType);
 
 		IStatementCondition statementCondition = relationStatement.getCondition();
 
@@ -475,6 +478,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		postcondition.derandomize();
 
 	}
+	
 	public AbstractStatement getPrecondition() {
 
 		return fPrecondition;
@@ -581,7 +585,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
-
+	
 	public Constraint createCopy(NodeMapper mapper) {
 
 		AbstractStatement precondition = fPrecondition.createCopy(mapper);
@@ -590,6 +594,20 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
+	public Constraint makeClone(Optional<NodeMapper> mapper) {
+
+		AbstractStatement precondition = fPrecondition.makeClone(mapper);
+		AbstractStatement postcondition = fPostcondition.makeClone(mapper);
+
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+	
+	public void replaceReferences(NodeMapper mapper, MappingDirection mappingDirection) {
+		
+		fPrecondition.replaceReferences(mapper, mappingDirection);
+		fPostcondition.replaceReferences(mapper, mappingDirection);
+	}
+	
 	public void verifyConversionOfParameterFromToType(
 			BasicParameterNode methodParameterNode,
 			String oldType,
@@ -1034,4 +1052,22 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 	}
+
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+		
+		AbstractStatement precondition = getPrecondition();
+		
+		if (!precondition.isConsistent(topParentNode)) {
+			return false;
+		}
+
+		AbstractStatement postcondition = getPostcondition();
+		
+		if (!postcondition.isConsistent(topParentNode)) {
+			return false;
+		}
+		
+		return true;
+	}
+
 }

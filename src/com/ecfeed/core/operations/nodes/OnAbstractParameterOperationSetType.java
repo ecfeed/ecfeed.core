@@ -27,10 +27,10 @@ import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class OnAbstractParameterOperationSetType extends AbstractModelOperation {
@@ -39,7 +39,6 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private String fNewTypeInIntrLanguage;
 	private String fCurrentType;
-	private ITypeAdapterProvider fAdapterProvider;
 	private Map<IChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
@@ -47,15 +46,10 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 			BasicParameterNode abstractParameterNode, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
-			ITypeAdapterProvider adapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_TYPE, extLanguageManager);
 
-		if (adapterProvider == null) {
-			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
-		}
-		
 		if (newTypeInIntrLanguage == null) {
 			ExceptionHelper.reportRuntimeException("New type is empty.");
 		}
@@ -63,7 +57,6 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 		fAbstractParameterNode = abstractParameterNode;
 		fNewTypeInIntrLanguage = newTypeInIntrLanguage;
 		fParameterConversionDefinition = parameterConversionDefinition;
-		fAdapterProvider = adapterProvider;
 		fOriginalChoices = new HashMap<>();
 		fOriginalValues = new HashMap<>();
 	}
@@ -197,7 +190,7 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 
 	private void adaptChoices(IChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
-		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInIntrLanguage);
+		ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(fNewTypeInIntrLanguage);
 		while(it.hasNext()){
 			adaptOneChoice(it, adapter);
 		}
@@ -267,10 +260,6 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 		return parent.getChoices();
 	}
 
-	protected ITypeAdapterProvider getTypeAdapterProvider(){
-		return fAdapterProvider;
-	}
-
 	protected String getNewType(){
 		return fNewTypeInIntrLanguage;
 	}
@@ -298,7 +287,6 @@ public class OnAbstractParameterOperationSetType extends AbstractModelOperation 
 					fAbstractParameterNode, 
 					fNewTypeInIntrLanguage,
 					fParameterConversionDefinition,
-					fAdapterProvider, 
 					getExtLanguageManager());
 		}
 

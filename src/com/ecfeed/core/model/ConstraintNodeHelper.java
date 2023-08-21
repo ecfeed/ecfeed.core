@@ -12,9 +12,11 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -74,25 +76,31 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = createQualifiedName(constraintNode);
+		String qualifiedNameInExtLanguage = createQualifiedName(constraintNode, extLanguageManager); 
 
-		String signatureOfConditions = 
+		String signatureOfConditionsInExtLanguage = 
 				ConstraintHelper.createSignatureOfConditions(constraintNode.getConstraint(), extLanguageManager);
 
-		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
+		String signatureInExtLanguage = 
+				qualifiedNameInExtLanguage + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditionsInExtLanguage;
+
+		return signatureInExtLanguage; 
 	}
 
-	private static String createQualifiedName(ConstraintNode constraintNode) {
+	private static String createQualifiedName(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		String prefix = createQualifiedPrefix(constraintNode);
+		String prefixInIntrLanguage = createQualifiedPrefix(constraintNode);
 
-		String name = constraintNode.getConstraint().getName();
+		String prefixInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(prefixInIntrLanguage);
 
-		if (StringHelper.isNullOrEmpty(prefix)) {
-			return name;
+		String constraintName = constraintNode.getConstraint().getName();
+
+		if (StringHelper.isNullOrEmpty(prefixInExtLanguage)) {
+			return constraintName;
 		}
 
-		String qualifiedName = prefix + SignatureHelper.SIGNATURE_NAME_SEPARATOR + name;
+		String qualifiedName = 
+				prefixInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + constraintName;
 
 		return qualifiedName;
 	}
@@ -105,13 +113,13 @@ public class ConstraintNodeHelper {
 	private static String createQualifiedPrefix(ConstraintNode constraintNode) {
 
 		String prefix = createQualifiedPrefixIntr(constraintNode);
-		
+
 		prefix = prefix.trim();
-		
+
 		prefix = StringHelper.removeFromPostfix(":", prefix);
-		
+
 		prefix = prefix.trim();
-		
+
 		return prefix;
 	}
 
@@ -128,7 +136,7 @@ public class ConstraintNodeHelper {
 				return "";
 			}
 
-			if (parent instanceof MethodNode) {
+			if ((parent instanceof MethodNode) || (parent instanceof RootNode) || (parent instanceof ClassNode)) {
 				return prefix;
 			}
 
@@ -143,13 +151,16 @@ public class ConstraintNodeHelper {
 
 	}
 
-	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {
+	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(
+			List<ConstraintNode> constraints) {
 
 		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
 
+		NodeMapper nodeMapper = new NodeMapper();
+
 		for (ConstraintNode constraint : constraints) {
 
-			ConstraintNode clonedConstraint = constraint.makeClone();
+			ConstraintNode clonedConstraint = constraint.makeClone(Optional.of(nodeMapper));
 
 			clonedConstraint.derandomize();
 			clonedConstraintNodes.add(clonedConstraint);
@@ -183,6 +194,107 @@ public class ConstraintNodeHelper {
 		}
 
 		return constraints;
+	}
+
+	public static void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
+
+		NameHelper.compareNames(constraint1.getName(), constraint2.getName());
+		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
+	}
+
+	public static List<ConstraintNode> getMentioningConstraintNodes(
+			List<CompositeParameterNode> compositeParameterNodes,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodesToDelete = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
+
+			List<ConstraintNode> currentConstraintNodes = 
+					getMentioningConstraintsForCompositeParameter(compositeParameterNode, basicParameterNodesToDelete);
+
+			resultConstraintNodesToDelete.addAll(currentConstraintNodes);
+		}
+
+		return resultConstraintNodesToDelete;
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForCompositeParameter(
+			CompositeParameterNode compositeParameterNode,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		if (compositeParameterNode.isGlobalParameter()) {
+			return getMentioningConstraintsForGlobalParameter(compositeParameterNode, basicParameterNodesToDelete);
+		}
+
+		return getMentioningConstraintsForLocalParameter(compositeParameterNode, basicParameterNodesToDelete);
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForGlobalParameter(
+			CompositeParameterNode globalCompositeParameterNode,
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<CompositeParameterNode> linkedCompositeParameterNodes =
+				CompositeParameterNodeHelper.getLinkedCompositeParameters(globalCompositeParameterNode);
+
+		for (CompositeParameterNode compositeParameterNode : linkedCompositeParameterNodes) {
+
+			List<ConstraintNode> currentConstraintNodes = 
+					getMentioningConstraintsForLocalParameter(
+							compositeParameterNode, basicParameterNodesToDelete);
+
+			resultConstraintNodes.addAll(currentConstraintNodes);
+		}
+
+		return resultConstraintNodes;
+	}
+
+	private static List<ConstraintNode> getMentioningConstraintsForLocalParameter(
+			CompositeParameterNode compositeParameterNode, 
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+
+		List<ConstraintNode> resultConstraintNodesToDelete = new ArrayList<>();
+
+		List<ConstraintNode> constraintsFromParentStructures = 
+				getConstraintsFromParentCompositesAndMethod(compositeParameterNode);
+
+		for (ConstraintNode constraintNode : constraintsFromParentStructures) {
+
+			if (constraintNode.mentionsAnyOfParameters(basicParameterNodesToDelete)) {
+				resultConstraintNodesToDelete.add(constraintNode);
+			}
+		}
+
+		return resultConstraintNodesToDelete;
+	}
+
+	private static List<ConstraintNode> getConstraintsFromParentCompositesAndMethod(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		IAbstractNode parent = compositeParameterNode.getParent();
+
+		if (!(parent instanceof IConstraintsParentNode)) {
+			return new ArrayList<>();
+		}
+
+		for(;;) {
+
+			IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) parent;
+
+			List<ConstraintNode> constraintNodes = constraintsParentNode.getConstraintNodes();
+
+			resultConstraintNodes.addAll(constraintNodes);
+
+			parent = constraintsParentNode.getParent();
+
+			if (parent == null || !(parent instanceof IConstraintsParentNode)) {
+				return resultConstraintNodes;
+			}
+		}
 	}
 
 }

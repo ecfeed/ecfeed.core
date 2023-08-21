@@ -25,21 +25,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public class ChoiceNodeHelper {
 
@@ -88,7 +90,11 @@ public class ChoiceNodeHelper {
 			return null;
 		}
 
-		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+		int indexOfChoiceNodeInTestCase = findIndexOfChoiceInTestCase(choiceNode, testCaseNode);
+
+		if (indexOfChoiceNodeInTestCase < 0) {
+			return null;
+		}
 
 		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
 
@@ -98,6 +104,22 @@ public class ChoiceNodeHelper {
 
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 		return basicParameterNode;
+	}
+
+	private static int findIndexOfChoiceInTestCase(ChoiceNode choiceNodeToFind, TestCaseNode testCaseNode) {
+
+		List<ChoiceNode> choices = testCaseNode.getChoices();
+
+		for (int index = 0; index < choices.size(); index++) {
+
+			ChoiceNode choiceNode = choices.get(index);
+
+			if (choiceNode.isMatch(choiceNodeToFind)) {
+				return index;
+			}
+		}			
+
+		return -1;
 	}
 
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
@@ -113,8 +135,7 @@ public class ChoiceNodeHelper {
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
-			NodeMapper mapper
-			) {
+			Optional<NodeMapper> nodeMapper) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -126,15 +147,15 @@ public class ChoiceNodeHelper {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
-			if (mapper != null) {
-				mapper.addMappings(choiceNode, clonedChoiceNode);
+			if (nodeMapper.isPresent()) {
+				nodeMapper.get().addMappings(choiceNode, clonedChoiceNode);
 			}
 
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, mapper);
+			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, nodeMapper);
 		}
 	}
 
@@ -197,9 +218,7 @@ public class ChoiceNodeHelper {
 			String newType, 
 			boolean isChoiceRandomized) {
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
 
@@ -325,7 +344,9 @@ public class ChoiceNodeHelper {
 			return choiceQualifiedName;
 		}
 
-		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
+		String parameterCompositeName = 
+				AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+						basicParameterNode, extLanguageManager);
 
 		if (basicParameterNode.isExpected()) {
 			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
@@ -896,57 +917,153 @@ public class ChoiceNodeHelper {
 		return new ArrayList<ConstraintNode>(result);
 	}
 
-	public static Set<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+	//	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+	//
+	//		return new ArrayList<>(getMentioningTestCases2(choiceNodeNotFromTestCase));
+	//	}
+	//
+	//	private static Set<TestCaseNode> getMentioningTestCases1(ChoiceNode choiceNodeNotFromTestCase) { 
+	//
+	//		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
+	//
+	//		if (basicParameterNode.isGlobalParameter()) {
+	//			return getMentioningTestCasesForGlobalChoice(choiceNodeNotFromTestCase, basicParameterNode);
+	//		}
+	//
+	//		return getMentioningTestCasesForLocalChoice(choiceNodeNotFromTestCase);
+	//	}
 
-		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
+	//	private static Set<TestCaseNode> getMentioningTestCasesForLocalChoice(ChoiceNode choiceNodeNotFromTestCase) {
+	//
+	//		Set<TestCaseNode> result = new HashSet<>();
+	//
+	//		MethodNode methodNode = MethodNodeHelper.findMethodNode(choiceNodeNotFromTestCase);
+	//
+	//		if (methodNode == null) {
+	//			return new HashSet<>();
+	//		}
+	//
+	//		accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+	//		return result;
+	//	}
 
-		if (basicParameterNode.isGlobalParameter()) {
-			return getMentioningTestCasesForGlobalChoice(choiceNodeNotFromTestCase, basicParameterNode);
+	//	private static Set<TestCaseNode> getMentioningTestCasesForGlobalChoice(
+	//			ChoiceNode choiceNodeNotFromTestCase,
+	//			BasicParameterNode basicParameterNode) {
+	//
+	//		Set<TestCaseNode> result = new HashSet<>();
+	//
+	//		List<BasicParameterNode> linkedParameterNodes = 
+	//				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+	//
+	//		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
+	//
+	//			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+	//			accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+	//		}
+	//
+	//		return result;
+	//	}
+
+	//	private static void accumulateChoiceMentioningTestCases(
+	//			ChoiceNode choiceNodeNotFromTestCase,
+	//			MethodNode methodNode,
+	//			Set<TestCaseNode> result) {
+	//
+	//		List<TestCaseNode> testCaseNodes = methodNode.getMentioningTestCases(choiceNodeNotFromTestCase);
+	//		result.addAll(testCaseNodes);
+	//	}
+	//
+
+	public static List<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+
+		if (choiceNodeNotFromTestCase.isPartOfGlobalParameter()) {
+			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNodeNotFromTestCase);
 		}
 
-		return getMentioningTestCasesForLocalChoice(choiceNodeNotFromTestCase);
-
+		return getTestCasesForRelatedMethod(choiceNodeNotFromTestCase);
 	}
 
-	private static Set<TestCaseNode> getMentioningTestCasesForLocalChoice(ChoiceNode choiceNodeNotFromTestCase) {
+	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
 
-		Set<TestCaseNode> result = new HashSet<>();
+		CompositeParameterNode compositeParameterNode = CompositeParameterNodeHelper.findTopComposite(globalChoiceNode);
 
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(choiceNodeNotFromTestCase);
-
-		if (methodNode == null) {
-			return new HashSet<>();
+		if (compositeParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalComposite(compositeParameterNode);
 		}
 
-		accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
-		return result;
+		BasicParameterNode basicParameterNode = BasicParameterNodeHelper.findBasicParameter(globalChoiceNode);
+
+		if (basicParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalBasicParameter(basicParameterNode);
+		}
+
+		return new ArrayList<>();
 	}
 
-	private static Set<TestCaseNode> getMentioningTestCasesForGlobalChoice(
-			ChoiceNode choiceNodeNotFromTestCase,
+	public static List<TestCaseNode> getTestCasesForRelatedMethod(IAbstractNode abstractNode) {
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractNode);
+
+		return methodNode.getTestCases();
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalComposite(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
+
+		List<CompositeParameterNode> linkedCompositeParameterNodes =
+				CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
+
+
+		for (CompositeParameterNode linkedCompositeParameterNode : linkedCompositeParameterNodes) {
+
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedCompositeParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(testCases);
+		}
+
+		return resultTestCaseNodesToDelete;
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalBasicParameter(
 			BasicParameterNode basicParameterNode) {
 
-		Set<TestCaseNode> result = new HashSet<>();
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
 
-		List<BasicParameterNode> linkedParameterNodes = 
+		List<BasicParameterNode> linkedBasicParameterNodes =
 				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
 
-		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
 
-			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
-			accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+		for (BasicParameterNode linkedBasicParameterNode : linkedBasicParameterNodes) {
+
+			List<TestCaseNode> testCases = ChoiceNodeHelper.getTestCasesForRelatedMethod(linkedBasicParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(testCases);
 		}
 
-		return result;
+		return resultTestCaseNodesToDelete;
 	}
 
-	private static void accumulateChoiceMentioningTestCases(
-			ChoiceNode choiceNodeNotFromTestCase,
-			MethodNode methodNode,
-			Set<TestCaseNode> result) {
+	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
 
-		List<TestCaseNode> testCaseNodes = methodNode.getMentioningTestCases(choiceNodeNotFromTestCase);
-		result.addAll(testCaseNodes);
+		NameHelper.compareNames(choice1.getName(), choice2.getName());
+		StringHelper.compareStrings(choice1.getValueString(),choice2.getValueString(), "Choice values differ.");
+		compareLabels(choice1.getLabels(), choice2.getLabels());
+		TypeHelper.compareIntegers(choice1.getChoices().size(), choice2.getChoices().size(), "Length of choices list differs.");
+		for(int i = 0; i < choice1.getChoices().size(); i++){
+			compareChoices(choice1.getChoices().get(i), choice2.getChoices().get(i));
+		}
+	}
+
+	public static void compareLabels(Set<String> labels, Set<String> labels2) {
+
+		BooleanHelper.assertIsTrue(labels.size() == labels2.size(), "Sizes of labels should be equal.");
+
+		for(String label : labels){
+			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
+		}
 	}
 
 }

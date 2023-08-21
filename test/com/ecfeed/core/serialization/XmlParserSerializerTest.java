@@ -29,16 +29,18 @@ import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.MethodDeployer;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
@@ -47,7 +49,6 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
@@ -96,8 +97,6 @@ public class XmlParserSerializerTest {
 			}
 		} catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -114,7 +113,7 @@ public class XmlParserSerializerTest {
 			int version = ModelVersionDistributor.getCurrentSoftwareVersion();
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
-			MethodNode method = new MethodNode("method", null);
+			MethodNode methodNode = new MethodNode("method", null);
 			BasicParameterNode choicesParentParameter =
 					new BasicParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			BasicParameterNode expectedParameter =
@@ -134,14 +133,14 @@ public class XmlParserSerializerTest {
 					"constraint",
 					ConstraintType.EXTENDED_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1),
 					null);
 
 			Constraint constraintBasicFilter = new Constraint(
 					"constraint",
 					ConstraintType.BASIC_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1),
 					null);
 
 			Constraint constraintAssignment = new Constraint(
@@ -156,7 +155,7 @@ public class XmlParserSerializerTest {
 							"constraint",
 							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null),
-							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
+							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, null, EMathRelation.EQUAL, "label"),
 							null);
 
 			Constraint expectedConstraint =
@@ -166,10 +165,11 @@ public class XmlParserSerializerTest {
 							new StaticStatement(true, null),
 							new ExpectedValueStatement(
 									expectedParameter,
+									null,
 									new ChoiceNode("expected", "n", null),
 									new JavaPrimitiveTypePredicate()),
 							null
-                    );
+							);
 
 			ConstraintNode choiceConstraintNodeExtendedFilter =
 					new ConstraintNode("choice constraint extended filter", constraintExtendedFilter, null);
@@ -187,16 +187,22 @@ public class XmlParserSerializerTest {
 					new ConstraintNode("expected constraint", expectedConstraint, null);
 
 			root.addClass(classNode);
-			classNode.addMethod(method);
-			method.addParameter(choicesParentParameter);
-			method.addParameter(expectedParameter);
+			classNode.addMethod(methodNode);
+			methodNode.addParameter(choicesParentParameter);
+			methodNode.addParameter(expectedParameter);
 			choicesParentParameter.addChoice(choice1);
-			method.addTestCase(testCase);
-			method.addConstraint(labelConstraintNode);
-			method.addConstraint(choiceConstraintNodeExtendedFilter);
-			method.addConstraint(choiceConstraintNodeBasicFilter);
-			method.addConstraint(constraintNodeAssignment);
-			method.addConstraint(expectedConstraintNode);
+			
+			methodNode.addConstraint(labelConstraintNode);
+			methodNode.addConstraint(choiceConstraintNodeExtendedFilter);
+			methodNode.addConstraint(choiceConstraintNodeBasicFilter);
+			methodNode.addConstraint(constraintNodeAssignment);
+			methodNode.addConstraint(expectedConstraintNode);
+			
+			NodeMapper nodeMapper = new NodeMapper();
+			MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+			MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+			
+			methodNode.addTestCase(testCase);
 
 			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 			ModelSerializer serializer = new ModelSerializer(ostream, version);
@@ -209,8 +215,6 @@ public class XmlParserSerializerTest {
 		}
 		catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -266,7 +270,9 @@ public class XmlParserSerializerTest {
 		// assignment with parameter condition
 
 		AbstractStatement assignmentWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(
+						methodParameterNode2, methodParameterNode1, null);
+
 		statementArray.addStatement(assignmentWithParameterCondition);
 
 		// assignment with choice condition
@@ -314,7 +320,7 @@ public class XmlParserSerializerTest {
 
 		try {
 			parsedModel = parser.parseModel(istream, null, errorList);
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			fail();
 		}
 
@@ -340,6 +346,11 @@ public class XmlParserSerializerTest {
 			classNode.addMethod(method);
 			method.addParameter(parameter);
 			parameter.addChoice(choice);
+			
+			NodeMapper nodeMapper = new NodeMapper();
+			MethodNode deployedMethodNode = MethodDeployer.deploy(method, nodeMapper);
+			MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, method, nodeMapper);
+			
 			method.addTestCase(testCase);
 
 			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
@@ -353,8 +364,6 @@ public class XmlParserSerializerTest {
 		}
 		catch (IOException e) {
 			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -381,44 +390,49 @@ public class XmlParserSerializerTest {
 
 	protected MethodNode createMethodNode(int numOfParameters,
 			int numOfExpParameters, int numOfConstraints, int numOfTestCases) {
-		MethodNode method = new MethodNode(randomName(), null);
+		MethodNode methodNode = new MethodNode(randomName(), null);
 		List<BasicParameterNode> choicesParentParameters = createChoicesParentParameters(numOfParameters);
 		List<BasicParameterNode> expectedParameters = createExpectedParameters(numOfExpParameters);
 
 		for(int i = 0, j = 0; i < choicesParentParameters.size() || j < expectedParameters.size();){
 			if(rand.nextBoolean() && i < choicesParentParameters.size()){
-				method.addParameter(choicesParentParameters.get(i));
+				methodNode.addParameter(choicesParentParameters.get(i));
 				++i;
 			}
 			else if (j < expectedParameters.size()){
-				method.addParameter(expectedParameters.get(j));
+				methodNode.addParameter(expectedParameters.get(j));
 				++j;
 			}
 		}
 
 		List<ConstraintNode> constraints = createConstraints(choicesParentParameters, expectedParameters, numOfConstraints);
-		List<TestCaseNode> testCases = createTestCases(getMethodParameters(method), numOfTestCases);
+		List<TestCaseNode> testCases = createTestCases(getMethodParameters(methodNode), numOfTestCases);
 
 		for(ConstraintNode constraint : constraints){
-			method.addConstraint(constraint);
-		}
-		for(TestCaseNode testCase : testCases){
-			method.addTestCase(testCase);
+			methodNode.addConstraint(constraint);
 		}
 
-		return method;
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+
+		for(TestCaseNode testCase : testCases){
+			methodNode.addTestCase(testCase);
+		}
+
+		return methodNode;
 	}
 
 	private List<BasicParameterNode> getMethodParameters(MethodNode method) {
-		
+
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
-		
+
 		List<AbstractParameterNode> methodParameters = method.getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : methodParameters) {
 			result.add((BasicParameterNode) abstractParameterNode);
 		}
-		
+
 		return result;
 	}
 
@@ -571,7 +585,7 @@ public class XmlParserSerializerTest {
 			parameter.getChoices().get(0).addLabel(label);
 		}
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(parameter, null, relation, label);
 	}
 
 	private AbstractStatement createChoiceStatement(List<BasicParameterNode> parameters) {
@@ -580,7 +594,7 @@ public class XmlParserSerializerTest {
 				new ArrayList<ChoiceNode>(parameter.getLeafChoices()).get(rand.nextInt(parameter.getChoices().size()));
 
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, choiceNode);
+		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, relation, choiceNode);
 	}
 
 	private EMathRelation pickRelation() {
@@ -596,7 +610,8 @@ public class XmlParserSerializerTest {
 	private AbstractStatement createExpectedStatement(List<BasicParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
 		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(
+				parameter, null, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
 	private List<BasicParameterNode> getChoicesParentParameters(List<? extends BasicParameterNode> parameters) {
@@ -632,7 +647,7 @@ public class XmlParserSerializerTest {
 
 	private List<TestCaseNode> createTestCases(
 			List<BasicParameterNode> parameters, int numOfTestCases) {
-		
+
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 		try {
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();
@@ -672,7 +687,7 @@ public class XmlParserSerializerTest {
 	private void compareModels(RootNode model1, RootNode model2) {
 
 		try {
-			ModelComparator.compareModels(model1, model2);
+			ModelComparator.compareRootNodes(model1, model2);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

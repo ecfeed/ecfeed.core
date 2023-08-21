@@ -5,30 +5,27 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class OnChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
 
 	private boolean fNewRandomized;
 	private boolean fOriginalRandomized;
 	private ChoiceNode fChoiceNode;
-	private ITypeAdapterProvider fAdapterProvider;
 
 
 	public OnChoiceOperationSetRandomizedValue(
 			ChoiceNode choiceNode, 
 			boolean newRandomized, 
-			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, extLanguageManager);
 
 		fNewRandomized = newRandomized;
 		fChoiceNode = choiceNode;
-		fAdapterProvider = adapterProvider;
 
 		fOriginalRandomized = choiceNode.isRandomizedValue();
 	}
@@ -50,7 +47,7 @@ public class OnChoiceOperationSetRandomizedValue extends AbstractModelOperation 
 
 		String type = fChoiceNode.getParameter().getType();
 
-		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(type); 
 
 		try {
 			return typeAdapter.adapt(
@@ -84,7 +81,7 @@ public class OnChoiceOperationSetRandomizedValue extends AbstractModelOperation 
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new OnChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguageManager());
+			return new OnChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, getExtLanguageManager());
 		}
 
 		@Override

@@ -68,10 +68,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateFile(path);
+
         initializeDataFile(path);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -81,10 +85,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateText(data);
+
         initializeDataText(data);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -130,9 +138,11 @@ abstract class ModelDataAbstract implements ModelData {
         this.body = new ArrayList<>();
 
         for (int i = 0 ; i < this.header.size() ; i++) {
-        	this.body.add(new HashSet<String>());
+        	this.body.add(new HashSet<>());
         }
     }
+
+    protected abstract void updateProperties();
 
     protected abstract void initializeHeader();
 
@@ -154,7 +164,7 @@ abstract class ModelDataAbstract implements ModelData {
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
         	List<ChoiceNode> choices = new ArrayList<>();
-        	DataType type = DataTypeFactory.create();
+        	DataType type = DataTypeFactory.create(false);
 
             int j = 0;
             for (String choice : this.body.get(i)) {
@@ -172,9 +182,9 @@ abstract class ModelDataAbstract implements ModelData {
             if (node instanceof MethodNode) {
             	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
             } else if (node instanceof ClassNode) {
-            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else if (node instanceof RootNode) {
-            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else {
             	throw new IllegalArgumentException("The node type is not supported.");
             }

@@ -15,9 +15,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -31,12 +33,18 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftParameterCompositeName() {
+		public CompositeParameterNode getLeftParameterLinkingContext() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public AbstractStatement makeClone(){
+			return null;
+		}
+
+		@Override
+		public AbstractStatement makeClone(Optional<NodeMapper> nodeMapper) {
 			return null;
 		}
 
@@ -106,6 +114,25 @@ public class AbstractStatementTest {
 		@Override
 		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 			return null;
+		}
+
+		@Override
+		public String getLeftOperandName() {
+			return null;
+		}
+
+		@Override
+		public BasicParameterNode getLeftParameter() {
+			return null;
+		}
+
+		@Override
+		public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+			return false;
+		}
+
+		@Override
+		public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
 		}
 
 	}

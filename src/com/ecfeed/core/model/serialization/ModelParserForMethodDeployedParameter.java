@@ -18,90 +18,143 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter {
+public class ModelParserForMethodDeployedParameter {
 
-	public Optional<BasicParameterNode> parseMethodDeployedParameter(Element element, MethodNode method, ListOfStrings errors) {
-		Optional<BasicParameterNode> parameter = parseMethodBasicParameter(element, method, errors);
+	public static ParameterWithLinkingContext parseMethodDeployedParameter(
+			Element parameterElement, 
+			MethodNode methodNode,
+			ListOfStrings errorList) {
 
+		AbstractParameterNode parameter = parseParameter(parameterElement, methodNode, errorList);
 
-		try {
-		
-			if (!parameter.isPresent()) {
-				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
-			}
-	
-			if (parameter.get().isLinked() && parameter.get().getLinkToGlobalParameter() != null) {
-				
-				AbstractParameterNode candidate = parameter.get().getLinkToGlobalParameter();
-				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
-			} else {
-		
-				String candidateName = parameter.get().getQualifiedName();
-				
-				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-					.filter(e -> e.getQualifiedName().equals(candidateName))
-					.findAny();
-				
-				if (candidate.isPresent()) {
-					parameter.get().setDeploymentParameter(candidate.get());
-				} else {
-					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
-					return Optional.empty();
-				}
-			}
+		AbstractParameterNode linkingContext = parseDeployedNode(
+				parameterElement, SerializationConstants.METHOD_DEPLOYED_PATH_OF_CONTEXT, methodNode, errorList);
 
-		} catch(Exception e) {
-			e.printStackTrace();
+		if (parameter == null && linkingContext == null) {
+			return null;
 		}
+
+		ParameterWithLinkingContext parameterWithLinkingContext = new ParameterWithLinkingContext(parameter, linkingContext);
+
+		return parameterWithLinkingContext;
+	}
+
+	private static AbstractParameterNode parseParameter(
+			Element parameterElement, MethodNode methodNode, ListOfStrings errorList) {
+		
+		AbstractParameterNode parameter = 
+				parseDeployedNode(
+						parameterElement, 
+						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, 
+						methodNode, 
+						errorList);
+		
+		if (parameter != null) {
+			return parameter;
+		}
+
+		parameter = 
+				parseDeployedNode(
+						parameterElement, 
+						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER_OLD, 
+						methodNode, 
+						errorList);
 		
 		return parameter;
 	}
 
-	public Optional<BasicParameterNode> parseMethodBasicParameter(Element element, MethodNode method, ListOfStrings errors) {
+	private static AbstractParameterNode parseDeployedNode(
+			Element parameterElement,
+			String attributeName,
+			MethodNode methodNode,
+			ListOfStrings errorList) {
+		
+		String path = "";
+
+		path = parameterElement.getAttributeValue(attributeName);
+
+		if (path == null) {
+			return null;
+		}
+
+		AbstractParameterNode foundParameter = AbstractParameterNodeHelper.findParameter(path, methodNode);
+
+		if (foundParameter == null) {
+			errorList.add("Original parameter not found by path: " + path);
+			return null;
+		}
+
+		return foundParameter;
+	}
+
+	public Optional<BasicParameterNode> parseMethodBasicParameter(
+			Element element, MethodNode method, ListOfStrings outErrorList) {
+
 		String defaultValue = null;
 		String name, type;
 		boolean expected = false;
 
 		try {
-			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errors);
-			name = ModelParserHelper.getElementName(element, errors);
-			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
+			ModelParserHelper.assertNameEqualsExpectedName(
+					element.getQualifiedName(), 
+					SerializationHelperVersion1.getBasicParameterNodeName(), outErrorList);
+
+			name = ModelParserHelper.getElementName(element, outErrorList);
+			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, outErrorList);
 
 			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-				expected = Boolean.parseBoolean(ModelParserHelper.getAttributeValue(element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
+				expected = 
+						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
+								element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, outErrorList));
 			}
 
 			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
-				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
+				defaultValue = 
+						ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, outErrorList);
 			}
 
-		} catch (ParserException e) {
+		} catch (Exception e) {
+			outErrorList.add(e.getMessage());
 			return Optional.empty();
 		}
 
-		BasicParameterNode parameter = new BasicParameterNode("tmp", type, defaultValue, expected, method.getModelChangeRegistrator());
-		parameter.setNameUnsafe(name);
+		String lastSegment = SignatureHelper.getLastSegment(name);
+
+		BasicParameterNode parameter = 
+				new BasicParameterNode(
+						lastSegment, type, defaultValue, expected, method.getModelChangeRegistrator());
 
 		ModelParserHelper.parseParameterProperties(element, parameter);
 
 		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 
 			try {
-				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
-				
-				method.getNestedBasicParameters(true).stream()
-					.filter(e -> e.getQualifiedName().equals(linkPath))
-					.findAny()
-					.ifPresent(parameter::setLinkToGlobalParameter);
-				
-			} catch (ParserException e) {
+				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
+
+				//				Optional<BasicParameterNode> basicParameterNode = 
+				//						method.getNestedBasicParameters(true).stream()
+				//						.filter(e -> AbstractParameterSignatureHelper.getQualifiedName(e).equals(linkPath))
+				//						.findAny(); //use function from helper 
+
+				AbstractParameterNode basicParameterNode = AbstractParameterNodeHelper.findParameter(linkPath, method);
+
+				if (basicParameterNode != null) {
+					parameter.setLinkToGlobalParameter(basicParameterNode);
+				} else {
+					outErrorList.add("Cannot parse link of parameter: " + parameter.getName() + ".");
+				}
+
+			} catch (Exception e) {
+				outErrorList.add(e.getMessage());
 				return Optional.empty();
 			}
 		}
@@ -112,4 +165,5 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 		return Optional.of(parameter);
 	}
+
 }

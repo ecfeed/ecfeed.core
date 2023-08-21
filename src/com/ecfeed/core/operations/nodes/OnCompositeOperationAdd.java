@@ -13,7 +13,7 @@ package com.ecfeed.core.operations.nodes;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
@@ -24,7 +24,7 @@ public class OnCompositeOperationAdd extends GenericOperationAddParameter {
 
 	IParametersParentNode fIParametersParentNode;
 	AbstractParameterNode fParameterNode;
-	private boolean fValidate;
+	//	private boolean fValidate;
 	private int fNewIndex;
 
 	public OnCompositeOperationAdd(
@@ -58,7 +58,7 @@ public class OnCompositeOperationAdd extends GenericOperationAddParameter {
 		List<String> parameterTypesInExtLanguage = 
 				ParametersParentNodeHelper.getParameterTypes(fIParametersParentNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterNodeHelper.getType(fParameterNode, extLanguageManager);
+		String newParameterType = AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(fParameterNode, extLanguageManager);
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 
@@ -67,8 +67,12 @@ public class OnCompositeOperationAdd extends GenericOperationAddParameter {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new OnCompositeParameterOperationRemove(
-				fIParametersParentNode, fParameterNode, fValidate, getExtLanguageManager());
+		//		return new OnCompositeParameterOperationRemove(
+		//				fIParametersParentNode, fParameterNode, fValidate, getExtLanguageManager());
+
+		return new OnParameterOperationRemove(
+				fIParametersParentNode, fParameterNode, getExtLanguageManager());
+
 	}
 
 }

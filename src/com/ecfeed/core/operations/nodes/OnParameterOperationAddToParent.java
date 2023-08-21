@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -44,17 +44,16 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 		fIParametersParentNode = parametersParentNode;
 		fParameterNode = abstractParameterNode;
 		fNewIndex = index != -1 ? index : parametersParentNode.getParameters().size();
-		
+
 		fTestCasesParentNode = MethodNodeHelper.findMethodNode(parametersParentNode);
-		fRemovedTestCases = getCurrentTestCases();
 	}
 
 	private ArrayList<TestCaseNode> getCurrentTestCases() {
-		
+
 		if (fTestCasesParentNode == null) {
 			return new ArrayList<>();
 		}
-		
+
 		return new ArrayList<TestCaseNode>(fTestCasesParentNode.getTestCases());
 	}
 
@@ -73,10 +72,12 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 
 		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fIParametersParentNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterNodeHelper.getType(fParameterNode, extLanguageManager);
+		String newParameterType = AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(fParameterNode, extLanguageManager);
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 
+		fRemovedTestCases = getCurrentTestCases();
+		
 		if (fTestCasesParentNode != null) {
 			fTestCasesParentNode.removeAllTestCases();
 		}
@@ -96,7 +97,11 @@ public class OnParameterOperationAddToParent extends GenericOperationAddParamete
 
 		@Override
 		public void execute() {
-			fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
+			
+			if (fTestCasesParentNode != null) {
+				fTestCasesParentNode.setTestCases(fRemovedTestCases);
+			}
+			
 			super.execute();
 		}
 

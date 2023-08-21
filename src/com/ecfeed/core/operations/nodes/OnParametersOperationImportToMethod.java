@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -52,7 +52,7 @@ public class OnParametersOperationImportToMethod extends GenericOperationImportP
 
 		int index = 0;
 		for (BasicParameterNode node : fAbstractParameterNodes) {
-			String newParameterType = AbstractParameterNodeHelper.getType(node, extLanguageManager);
+			String newParameterType = AbstractParameterSignatureHelper.createSignatureOfType(node, extLanguageManager);
 			paremeterTypesInExtLanguage.add(index++, newParameterType);
 		}
 		
@@ -92,7 +92,7 @@ public class OnParametersOperationImportToMethod extends GenericOperationImportP
 
 		@Override
 		public void execute() {
-			fMethodNode.replaceTestCases(fRemovedTestCases);
+			fMethodNode.setTestCases(fRemovedTestCases);
 			super.execute();
 		}
 

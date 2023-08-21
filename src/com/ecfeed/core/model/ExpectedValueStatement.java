@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -21,32 +23,44 @@ import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
+public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement { // TODO MO-RE do we need it as there is assignment statement?
 
-	private BasicParameterNode fLeftMethodParameterNode;
+	private BasicParameterNode fLeftParameterNode;
+	private CompositeParameterNode fLeftParameterLinkingContext;
 	private ChoiceNode fChoiceNode;
 	private IPrimitiveTypePredicate fPredicate; // TODO NE-TE remove ?
 
 	public ExpectedValueStatement(
-			BasicParameterNode methodParameterNode,
+			BasicParameterNode basicParameterNode,
+			CompositeParameterNode leftParameterLinkingContext,
 			ChoiceNode choiceNode, 
 			IPrimitiveTypePredicate predicate) {
 
-		super(methodParameterNode.getModelChangeRegistrator());
+		super(basicParameterNode.getModelChangeRegistrator());
 
-		fLeftMethodParameterNode = methodParameterNode;
+		fLeftParameterNode = basicParameterNode;
 		fChoiceNode = choiceNode.makeClone();
 		fPredicate = predicate;
 	}
 
 	@Override
-	public String getLeftParameterCompositeName() {
-		return fLeftMethodParameterNode.getName();
+	public BasicParameterNode getLeftParameter() {
+		return fLeftParameterNode;
+	}
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return fLeftParameterLinkingContext;
+	}
+
+	@Override
+	public String getLeftOperandName() {
+		return fLeftParameterNode.getName();
 	}
 
 	@Override
 	public boolean mentions(AbstractParameterNode parameter) {
-		return parameter == fLeftMethodParameterNode;
+		return parameter == fLeftParameterNode;
 	}
 
 	@Override
@@ -61,10 +75,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 			return true;
 		}
 
-		IParametersParentNode parametersParent = (IParametersParentNode) fLeftMethodParameterNode.getParent();
+		IParametersParentNode parametersParent = (IParametersParentNode) fLeftParameterNode.getParent();
 		if  (parametersParent != null) {
 
-			int index = parametersParent.getParameters().indexOf(fLeftMethodParameterNode);
+			int index = parametersParent.getParameters().indexOf(fLeftParameterNode);
 			testCaseChoices.set(index, fChoiceNode.makeClone());
 		}
 
@@ -89,7 +103,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public boolean mentions(int methodParameterIndex) {
 
 		IParametersAndConstraintsParentNode methodNode = 
-				(IParametersAndConstraintsParentNode) fLeftMethodParameterNode.getParent();
+				(IParametersAndConstraintsParentNode) fLeftParameterNode.getParent();
 
 		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
@@ -137,7 +151,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	public BasicParameterNode getLeftMethodParameterNode() {
-		return fLeftMethodParameterNode;
+		return fLeftParameterNode;
 	}
 
 	public ChoiceNode getChoice() {
@@ -162,16 +176,39 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public ExpectedValueStatement makeClone(){
-		return new ExpectedValueStatement(fLeftMethodParameterNode, fChoiceNode.makeClone(), fPredicate);
+	public ExpectedValueStatement makeClone(Optional<NodeMapper> mapper) {
+
+		if (mapper.isPresent()) {
+			BasicParameterNode parameter = mapper.get().getDestinationNode(fLeftParameterNode); 
+			ChoiceNode choice = mapper.get().getDestinationNode(fChoiceNode);
+
+			return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
+		}
+
+		return new ExpectedValueStatement(
+				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(mapper), fPredicate);
+	}
+	
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+		
+		fLeftParameterNode = nodeMapper.getMappedNode(fLeftParameterNode, mappingDirection);
+		fLeftParameterLinkingContext = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
+		fChoiceNode = nodeMapper.getMappedNode(fChoiceNode, mappingDirection);
 	}
 
 	@Override
-	public ExpectedValueStatement createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftMethodParameterNode);
-		ChoiceNode choice = mapper.getMappedNodeDeployment(fChoiceNode);
+	public ExpectedValueStatement makeClone(){ // TODO MO-RE obsolete ?
+		return new ExpectedValueStatement(
+				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(), fPredicate);
+	}
 
-		return new ExpectedValueStatement(parameter, choice, fPredicate);
+	@Override
+	public ExpectedValueStatement createCopy(NodeMapper mapper) { // TODO MO-RE obsolete ?
+		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameterNode); 
+		ChoiceNode choice = mapper.getDestinationNode(fChoiceNode);
+
+		return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 	}
 
 	//	@Override
@@ -220,7 +257,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	public boolean isParameterPrimitive(){
-		return fPredicate.isPrimitive(fLeftMethodParameterNode.getType());
+		return fPredicate.isPrimitive(fLeftParameterNode.getType());
 	}
 
 	@Override
@@ -256,6 +293,18 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameterNode, fLeftParameterLinkingContext, parentMethodNode)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	//	@Override

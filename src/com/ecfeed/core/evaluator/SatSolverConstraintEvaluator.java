@@ -34,25 +34,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	MethodNode method) {
 
-		if (constraints == null || constraints.size() == 0) {
-			return;
+		if (constraints == null) {
+			constraints = new ArrayList<>();
 		}
 
-		initMethod(constraints);
+		initMethod(constraints, method);
 	}
 
-	private void initMethod(Collection<Constraint> constraints) {
-		Set<MethodNode> methods = initGetMethodNode(constraints);
-
-		if (methods.size() == 0) {
-			return;
-		}
-
+	private void initMethod(Collection<Constraint> constraints, MethodNode method) {
 		fConstraints = constraints;
 
-		for (MethodNode method : methods) {
-			fParameters.addAll(convertToBasicParameters(method));
-		}
+		fParameters.addAll(convertToBasicParameters(method));
 
 		fParameterChoices.update(fParameters);
 		fChoiceMappings.updateSanitizedToInput(fParameterChoices.getInputChoices());
@@ -63,25 +55,23 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	private List<BasicParameterNode> convertToBasicParameters(MethodNode method) {
-		
+
 		List<BasicParameterNode> result = new ArrayList<>();
-		
-		for (BasicParameterNode parameter : method.getNestedBasicParameters(false)) {
-			result.add(parameter);
-		}
-		
+
+		result.addAll(method.getNestedBasicParameters(false));
+
 		return result;
 	}
 
-	private Set<MethodNode> initGetMethodNode(Collection<Constraint> constraints) {
-		Set<MethodNode> methods = new HashSet<>();
-
-		for (Constraint constraint : constraints) {
-			methods.addAll(ConstraintHelper.getMethods(constraint));
-		}
-
-		return methods;
-	}
+//	private Set<MethodNode> initGetMethodNode(Collection<Constraint> constraints) {
+//		Set<MethodNode> methods = new HashSet<>();
+//
+//		for (Constraint constraint : constraints) {
+//			methods.addAll(ConstraintHelper.getMethods(constraint));
+//		}
+//
+//		return methods;
+//	}
 
 	private void initSat4Solver() {
 

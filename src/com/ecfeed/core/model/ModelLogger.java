@@ -17,153 +17,185 @@ public class ModelLogger {
 
 	private static final int indentIncrement = 4;
 
-	//	public static void printListOfChoices(String message, List<ChoiceNode> choices, int indent) {
-	//		for (ChoiceNode choice : choices) {
-	//			printChoiceNode(choice, indent);
-	//		}
-	//	}
+	public static String printModel(String message, IAbstractNode someNodeOfModel) {
 
+		String text = "";
 
-	public static void printModel(String message, IAbstractNode someNodeOfModel) {
-		
-		IAbstractNode root = ModelHelper.findRoot(someNodeOfModel);
+		IAbstractNode topNode = AbstractNodeHelper.findTopNode(someNodeOfModel);
 
-		if (root == null) {
-			System.out.println("Root not found.");
+		int indent = 0;
+
+		if (topNode == null) {
+			return printIndentedLine("Root not found.", indent);
 		}
-		System.out.println("Model vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
-		System.out.println("Message: " + message);
-		printChildren(root, 0);
-		System.out.println("Model ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+		text += printIndentedLine("Model BEG ------------------------------------------------------------------------------------------------------------------", indent);
+		text += printIndentedLine("Message: " + message, indent);
+		text += printChildren(topNode, indent);
+		text += printIndentedLine("Model END ------------------------------------------------------------------------------------------------------------------", indent);
+
+		return text;
 	}
 
-	private static void printChildren(IAbstractNode abstractNode, int indent) {
+	private static String printIndentedLine(String line, int indent) {
 
-		printAbstractNode(abstractNode, indent);
+		String indentStr = new String(new char[indent]).replace("\0", " ");
+		return (indentStr + line + "\n");
+	}
+
+	private static String printChildren(IAbstractNode abstractNode, int indent) {
+
+		String text = "";
+
+		text += printAbstractNode(abstractNode, indent);
 
 		List<IAbstractNode> children = abstractNode.getChildren();
 
 		if (children.size() == 0) {
-			return;
+			return text;
 		}
 
 		for (IAbstractNode child : children) {
-			printChildren(child, indent + indentIncrement);
+			text += printChildren(child, indent + indentIncrement);
 		}
+
+		return text;
 	}
 
-	private static void printIndentedLine(String line, int indent) {
-		String indentStr = new String(new char[indent]).replace("\0", " ");
-		System.out.println(indentStr + line);
+	private static String printFieldLine(String line, int indent) {
 
-	}
-
-	private static void printFieldLine(String line, int indent) {
-		printIndentedLine("F:" + line, indent);
+		return printIndentedLine("F:" + line, indent);
 	}	
 
-	private static void printObjectLine(IAbstractNode abstractNode, String fieldName, int indent) {
-		printIndentedLine(
-				getIsFieldStr(fieldName) + 
-				abstractNode.getClass().getSimpleName() +
-				getFieldStr(fieldName) +
-				", " + abstractNode.getName()+ 
-				", #" + abstractNode.hashCode(), indent);
+	private static String printObjectLine(IAbstractNode abstractNode, String fieldName, int indent) {
+
+		String line = 
+				abstractNode.getName()+
+				"  (" + abstractNode.getClass().getSimpleName() + ")" +
+				"   #" + abstractNode.hashCode();
+
+		//		String line = 
+		//				getIsFieldStr(fieldName) + 
+		//				abstractNode.getClass().getSimpleName() +
+		//				getFieldStr(fieldName) +
+		//				", " + abstractNode.getName()+ 
+		//				", #" + abstractNode.hashCode();
+
+		return printIndentedLine(line, indent);
 	}
 
-	private static void printAbstractNode(IAbstractNode abstractNode, int indent) {
+	private static String printAbstractNode(IAbstractNode abstractNode, int indent) {
 
 		if (abstractNode == null) {
-			printIndentedLine("Abstract node is null", indent);
-			return;
+			return printIndentedLine("Abstract node is null", indent);
 		}
+
 		if (abstractNode instanceof TestCaseNode) {
-			printTestCaseNode((TestCaseNode)abstractNode, null, indent);
-			return;
+			return printTestCaseNode((TestCaseNode)abstractNode, null, indent);
 		}
+
 		if (abstractNode instanceof ConstraintNode) {
-			printConstraintNode((ConstraintNode)abstractNode, null, indent);
-			return;
+			return printConstraintNode((ConstraintNode)abstractNode, null, indent);
 		}
+
 		if (abstractNode instanceof MethodNode) {
-			printMethodNode((MethodNode)abstractNode, null, indent);
-			return;
+			return printParametersParentNode((MethodNode)abstractNode, null, indent);
 		}
+
 		if (abstractNode instanceof BasicParameterNode) {
-			printMethodParameterNode((BasicParameterNode)abstractNode, null, indent);
-			return;
-		}		
-		if (abstractNode instanceof ChoiceNode) {
-			printChoiceNode((ChoiceNode)abstractNode, null, indent);
-			return;
+			return printParameterNode((BasicParameterNode)abstractNode, null, indent);
 		}
-		printObjectLine(abstractNode, null, indent);
+
+		if (abstractNode instanceof CompositeParameterNode) {
+			return printParameterNode((CompositeParameterNode)abstractNode, null, indent);
+		}
+		
+		if (abstractNode instanceof ChoiceNode) {
+			return printChoiceNode((ChoiceNode)abstractNode, null, indent);
+		}
+
+		return printObjectLine(abstractNode, null, indent);
 	}
 
+	private static String printTestCaseNode(TestCaseNode testCaseNode, String fieldName, int indent) {
 
-	private static void printTestCaseNode(TestCaseNode testCaseNode, String fieldName, int indent) {
-		printObjectLine(testCaseNode, fieldName, indent);
+		String text = printObjectLine(testCaseNode, fieldName, indent);
 
 		List<ChoiceNode> choices = testCaseNode.getTestData();
 
 		for (ChoiceNode choice : choices) {
-			printAbstractNode(choice, indent + indentIncrement);
+			text += printAbstractNode(choice, indent + indentIncrement);
 		}
+
+		return text;
 	}
 
-	private static void printConstraintNode(ConstraintNode constraintNode, String fieldName, int indent) {
+	private static String printConstraintNode(ConstraintNode constraintNode, String fieldName, int indent) {
+
 		if (constraintNode == null) {
-			printIndentedLine("ConstraintNode is null", indent);
-			return;
-		}		
-		printObjectLine(constraintNode, fieldName, indent);
+			return printIndentedLine("ConstraintNode is null", indent);
+		}	
+
+		String text = printObjectLine(constraintNode, fieldName, indent);
 
 		IAbstractNode parent = constraintNode.getParent();
-		printMethodNode((MethodNode)parent, "parentMethod", indent + indentIncrement);
+		text += printParametersParentNode((IParametersParentNode)parent, "parent", indent + indentIncrement);
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-		printAbstractStatement(precondition, "Precondition", indent + indentIncrement);
+		text += printAbstractStatement(precondition, "Precondition", indent + indentIncrement);
 
 		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-		printAbstractStatement(postcondition, "Postcondition", indent + indentIncrement);
+		text += printAbstractStatement(postcondition, "Postcondition", indent + indentIncrement);
+
+		return text;
 	}
 
-	private static void printMethodNode(MethodNode methodNode, String fieldName, int indent) {
-		if (methodNode == null) {
-			printIndentedLine("MethodNode is null", indent);
-			return;
+	private static String printParametersParentNode(IParametersParentNode parametersParentNode, String fieldName, int indent) {
+
+		if (parametersParentNode == null) {
+			return printIndentedLine("MethodNode is null", indent);
 		}
 
-		printObjectLine(methodNode, fieldName, indent);
+		return printObjectLine(parametersParentNode, fieldName, indent);
 	}
 
-	private static void printMethodParameterNode(BasicParameterNode methodParameterNode, String fieldName, int indent) {
-		if (methodParameterNode == null) {
-			printIndentedLine("MethodNode is null", indent);
-			return;
+	private static String printParameterNode(
+			AbstractParameterNode abstractParameterNode, String fieldName, int indent) {
+		
+		if (abstractParameterNode == null) {
+			return printIndentedLine("MethodNode is null", indent);
 		}
-		printObjectLine(methodParameterNode, fieldName, indent);
 
-		boolean isLinked = methodParameterNode.isLinked();
-		printFieldLine(methodParameterNode.getType() + " [isLinked]=" + isLinked, indent + indentIncrement);
+		String text = printObjectLine(abstractParameterNode, fieldName, indent);
 
-		if (isLinked) {
-			BasicParameterNode globalParameterNode = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			text += printFieldLine(((BasicParameterNode)abstractParameterNode).getType(), indent + indentIncrement);
+		}
+
+		if (abstractParameterNode.isLinked()) {
+			
+			AbstractParameterNode globalParameterNode = abstractParameterNode.getLinkToGlobalParameter();
+			
 			if (globalParameterNode == null) {
-				printIndentedLine("GlobalParameterNode is null", indent + indentIncrement);
+				text += printIndentedLine("Link is null", indent + indentIncrement);
 			} else {
-				printAbstractNode(globalParameterNode, indent + indentIncrement);
+				text += printIndentedLine("Link:" + globalParameterNode.getName(), indent + indentIncrement);
 			}
 		}
-	}	
 
-	private static void printChoiceNode(ChoiceNode choiceNode, String fieldName, int indent) {
-		printObjectLine(choiceNode, fieldName, indent);
-		printObjectLine(choiceNode.getParameter(), "Parameter", indent + indentIncrement);
+		return text;
 	}
 
-	private static void printAbstractStatement(AbstractStatement abstractStatement, String fieldName, int indent) {
-		printIndentedLine(
+	private static String printChoiceNode(ChoiceNode choiceNode, String fieldName, int indent) {
+
+		String text = printObjectLine(choiceNode, fieldName, indent);
+		text += printObjectLine(choiceNode.getParameter(), "Parameter", indent + indentIncrement);
+
+		return text;
+	}
+
+	private static String printAbstractStatement(AbstractStatement abstractStatement, String fieldName, int indent) {
+		return printIndentedLine(
 				getIsFieldStr(fieldName) + 
 				abstractStatement.getClass().getSimpleName() +
 				getFieldStr(fieldName) +

@@ -12,15 +12,18 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
 
 	public static String POSTFIX = "deployed";
 
-	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper mapper) {
+	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper nodeMapper) {
 
 		if (sourceMethodNode == null) {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
@@ -28,67 +31,188 @@ public abstract class MethodDeployer {
 
 		MethodNode targetMethodNode = new MethodNode(sourceMethodNode.getName() + "_" +  POSTFIX);
 
-		deployParameters(sourceMethodNode, targetMethodNode, mapper);
-		deployConstraints(sourceMethodNode, targetMethodNode, mapper);
+		deployParameters(sourceMethodNode, targetMethodNode, nodeMapper);
+		deployConstraints(sourceMethodNode, targetMethodNode, nodeMapper);
 
 		return targetMethodNode;
 	}
 
-	public static boolean deployedParametersDiffer(
+	public static boolean isMatchFoDeployedParameters(
 			MethodNode methodNode,
 			MethodNode deployedMethodNode) {
 
-		List<BasicParameterNode> oldDeployedParameters = methodNode.getDeployedMethodParameters();
+		List<ParameterWithLinkingContext> oldDeployedParameters = 
+				methodNode.getDeployedParametersWithLinkingContexts();
 
-		List<AbstractParameterNode> newDeployedParameters = deployedMethodNode.getParameters();
+		List<ParameterWithLinkingContext> newDeployedParameters = 
+				deployedMethodNode.getParametersWithLinkingContexts();
 
-		List<BasicParameterNode> convertedNewParameters = 
-				BasicParameterNodeHelper.convertAbstractListToBasicList(newDeployedParameters);
-
-		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(oldDeployedParameters, convertedNewParameters)) {
-			return false;
+		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(
+				oldDeployedParameters, newDeployedParameters)) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
-	public static void copyDeployedParameters(MethodNode deployedMethodNode, MethodNode methodNode) {
+	public static void copyDeployedParametersWithConversionToOriginals(
+			MethodNode deployedMethodNode, 
+			MethodNode destinationMethodNode, 
+			NodeMapper nodeMapper) {
 
-		List<BasicParameterNode> deployedParameters = deployedMethodNode.getParametersAsBasic();
-		methodNode.setDeployedParameters(deployedParameters);
+		List<ParameterWithLinkingContext> deployedParametersWithContexts = 
+				deployedMethodNode.getParametersWithLinkingContexts();
+
+		List<ParameterWithLinkingContext> originalParametersWithContexts =
+				convertDeployedParametersWithContextsToOriginals(deployedParametersWithContexts, nodeMapper);
+
+		destinationMethodNode.setDeployedParametersWithContexts(originalParametersWithContexts);
 	}
 
-	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
+	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginals(
+			List<ParameterWithLinkingContext> deployedParametersWithContexts,
+			NodeMapper nodeMapper) {
 
-		List<BasicParameterNode> nestedBasicParameters = methodSource.getNestedBasicParameters(true);
+		List<ParameterWithLinkingContext> result = new ArrayList<>();
 
-		nestedBasicParameters.stream().forEach(e -> deployBasicParameter(e, methodTarget, mapper));
+		for (ParameterWithLinkingContext deployedParameterWithContext : deployedParametersWithContexts) {
+
+			AbstractParameterNode deployedParameter = deployedParameterWithContext.getParameter();
+			AbstractParameterNode deployedLinkingContext = deployedParameterWithContext.getLinkingContext();
+
+			AbstractParameterNode originalParameter = nodeMapper.getSourceNode(deployedParameter);
+			AbstractParameterNode originalLinkingContext = nodeMapper.getSourceNode(deployedLinkingContext);
+
+			ParameterWithLinkingContext original = 
+					new ParameterWithLinkingContext(originalParameter, originalLinkingContext);
+
+			result.add(original);
+		}
+
+		return result;
+	}
+
+	//	private static List<ParameterWithLinkingContext> convertDeployedParametersWithContextsToOriginal(
+	//			List<ParameterWithLinkingContext> deployedParametersWithContexts,
+	//			NodeMapper nodeMapper) {
+	//		
+	//		List<ParameterWithLinkingContext> result = new ArrayList<>();
+	//		
+	//		for (ParameterWithLinkingContext deployed : deployedParametersWithContexts) {
+	//			
+	//			System.out.println(ParameterWithLinkingContextHelper.createSignature(deployed));
+	//			
+	//			BasicParameterNode deployedBasicParameterNode = deployed.getParameterAsBasic();
+	//			BasicParameterNode originalBasicParameterNode = nodeMapper.getSourceNode(deployedBasicParameterNode);
+	//			
+	//			CompositeParameterNode deployedCompositeParameterNode = 
+	//					deployed.getLinkingContextAsCompositeParameter();
+	//			
+	//			CompositeParameterNode originalCompositeParameterNode =
+	//					nodeMapper.getSourceNode(deployedCompositeParameterNode);
+	//			
+	//			ParameterWithLinkingContext original = 
+	//					new ParameterWithLinkingContext(originalBasicParameterNode, originalCompositeParameterNode);
+	//			
+	//			System.out.println(ParameterWithLinkingContextHelper.createSignature(original));
+	//			
+	//			result.add(original);
+	//		}
+	//		
+	//		return result;
+	//	}
+
+	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper nodeMapper) {
+
+		List<ParameterWithLinkingContext> nestedBasicParameters = 
+				MethodNodeHelper.getNestedBasicParametersWithLinkingContexts(methodSource);
+
+		nestedBasicParameters.forEach(e -> deployBasicParameter(e, methodTarget, nodeMapper));
 	}
 
 	private static void deployBasicParameter(
-			BasicParameterNode sourceParameter, MethodNode targetMethodNode, NodeMapper mapper) {
+			ParameterWithLinkingContext parameterWithLinkingContext,
+			MethodNode targetMethodNode, 
+			NodeMapper nodeMapper) {
 
-		BasicParameterNode copy = sourceParameter.createCopy(mapper);
-
-		copy.setCompositeName(copy.getName());
-
-		targetMethodNode.addParameter(copy);
+		// deployBasicParameterOldVersion(parameterWithLinkingContext, targetMethodNode, nodeMapper);
+		deployBasicParameterWithLinkingContext(parameterWithLinkingContext, targetMethodNode, nodeMapper);
 	}
 
+	//	private static void deployBasicParameterOldVersion(
+	//			ParameterWithLinkingContext parameterWithLinkingContext,
+	//			MethodNode targetMethodNode, NodeMapper nodeMapper) {
+	//		
+	//		BasicParameterNode basicParameterNode = parameterWithLinkingContext.getParameterAsBasic();
+	//
+	//		BasicParameterNode copy = basicParameterNode.createCopyForDeployment(nodeMapper);
+	//
+	//		AbstractParameterNode linkingContext = parameterWithLinkingContext.getLinkingContext();
+	//		
+	//		targetMethodNode.addParameter(copy, linkingContext);
+	//	}
+
+	private static void deployBasicParameterWithLinkingContext(
+			ParameterWithLinkingContext parameterWithLinkingContext,
+			MethodNode deployedMethodNode, 
+			NodeMapper nodeMapper) {
+
+		BasicParameterNode sourceParameter = parameterWithLinkingContext.getParameterAsBasic();
+		AbstractParameterNode sourceLinkingContext =  parameterWithLinkingContext.getLinkingContext();
+
+		if (sourceLinkingContext == null) {
+
+			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, null);
+			return;
+		}
+
+		if (sourceLinkingContext instanceof CompositeParameterNode) {
+
+			nodeMapper.addMappingsForOneNode(sourceLinkingContext);
+
+			BasicParameterNode deployedParameter = sourceParameter.createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, sourceLinkingContext);
+			return;
+		}
+
+		if (sourceLinkingContext instanceof BasicParameterNode) {
+
+			BasicParameterNode deployedParameter = 
+					((BasicParameterNode)sourceLinkingContext).createCopyForDeployment(nodeMapper);
+			deployedParameter.setParent(deployedMethodNode);
+
+			deployedMethodNode.addParameter(deployedParameter, null);
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid configuration of parameter with context.");
+	}	
+
 	private static void deployConstraints(
-			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
+			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper nodeMapper) {
 
 		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
-		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
+		
+		// when using createCopy, filtering does not work because basic parameter from method or structure
+		// is different than parent of choice in in deployed test case (probably not converted by mapper)
+		// when using makeClone - basic choice constraint fails 
+		
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.makeClone(Optional.of(nodeMapper))));
+		//constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(nodeMapper)));
 
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
 
-		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, mapper));
+		parameters.forEach(e -> deployConstraintsRecursively(e, targetMethod, prefix, nodeMapper));
 	}
 
-	private static void deployConstraintsForCompositeParameterRecursively(
-			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper mapper) {
+	private static void deployConstraintsRecursively(
+			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
 
 		if (parameter instanceof BasicParameterNode) {
 			return;
@@ -98,12 +222,12 @@ public abstract class MethodDeployer {
 
 		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
 
-		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, mapper);
+		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, nodeMapper);
 
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, mapper);
+				deployConstraintsRecursively(abstractParameterNode, targetMethod, childPrefix, nodeMapper);
 			}
 		}
 	}
@@ -122,13 +246,51 @@ public abstract class MethodDeployer {
 		}
 	}
 
-	public static List<TestCase> revertToOriginalTestCases(List<TestCase> deployedTestCases, NodeMapper mapper) {
+	public static List<TestCase> createListOfDeployedTestCases(
+			List<TestCase> notDeployedTestCases, NodeMapper nodeMapper) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase notDeployedTestCase : notDeployedTestCases) {
+
+			TestCase deployedTestCase = createDeployedTestCase(notDeployedTestCase, nodeMapper);
+
+			result.add(deployedTestCase);
+		}
+
+		return result;
+	}
+	
+	private static TestCase createDeployedTestCase(TestCase notDeployedTestCase, NodeMapper nodeMapper) {
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		List<ChoiceNode> notDeployedChoices = notDeployedTestCase.getListOfChoiceNodes();
+
+		for (ChoiceNode notDeployedChoiceNode : notDeployedChoices) {
+
+			ChoiceNode deployedChoiceNode = nodeMapper.getDestinationNode(notDeployedChoiceNode);
+			
+			AbstractNode notDeployedParent = (AbstractNode) notDeployedChoiceNode.getParent();
+			IAbstractNode deployedParent = nodeMapper.getDestinationNode(notDeployedParent);
+			
+			deployedChoiceNode.setParent(deployedParent);
+			
+
+			result.add(deployedChoiceNode);
+		}
+
+		return new TestCase(result);
+	}
+	
+	public static List<TestCase> createListOfOriginalTestCases(
+			List<TestCase> deployedTestCases, NodeMapper nodeMapper) {
 
 		List<TestCase> result = new ArrayList<>();
 
 		for (TestCase deployedTestCase : deployedTestCases) {
 
-			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, mapper);
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, nodeMapper);
 
 			result.add(revertedTestCaseNode);
 		}
@@ -136,7 +298,7 @@ public abstract class MethodDeployer {
 		return result;
 	}
 
-	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase, NodeMapper mapper) {
+	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase, NodeMapper nodeMapper) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
 
@@ -144,12 +306,32 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = mapper.getMappedNodeSource(deployedChoiceNode);
+			ChoiceNode revertedChoiceNode = nodeMapper.getSourceNode(deployedChoiceNode);
+			
+			AbstractNode deployedParent = (AbstractNode) deployedChoiceNode.getParent();
+			IAbstractNode revertedParent = nodeMapper.getSourceNode(deployedParent);
+			
+			revertedChoiceNode.setParent(revertedParent);
 
-			revertedChoices.add(originalChoiceNode);
+			revertedChoices.add(revertedChoiceNode);
 		}
 
 		return new TestCase(revertedChoices);
+	}
+
+	public static String createSignatureOfOriginalNodes(
+			ParameterWithLinkingContext deployedParameterWithLinkingContext,
+			NodeMapper nodeMapper,
+			IExtLanguageManager extLanguageManager) {
+
+		AbstractParameterNode parameter = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getParameter());
+		AbstractParameterNode context = nodeMapper.getSourceNode(deployedParameterWithLinkingContext.getLinkingContext());
+
+		String signature = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						parameter, context, extLanguageManager);
+
+		return signature;
 	}
 
 }

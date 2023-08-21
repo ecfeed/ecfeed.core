@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-
-import java.util.List;
 
 public class AssignmentStatement extends RelationStatement {
 
@@ -24,7 +24,7 @@ public class AssignmentStatement extends RelationStatement {
 			BasicParameterNode parameter, 
 			IStatementCondition condition) {
 
-		super(parameter, EMathRelation.ASSIGN, condition);
+		super(parameter, null, EMathRelation.ASSIGN, condition);
 	}
 
 	public static AssignmentStatement createAssignmentWithChoiceCondition(
@@ -42,11 +42,13 @@ public class AssignmentStatement extends RelationStatement {
 
 	public static AssignmentStatement createAssignmentWithParameterCondition(
 			BasicParameterNode parameter,
-			BasicParameterNode rightParameter) {
+			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
 
-		IStatementCondition condition = new ParameterCondition(rightParameter, AssignmentStatement);
+		IStatementCondition condition = 
+				new ParameterCondition(rightParameter, rightParameterLinkingContext, AssignmentStatement);
 
 		AssignmentStatement.setCondition(condition);
 
@@ -198,5 +200,20 @@ public class AssignmentStatement extends RelationStatement {
 
 		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
 	}
+
+	@Override
+	public AssignmentStatement createCopy(NodeMapper mapper) {
+
+		BasicParameterNode deployedParameter = mapper.getDestinationNode(super.getLeftParameter());
+
+		AssignmentStatement statementCopy = new AssignmentStatement(deployedParameter, null);
+		IStatementCondition conditionCopy = super.getCondition().createCopy(this, mapper);
+
+		statementCopy.setCondition(conditionCopy);
+		conditionCopy.setParentRelationStatement(statementCopy);
+
+		return statementCopy;
+	}
+
 }
 

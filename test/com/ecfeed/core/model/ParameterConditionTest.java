@@ -42,7 +42,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
+						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
 		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, null);
@@ -72,7 +72,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
+						leftMethodParameterNode, null, statementRelation, rightMethodParameterNode, null);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, true, null);
 		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, true, null);
@@ -431,7 +431,7 @@ public class ParameterConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftParam, EMathRelation.EQUAL, rightParam);
+						leftParam, null, EMathRelation.EQUAL, rightParam, null);
 
 		RelationStatement copy = statement.makeClone();
 
@@ -439,35 +439,5 @@ public class ParameterConditionTest {
 		assertEquals(true, result);
 
 	}
-
-	//	@Test
-	//	public void updateReferencesTest() {
-	//		MethodNode method1 = new MethodNode("method1", null);
-	//		BasicParameterNode method1LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-	//		method1.addParameter(method1LeftParameterNode);
-	//		BasicParameterNode method1RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-	//		method1.addParameter(method1RightParameterNode);
-	//
-	//		RelationStatement statement = 
-	//				RelationStatement.createRelationStatementWithParameterCondition(
-	//						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
-	//
-	//		MethodNode method2 = new MethodNode("method2", null);
-	//		BasicParameterNode method2LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-	//		method2.addParameter(method2LeftParameterNode);
-	//		BasicParameterNode method2RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-	//		method2.addParameter(method2RightParameterNode);
-	//
-	//
-	//		ParameterCondition parameterCondition = (ParameterCondition)statement.getCondition();
-	//
-	//		assertNotEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-	//		assertNotEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
-	//
-	//		statement.updateReferences(method2);
-	//
-	//		assertEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-	//		assertEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
-	//	}	
 
 }

@@ -7,7 +7,9 @@ public enum GenWebServiceClientType {
 
     REGULAR("regular"),
     LOCAL_TEST_RUNNER("localTestRunner"),
-    LOCAL_TEST_RAP("localTestRap");
+    LOCAL_TEST_RUNNER_TEAM("localTestRunnerTeam"),
+    LOCAL_TEST_RAP("localTestRap"),
+    LOCAL_TEST_RAP_TEAM("localTestRapTeam");
 
     private String fTag;
 
@@ -29,8 +31,16 @@ public enum GenWebServiceClientType {
             return LOCAL_TEST_RUNNER;
         }
 
+        if (clientTypeStr.equals(LOCAL_TEST_RUNNER_TEAM.getDescription())) {
+            return LOCAL_TEST_RUNNER_TEAM;
+        }
+
         if (clientTypeStr.equals(LOCAL_TEST_RAP.getDescription())) {
             return LOCAL_TEST_RAP;
+        }
+
+        if (clientTypeStr.equals(LOCAL_TEST_RAP_TEAM.getDescription())) {
+            return LOCAL_TEST_RAP_TEAM;
         }
 
         ExceptionHelper.reportRuntimeException("Cannot convert string: " + clientTypeStr + " to client type.");

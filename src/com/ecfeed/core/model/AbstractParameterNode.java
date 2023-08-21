@@ -10,9 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.SignatureHelper;
-
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AbstractParameterNode extends AbstractNode {
@@ -27,8 +24,6 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 	}
-
-	abstract public AbstractParameterNode getLinkDestination();
 
 	public void setLinkToGlobalParameter(AbstractParameterNode node) {
 
@@ -99,6 +94,10 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		while (parent != null) {
 			parent = parent.getParent();
 
+			if (parent instanceof MethodNode) {
+				return false;
+			}
+
 			if (parent instanceof ClassNode) {
 				return true;
 			}
@@ -122,33 +121,20 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	}
 
 	public boolean isGlobalParameter() {
-		IAbstractNode parent = this;
 
-		while (parent != null) {
-			parent = parent.getParent();
+		RootNode rootNode = RootNodeHelper.findRootNode(this);
 
-			if (parent instanceof MethodNode) {
-				return false;
-			}
-
-			if (parent instanceof ClassNode || parent instanceof RootNode) {
-				return true;
-			}
+		if (rootNode == null) {
+			return false;
 		}
 
-		return false;
-	}
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
 
-	public String getQualifiedName() { // TODO MO-RE remove
-		LinkedList<String> segments = new LinkedList<>();
-		IAbstractNode parent = this;
+		if (methodNode != null) {
+			return false;
+		}
 
-		do {
-			segments.addFirst(parent.getName());
-			parent = parent.getParent();
-		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
-
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		return true;
 	}
 
 	public IParametersParentNode getParametersParent() {
@@ -160,6 +146,15 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		}
 
 		return null;
-	}	
+	}
+
+	public AbstractParameterNode getLinkDestination() {
+
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return getLinkToGlobalParameter().getLinkDestination();
+		}
+
+		return this;
+	}
 
 }

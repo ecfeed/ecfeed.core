@@ -11,8 +11,7 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
@@ -37,8 +36,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		fConstraintName = constraintName;
 		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-		fNewTypeAdapter = typeAdapterProvider.getAdapter(newType);
+		fNewTypeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class OnClassesOperationAddToRoot extends CompositeOperation {
 		super(OperationNames.ADD_CLASSES, false, target, target, extLanguageManager);
 		
 		for(ClassNode classNode : classes){
-			addOperation(new OnClassOperationAddToRoot(target, classNode, index++, extLanguageManager));
+			addOperation(new OnClassOperationAddToRoot(target, classNode, index++, true, extLanguageManager));
 		}
 	}
 }

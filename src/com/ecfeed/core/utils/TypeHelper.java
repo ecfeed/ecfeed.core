@@ -48,5 +48,21 @@ public class TypeHelper {
 		return null;
 	}
 
+	public static void compareTypes(String type1, String type2) {
+
+		if(type1.equals(type2) == false){
+			ExceptionHelper.reportRuntimeException("Different types: " + type1 + ", " + type2);
+		}
+	}
+
+	public static void compareIntegers(int size, int size2, String message) {
+
+		if (size == size2) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Integers do not match." + " " + message);
+	}
+
 
 }

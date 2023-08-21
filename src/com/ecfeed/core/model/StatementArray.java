@@ -12,11 +12,13 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
 public class StatementArray extends AbstractStatement {
@@ -163,7 +165,28 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
+	public AbstractStatement makeClone(Optional<NodeMapper> mapper) {
+
+		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
+
+		for (AbstractStatement statement: fStatements) {
+			copy.addStatement(statement.makeClone(mapper));
+		}
+
+		return copy;
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		for (AbstractStatement statement: fStatements) {
+			statement.replaceReferences(nodeMapper, mappingDirection);
+		}
+	}
+
+	@Override
 	public StatementArray makeClone() {
+
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement : fStatements) {
@@ -175,6 +198,7 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray createCopy(NodeMapper mapper) {
+
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {
@@ -392,7 +416,13 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	public String getLeftParameterCompositeName() {
+	@Override
+	public BasicParameterNode getLeftParameter() {
+		return null;
+	}
+
+	@Override
+	public String getLeftOperandName() {
 		return fOperator.toString();
 	}
 
@@ -428,6 +458,23 @@ public class StatementArray extends AbstractStatement {
 		for (AbstractStatement child : fStatements) {
 			child.convert(parameterConversionItem);
 		}
+	}
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+
+		for (AbstractStatement abstractStatement : fStatements) {
+			if (!abstractStatement.isConsistent(parentMethodNode)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	//	@Override

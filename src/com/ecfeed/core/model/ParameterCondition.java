@@ -12,7 +12,13 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -27,13 +33,16 @@ import com.ecfeed.core.utils.RelationMatcher;
 public class ParameterCondition implements IStatementCondition {
 
 	private BasicParameterNode fRightParameterNode;
+	private AbstractParameterNode fRightParameterLinkingContext;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
 			BasicParameterNode rightParameter,
+			AbstractParameterNode rightParameterLinkingContext,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
+		fRightParameterLinkingContext = rightParameterLinkingContext;
 		fParentRelationStatement = parentRelationStatement;
 	}
 
@@ -58,6 +67,11 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
+	}
+
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
 	}
 
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
@@ -160,17 +174,39 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public IStatementCondition makeClone(RelationStatement statement, Optional<NodeMapper> mapper) {
+
+		if (mapper.isPresent()) {
+
+			BasicParameterNode mappedLinkinContext = mapper.get().getDestinationNode(fRightParameterNode);
+			AbstractParameterNode mappedLinkingContext = mapper.get().getDestinationNode(fRightParameterLinkingContext);
+
+			return new ParameterCondition(mappedLinkinContext, mappedLinkingContext, statement);
+		}
+
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightParameterNode = nodeMapper.getMappedNode(fRightParameterNode, mappingDirection); 
+		fRightParameterLinkingContext = nodeMapper.getMappedNode(fRightParameterLinkingContext, mappingDirection); 
+	}
+
+	@Override
 	public ParameterCondition makeClone() {
 
 		// parameters are not cloned
-		return new ParameterCondition(fRightParameterNode, fParentRelationStatement);
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
 	}
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fRightParameterNode);
 
-		return new ParameterCondition(parameter, statement);
+		BasicParameterNode parameter = mapper.getDestinationNode(fRightParameterNode);
+
+		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}
 
 	//	@Override
@@ -225,7 +261,10 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String name = 
+				AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+						fRightParameterNode, new ExtLanguageManagerForJava());
+		
 		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
 		return parameterDescription;
 	}
@@ -233,9 +272,22 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
-		return StatementConditionHelper.createParameterDescription(name);
+		//		String name = 
+		//				AbstractParameterSignatureHelper.getQualifiedName(
+		//						fRightParameterNode, fRightParameterLinkingContext);
 
+		String signatureNew = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
+						fRightParameterLinkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						fRightParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+
+		return StatementConditionHelper.createParameterDescription(signatureNew);
 	}
 
 	@Override
@@ -251,6 +303,11 @@ public class ParameterCondition implements IStatementCondition {
 	public BasicParameterNode getRightParameterNode() {
 
 		return fRightParameterNode;
+	}
+
+	public AbstractParameterNode getRightParameterLinkingContext() {
+
+		return fRightParameterLinkingContext;
 	}
 
 	@Override
@@ -363,6 +420,17 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
+	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fRightParameterNode, fRightParameterLinkingContext, topParentNode)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	//	@Override

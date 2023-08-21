@@ -18,7 +18,7 @@
 //
 ////	// TODO - REMOVE
 ////	@Override
-////	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
+////	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws Parser Exception {
 ////		
 ////		String type = element.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_TYPE);
 ////		
