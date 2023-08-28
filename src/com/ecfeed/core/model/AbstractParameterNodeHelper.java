@@ -335,5 +335,15 @@ public abstract class AbstractParameterNodeHelper {
 
 		return parameters;
 	}
-	
+
+	public static boolean isTopLocalParameter(AbstractParameterNode abstractParameterNode) {
+		
+		IAbstractNode parent = abstractParameterNode.getParent();
+		
+		if (parent instanceof MethodNode) {
+			return true;
+		}
+		
+		return false;
+	}
 }

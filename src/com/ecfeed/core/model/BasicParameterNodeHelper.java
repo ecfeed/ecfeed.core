@@ -171,7 +171,7 @@ public class BasicParameterNodeHelper {
 	private static BasicParameterNode findParameterByQualifiedNameRecursive(
 			String parameterName, 
 			IAbstractNode parameterParent) {
-		
+
 		MethodNode parent = MethodNodeHelper.findMethodNode(parameterParent);
 
 		if (parent == null) {
@@ -181,11 +181,11 @@ public class BasicParameterNodeHelper {
 		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			
+
 			String qualifiedName = 
 					AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
 							parameter, new ExtLanguageManagerForJava());
-			
+
 			if (qualifiedName.equals(parameterName)) {
 				return parameter;
 			}
@@ -367,7 +367,8 @@ public class BasicParameterNodeHelper {
 			return new ArrayList<>();
 		}
 
-		List<AbstractParameterNode> abstractParameterNodes = AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
+		List<AbstractParameterNode> abstractParameterNodes = 
+				AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
 
 		List<BasicParameterNode> basicParameterNodes = getBasicParameters(abstractParameterNodes);
 
@@ -743,5 +744,5 @@ public class BasicParameterNodeHelper {
 
 		return basicParameterNodesToReturn;
 	}
-	
+
 }

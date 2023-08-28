@@ -257,7 +257,7 @@ public class ModelSerializerAndParserTest {
 				BasicParameterNodeHelper.addNewChoice(
 						basicParameterNode, "GC1", "0", false, true, null);
 
-		// constraint with parameter condition
+		// constraint with choice condition
 
 		RelationStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(

@@ -112,8 +112,12 @@ public class TestCasesHolder {
 	}
 
 	public void replaceTestCases(List<TestCaseNode> testCases, MethodNode parent) {
-
+		
 		fTestCaseNodes.clear();
+		
+		if (testCases == null) {
+			return;
+		}
 
 		for (TestCaseNode testCaseNode : testCases) {
 			

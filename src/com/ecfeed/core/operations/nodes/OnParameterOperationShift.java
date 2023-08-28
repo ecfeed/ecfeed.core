@@ -74,7 +74,8 @@ public class OnParameterOperationShift extends GenericShiftOperation {
 		}
 
 		IAbstractNode theFirstNodeToBeShifted = fNodesToBeShifted.get(0);
-		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(theFirstNodeToBeShifted);
+		List<MethodNode> methodNodes = 
+				MethodNodeHelper.findMentioningMethodNodes((AbstractParameterNode) theFirstNodeToBeShifted);
 
 		fMethodsWithResultsOfGenerations.saveResultsForMethods(methodNodes);
 		fMethodsWithResultsOfGenerations.clearResultsForAllMethods();

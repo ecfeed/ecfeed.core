@@ -11,8 +11,10 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -202,7 +204,70 @@ public class ConstraintNodeHelper {
 		ConstraintHelper.compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
+	public static List<ConstraintNode> getMentioningConstraintNodes(AbstractParameterNode abstractParameterNode) {
+
+		if (!abstractParameterNode.isGlobalParameter()) {
+			return getMentioningParameterNodesIntr(abstractParameterNode);
+		}
+
+		Set<ConstraintNode> resultConstraintNodes = new HashSet<>();
+
+		List<BasicParameterNode> globalBasicParameterNodes = 
+				createListOfChildBasicParameterNodes(abstractParameterNode);
+
+		List<MethodNode> methodNodes = MethodNodeHelper.findMentioningMethodNodes(abstractParameterNode);
+		List<ConstraintNode> constraintNodes = MethodNodeHelper.getConstraints(methodNodes);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			if (constraintNode.mentionsAnyOfParameters(globalBasicParameterNodes)) {
+				resultConstraintNodes.add(constraintNode);
+			}
+		}
+
+		return new ArrayList<>(resultConstraintNodes);
+	}
+
+	private static List<ConstraintNode> getMentioningParameterNodesIntr(AbstractParameterNode abstractParameterNode) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<BasicParameterNode> basicParameterNodes = 
+				createListOfChildBasicParameterNodes(abstractParameterNode);
+
+		List<ConstraintNode> constraintsFromParentStructures = 
+				getConstraintsFromParentCompositesAndMethod(abstractParameterNode);
+
+		for (ConstraintNode constraintNode : constraintsFromParentStructures) {
+
+			if (constraintNode.mentionsAnyOfParameters(basicParameterNodes)) {
+				resultConstraintNodes.add(constraintNode);
+			}
+		}
+
+		return resultConstraintNodes;
+	}
+
+	private static List<BasicParameterNode> createListOfChildBasicParameterNodes(
+			AbstractParameterNode abstractParameterNode) {
+
+		List<BasicParameterNode> result = new ArrayList<>();
+
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			result.add((BasicParameterNode) abstractParameterNode);
+			return result;
+		}
+
+		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) abstractParameterNode;
+
+		List<BasicParameterNode> basicParameterNodes = 
+				CompositeParameterNodeHelper.getChildBasicParameterNodes(compositeParameterNode);
+
+		return basicParameterNodes;
+	}
+
 	public static List<ConstraintNode> getMentioningConstraintNodes(
+
 			List<CompositeParameterNode> compositeParameterNodes,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
@@ -271,7 +336,7 @@ public class ConstraintNodeHelper {
 	}
 
 	private static List<ConstraintNode> getConstraintsFromParentCompositesAndMethod(
-			CompositeParameterNode compositeParameterNode) {
+			AbstractParameterNode compositeParameterNode) {
 
 		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
 

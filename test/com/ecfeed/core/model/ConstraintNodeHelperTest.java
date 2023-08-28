@@ -13,9 +13,12 @@ package com.ecfeed.core.model;
 import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
@@ -137,4 +140,249 @@ public class ConstraintNodeHelperTest {
 		assertEquals("Composite:c_1 : false => false", signature);
 	}
 
+	@Test
+	public void getMentioningConstraintNodesForBasicParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		// constraint 1 with choice condition
+
+		RelationStatement precondition1 =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		// constraint 2 - static statements
+
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(basicParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
+	}
+
+	@Test
+	public void AAgetMentioningConstraintNodesForLinkedBasicParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		BasicParameterNode globalBasicParameterNode = 
+				RootNodeHelper.addNewBasicParameter(rootNode, "gpar1", "String", "", true, null);
+		
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						globalBasicParameterNode, "choice1", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
+		
+		basicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
+
+		// constraint 1 with choice condition
+
+		RelationStatement precondition1 =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		// constraint 2 - static statements
+
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+		
+		// root
+		//   gpar1
+		//     choice1
+		//   class
+		//     method
+		//     par1->gpar1
+		//     constraint: par1=choice1=>true
+
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(globalBasicParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
+	}
+	
+	@Test
+	public void getMentioningConstraintNodesForCompositeParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
+
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "str1", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameter(compositeParameterNode, "par1", "String", "", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		// constraint 1 with choice condition
+
+		RelationStatement precondition1 =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		// constraint 2 - static statements
+
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(compositeParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
+	}
+
+	@Test
+	public void getMentioningConstraintNodesForGlobalCompositeParameter() {
+
+		RootNode rootNode = new RootNode("root", null);
+		
+		CompositeParameterNode globalCompositeParameterNode = 
+				RootNodeHelper.addNewCompositeParameter(rootNode, "gstr1", true, null);
+		
+		BasicParameterNode basicParameterNode = 
+				CompositeParameterNodeHelper.addNewBasicParameter(globalCompositeParameterNode, "gpar1", "String", "", true, null);
+
+		ChoiceNode choiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode, "choice1", "1", false, true, null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class1", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method1", true, null);
+
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "str1", true, null);
+		
+		compositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
+
+		// constraint 1 with choice condition
+
+		RelationStatement precondition1 =
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode, null, 
+						EMathRelation.EQUAL, 
+						choiceNode);
+
+		StaticStatement postcondition = new StaticStatement(EvaluationResult.TRUE); 
+
+		Constraint constraint1 = new Constraint(
+				"constraint1", ConstraintType.EXTENDED_FILTER, precondition1, postcondition, null);
+
+		ConstraintNode constraintNode1 = 
+				ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		// constraint 2 - static statements
+
+		Constraint constraint2 = new Constraint(
+				"constraint1", 
+				ConstraintType.EXTENDED_FILTER, 
+				new StaticStatement(EvaluationResult.TRUE), 
+				new StaticStatement(EvaluationResult.TRUE), 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
+
+		// root
+		//   gstr1
+		//     gpar1
+		//       choice1
+		//   class1
+		//     method1
+		//       str1->gstr1
+		//       constraint gpar1=choice1=>true
+		
+		List<ConstraintNode> mentioningConstraintNodes = 
+				ConstraintNodeHelper.getMentioningConstraintNodes(globalCompositeParameterNode);
+
+		assertEquals(1, mentioningConstraintNodes.size());
+
+		ConstraintNode resultConstraintNode = mentioningConstraintNodes.get(0);
+
+		assertEquals(constraintNode1, resultConstraintNode);
+	}
+	
 }
