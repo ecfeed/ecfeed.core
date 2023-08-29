@@ -171,7 +171,6 @@ public class MethodNodeHelper {
 							ExtendedName.NAME_ONLY, Decorations.YES, TypeIncluded.YES, 
 							extLanguageManager);
 
-
 			signature += signatureOfOneParameter;
 
 			if (paramIndex < parametersSize - 1) {
@@ -405,7 +404,7 @@ public class MethodNodeHelper {
 	//	}
 
 	public static String findNewUserTypeForJavaLanguage(
-			MethodNode methodNode, 
+			MethodNode methodNode,
 			IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
