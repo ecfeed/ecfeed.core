@@ -1,7 +1,9 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -271,6 +273,37 @@ public class CompositeParameterNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static List<BasicParameterNode> getChildBasicParameterNodes(CompositeParameterNode compositeParameterNode) {
+
+		Set<BasicParameterNode> basicParameters  = new HashSet<>();
+
+		accumulateBasicParametersFromComposite(compositeParameterNode, basicParameters);
+
+		List<CompositeParameterNode> childCompositeParameterNodes = 
+				getChildCompositeParameterNodes(compositeParameterNode);
+
+		for (CompositeParameterNode childCompositeParameterNode : childCompositeParameterNodes) {
+			accumulateBasicParametersFromComposite(childCompositeParameterNode, basicParameters);
+		}
+
+		List<BasicParameterNode> result = new ArrayList<>(basicParameters);
+		return result;
+	}
+
+	private static void accumulateBasicParametersFromComposite(
+			CompositeParameterNode compositeParameterNode,
+			Set<BasicParameterNode> basicParameters) {
+
+		List<AbstractParameterNode> parameters = compositeParameterNode.getParameters();
+
+		for (AbstractNode parameter : parameters) {
+
+			if (parameter instanceof BasicParameterNode) {
+				basicParameters.add((BasicParameterNode) parameter);
+			}
+		}
 	}
 
 	public static List<CompositeParameterNode> getChildCompositeParameterNodes(IParametersParentNode parentNode) {

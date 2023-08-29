@@ -63,6 +63,15 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 		getOperations().add(index, operation);
 	}
 
+	public void addOperation(IModelOperation operation){
+
+		if (operation == null) {
+			return;
+		}
+
+		getOperations().add(getOperations().size(), operation);
+	}
+
 	private class OperationPrepareMethodForParameterTypeChange extends AbstractModelOperation {
 
 		private BasicParameterNode fTarget;

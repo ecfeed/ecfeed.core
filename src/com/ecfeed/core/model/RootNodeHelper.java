@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,11 +66,11 @@ public class RootNodeHelper {
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		ClassNode classNode = new ClassNode(className, modelChangeRegistrator);
-		
+
 		if (setParent) {
 			classNode.setParent(classNode);
 		}
-		
+
 		rootNode.addClass(classNode);
 
 		return classNode;
@@ -189,6 +190,20 @@ public class RootNodeHelper {
 			AbstractNodeHelper.compareParents(classNode1, rootNode1, classNode2, rootNode2);
 			ClassNodeHelper.compareClasses(classNode1, classNode2);
 		}
+	}
+
+	public static List<MethodNode> getAllMethodNodes(RootNode rootNode) {
+
+		List<MethodNode> result = new ArrayList<>();
+
+		List<ClassNode> classNodes = rootNode.getClasses();
+
+		for (ClassNode classNode : classNodes) {
+
+			result.addAll(classNode.getMethods());
+		}
+
+		return result;
 	}
 
 }
