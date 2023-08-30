@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.BasicParameterWithChoice;
 import com.ecfeed.core.utils.*;
 
 public class ParametersAndConstraintsParentNodeHelper {
@@ -98,7 +99,88 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return labels;
 	}
 
-	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
+	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraintsForLocalTopParameter( // TODO test
+			AbstractParameterNode localTopParameterNode) {
+
+		Set<BasicParameterWithChoice> resultSet = new HashSet<BasicParameterWithChoice>();
+
+		List<BasicParameterNode> basicParameterNodes = getBasicChildParameterNodes(localTopParameterNode);
+		List<ConstraintNode> constraintNodes = getConstraintNodes(localTopParameterNode);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			Set<BasicParameterWithChoice> resultForOneConstraint = 
+					getParametersWithChoicesUsedInConstraint(constraintNode, basicParameterNodes);
+
+			resultSet.addAll(resultForOneConstraint);
+		}
+
+		return new ArrayList<>(resultSet);
+	}
+
+	private static Set<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
+			ConstraintNode constraintNode, List<BasicParameterNode> basicParameterNodes) {
+
+		Set<BasicParameterWithChoice> result = new HashSet<>();
+
+		for (int parameterIndex = 0; parameterIndex < basicParameterNodes.size(); parameterIndex++) {
+
+			BasicParameterNode basicParameterNode = basicParameterNodes.get(parameterIndex);
+
+			Set<BasicParameterWithChoice> resultForOneParameter = 
+					getParameterWithChoicesUsedInConstraint(constraintNode, basicParameterNode);			
+
+			result.addAll(resultForOneParameter);
+		}
+
+		return result; 
+	}
+
+	private static Set<BasicParameterWithChoice> getParameterWithChoicesUsedInConstraint(
+			ConstraintNode constraintNode,
+			BasicParameterNode basicParameterNode) {
+
+		List<ChoiceNode> choiceNodesForConstraint = 
+				ConstraintNodeHelper.getChoicesUsedInConstraint(
+						constraintNode, basicParameterNode);
+
+		Set<BasicParameterWithChoice> result = new HashSet<>();
+
+		for (int choiceIndex = 0; choiceIndex < choiceNodesForConstraint.size(); choiceIndex++) {
+
+			ChoiceNode choiceNode = choiceNodesForConstraint.get(choiceIndex); 
+
+			result.add(new BasicParameterWithChoice(basicParameterNode, choiceNode));
+		}
+
+		return result;
+	}
+
+	private static List<BasicParameterNode> getBasicChildParameterNodes(AbstractParameterNode localTopParameterNode) { // XYX TO HELPER
+
+		if (localTopParameterNode instanceof BasicParameterNode) {
+
+			List<BasicParameterNode> result = new ArrayList<>();
+			result.add((BasicParameterNode) localTopParameterNode);
+
+			return result;
+		}
+
+		ExceptionHelper.reportRuntimeException("Not implemented for structures.");
+		return null;
+	}
+
+	private static List<ConstraintNode> getConstraintNodes(AbstractParameterNode localTopParameterNode) { // XYX move to helper and add code for composites
+
+		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
+				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
+
+		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
+		return constraintNodes;
+	}
+
+	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?
+
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
 
 		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
