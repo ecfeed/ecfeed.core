@@ -139,69 +139,12 @@ public class LogHelperCore {
     public static void logThrow(String message) {
 
         logger.error(tag + message);
-//        JSONObject json = new JSONObject();
-//
-//        json.put("type", "Exception thrown");
-//        json.put("message", message);
-//
-//        StackTraceElement[] stackElements = new Throwable().getStackTrace();
-//        StackTraceElement currentElement = stackElements[2];
-//
-//        json.put("current", getCurrentStackElement(currentElement));
-//        json.put("stack", getStack(stackElements));
-//
-//        logError(json.toString());
     }
 
     public static void logCatch(Exception e) {
 
         logger.error(tag + e.toString());
-//        JSONObject json = new JSONObject();
-//
-//        json.put("type", "Exception caught");
-//        json.put("message", ExceptionMessageHelper.createErrorMessage(e));
-//
-//        StackTraceElement element = new Throwable().getStackTrace()[1];
-//
-//        json.put("current", getCurrentStackElement(element));
-//
-//        logError(json.toString());
     }
-
-//    private static JSONObject getCurrentStackElement(StackTraceElement element) {
-//        JSONObject json = new JSONObject();
-//
-//        json.put("file", element.getFileName());
-//        json.put("class", element.getClassName());
-//        json.put("method", element.getMethodName());
-//        json.put("line", element.getLineNumber());
-//
-//        return json;
-//    }
-
-//    private static JSONObject getStack(StackTraceElement[] stackElements) {
-//        JSONObject json = new JSONObject();
-//
-//        JSONArray array = new JSONArray();
-//
-//        for (StackTraceElement element : stackElements) {
-//            array.put(getStackElement(element));
-//        }
-//
-//        json.put("stack", array);
-//
-//        return json;
-//    }
-
-//    private static JSONObject getStackElement(StackTraceElement element) {
-//        JSONObject json = new JSONObject();
-//
-//        json.put("class", element.getClassName());
-//        json.put("method", element.getMethodName());
-//        json.put("line", element.getLineNumber());
-//
-//        return json;
-//    }
 
     public static void log(String message) {
 
