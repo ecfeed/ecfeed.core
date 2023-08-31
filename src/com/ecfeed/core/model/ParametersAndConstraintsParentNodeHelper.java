@@ -102,15 +102,25 @@ public class ParametersAndConstraintsParentNodeHelper {
 	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraintsForLocalTopParameter( // TODO test
 			AbstractParameterNode localTopParameterNode) {
 
+		IParametersAndConstraintsParentNode parent =
+				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
+
+		if (!(parent instanceof MethodNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid position of parameter - top parameter expected.");
+		}
+
+		MethodNode parentMethodNode = (MethodNode)parent;
+
 		Set<BasicParameterWithChoice> resultSet = new HashSet<BasicParameterWithChoice>();
 
 		List<BasicParameterNode> basicParameterNodes = getBasicChildParameterNodes(localTopParameterNode);
-		List<ConstraintNode> constraintNodes = getConstraintNodes(localTopParameterNode);
+
+		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
 			Set<BasicParameterWithChoice> resultForOneConstraint = 
-					getParametersWithChoicesUsedInConstraint(constraintNode, basicParameterNodes);
+					getParametersWithChoicesUsedInOneConstraint(constraintNode, basicParameterNodes);
 
 			resultSet.addAll(resultForOneConstraint);
 		}
@@ -118,7 +128,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return new ArrayList<>(resultSet);
 	}
 
-	private static Set<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
+	private static Set<BasicParameterWithChoice> getParametersWithChoicesUsedInOneConstraint(
 			ConstraintNode constraintNode, List<BasicParameterNode> basicParameterNodes) {
 
 		Set<BasicParameterWithChoice> result = new HashSet<>();
@@ -166,17 +176,12 @@ public class ParametersAndConstraintsParentNodeHelper {
 			return result;
 		}
 
-		ExceptionHelper.reportRuntimeException("Not implemented for structures.");
-		return null;
-	}
+		CompositeParameterNode topCompositeParameterNode = (CompositeParameterNode) localTopParameterNode;
 
-	private static List<ConstraintNode> getConstraintNodes(AbstractParameterNode localTopParameterNode) { // XYX move to helper and add code for composites
+		List<BasicParameterNode> result = 
+				BasicParameterNodeHelper.getBasicParametersForParentNodeSubtree(topCompositeParameterNode);
 
-		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
-				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
-
-		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
-		return constraintNodes;
+		return result;
 	}
 
 	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?

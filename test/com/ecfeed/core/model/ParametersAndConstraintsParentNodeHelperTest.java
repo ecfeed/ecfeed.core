@@ -66,7 +66,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		List<BasicParameterWithChoice> parametersWithChoices =
 				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
 						basicParameterNode);
-		
+
 		assertEquals(0, parametersWithChoices.size());
 	}
 
@@ -110,8 +110,52 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 						basicParameterNode1);
 
 		assertEquals(1, parametersWithChoices.size());
-		
+
 		assertEquals(choiceNode1, parametersWithChoices.get(0).getChoiceNode());
+		assertEquals(basicParameterNode1, parametersWithChoices.get(0).getBasicParameterNode());
+	}
+
+	@Test
+	public void getParametersWithChoicesForCompositeParameterTest1() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		CompositeParameterNode compositeParameterNode = 
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "str1", true, null);
+
+		BasicParameterNode basicParameterNode1 =
+				CompositeParameterNodeHelper.addNewBasicParameter(compositeParameterNode, "par1", "String", "", true, null);
+
+		ChoiceNode choiceNode1 =
+				BasicParameterNodeHelper.addNewChoice(basicParameterNode1, "choice1", "c1", false, true, null);
+
+		StaticStatement precondition = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						basicParameterNode1, null, EMathRelation.EQUAL, choiceNode1);
+
+		Constraint constraint = new Constraint(
+				"constraint", 
+				ConstraintType.EXTENDED_FILTER, 
+				precondition, 
+				postcondition, 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(compositeParameterNode, constraint, true, null);
+
+		List<BasicParameterWithChoice> parametersWithChoices =
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+						compositeParameterNode);
+
+		assertEquals(1, parametersWithChoices.size());
+
+		assertEquals(choiceNode1, parametersWithChoices.get(0).getChoiceNode());
+		assertEquals(basicParameterNode1, parametersWithChoices.get(0).getBasicParameterNode());
 	}
 
 }

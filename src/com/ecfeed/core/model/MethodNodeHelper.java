@@ -960,13 +960,40 @@ public class MethodNodeHelper {
 		return resultConstraintNodes;
 	}
 
+	public static List<ConstraintNode> getChildConstraintNodes(MethodNode methodNode) { 
+
+		List<ConstraintNode> result = new ArrayList<>();
+
+		accumulateConstraintsRecursively(methodNode, result);
+
+		return result;
+	}
+
+	private static void accumulateConstraintsRecursively(
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode,
+			List<ConstraintNode> inOutResult) {
+
+		List<ConstraintNode> localConstraints = parametersAndConstraintsParentNode.getConstraintNodes();
+		inOutResult.addAll(localConstraints);
+
+		List<AbstractParameterNode> abstractParameters = parametersAndConstraintsParentNode.getParameters();
+
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+
+				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) abstractParameterNode; 
+
+				accumulateConstraintsRecursively(compositeParameterNode, inOutResult);
+			}
+		}
+	}
+
 	public static boolean methodMentionsParameter(
 			MethodNode methodNode,
 			AbstractParameterNode abstractParameterNode) {
 
 		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
-
-		// remark: links only at the top 
 
 		for (AbstractParameterNode currentAbstractParameterNode : methodParameters) {
 
