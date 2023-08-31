@@ -1,5 +1,7 @@
 package com.ecfeed.core.parser.model;
 
+import com.ecfeed.core.model.ChoiceNodeHelper;
+
 import java.util.*;
 
 public class ModelDataCSVLineProcessor {
@@ -9,8 +11,9 @@ public class ModelDataCSVLineProcessor {
 
     private int nameIndex = 0;
 
-    private StringBuilder valueCandidate = new StringBuilder();
-    private Queue<Character> characterQueue = new LinkedList<>();
+    private final StringBuilder valueCandidate = new StringBuilder();
+    private final Queue<Character> characterQueue = new LinkedList<>();
+
     private boolean isQuotation = false;
 
     private ModelDataCSVLineProcessor() {
