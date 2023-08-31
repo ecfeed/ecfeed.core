@@ -18,6 +18,11 @@ public class BasicParameterWithChoice {
 	private BasicParameterNode fBasicParameterNode;
 	private ChoiceNode fChoiceNode;
 
+	@Override
+	public String toString() {
+		return fBasicParameterNode.getName() + "(" + fChoiceNode.getName() + ")";
+	}
+	
 	public BasicParameterWithChoice(BasicParameterNode basicParameterNode, ChoiceNode choiceNode) {
 
 		fBasicParameterNode = basicParameterNode;
