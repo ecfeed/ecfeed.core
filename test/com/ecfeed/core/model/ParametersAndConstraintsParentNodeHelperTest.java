@@ -36,10 +36,6 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 
 		BasicParameterNodeHelper.addNewChoice(basicParameterNode, "choice", "c1", false, true, null);
 
-		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
-						basicParameterNode);
-
 		StaticStatement precondition1 = new StaticStatement(EvaluationResult.TRUE);
 		StaticStatement postcondition1 = new StaticStatement(EvaluationResult.TRUE);
 
@@ -67,6 +63,10 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 
 		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
 
+		List<BasicParameterWithChoice> parametersWithChoices =
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+						basicParameterNode);
+		
 		assertEquals(0, parametersWithChoices.size());
 	}
 
@@ -110,6 +110,8 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 						basicParameterNode1);
 
 		assertEquals(1, parametersWithChoices.size());
+		
+		assertEquals(choiceNode1, parametersWithChoices.get(0).getChoiceNode());
 	}
 
 }
