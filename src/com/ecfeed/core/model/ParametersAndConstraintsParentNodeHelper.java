@@ -48,20 +48,20 @@ public class ParametersAndConstraintsParentNodeHelper {
 	//		return constraints;
 	//	}
 
-	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
-			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
-
-		Set<ChoiceNode> choices = new HashSet<>();
-
-		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
-			for (ConstraintNode constraint : constraints) {
-
-				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
-			}
-		}
-
-		return choices;
-	}
+//	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
+//			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+//
+//		Set<ChoiceNode> choices = new HashSet<>();
+//
+//		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
+//			for (ConstraintNode constraint : constraints) {
+//
+//				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
+//			}
+//		}
+//
+//		return choices;
+//	}
 
 	public static Collection<BasicParameterNode> getParametersUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
