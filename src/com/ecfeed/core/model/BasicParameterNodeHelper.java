@@ -745,4 +745,22 @@ public class BasicParameterNodeHelper {
 		return basicParameterNodesToReturn;
 	}
 
+	public static List<BasicParameterNode> getBasicChildParameterNodes(AbstractParameterNode localTopParameterNode) {
+
+		if (localTopParameterNode instanceof BasicParameterNode) {
+
+			List<BasicParameterNode> result = new ArrayList<>();
+			result.add((BasicParameterNode) localTopParameterNode);
+
+			return result;
+		}
+
+		CompositeParameterNode topCompositeParameterNode = (CompositeParameterNode) localTopParameterNode;
+
+		List<BasicParameterNode> result = 
+				BasicParameterNodeHelper.getBasicParametersForParentNodeSubtree(topCompositeParameterNode);
+
+		return result;
+	}
+	
 }

@@ -99,7 +99,8 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		Set<BasicParameterWithChoice> resultSet = new HashSet<BasicParameterWithChoice>();
 
-		List<BasicParameterNode> basicParameterNodes = getBasicChildParameterNodes(localTopParameterNode);
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
 
 		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
 
@@ -152,24 +153,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return result;
 	}
 
-	private static List<BasicParameterNode> getBasicChildParameterNodes(AbstractParameterNode localTopParameterNode) { // XYX TO HELPER
-
-		if (localTopParameterNode instanceof BasicParameterNode) {
-
-			List<BasicParameterNode> result = new ArrayList<>();
-			result.add((BasicParameterNode) localTopParameterNode);
-
-			return result;
-		}
-
-		CompositeParameterNode topCompositeParameterNode = (CompositeParameterNode) localTopParameterNode;
-
-		List<BasicParameterNode> result = 
-				BasicParameterNodeHelper.getBasicParametersForParentNodeSubtree(topCompositeParameterNode);
-
-		return result;
-	}
-
 	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?
 
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
@@ -207,7 +190,8 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		Set<BasicParameterWithString> resultSet = new HashSet<>();
 
-		List<BasicParameterNode> basicParameterNodes = getBasicChildParameterNodes(localTopParameterNode);
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
 
 		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
 

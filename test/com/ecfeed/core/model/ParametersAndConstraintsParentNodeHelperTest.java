@@ -17,6 +17,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
+import com.ecfeed.core.model.utils.BasicParameterWithString;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
@@ -402,6 +403,68 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		BasicParameterWithChoice basicParameterWithChoice2 = parametersWithChoices.get(1);
 		assertEquals(choiceNode2, basicParameterWithChoice2.getChoiceNode());
 		assertEquals(basicParameterNode2, basicParameterWithChoice2.getBasicParameterNode());
+	}
+
+	@Test
+	public void getParametersWithLabelsForBasicParameterTest1() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "class", true, null);
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "method", true, null);
+
+		BasicParameterNode basicParameterNode = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
+
+		ChoiceNode choice1 = 
+				BasicParameterNodeHelper.addNewChoice(basicParameterNode, "choice1", "c1", false, true, null);
+
+		String label1 = "label1";
+		choice1.addLabel(label1);
+
+		String label2 = "label2";
+		choice1.addLabel(label2);
+
+
+		StaticStatement precondition1 = new StaticStatement(EvaluationResult.TRUE);
+		StaticStatement postcondition1 = new StaticStatement(EvaluationResult.TRUE);
+
+		Constraint constraint1 = new Constraint(
+				"constraint", 
+				ConstraintType.EXTENDED_FILTER, 
+				precondition1, 
+				postcondition1, 
+				null);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint1, true, null);
+
+		StaticStatement precondition2 = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement postcondition2 =
+				RelationStatement.createRelationStatementWithLabelCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, label1);
+
+		ConstraintsParentNodeHelper.addNewConstraintNode(
+				methodNode,
+				"constraint",
+				ConstraintType.EXTENDED_FILTER,
+				precondition2, postcondition2,
+				true, null); 		
+
+		// root
+		//   class
+		//     method
+		//       par1
+		//         choice1 with label1 and label2
+
+		List<BasicParameterWithString> parametersWithLabels =
+				ParametersAndConstraintsParentNodeHelper.getParametersWithLabelsUsedInConstraintsForLocalTopParameter(
+						basicParameterNode);
+
+		assertEquals(1, parametersWithLabels.size());
+		BasicParameterWithString parameterWithLabel = parametersWithLabels.get(0);
+		assertEquals(label1, parameterWithLabel.getStr());
 	}
 
 }

@@ -34,6 +34,35 @@ public abstract class ConstraintsParentNodeHelper {
 		return constraintNode;
 	}
 
+	public static ConstraintNode addNewConstraintNode(
+			IConstraintsParentNode parameterParentNode,
+			String constraintName,
+			ConstraintType constraintType,
+			AbstractStatement precondition, 
+			AbstractStatement postcondition,
+			boolean setParent, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		Constraint constraint = 
+				new Constraint(
+						constraintName, 
+						constraintType, 
+						precondition, 
+						postcondition, 
+						null);
+
+		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+
+		if (setParent) {
+			constraintNode.setParent(parameterParentNode);
+		}
+
+		parameterParentNode.addConstraint(constraintNode);
+
+		return constraintNode;
+	}
+
+
 	public static void removeInconsistentConstraints(IConstraintsParentNode constraintsParentNode, BooleanHolder modelUpdated) {
 
 		ConstraintNodeListHolder.ConstraintsItr constraintItr = constraintsParentNode.getIterator();
