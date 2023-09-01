@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
+import com.ecfeed.core.model.utils.BasicParameterWithString;
 import com.ecfeed.core.utils.*;
 
 public class ParametersAndConstraintsParentNodeHelper {
@@ -84,22 +85,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return parameters;
 	}
 
-	public static Collection<String> getLabelsUsedInConstraints(
-			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
-
-		Set<String> labels = new HashSet<>();
-
-		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
-			for (ConstraintNode constraint : constraints) {
-
-				labels.addAll(ConstraintNodeHelper.getLabelsUsedInConstraint(constraint, parameterBasic));
-			}
-		}
-
-		return labels;
-	}
-
-	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraintsForLocalTopParameter( // TODO test
+	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
 			AbstractParameterNode localTopParameterNode) {
 
 		IParametersAndConstraintsParentNode parent =
@@ -207,7 +193,88 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return resultChoiceNodes;
 	}
 
-	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) {
+	public static List<BasicParameterWithString> getParametersWithLabelsUsedInConstraintsForLocalTopParameter(
+			AbstractParameterNode localTopParameterNode) {
+
+		IParametersAndConstraintsParentNode parent =
+				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
+
+		if (!(parent instanceof MethodNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid position of parameter - top parameter expected.");
+		}
+
+		MethodNode parentMethodNode = (MethodNode)parent;
+
+		Set<BasicParameterWithString> resultSet = new HashSet<>();
+
+		List<BasicParameterNode> basicParameterNodes = getBasicChildParameterNodes(localTopParameterNode);
+
+		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			Set<BasicParameterWithString> resultForOneConstraint = 
+					getParametersWithLabelsUsedInOneConstraint(constraintNode, basicParameterNodes);
+
+			resultSet.addAll(resultForOneConstraint);
+		}
+
+		return new ArrayList<>(resultSet);
+	}
+
+	private static Set<BasicParameterWithString> getParametersWithLabelsUsedInOneConstraint(
+			ConstraintNode constraintNode, List<BasicParameterNode> basicParameterNodes) {
+
+		Set<BasicParameterWithString> result = new HashSet<>();
+
+		for (int parameterIndex = 0; parameterIndex < basicParameterNodes.size(); parameterIndex++) {
+
+			BasicParameterNode basicParameterNode = basicParameterNodes.get(parameterIndex);
+
+			Set<BasicParameterWithString> resultForOneParameter = 
+					getParameterWithLabelsUsedInConstraint(constraintNode, basicParameterNode);			
+
+			result.addAll(resultForOneParameter);
+		}
+
+		return result; 
+	}
+
+	private static Set<BasicParameterWithString> getParameterWithLabelsUsedInConstraint(
+			ConstraintNode constraintNode,
+			BasicParameterNode basicParameterNode) {
+
+		List<String> labelsForConstraint = 
+				ConstraintNodeHelper.getLabelsUsedInConstraint(constraintNode, basicParameterNode);
+
+		Set<BasicParameterWithString> result = new HashSet<>();
+
+		for (int choiceIndex = 0; choiceIndex < labelsForConstraint.size(); choiceIndex++) {
+
+			String label = labelsForConstraint.get(choiceIndex); 
+
+			result.add(new BasicParameterWithString(basicParameterNode, label));
+		}
+
+		return result;
+	}
+
+	public static Collection<String> getLabelsUsedInConstraints( // XYX obsolete ?
+			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+
+		Set<String> labels = new HashSet<>();
+
+		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
+			for (ConstraintNode constraint : constraints) {
+
+				labels.addAll(ConstraintNodeHelper.getLabelsUsedInConstraint(constraint, parameterBasic));
+			}
+		}
+
+		return labels;
+	}
+
+	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?
 
 		List<String> resultLabels = new ArrayList<>();
 
