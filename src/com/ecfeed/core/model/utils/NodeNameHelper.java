@@ -29,20 +29,17 @@ public class NodeNameHelper  {
 	private static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
 	private static final String REGEX_PACKAGE_NAME = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
-	
-	// XYX make private
-	public static final String REGEX_CLASS_NODE_NAME = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
+
+	private static final String REGEX_CLASS_NODE_NAME = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
 
 	private static final String REGEX_METHOD_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
-	//private static final String REGEX_CATEGORY_TYPE_NAME = REGEX_CLASS_NODE_NAME; // XYX ??
-	private static final String REGEX_CATEGORY_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
+
+	private static final String REGEX_PARAMETER_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
 
 	private static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
-	// XYX make private
-	public static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
-	// XYX make private
 	public static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
 
@@ -50,7 +47,26 @@ public class NodeNameHelper  {
 		return null; // XYX TODO
 	}
 
-	public static String getRegex(IAbstractNode target) { // XYX
+	public static boolean classNameCompliesWithJavaNamingRules(String className) {
+
+		if (className.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean constraintNodeNameCompliesWithRules(String constraintName) {
+
+		return constraintName.matches(NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME);
+	}
+
+	public static boolean testCaseNodeNameCompliesWithRules(String name) {
+
+		return name.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME);
+	}
+
+	public static String getRegex(IAbstractNode target) {
 
 		try{
 			return (String)target.accept(new RegexInternalProvider());
@@ -80,12 +96,12 @@ public class NodeNameHelper  {
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			return REGEX_CATEGORY_NODE_NAME;
+			return REGEX_PARAMETER_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			return REGEX_CATEGORY_NODE_NAME;
+			return REGEX_PARAMETER_NODE_NAME;
 		}
 
 		@Override

@@ -102,7 +102,7 @@ public class ClassNodeHelper {
 
 		String nameInInternalLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
-		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
+		if (!NodeNameHelper.classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
 			return RegexHelper.createMessageAllowedCharsForClass(extLanguageManager);
 		}
 
@@ -210,15 +210,6 @@ public class ClassNodeHelper {
 		}
 
 		return null;
-	}
-
-	private static boolean classNameCompliesWithJavaNamingRules(String className) { // XYX remove - use java node name helper
-
-		if (className.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public static ClassNode findClassNode(IAbstractNode anyNode) {

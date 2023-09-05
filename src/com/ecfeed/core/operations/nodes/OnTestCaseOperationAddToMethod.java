@@ -115,7 +115,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			return true;
 		}
 
-		if (!name.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME)) {
+		if (!NodeNameHelper.testCaseNodeNameCompliesWithRules(name)) {
 			return false;
 		}
 

@@ -62,7 +62,7 @@ public class OnConstraintOperationAdd extends AbstractModelOperation {
 			fIndex = fParentNode.getConstraintNodes().size();
 		}
 
-		if(fConstraint.getName().matches(NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME) == false){ // XYX use node name helper
+		if (!NodeNameHelper.constraintNodeNameCompliesWithRules(fConstraint.getName())) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 
