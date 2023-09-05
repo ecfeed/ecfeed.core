@@ -26,20 +26,23 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class NodeNameHelper  {
 
-	public static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
-	public static final String REGEX_PACKAGE_NAME = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
-	public static final String REGEX_COMPLEX_JAVA_IDENTIFIER = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
+	private static final String REGEX_PACKAGE_NAME = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
+	
+	// XYX make private
 	public static final String REGEX_CLASS_NODE_NAME = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
 
-	public static final String REGEX_METHOD_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
-	public static final String REGEX_CATEGORY_TYPE_NAME = REGEX_CLASS_NODE_NAME; // XYX ??
-	public static final String REGEX_CATEGORY_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
+	private static final String REGEX_METHOD_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
+	//private static final String REGEX_CATEGORY_TYPE_NAME = REGEX_CLASS_NODE_NAME; // XYX ??
+	private static final String REGEX_CATEGORY_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
 
-	public static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
+	// XYX make private
 	public static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
+	// XYX make private
 	public static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
 
