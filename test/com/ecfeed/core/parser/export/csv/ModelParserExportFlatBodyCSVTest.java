@@ -1,19 +1,23 @@
-package com.ecfeed.core.parser.export;
+package com.ecfeed.core.parser.export.csv;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.parser.export.ModelParserExportHelper;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
 import com.ecfeed.core.parser.model.export.ModelDataExportCSV;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ModelParserExportBodyTest {
+public class ModelParserExportFlatBodyCSVTest {
     private ModelDataExport parser;
+    private ModelDataExport parserExplicit;
 
     @BeforeEach
     void setup() {
-        parser = ModelDataExportCSV.getModelDataExport();
+
+        parser = ModelDataExportCSV.getModelDataExport(",", false, false);
+        parserExplicit = ModelDataExportCSV.getModelDataExport(",", false, true);
     }
 
     @Test
@@ -23,7 +27,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -33,7 +43,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -43,7 +59,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -53,7 +75,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -65,7 +93,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -75,7 +109,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -85,7 +125,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
     @Test
@@ -95,7 +141,13 @@ public class ModelParserExportBodyTest {
 
         String result = parser.getTest(test);
 
+        System.out.println(result);
         Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", result);
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        System.out.println(resultExplicit);
+        Assertions.assertEquals("Lorem Ipsum,\"Lorem \"\"Ipsum\"\"\",\"Lorem, Ipsum\",\"Lorem, \"\"Ipsum\"\"\"", resultExplicit);
     }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -108,6 +160,10 @@ public class ModelParserExportBodyTest {
         String result = parser.getTest(test);
 
         Assertions.assertEquals(7, result.length());
+
+        String resultExplicit = parserExplicit.getTest(test);
+
+        Assertions.assertEquals(7, resultExplicit.length());
     }
 
     @Test
@@ -118,6 +174,9 @@ public class ModelParserExportBodyTest {
         String result = parser.getTest(test);
 
         Assertions.assertEquals("A,B", result);
-    }
 
+        String resultExplicit = parserExplicit.getTest(test);
+
+        Assertions.assertEquals("A,B", resultExplicit);
+    }
 }

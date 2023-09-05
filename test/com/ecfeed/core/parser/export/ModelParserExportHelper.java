@@ -50,7 +50,42 @@ public class ModelParserExportHelper {
 
         List<ChoiceNode> choices = parameters.stream().map(e -> e.getChoices().get(0)).collect(Collectors.toList());
 
-        return new TestCaseNode("suite", null, choices);
+        TestCaseNode test = new TestCaseNode("suite", null, choices);
+
+        method.addTestCase(test);
+
+        return test;
+    }
+
+    public static TestSuiteNode getTestSuite(MethodNode method) {
+        List<BasicParameterNode> parameters = new ArrayList<>();
+
+        method.getParameters().forEach(e -> {
+            AbstractParameterNode node = e.getLinkDestination();
+
+            if (node instanceof BasicParameterNode) {
+                parameters.add((BasicParameterNode) node);
+            } else if (node instanceof CompositeParameterNode) {
+                parameters.addAll(((CompositeParameterNode) node).getNestedBasicParameters(true));
+            }
+        });
+
+        TestSuiteNode suite = new TestSuiteNode("suite", null);
+
+        for (int i = 0 ; i < parameters.get(0).getChoices().size() ; i++) {
+            int index = i;
+
+            List<ChoiceNode> choices = parameters.stream().map(e -> e.getChoices().get(index)).collect(Collectors.toList());
+
+            TestCaseNode test = new TestCaseNode("suite", null, choices);
+
+            method.addTestCase(test);
+            suite.addTestCase(test);
+        }
+
+        suite.setParent(method);
+
+        return suite;
     }
 
     public static AbstractParameterNode getStructureNode(String parameterName, AbstractParameterNode... parameters) {
@@ -61,11 +96,12 @@ public class ModelParserExportHelper {
         return structure;
     }
 
-    public static AbstractParameterNode getParameterNode(String parameterName, String parameterType, String choiceValue) {
+    public static AbstractParameterNode getParameterNode(String parameterName, String parameterType, String... choiceValue) {
         BasicParameterNode parameter = BasicParameterNode.createLocalStandardParameter(parameterName, parameterType, null, null);
-        ChoiceNode choice = new ChoiceNode("choice", choiceValue, null);
 
-        parameter.addChoice(choice);
+        for (int i = 0 ; i < choiceValue.length ; i++) {
+            parameter.addChoice(new ChoiceNode("choice" + i, choiceValue[i], null));
+        }
 
         return parameter;
     }
@@ -84,12 +120,14 @@ public class ModelParserExportHelper {
         return parameterLinked;
     }
 
-    public static BasicParameterNode getParameterNodeRandom(String parameterName, String parameterType, String choiceValue) {
+    public static BasicParameterNode getParameterNodeRandom(String parameterName, String parameterType, String... choiceValue) {
         BasicParameterNode parameter = BasicParameterNode.createLocalStandardParameter(parameterName, parameterType, null, null);
-        ChoiceNode choice = new ChoiceNode("choice", choiceValue, null);
-        choice.setRandomizedValue(true);
 
-        parameter.addChoice(choice);
+        for (int i = 0 ; i < choiceValue.length ; i++) {
+            ChoiceNode choice = new ChoiceNode("choice" + i, choiceValue[0], null);
+            choice.setRandomizedValue(true);
+            parameter.addChoice(choice);
+        }
 
         return parameter;
     }
@@ -99,16 +137,16 @@ public class ModelParserExportHelper {
     public static MethodNode modelLocal() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNode("p1", "String", "Lorem Ipsum");
+        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
         ModelParserExportHelper.addParameterAsLocal(p1, method);
 
-        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNode("p2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         ModelParserExportHelper.addParameterAsLocal(p2, method);
 
-        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("p3", "String", "Lorem, Ipsum");
+        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         ModelParserExportHelper.addParameterAsLocal(p3, method);
 
-        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("p4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsLocal(p4, method);
 
         return method;
@@ -117,16 +155,16 @@ public class ModelParserExportHelper {
     public static MethodNode modelGlobalClass() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("gc1", "String", "Lorem Ipsum");
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
         ModelParserExportHelper.addParameterAsGlobalClass(gc1, method);
 
-        AbstractParameterNode gc2 = ModelParserExportHelper.getParameterNode("gc2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gc2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalClass(gc2, method);
 
-        AbstractParameterNode gc3 = ModelParserExportHelper.getParameterNode("gc3", "String", "Lorem, Ipsum");
+        AbstractParameterNode gc3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         ModelParserExportHelper.addParameterAsGlobalClass(gc3, method);
 
-        AbstractParameterNode gc4 = ModelParserExportHelper.getParameterNode("gc4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode gc4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalClass(gc4, method);
 
         AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", gc1);
@@ -147,16 +185,16 @@ public class ModelParserExportHelper {
     public static MethodNode modelGlobalRoot() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("gr1", "String", "Lorem Ipsum");
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr1, method);
 
-        AbstractParameterNode gr2 = ModelParserExportHelper.getParameterNode("gr2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gr2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr2, method);
 
-        AbstractParameterNode gr3 = ModelParserExportHelper.getParameterNode("gr3", "String", "Lorem, Ipsum");
+        AbstractParameterNode gr3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr3, method);
 
-        AbstractParameterNode gr4 = ModelParserExportHelper.getParameterNode("gr4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode gr4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr4, method);
 
         AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", gr1);
@@ -177,10 +215,10 @@ public class ModelParserExportHelper {
     public static MethodNode modelMixed() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("gr1", "String", "Lorem Ipsum");
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr1, method);
 
-        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("gc1", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalClass(gc1, method);
 
         AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", gr1);
@@ -189,28 +227,30 @@ public class ModelParserExportHelper {
         AbstractParameterNode p2 = ModelParserExportHelper.getLinkedParameterNode("p2", gc1);
         ModelParserExportHelper.addParameterAsLocal(p2, method);
 
-        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("p3", "String", "Lorem, Ipsum");
+        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         ModelParserExportHelper.addParameterAsLocal(p3, method);
 
-        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("p4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsLocal(p4, method);
 
         return method;
     }
 
+//---------------------------------------------------------------------------------------------------------------
+
     public static MethodNode modelLocalStructure() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNode("p1", "String", "Lorem Ipsum");
-        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNode("p2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
+        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         AbstractParameterNode s1 = ModelParserExportHelper.getStructureNode("s1", p1, p2);
         ModelParserExportHelper.addParameterAsLocal(s1, method);
 
-        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("p3", "String", "Lorem, Ipsum");
+        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         AbstractParameterNode s2 = ModelParserExportHelper.getStructureNode("s2", p3);
         ModelParserExportHelper.addParameterAsLocal(s2, method);
 
-        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("p4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsLocal(p4, method);
 
         return method;
@@ -219,16 +259,16 @@ public class ModelParserExportHelper {
     public static MethodNode modelGlobalClassStructure() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("gc1", "String", "Lorem Ipsum");
-        AbstractParameterNode gc2 = ModelParserExportHelper.getParameterNode("gc2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
+        AbstractParameterNode gc2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         AbstractParameterNode sgc1 = ModelParserExportHelper.getStructureNode("sgc1", gc1, gc2);
         ModelParserExportHelper.addParameterAsGlobalClass(sgc1, method);
 
-        AbstractParameterNode gc3 = ModelParserExportHelper.getParameterNode("gc3", "String", "Lorem, Ipsum");
+        AbstractParameterNode gc3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         AbstractParameterNode sgc2 = ModelParserExportHelper.getStructureNode("sgc2", gc3);
         ModelParserExportHelper.addParameterAsGlobalClass(sgc2, method);
 
-        AbstractParameterNode gc4 = ModelParserExportHelper.getParameterNode("gc4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode gc4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalClass(gc4, method);
 
         AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", sgc1);
@@ -246,16 +286,16 @@ public class ModelParserExportHelper {
     public static MethodNode modelGlobalRootStructure() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("gr1", "String", "Lorem Ipsum");
-        AbstractParameterNode gr2 = ModelParserExportHelper.getParameterNode("gr2", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
+        AbstractParameterNode gr2 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         AbstractParameterNode sgr1 = ModelParserExportHelper.getStructureNode("sgr1", gr1, gr2);
         ModelParserExportHelper.addParameterAsGlobalRoot(sgr1, method);
 
-        AbstractParameterNode gr3 = ModelParserExportHelper.getParameterNode("gr3", "String", "Lorem, Ipsum");
+        AbstractParameterNode gr3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         AbstractParameterNode sgr2 = ModelParserExportHelper.getStructureNode("sgr2", gr3);
         ModelParserExportHelper.addParameterAsGlobalRoot(sgr2, method);
 
-        AbstractParameterNode gr4 = ModelParserExportHelper.getParameterNode("gr4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode gr4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsGlobalRoot(gr4, method);
 
         AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", sgr1);
@@ -273,11 +313,11 @@ public class ModelParserExportHelper {
     public static MethodNode modelMixedStructure() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("gr1", "String", "Lorem Ipsum");
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum");
         AbstractParameterNode sgr1 = ModelParserExportHelper.getStructureNode("sgr1", gr1);
         ModelParserExportHelper.addParameterAsGlobalRoot(sgr1, method);
 
-        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("gc1", "String", "Lorem \"Ipsum\"");
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         AbstractParameterNode sgc1 = ModelParserExportHelper.getStructureNode("sgc1", gc1);
         ModelParserExportHelper.addParameterAsGlobalClass(sgc1, method);
 
@@ -287,11 +327,11 @@ public class ModelParserExportHelper {
         AbstractParameterNode p2 = ModelParserExportHelper.getLinkedParameterNode("p2", sgc1);
         ModelParserExportHelper.addParameterAsLocal(p2, method);
 
-        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("p3", "String", "Lorem, Ipsum");
+        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum");
         AbstractParameterNode s1 = ModelParserExportHelper.getStructureNode("s1", p3);
         ModelParserExportHelper.addParameterAsLocal(s1, method);
 
-        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("p4", "String", "Lorem, \"Ipsum\"");
+        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         ModelParserExportHelper.addParameterAsLocal(p4, method);
 
         return method;
@@ -300,10 +340,10 @@ public class ModelParserExportHelper {
     public static MethodNode modelRandom() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNodeRandom("p1", "String", "[a-zA-Z0-9]{5}");
+        AbstractParameterNode p1 = ModelParserExportHelper.getParameterNodeRandom("dest1", "String", "[a-zA-Z0-9]{5}");
         ModelParserExportHelper.addParameterAsLocal(p1, method);
 
-        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNodeRandom("p2", "int", "0:9");
+        AbstractParameterNode p2 = ModelParserExportHelper.getParameterNodeRandom("dest2", "int", "0:9");
         ModelParserExportHelper.addParameterAsLocal(p2, method);
 
         return method;
@@ -312,11 +352,11 @@ public class ModelParserExportHelper {
     public static MethodNode modelNested() {
         MethodNode method = ModelParserExportHelper.getBaseMethodNode();
 
-        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("gr1", "String", "A");
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "A");
         AbstractParameterNode sgr1 = ModelParserExportHelper.getStructureNode("sgr1", gr1);
         ModelParserExportHelper.addParameterAsGlobalClass(sgr1, method);
 
-        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("gc1", "String", "B");
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest2", "String", "B");
         AbstractParameterNode sgc1 = ModelParserExportHelper.getStructureNode("sgc1", gc1);
         ModelParserExportHelper.addParameterAsGlobalClass(sgc1, method);
 
@@ -330,4 +370,30 @@ public class ModelParserExportHelper {
         return method;
     }
 
+    public static MethodNode modelSuite() {
+        MethodNode method = ModelParserExportHelper.getBaseMethodNode();
+
+        AbstractParameterNode gr1 = ModelParserExportHelper.getParameterNode("dest1", "String", "Lorem Ipsum", "Value");
+        AbstractParameterNode sgr1 = ModelParserExportHelper.getStructureNode("sgr1", gr1);
+        ModelParserExportHelper.addParameterAsGlobalRoot(sgr1, method);
+
+        AbstractParameterNode gc1 = ModelParserExportHelper.getParameterNode("dest2", "String", "Lorem \"Ipsum\"", "Value");
+        AbstractParameterNode sgc1 = ModelParserExportHelper.getStructureNode("sgc1", gc1);
+        ModelParserExportHelper.addParameterAsGlobalClass(sgc1, method);
+
+        AbstractParameterNode p1 = ModelParserExportHelper.getLinkedParameterNode("p1", sgr1);
+        ModelParserExportHelper.addParameterAsLocal(p1, method);
+
+        AbstractParameterNode p2 = ModelParserExportHelper.getLinkedParameterNode("p2", sgc1);
+        ModelParserExportHelper.addParameterAsLocal(p2, method);
+
+        AbstractParameterNode p3 = ModelParserExportHelper.getParameterNode("dest3", "String", "Lorem, Ipsum", "Value");
+        AbstractParameterNode s1 = ModelParserExportHelper.getStructureNode("s1", p3);
+        ModelParserExportHelper.addParameterAsLocal(s1, method);
+
+        AbstractParameterNode p4 = ModelParserExportHelper.getParameterNode("dest4", "String", "Lorem, \"Ipsum\"", "Value");
+        ModelParserExportHelper.addParameterAsLocal(p4, method);
+
+        return method;
+    }
 }
