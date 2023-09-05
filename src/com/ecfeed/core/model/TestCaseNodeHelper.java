@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.ecfeed.core.model.utils.JavaNodeNameHelper;
 import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.NameHelper;
-import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TestCaseNodeHelper {
@@ -279,7 +279,7 @@ public class TestCaseNodeHelper {
 
 		return isAmbiguous;
 	}
-	
+
 	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
 
 		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
@@ -411,9 +411,9 @@ public class TestCaseNodeHelper {
 		}
 	}
 
-	public static boolean isValidTestCaseName(String name) {
+	public static boolean isValidTestCaseName(String name) { // XYX use java node name helper
 
-		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
+		return name.matches(JavaNodeNameHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
 }

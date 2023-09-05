@@ -25,12 +25,24 @@ import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class JavaNodeNameHelper  {
-	
+
+	public static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+
 	public static final String REGEX_PACKAGE_NAME = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
 	public static final String REGEX_COMPLEX_JAVA_IDENTIFIER = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
 	public static final String REGEX_CLASS_NODE_NAME = REGEX_PACKAGE_NAME + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
-	public static final String REGEX_CATEGORY_TYPE_NAME = REGEX_CLASS_NODE_NAME;
-	
+
+	public static final String REGEX_METHOD_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
+	public static final String REGEX_CATEGORY_TYPE_NAME = REGEX_CLASS_NODE_NAME; // XYX ??
+	public static final String REGEX_CATEGORY_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
+
+	public static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+
+	public static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+
+	public static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+
+
 	public static String correctExtNodeName(String nodeName, IAbstractNode node) {
 		return null; // XYX TODO
 	}
@@ -39,9 +51,9 @@ public class JavaNodeNameHelper  {
 
 		try{
 			return (String)target.accept(new RegexInternalProvider());
-			
+
 		} catch(Exception e) {
-			
+
 			LogHelperCore.logCatch(e);}
 		return "*";
 	}
@@ -50,7 +62,7 @@ public class JavaNodeNameHelper  {
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return RegexHelper.REGEX_ROOT_NODE_NAME;
+			return REGEX_ROOT_NODE_NAME;
 		}
 
 		@Override
@@ -60,37 +72,37 @@ public class JavaNodeNameHelper  {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return RegexHelper.REGEX_METHOD_NODE_NAME;
+			return REGEX_METHOD_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
+			return REGEX_CATEGORY_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
+			return REGEX_CATEGORY_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
+			return REGEX_TEST_CASE_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
+			return REGEX_TEST_CASE_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return RegexHelper.REGEX_CONSTRAINT_NODE_NAME;
+			return REGEX_CONSTRAINT_NODE_NAME;
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return RegexHelper.REGEX_PARTITION_NODE_NAME;
+			return REGEX_CHOICE_NODE_NAME;
 		}
 	}
 

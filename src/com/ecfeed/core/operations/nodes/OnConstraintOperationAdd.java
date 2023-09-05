@@ -12,13 +12,13 @@ package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.utils.JavaNodeNameHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.RegexHelper;
 
 public class OnConstraintOperationAdd extends AbstractModelOperation {
 
@@ -62,13 +62,13 @@ public class OnConstraintOperationAdd extends AbstractModelOperation {
 			fIndex = fParentNode.getConstraintNodes().size();
 		}
 
-		if(fConstraint.getName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
+		if(fConstraint.getName().matches(JavaNodeNameHelper.REGEX_CONSTRAINT_NODE_NAME) == false){ // XYX use node name helper
 			ExceptionHelper.reportRuntimeException(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 
-//		if(fConstraint.updateReferences(fParentNode) == false){
-//			ExceptionHelper.reportRuntimeException(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
-//		}
+		//		if(fConstraint.updateReferences(fParentNode) == false){
+		//			ExceptionHelper.reportRuntimeException(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
+		//		}
 
 		fParentNode.addConstraint(fConstraint, fIndex);
 		markModelUpdated();
