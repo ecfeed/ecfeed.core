@@ -12,7 +12,7 @@ package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
-import com.ecfeed.core.model.utils.JavaNodeNameHelper;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
@@ -62,7 +62,7 @@ public class OnConstraintOperationAdd extends AbstractModelOperation {
 			fIndex = fParentNode.getConstraintNodes().size();
 		}
 
-		if(fConstraint.getName().matches(JavaNodeNameHelper.REGEX_CONSTRAINT_NODE_NAME) == false){ // XYX use node name helper
+		if(fConstraint.getName().matches(NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME) == false){ // XYX use node name helper
 			ExceptionHelper.reportRuntimeException(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 

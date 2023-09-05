@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.utils.JavaNodeNameHelper;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.OperationMessages;
@@ -31,7 +31,7 @@ public class OnTestCasesOperationRename extends CompositeOperation {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguageManager);
 
-		if (newName.matches(JavaNodeNameHelper.REGEX_TEST_CASE_NODE_NAME) == false) { // XYX use java node name helper
+		if (newName.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME) == false) { // XYX use java node name helper
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 

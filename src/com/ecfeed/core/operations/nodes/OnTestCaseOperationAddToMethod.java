@@ -16,7 +16,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.utils.JavaNodeNameHelper;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
@@ -115,7 +115,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			return true;
 		}
 
-		if (!name.matches(JavaNodeNameHelper.REGEX_TEST_CASE_NODE_NAME)) {
+		if (!name.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME)) {
 			return false;
 		}
 

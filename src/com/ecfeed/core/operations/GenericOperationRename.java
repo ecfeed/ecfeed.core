@@ -26,7 +26,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.model.utils.JavaNodeNameHelper;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -63,7 +63,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
 		fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
 
-		fJavaNameRegex = JavaNodeNameHelper.getRegex(target);
+		fJavaNameRegex = NodeNameHelper.getRegex(target);
 		fExtLanguageManager = extLanguageManager;
 	}
 

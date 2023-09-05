@@ -24,7 +24,7 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class JavaNodeNameHelper  {
+public class NodeNameHelper  {
 
 	public static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
