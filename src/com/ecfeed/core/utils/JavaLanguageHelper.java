@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.ecfeed.core.model.utils.JavaNodeNameHelper;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.TypeAdapterBaseForUserType;
@@ -164,7 +165,7 @@ public final class JavaLanguageHelper {
 
 	public static boolean isMatchWithJavaComplexIdenfifier(String value) {
 
-		if (!value.matches(RegexHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {
+		if (!value.matches(JavaNodeNameHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {
 			return false;
 		}
 

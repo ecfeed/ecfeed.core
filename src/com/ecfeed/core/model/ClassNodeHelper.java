@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.model.utils.JavaNodeNameHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NameHelper;
@@ -211,9 +212,9 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	private static boolean classNameCompliesWithJavaNamingRules(String className) {
+	private static boolean classNameCompliesWithJavaNamingRules(String className) { // XYX remove - use java node name helper
 
-		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
+		if (className.matches(JavaNodeNameHelper.REGEX_CLASS_NODE_NAME)) {
 			return true;
 		}
 
