@@ -55,7 +55,7 @@ public class ClassNodeHelper {
 		return methodNode;
 	}
 
-	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	public static String getNameWithoutPackage(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = getNonQualifiedName(classNode.getName());
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);

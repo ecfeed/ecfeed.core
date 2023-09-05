@@ -21,10 +21,11 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class NodeNameHelper  {
+public class NodeNameHelper {
 
 	private static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
@@ -43,10 +44,6 @@ public class NodeNameHelper  {
 	public static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
 
-	public static String correctExtNodeName(String nodeName, IAbstractNode node) {
-		return null; // XYX TODO
-	}
-
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
 
 		if (className.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
@@ -55,6 +52,13 @@ public class NodeNameHelper  {
 
 		return false;
 	}
+
+	public static String correctClassNameWithoutPackage(String classNameInIntrLanguage) {
+
+		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
+
+		return corrected;
+	}	
 
 	public static boolean constraintNodeNameCompliesWithRules(String constraintName) {
 

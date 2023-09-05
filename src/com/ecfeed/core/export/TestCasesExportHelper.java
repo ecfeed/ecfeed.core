@@ -68,7 +68,7 @@ public class TestCasesExportHelper {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(method.getClassNode(), extLanguageManager));
 		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
 		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 
@@ -91,7 +91,7 @@ public class TestCasesExportHelper {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(methodNode.getClassNode(), extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(methodNode.getClassNode(), extLanguageManager));
 		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(methodNode.getClassNode(), extLanguageManager));
 		result = result.replace(METHOD_NAME_SEQUENCE, AbstractNodeHelper.getName(methodNode, extLanguageManager));
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
