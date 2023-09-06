@@ -96,9 +96,23 @@ public class RootNodeHelper {
 		return null;
 	}
 
-	public static String generateUniqueClassName(RootNode rootNode, String oldName) {
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldName, 
+			IExtLanguageManager extLanguageManager) {
 
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
+		String oldNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(oldName);
+
+		String newNameInIntrLanguage = generateUniqueClassName(rootNode, oldNameInIntrLanguage);
+
+		String newNameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(newNameInIntrLanguage);
+
+		return newNameInExtLanguage;
+	}
+
+	public static String generateUniqueClassName(RootNode rootNode, String oldNameInIntrLanguage) {
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
 
 		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
 
