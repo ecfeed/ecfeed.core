@@ -58,6 +58,13 @@ public class NodeNameHelper {
 		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
 
 		return corrected;
+	}
+	
+	public static String correctMethodName(String classNameInIntrLanguage) {
+
+		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
+
+		return corrected;
 	}	
 
 	public static boolean constraintNodeNameCompliesWithRules(String constraintName) {

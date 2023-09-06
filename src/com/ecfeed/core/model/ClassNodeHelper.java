@@ -136,7 +136,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String generateNewMethodName(
+	public static String generateUniqueMethodName(
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
@@ -156,7 +156,7 @@ public class ClassNodeHelper {
 
 			String newMethodNameInExtLanguage = oldNameCore + String.valueOf(i);
 
-			MethodNode methodNode = findMethodByExtLanguage(
+			MethodNode methodNode = findMethodByName(
 					classNode,
 					newMethodNameInExtLanguage,
 					extLanguageManager);
@@ -193,7 +193,7 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-	public static MethodNode findMethodByExtLanguage(
+	public static MethodNode findMethodByName(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
 			IExtLanguageManager extLanguageManager) {

@@ -99,7 +99,7 @@ public class OnCompositeParameterOperationShift extends GenericShiftOperation {
 		String methodName = AbstractNodeHelper.getName(method, getExtLanguageManager());
 
 		MethodNode sibling = 
-				ClassNodeHelper.findMethodByExtLanguage(
+				ClassNodeHelper.findMethodByName(
 						classNode, 
 						methodName, 
 						getExtLanguageManager());
