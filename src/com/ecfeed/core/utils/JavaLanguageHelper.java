@@ -1523,15 +1523,9 @@ public final class JavaLanguageHelper {
 			}
 		}
 
-		if (result.startsWith(UNDERLINE_CHAR_STR)) {
-			result = "BEG_" + result;
-		}
-
-		if (result.endsWith(UNDERLINE_CHAR_STR)) {
-			result = result + "_END";
-		}
-
 		result = StringHelper.replaceAllSubstrings(result, "__", "_");
+		
+		result = StringHelper.removeToPrefixAndFromPostfix(UNDERLINE_CHAR_STR, UNDERLINE_CHAR_STR, result);
 
 		return result;
 	}
