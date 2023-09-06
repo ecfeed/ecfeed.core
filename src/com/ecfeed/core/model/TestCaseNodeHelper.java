@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -409,11 +408,6 @@ public class TestCaseNodeHelper {
 				ChoiceNodeHelper.compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
 			}
 		}
-	}
-
-	public static boolean isValidTestCaseName(String name) { // XYX use java node name helper
-
-		return name.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
 }

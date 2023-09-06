@@ -26,10 +26,10 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("pack.class_1", null);
 
-		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
 
 
@@ -52,10 +52,10 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class_1", null);
 
-		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
 
 		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
@@ -255,7 +255,7 @@ public class ClassNodeHelperTest {
 		//		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-					classNode, "method_1", new ExtLanguageManagerForJava());
+						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// simple language
@@ -327,8 +327,8 @@ public class ClassNodeHelperTest {
 
 		List<String> convertedTypes =
 				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
-					Arrays.asList(parameterTypes),
-					new ExtLanguageManagerForJava());
+						Arrays.asList(parameterTypes),
+						new ExtLanguageManagerForJava());
 
 		assertEquals(9, convertedTypes.size());
 		assertEquals("byte", convertedTypes.get(0));

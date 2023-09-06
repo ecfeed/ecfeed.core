@@ -31,7 +31,7 @@ public class OnTestCasesOperationRename extends CompositeOperation {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguageManager);
 
-		if (newName.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME) == false) { // XYX use java node name helper
+		if (!NodeNameHelper.testCaseNodeNameCompliesWithRules(newName)) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 

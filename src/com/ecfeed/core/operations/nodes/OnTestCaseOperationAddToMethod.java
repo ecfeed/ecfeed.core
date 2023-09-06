@@ -107,7 +107,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private boolean testCaseNameOk(TestCaseNode testCaseNode) { // XYX remove ?? - r use java node name helper
+	private boolean testCaseNameOk(TestCaseNode testCaseNode) {
 
 		String name = testCaseNode.getName();
 
