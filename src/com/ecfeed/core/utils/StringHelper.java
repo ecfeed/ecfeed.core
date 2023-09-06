@@ -618,5 +618,34 @@ public class StringHelper {
 
 			result = result.replace(stringToFind, stringToReplace);
 		}
-	}	
+	}
+
+	public static String trimmStringByCharacter(String fromString, char characterToTrimm) {
+
+		int firstIndex = 0;
+
+		for (int index = 0; index < fromString.length(); index++) {
+
+			char charAt = fromString.charAt(index);
+
+			if (charAt != characterToTrimm) {
+				firstIndex = index;
+				break;
+			}
+		}
+
+		int lastIndex = fromString.length() - 1;
+
+		for (int index = fromString.length() - 1; index > 0; index--) {
+
+			char charAt = fromString.charAt(index);
+
+			if (charAt != characterToTrimm) {
+				lastIndex = index;
+				break;
+			}
+		}
+
+		return fromString.substring(firstIndex, lastIndex + 1);
+	}
 }

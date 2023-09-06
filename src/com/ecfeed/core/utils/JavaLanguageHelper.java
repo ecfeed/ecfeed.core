@@ -36,7 +36,6 @@ import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 public final class JavaLanguageHelper {
 
 	private static final char UNDERLINE_CHAR = '_';
-	private static final String UNDERLINE_CHAR_STR = "_";
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
 	public static final String TYPE_NAME_BYTE = "byte";
 	public static final String TYPE_NAME_CHAR = "char";
@@ -1514,6 +1513,17 @@ public final class JavaLanguageHelper {
 
 		String result = identifier;
 
+		result = replaceInvalidCharacters(result);
+
+		result = StringHelper.replaceAllSubstrings(result, "__", "_");
+
+		result = StringHelper.trimmStringByCharacter(result, UNDERLINE_CHAR);
+
+		return result;
+	}
+
+	private static String replaceInvalidCharacters(String result) {
+
 		for (int index = 0; index < result.length(); index++) {
 
 			String substr = result.substring(index, index + 1);
@@ -1522,10 +1532,6 @@ public final class JavaLanguageHelper {
 				result = StringHelper.replaceCharacterInString(result, UNDERLINE_CHAR, index);
 			}
 		}
-
-		result = StringHelper.replaceAllSubstrings(result, "__", "_");
-		
-		result = StringHelper.removeToPrefixAndFromPostfix(UNDERLINE_CHAR_STR, UNDERLINE_CHAR_STR, result);
 
 		return result;
 	}
