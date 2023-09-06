@@ -6,10 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModelDataExportCSV implements ModelDataExport {
-
+    private final ModelDataParser parser;
     private final String separator;
     private final boolean nested;
-    private final boolean explicit;
 
     public static ModelDataExport getModelDataExport(String separator, boolean nested, boolean explicit) {
 
@@ -20,30 +19,24 @@ public class ModelDataExportCSV implements ModelDataExport {
 
         this.separator = separator;
         this.nested = nested;
-        this.explicit = explicit;
+
+        this.parser = ModelDataParserDefault.get(explicit, nested);
     }
 
     @Override
-    public List<String> getFile(TestSuiteNode suite) {
+    public String getFile(TestSuiteNode suite) {
         List<String> file = new ArrayList<>();
 
         file.add(getHeader(suite.getMethod()).orElse(""));
 
         suite.getTestCaseNodes().forEach(e -> file.add(getTest(e)));
 
-        return file;
+        return String.join("\n", file);
     }
 
     @Override
     public Optional<String> getHeader(MethodNode method) {
-       List<String> names = new ArrayList<>();
-
-       if (nested) {
-           method.getParameters().forEach(e -> names.add(getHeaderNameNested(e)));
-       } else {
-           method.getParameters().forEach(e -> names.addAll(getHeaderNameFlat(e, "")));
-       }
-
+       List<String> names = parser.getParameterNameList(method);
 
        return Optional.of(String.join(separator, names));
     }
@@ -52,77 +45,6 @@ public class ModelDataExportCSV implements ModelDataExport {
     public Optional<String> getFooter(MethodNode method) {
 
         return Optional.empty();
-    }
-
-    private String getHeaderNameNested(AbstractParameterNode parameter) {
-
-        if (!parameter.isLinked()) {
-            return getHeaderNameNestedNotLinked(parameter);
-        } else {
-            return getHeaderNameNestedLinked(parameter);
-        }
-    }
-
-    private String getHeaderNameNestedLinked(AbstractParameterNode parameter) {
-        AbstractParameterNode linked = parameter.getLinkToGlobalParameter();
-
-        if (explicit) {
-            if (linked.isClassParameter()) {
-                return parameter.getName() + ModelDataParser.SEPARATOR_CLASS + linked.getName();
-            } else if (linked.isGlobalParameter()) {
-                return parameter.getName() + ModelDataParser.SEPARATOR_ROOT + linked.getName();
-            }
-        }
-
-        return parameter.getName();
-    }
-
-    private String getHeaderNameNestedNotLinked(AbstractParameterNode parameter) {
-
-        return parameter.getName();
-    }
-
-    private List<String> getHeaderNameFlat(AbstractParameterNode parameter, String prefix) {
-        List<String> names = new ArrayList<>();
-        String prefixUpdated = prefix + parameter.getName();
-
-        if (!parameter.isLinked()) {
-            names.addAll(getHeaderNameFlatNotLinked(parameter, prefixUpdated));
-        } else {
-            if (explicit) {
-                names.addAll(getHeaderNameFlatLinked(parameter, prefixUpdated));
-            } else {
-                names.addAll(getHeaderNameFlatNotLinked(parameter.getLinkDestination(), prefixUpdated));
-            }
-        }
-
-        return names;
-    }
-
-    private List<String> getHeaderNameFlatLinked(AbstractParameterNode parameter, String prefix) {
-        List<String> names = new ArrayList<>();
-        AbstractParameterNode linked = parameter.getLinkToGlobalParameter();
-
-        if (linked.isClassParameter()) {
-            names.addAll(getHeaderNameFlat(linked, prefix + ModelDataParser.SEPARATOR_CLASS));
-        } else if (linked.isRootParameter()) {
-            names.addAll(getHeaderNameFlat(linked, prefix + ModelDataParser.SEPARATOR_ROOT));
-        }
-
-        return names;
-    }
-
-    private List<String> getHeaderNameFlatNotLinked(AbstractParameterNode parameter, String prefix) {
-        List<String> names = new ArrayList<>();
-
-        if (parameter instanceof BasicParameterNode) {
-            names.add(prefix);
-        } else if (parameter instanceof CompositeParameterNode) {
-            ((CompositeParameterNode) parameter).getParameters()
-                    .forEach(e -> names.addAll(getHeaderNameFlat(e, prefix + ModelDataParser.SEPARATOR_STRUCTURE)));
-        }
-
-        return names;
     }
 
     @Override
@@ -148,9 +70,14 @@ public class ModelDataExportCSV implements ModelDataExport {
         method.getParameters().forEach(e -> {
             if (e instanceof BasicParameterNode) {
                 ChoiceNode choice = choices.poll();
+
+                if (choice == null) {
+                    throw new RuntimeException("The test could not be exported to CSV!");
+                }
+
                 line.add(parseValue(choice.getDerandomizedValue()));
             } else if (e instanceof CompositeParameterNode) {
-                line.add(ModelDataParser.getJSON(e, choices, explicit));
+                line.add(parser.getJSON(choices, Collections.singletonList(e)).toString());
             }
         });
 

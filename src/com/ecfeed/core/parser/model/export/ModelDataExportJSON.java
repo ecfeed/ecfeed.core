@@ -4,32 +4,43 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 public class ModelDataExportJSON implements ModelDataExport {
+    private final ModelDataParser parser;
+
     private final boolean nested;
-    private final boolean explicit;
-    private final int indent = 2;
+    private final int indent;
 
-    public static ModelDataExport getModelDataExport(boolean nested, boolean explicit) {
+    public static ModelDataExport getModelDataExport(int indent, boolean nested, boolean explicit) {
 
-        return new ModelDataExportJSON(nested, explicit);
+        return new ModelDataExportJSON(indent, nested, explicit);
     }
 
-    private ModelDataExportJSON(boolean nested, boolean explicit) {
+    private ModelDataExportJSON(int indent, boolean nested, boolean explicit) {
 
         this.nested = nested;
-        this.explicit = explicit;
+        this.indent = indent;
+
+        this.parser = ModelDataParserDefault.get(explicit, nested);
     }
 
     @Override
-    public List<String> getFile(TestSuiteNode suite) {
-        return null;
+    public String getFile(TestSuiteNode suite) {
+        JSONObject json = new JSONObject();
+        JSONArray jsonTests = new JSONArray();
+
+        int index = 0;
+        for (TestCaseNode test : suite.getTestCaseNodes()) {
+            jsonTests.put(getTestJSON(test, index++));
+        }
+
+        json.put("tests", jsonTests);
+
+        return json.toString(this.indent);
     }
 
     @Override
@@ -53,9 +64,7 @@ public class ModelDataExportJSON implements ModelDataExport {
 
     @Override
     public String getTest(TestCaseNode test, int index) {
-        JSONObject json = getTestJSON(test);
-
-        json.put("index", index);
+        JSONObject json = getTestJSON(test, index);
 
         return json.toString(indent);
     }
@@ -63,12 +72,33 @@ public class ModelDataExportJSON implements ModelDataExport {
     private JSONObject getTestJSON(TestCaseNode test) {
         Queue<ChoiceNode> choices = new LinkedList<>(test.getChoices());
 
-        JSONObject json = new JSONObject();
+        if (this.nested) {
+            return getTestJSONNested(test, choices);
+        } else {
+            return getTestJSONFlat(test, choices);
+        }
+    }
 
-        test.getMethod().getParameters().forEach(e -> {
-            ModelDataParser.getJSON(json, e, choices, explicit);
-        });
+    private JSONObject getTestJSON(TestCaseNode test, int index) {
+        JSONObject json = getTestJSON(test);
+
+        json.put("index", index);
 
         return json;
+    }
+
+    private JSONObject getTestJSONFlat(TestCaseNode test, Queue<ChoiceNode> choices) {
+        List<String> names = parser.getParameterNameList(test.getMethod());
+
+        JSONObject json = new JSONObject();
+
+        names.forEach(e -> json.put(e, choices.poll().getDerandomizedValue()));
+
+        return json;
+    }
+
+    private JSONObject getTestJSONNested(TestCaseNode test, Queue<ChoiceNode> choices) {
+
+        return parser.getJSON(choices, test.getMethod().getParameters());
     }
 }

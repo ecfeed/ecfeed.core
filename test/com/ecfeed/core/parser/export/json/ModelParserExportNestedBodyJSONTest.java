@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ModelParserExportFlatBodyJSONTest {
+public class ModelParserExportNestedBodyJSONTest {
     private ModelDataExport parser;
     private ModelDataExport parserExplicit;
 
     @BeforeEach
     void setup() {
 
-        parser = ModelDataExportJSON.getModelDataExport(0, false, false);
-        parserExplicit = ModelDataExportJSON.getModelDataExport(0,false, true);
+        parser = ModelDataExportJSON.getModelDataExport(0, true, false);
+        parserExplicit = ModelDataExportJSON.getModelDataExport(0, true, true);
     }
 
     @Test
@@ -154,9 +154,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", json.get("s1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", json.get("s1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", json.get("s2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("s1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("s1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("s2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", json.get("dest4"));
         });
 
@@ -166,9 +166,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.get("s1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.get("s1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.get("s2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.getJSONObject("s1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.getJSONObject("s1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.getJSONObject("s2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", jsonExplicit.get("dest4"));
         });
     }
@@ -184,9 +184,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", json.get("p1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", json.get("p1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", json.get("p2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("p1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("p2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", json.get("p3"));
         });
 
@@ -196,9 +196,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.get("p1:sgc1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.get("p1:sgc1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.get("p2:sgc2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.getJSONObject("p1:sgc1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.getJSONObject("p1:sgc1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.getJSONObject("p2:sgc2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", jsonExplicit.get("p3:dest4"));
         });
     }
@@ -214,9 +214,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", json.get("p1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", json.get("p1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", json.get("p2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("p1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("p2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", json.get("p3"));
         });
 
@@ -226,9 +226,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.get("p1!sgr1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.get("p1!sgr1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.get("p2!sgr2_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.getJSONObject("p1!sgr1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.getJSONObject("p1!sgr1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.getJSONObject("p2!sgr2").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", jsonExplicit.get("p3!dest4"));
         });
     }
@@ -244,9 +244,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", json.get("p1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", json.get("p2_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", json.get("s1_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("p2").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("s1").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", json.get("dest4"));
         });
 
@@ -256,9 +256,9 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.get("p1!sgr1_dest1"));
-            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.get("p2:sgc1_dest2"));
-            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.get("s1_dest3"));
+            Assertions.assertEquals("Lorem Ipsum", jsonExplicit.getJSONObject("p1!sgr1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", jsonExplicit.getJSONObject("p2:sgc1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", jsonExplicit.getJSONObject("s1").get("dest3"));
             Assertions.assertEquals("Lorem, \"Ipsum\"", jsonExplicit.get("dest4"));
         });
     }
@@ -302,8 +302,8 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("A", json.get("s3_s2_s1_p1"));
-            Assertions.assertEquals("B", json.get("s3_s2_p2"));
+            Assertions.assertEquals("A", json.getJSONObject("s3").getJSONObject("s2").getJSONObject("s1").get("p1"));
+            Assertions.assertEquals("B", json.getJSONObject("s3").getJSONObject("s2").get("p2"));
         });
 
         String resultExplicit = parserExplicit.getTest(test, 0);
@@ -312,8 +312,8 @@ public class ModelParserExportFlatBodyJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals("A", jsonExplicit.get("s3_s2_s1_p1:dest1"));
-            Assertions.assertEquals("B", jsonExplicit.get("s3_s2_p2:dest2"));
+            Assertions.assertEquals("A", jsonExplicit.getJSONObject("s3").getJSONObject("s2").getJSONObject("s1").get("p1:dest1"));
+            Assertions.assertEquals("B", jsonExplicit.getJSONObject("s3").getJSONObject("s2").get("p2:dest2"));
         });
     }
 
