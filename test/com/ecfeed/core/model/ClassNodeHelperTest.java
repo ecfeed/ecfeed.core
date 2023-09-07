@@ -225,7 +225,7 @@ public class ClassNodeHelperTest {
 	}
 
 	@Test
-	public void generateNewMethodNameTest() {
+	public void generateUniqueMethodNameTest() {
 
 		// class node without methods
 
@@ -234,7 +234,7 @@ public class ClassNodeHelperTest {
 		// String[] userTypes1 = {"User1", "com.User2"};
 
 		String result =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method", new ExtLanguageManagerForJava());
 
 		assertEquals("method1", result);
@@ -244,7 +244,7 @@ public class ClassNodeHelperTest {
 		// String[] userTypes2 = {"User1", "User2"};
 
 		result =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method", new ExtLanguageManagerForSimple());
 		assertEquals("method1", result);
 
@@ -254,7 +254,7 @@ public class ClassNodeHelperTest {
 
 		//		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
@@ -262,7 +262,7 @@ public class ClassNodeHelperTest {
 
 		// String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
@@ -277,14 +277,14 @@ public class ClassNodeHelperTest {
 		// check in java language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		// check in simple language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 
@@ -296,12 +296,12 @@ public class ClassNodeHelperTest {
 		// check in Java and Simple language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
+				ClassNodeHelper.generateUniqueMethodName(
 						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 	}
