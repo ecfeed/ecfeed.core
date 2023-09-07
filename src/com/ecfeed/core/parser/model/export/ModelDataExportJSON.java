@@ -49,12 +49,6 @@ public class ModelDataExportJSON implements ModelDataExport {
     }
 
     @Override
-    public String getFile(TestSuiteNode suite) {
-
-        return getFile(suite.getTestCaseNodes());
-    }
-
-    @Override
     public Optional<String> getHeader(MethodNode method) {
 
         return Optional.empty();

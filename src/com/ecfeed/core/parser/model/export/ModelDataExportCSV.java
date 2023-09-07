@@ -40,12 +40,6 @@ public class ModelDataExportCSV implements ModelDataExport {
     }
 
     @Override
-    public String getFile(TestSuiteNode suite) {
-
-        return getFile(suite.getTestCaseNodes());
-    }
-
-    @Override
     public Optional<String> getHeader(MethodNode method) {
        List<String> names = parser.getParameterNameList(method);
 

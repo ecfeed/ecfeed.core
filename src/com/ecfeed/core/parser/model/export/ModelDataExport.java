@@ -11,11 +11,15 @@ import java.util.Optional;
 public interface ModelDataExport {
 
     String getFile(List<TestCaseNode> suite);
-    String getFile(TestSuiteNode suite);
     Optional<String> getHeader(MethodNode method);
     Optional<String> getFooter(MethodNode method);
     String getTest(TestCaseNode test);
     String getTest(TestCaseNode test, int index);
+
+    default String getFile(TestSuiteNode suite) {
+
+        return getFile(suite.getTestCaseNodes());
+    }
 
     default String getFilePreview(List<TestCaseNode> suite) {
 
@@ -26,7 +30,7 @@ public interface ModelDataExport {
         List<TestCaseNode> suiteUpdated = new ArrayList<>();
 
         for (int i = 0 ; i < suite.size() && i < 2 ; i++) {
-            suiteUpdated.add(suite.get(0));
+            suiteUpdated.add(suite.get(i));
         }
 
         return getFile(suiteUpdated);
