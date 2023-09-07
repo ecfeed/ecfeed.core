@@ -136,7 +136,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String generateUniqueMethodName(
+	public static String generateUniqueMethodName( // XYX REMOVE
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
@@ -166,6 +166,34 @@ public class ClassNodeHelper {
 			}
 		}
 	}
+
+	public static String generateUniqueMethodName(
+			ClassNode classNode,
+			String startMethodName,
+			String availableMethodName) {
+
+		if (!NodeNameHelper.methodNameCompliesWithNamingRules(startMethodName)) {
+			ExceptionHelper.reportRuntimeException("Method name is invalid.");
+		}
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
+
+		for (int i = 1;   ; i++) {
+
+			String newMethodName = oldNameCore + String.valueOf(i);
+
+			if (availableMethodName != null && StringHelper.isEqual(newMethodName, availableMethodName)) {
+				return availableMethodName;
+			}
+
+			MethodNode methodNode = findMethodByName(classNode, newMethodName);
+
+			if (methodNode == null) {
+				return newMethodName;
+			}
+		}
+	}
+
 
 	public static String createSignature(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
@@ -205,6 +233,24 @@ public class ClassNodeHelper {
 			String currentMethodName = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage)){
+				return methodNode;
+			}
+		}
+
+		return null;
+	}
+
+	public static MethodNode findMethodByName(
+			ClassNode classNode,
+			String methodNameInIntrLanguage) {
+
+		List<MethodNode> methods = classNode.getMethods();
+
+		for (MethodNode methodNode : methods) {
+
+			String currentMethodName = methodNode.getName();
+
+			if (currentMethodName.equals(methodNameInIntrLanguage)){
 				return methodNode;
 			}
 		}
