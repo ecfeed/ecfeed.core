@@ -43,7 +43,6 @@ public class NodeNameHelper {
 
 	private static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
 
-
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
 
 		if (className.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
@@ -76,6 +75,13 @@ public class NodeNameHelper {
 		return corrected;
 	}	
 
+	public static String correctParameterNameSyntax(String classNameInIntrLanguage) {
+
+		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
+
+		return corrected;
+	}	
+	
 	public static boolean constraintNodeNameCompliesWithRules(String constraintName) {
 
 		return constraintName.matches(NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME);
