@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -64,7 +65,7 @@ public class ParametersParentNodeHelper {
 		return result;
 	}
 
-	public static BasicParameterNode findGlobalParameter(
+	public static BasicParameterNode findGlobalParameter( // XYX move to basic parameter node helper
 			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
@@ -96,7 +97,8 @@ public class ParametersParentNodeHelper {
 		return null;
 	}
 
-	public static BasicParameterNode getBasicParameter(int parameterNumber, IParametersParentNode parametersParentNode) {
+	public static BasicParameterNode getBasicParameter( // XYX move to basic parameter node helper
+			int parameterNumber, IParametersParentNode parametersParentNode) {
 
 		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
 
@@ -129,6 +131,37 @@ public class ParametersParentNodeHelper {
 		}
 
 		return parameterTypes;
+	}
+
+	public static String generateUniqueParameterName(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			IParametersParentNode parametersParent) {
+
+		String nameCore = StringHelper.removeFromNumericPostfix(nameInIntrLanguage);
+
+		String newName = generateUniqueParameterNameFromNameCore(nameCore, availableNameInIntrLanguage, parametersParent);
+
+		return newName;
+	}
+
+	private static String generateUniqueParameterNameFromNameCore(
+			String startNameCore,
+			String availableName,
+			IParametersParentNode parametersParent) {
+
+		for (int i = 1;   ; i++) {
+
+			String newName = startNameCore + String.valueOf(i);
+
+			if (availableName != null && StringHelper.isEqual(newName, availableName)) {
+				return availableName;
+			}
+
+			if (null == AbstractParameterNodeHelper.findParameterByName(newName, parametersParent)) {
+				return newName;
+			}
+		}
 	}
 
 	//----------------------------------------------------------------------------
