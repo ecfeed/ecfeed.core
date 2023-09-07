@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
@@ -244,7 +242,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static AbstractParameterNode findParameter(
 			String path, 
 			IParametersParentNode parent) {
@@ -357,13 +355,13 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static boolean isTopLocalParameter(AbstractParameterNode abstractParameterNode) {
-		
+
 		IAbstractNode parent = abstractParameterNode.getParent();
-		
+
 		if (parent instanceof MethodNode) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
