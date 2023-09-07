@@ -53,14 +53,23 @@ public class NodeNameHelper {
 		return false;
 	}
 
-	public static String correctClassNameWithoutPackage(String classNameInIntrLanguage) {
+	public static String correctSyntaxClassNameWithoutPackage(String classNameInIntrLanguage) {
 
 		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
 
 		return corrected;
 	}
+
+	public static boolean methodNameCompliesWithNamingRules(String methodName) {
+
+		if (methodName.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
+			return true;
+		}
+
+		return false;
+	}
 	
-	public static String correctMethodName(String classNameInIntrLanguage) {
+	public static String correctMethodNameSyntax(String classNameInIntrLanguage) {
 
 		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
 
