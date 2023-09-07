@@ -56,7 +56,13 @@ public class ExportTemplateFactory {
 		}
 		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
 			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
-		}		
+		}
+		if (formatName.equals(StandardizedExportCsvTemplate.getTemplateFormatSt())) {
+			return new StandardizedExportCsvTemplate(fMethodNode, fExtLanguageManager);
+		}
+		if (formatName.equals(StandardizedExportJsonTemplate.getTemplateFormatSt())) {
+			return new StandardizedExportJsonTemplate(fMethodNode, fExtLanguageManager);
+		}
 		
 		return null;
 	}
@@ -64,6 +70,8 @@ public class ExportTemplateFactory {
 	public static String[] getAvailableExportFormats() {
 
 		String[] formats = { 
+				StandardizedExportCsvTemplate.getTemplateFormatSt(), 
+				StandardizedExportJsonTemplate.getTemplateFormatSt(), 
 				CsvExportTemplate.getTemplateFormatSt(), 
 				XmlExportTemplate.getTemplateFormatSt(), 
 				GherkinExportTemplate.getTemplateFormatSt(),

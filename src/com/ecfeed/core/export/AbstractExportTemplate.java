@@ -39,6 +39,11 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
+	public boolean isStanderdized() {
+		return false;
+	}
+	
+	@Override
 	public String getDefaultTemplateText() {
 		
 		return fTemplateText.getInitialTemplateText();

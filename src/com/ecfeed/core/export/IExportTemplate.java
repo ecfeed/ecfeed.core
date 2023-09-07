@@ -29,6 +29,8 @@ public interface IExportTemplate {
 	String getFooterTemplate();
 	String getHeaderTemplate();
 	String getTestCaseTemplate();
+	
+	boolean isStanderdized();
 
 	String createPreview(Collection<TestCaseNode> testCases, MethodNode methodNode, List<ParameterWithLinkingContext> deployedParameters);
 }
