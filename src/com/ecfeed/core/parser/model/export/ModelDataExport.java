@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface ModelDataExport {
 
+    String getFilePreview(List<TestCaseNode> suite);
     String getFile(List<TestCaseNode> suite);
     String getFile(TestSuiteNode suite);
     Optional<String> getHeader(MethodNode method);
