@@ -96,7 +96,7 @@ public class RootNodeHelper {
 		return null;
 	}
 
-	public static ClassNode findClassByName(
+	public static ClassNode findClassByName( // XYX class node helper
 			String classNameInIntrLanguage,
 			RootNode rootNode) {
 
