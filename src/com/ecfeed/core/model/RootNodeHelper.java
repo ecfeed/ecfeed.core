@@ -96,42 +96,82 @@ public class RootNodeHelper {
 		return null;
 	}
 
+	public static ClassNode findClassByName(
+			String classNameInIntrLanguage,
+			RootNode rootNode) {
+
+		List<ClassNode> classes = rootNode.getClasses();
+
+		for (ClassNode node : classes) {
+
+			String currentName = node.getName();
+
+			if (StringHelper.isEqual(currentName, classNameInIntrLanguage)) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
 	public static String generateUniqueClassName(
 			RootNode rootNode, 
 			String oldName, 
+			String availableClassName,
 			IExtLanguageManager extLanguageManager) {
 
 		String oldNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(oldName);
 
-		String newNameInIntrLanguage = generateUniqueClassName(rootNode, oldNameInIntrLanguage);
+		String newNameInIntrLanguage = generateUniqueClassName(rootNode, oldNameInIntrLanguage, availableClassName);
 
 		String newNameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(newNameInIntrLanguage);
 
 		return newNameInExtLanguage;
 	}
 
-	public static String generateUniqueClassName(RootNode rootNode, String oldNameInIntrLanguage) {
+	public static String generateNewClassName(RootNode rootNode) {
+
+		String fullClassName = CLASS_NEW_NAME;
+		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName, null);
+	}
+
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldNameInIntrLanguage) {
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
 
-		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore);
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore, null);
 
 		return newName;
 	}
 
-	public static String generateNewClassName(RootNode rootNode) {
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldNameInIntrLanguage,
+			String availableClassName) {
 
-		String fullClassName = CLASS_NEW_NAME;
-		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName);
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
+
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore, availableClassName);
+
+		return newName;
 	}
 
-	public static String generateUniqueClassNameFromClassNameCore(RootNode rootNode, String startClassNameCore) {
+	public static String generateUniqueClassNameFromClassNameCore(
+			RootNode rootNode, 
+			String startClassNameCore,
+			String availableClassName) {
 
 		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
 		for (int i = 1;   ; i++) {
 
 			String newClassName = startClassNameCore + String.valueOf(i);
+
+			if (availableClassName != null && StringHelper.isEqual(newClassName, availableClassName)) {
+				return availableClassName;
+			}
 
 			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
 
