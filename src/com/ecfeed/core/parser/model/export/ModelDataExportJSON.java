@@ -29,18 +29,29 @@ public class ModelDataExportJSON implements ModelDataExport {
     }
 
     @Override
-    public String getFile(TestSuiteNode suite) {
+    public String getFile(List<TestCaseNode> suite) {
+
+        if (suite.size() == 0) {
+            throw new RuntimeException("The test suite should consist of at least one test case!");
+        }
+
         JSONObject json = new JSONObject();
         JSONArray jsonTests = new JSONArray();
 
         int index = 0;
-        for (TestCaseNode test : suite.getTestCaseNodes()) {
+        for (TestCaseNode test : suite) {
             jsonTests.put(getTestJSON(test, index++));
         }
 
         json.put("tests", jsonTests);
 
         return json.toString(this.indent);
+    }
+
+    @Override
+    public String getFile(TestSuiteNode suite) {
+
+        return getFile(suite.getTestCaseNodes());
     }
 
     @Override

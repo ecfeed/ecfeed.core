@@ -24,14 +24,25 @@ public class ModelDataExportCSV implements ModelDataExport {
     }
 
     @Override
-    public String getFile(TestSuiteNode suite) {
+    public String getFile(List<TestCaseNode> suite) {
+
+        if (suite.size() == 0) {
+            throw new RuntimeException("The test suite should consist of at least one test case!");
+        }
+
         List<String> file = new ArrayList<>();
 
-        file.add(getHeader(suite.getMethod()).orElse(""));
+        file.add(getHeader(suite.get(0).getMethod()).orElse(""));
 
-        suite.getTestCaseNodes().forEach(e -> file.add(getTest(e)));
+        suite.forEach(e -> file.add(getTest(e)));
 
         return String.join("\n", file);
+    }
+
+    @Override
+    public String getFile(TestSuiteNode suite) {
+
+        return getFile(suite.getTestCaseNodes());
     }
 
     @Override
