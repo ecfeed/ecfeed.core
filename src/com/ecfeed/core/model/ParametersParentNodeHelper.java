@@ -64,38 +64,6 @@ public class ParametersParentNodeHelper {
 		return result;
 	}
 
-	public static BasicParameterNode findGlobalParameter( // XYX move to basic parameter node helper
-			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
-
-		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
-			return null;
-		}
-
-		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
-		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
-
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(parametersParentNode);
-
-		ClassNode classNode = methodNode.getClassNode();
-		String className = classNode.getName();
-
-		if (StringHelper.isEqual(className, parentName)) {
-			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
-		}
-
-		RootNode rootNode = classNode.getRoot();
-		String rootName = rootNode.getName();
-
-		if (parentName == null || rootName.equals(parentName)) {
-			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
-		}
-
-		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
-		return null;
-	}
-
 	public static BasicParameterNode getBasicParameter( // XYX move to basic parameter node helper
 			int parameterNumber, IParametersParentNode parametersParentNode) {
 
