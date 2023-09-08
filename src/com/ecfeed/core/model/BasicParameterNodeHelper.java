@@ -760,7 +760,7 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static BasicParameterNode getBasicParameter( // XYX move to basic parameter node helper
+	public static BasicParameterNode getBasicParameter(
 			int parameterNumber, IParametersParentNode parametersParentNode) {
 
 		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
