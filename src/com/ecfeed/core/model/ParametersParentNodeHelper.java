@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -62,20 +61,6 @@ public class ParametersParentNodeHelper {
 		}
 
 		return result;
-	}
-
-	public static BasicParameterNode getBasicParameter( // XYX move to basic parameter node helper
-			int parameterNumber, IParametersParentNode parametersParentNode) {
-
-		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
-
-		if (!(abstractParameterNode instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-		return basicParameterNode;
 	}
 
 	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {

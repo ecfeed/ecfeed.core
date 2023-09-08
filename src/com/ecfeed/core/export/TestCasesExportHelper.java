@@ -21,13 +21,13 @@ import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
-import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -428,7 +428,9 @@ public class TestCasesExportHelper {
 			return null;
 		}
 
-		BasicParameterNode basicParameterNode = ParametersParentNodeHelper.getBasicParameter(parameterIndex, methodNode);
+		BasicParameterNode basicParameterNode = 
+				BasicParameterNodeHelper.getBasicParameter(parameterIndex, methodNode);
+
 		String parameterType = basicParameterNode.getType();
 
 		ChoiceNode choice = testCase.getTestData().get(parameterIndex);

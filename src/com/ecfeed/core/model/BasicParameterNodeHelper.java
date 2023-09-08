@@ -760,5 +760,18 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
+	public static BasicParameterNode getBasicParameter( // XYX move to basic parameter node helper
+			int parameterNumber, IParametersParentNode parametersParentNode) {
+
+		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+		return basicParameterNode;
+	}
 
 }
