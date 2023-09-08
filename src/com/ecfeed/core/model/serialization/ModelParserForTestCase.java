@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -177,7 +177,7 @@ public class ModelParserForTestCase {
 			return Optional.empty();
 		}
 
-		ChoiceNode choiceNode = BasicParameterNodeHelper.findChoice(choicesParentParameter, choiceQualifiedName);
+		ChoiceNode choiceNode = ChoiceNodeHelper.findChoice(choicesParentParameter, choiceQualifiedName);
 
 		if (choiceNode == null) {
 			return Optional.empty();

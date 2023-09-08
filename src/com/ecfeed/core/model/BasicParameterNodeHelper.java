@@ -470,23 +470,6 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) { // XYX MOVE TO CHOICE NODE HELPER
-
-		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
-
-		Iterator<ChoiceNode> it = choiceNodes.iterator();
-
-		while(it.hasNext()) {
-			ChoiceNode choiceNode = it.next();
-
-			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
-				return choiceNode;
-			}
-		}
-
-		return null;
-	}
-
 	public static boolean choiceNodeExists(
 			BasicParameterNode basicParameterNode, 
 			ChoiceNode choiceNodeToFind) {
