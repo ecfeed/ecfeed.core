@@ -96,24 +96,6 @@ public class RootNodeHelper {
 		return null;
 	}
 
-	public static ClassNode findClassByName( // XYX class node helper
-			String classNameInIntrLanguage,
-			RootNode rootNode) {
-
-		List<ClassNode> classes = rootNode.getClasses();
-
-		for (ClassNode node : classes) {
-
-			String currentName = node.getName();
-
-			if (StringHelper.isEqual(currentName, classNameInIntrLanguage)) {
-				return node;
-			}
-		}
-
-		return null;
-	}
-
 	public static String generateUniqueClassName(
 			RootNode rootNode, 
 			String oldName, 

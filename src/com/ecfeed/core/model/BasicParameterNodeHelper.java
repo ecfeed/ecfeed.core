@@ -728,7 +728,7 @@ public class BasicParameterNodeHelper {
 		return basicParameterNodesToReturn;
 	}
 
-	public static BasicParameterNode findGlobalBasicParameter( // XYX move to basic parameter node helper
+	public static BasicParameterNode findGlobalBasicParameter(
 			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {

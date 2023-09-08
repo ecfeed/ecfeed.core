@@ -287,4 +287,23 @@ public class ClassNodeHelper {
 		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
 	}
 
+	public static ClassNode findClassByName(
+			String classNameInIntrLanguage,
+			RootNode rootNode) {
+
+		List<ClassNode> classes = rootNode.getClasses();
+
+		for (ClassNode node : classes) {
+
+			String currentName = node.getName();
+
+			if (StringHelper.isEqual(currentName, classNameInIntrLanguage)) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
+
 }
