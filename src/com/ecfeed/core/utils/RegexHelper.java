@@ -21,11 +21,11 @@ public class RegexHelper {
 	public static final String REGEX_SPECIAL_CHARACTER = "\u039B";
 
 	public static final String REGEX_JAVA_IDENTIFIER = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z_$][" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_$]*";
-	public static final String REGEX_ALPHANUMERIC_WITH_SPACES_64 = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\-][" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\- ]{0,63}";
+	public static final String REGEX_ALPHANUMERIC_WITH_SPACES_300 = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\-][" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\- ]{0,300}";
 	private static final String REGEX_PACKAGE_NAME_2 = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
 	public static final String REGEX_COMPLEX_JAVA_IDENTIFIER = REGEX_PACKAGE_NAME_2 + "*"+ RegexHelper.REGEX_JAVA_IDENTIFIER;
 
-	public static final String REGEX_PARTITION_LABEL = REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	public static final String REGEX_PARTITION_LABEL = REGEX_ALPHANUMERIC_WITH_SPACES_300;
 
 	public static final String REGEX_USER_TYPE_VALUE = REGEX_JAVA_IDENTIFIER;
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";

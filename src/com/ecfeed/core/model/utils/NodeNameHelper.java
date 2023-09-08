@@ -27,7 +27,7 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class NodeNameHelper {
 
-	private static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_ROOT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_300;
 
 	private static final String REGEX_PACKAGE_NAME = "(\\.|((" + RegexHelper.REGEX_JAVA_IDENTIFIER + ")\\.)*)";
 
@@ -37,11 +37,11 @@ public class NodeNameHelper {
 
 	private static final String REGEX_PARAMETER_NODE_NAME = RegexHelper.REGEX_JAVA_IDENTIFIER;
 
-	private static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_CHOICE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_300;
 
-	private static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_CONSTRAINT_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_300;
 
-	private static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64;
+	private static final String REGEX_TEST_CASE_NODE_NAME = RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_300;
 
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
 
@@ -76,7 +76,7 @@ public class NodeNameHelper {
 
 		return false;
 	}
-	
+
 	public static String correctMethodNameSyntax(String classNameInIntrLanguage) {
 
 		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
@@ -90,7 +90,7 @@ public class NodeNameHelper {
 
 		return corrected;
 	}	
-	
+
 	public static boolean constraintNodeNameCompliesWithRules(String constraintName) {
 
 		return constraintName.matches(NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME);
@@ -101,14 +101,16 @@ public class NodeNameHelper {
 		return name.matches(NodeNameHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
-	public static String getRegex(IAbstractNode target) {
+	public static String getNameRegex(IAbstractNode target) {
 
 		try{
 			return (String)target.accept(new RegexInternalProvider());
 
 		} catch(Exception e) {
 
-			LogHelperCore.logCatch(e);}
+			LogHelperCore.logCatch(e);
+		}
+		
 		return "*";
 	}
 

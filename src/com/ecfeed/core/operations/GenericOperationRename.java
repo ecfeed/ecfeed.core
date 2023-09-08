@@ -63,7 +63,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
 		fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
 
-		fJavaNameRegex = NodeNameHelper.getRegex(target);
+		fJavaNameRegex = NodeNameHelper.getNameRegex(target);
 		fExtLanguageManager = extLanguageManager;
 	}
 
