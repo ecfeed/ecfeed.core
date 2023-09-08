@@ -67,6 +67,15 @@ public class NodeNameHelper {
 
 		return false;
 	}
+
+	public static boolean choiceNameCompliesWithNamingRules(String methodName) {
+
+		if (methodName.matches(NodeNameHelper.REGEX_CLASS_NODE_NAME)) {
+			return true;
+		}
+
+		return false;
+	}
 	
 	public static String correctMethodNameSyntax(String classNameInIntrLanguage) {
 

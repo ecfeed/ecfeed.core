@@ -240,7 +240,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static MethodNode findMethodByName(
+	public static MethodNode findMethodByName( // XYX move to method node helper
 			ClassNode classNode,
 			String methodNameInIntrLanguage) {
 

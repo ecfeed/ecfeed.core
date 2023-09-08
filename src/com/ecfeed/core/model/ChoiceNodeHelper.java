@@ -1065,5 +1065,23 @@ public class ChoiceNodeHelper {
 			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
 	}
+	
+	public static ChoiceNode findChoiceByName(
+			IChoicesParentNode choicesParentNode,
+			String methodNameInIntrLanguage) {
+
+		List<ChoiceNode> choices = choicesParentNode.getChoices();
+
+		for (ChoiceNode choiceNode : choices) {
+
+			String currentName = choiceNode.getName();
+
+			if (currentName.equals(methodNameInIntrLanguage)){
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
 
 }

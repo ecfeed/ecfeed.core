@@ -470,7 +470,7 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) {
+	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) { // XYX MOVE TO CHOICE NODE HELPER
 
 		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
 
