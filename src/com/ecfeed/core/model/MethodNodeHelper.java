@@ -980,4 +980,22 @@ public class MethodNodeHelper {
 		return false;
 	}
 
+	public static MethodNode findMethodByName(
+			ClassNode classNode,
+			String methodNameInIntrLanguage) {
+
+		List<MethodNode> methods = classNode.getMethods();
+
+		for (MethodNode methodNode : methods) {
+
+			String currentMethodName = methodNode.getName();
+
+			if (currentMethodName.equals(methodNameInIntrLanguage)){
+				return methodNode;
+			}
+		}
+
+		return null;
+	}
+
 }

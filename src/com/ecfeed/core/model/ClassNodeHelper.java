@@ -177,7 +177,7 @@ public class ClassNodeHelper {
 				return availableMethodName;
 			}
 
-			MethodNode methodNode = findMethodByName(classNode, newMethodName);
+			MethodNode methodNode = MethodNodeHelper.findMethodByName(classNode, newMethodName);
 
 			if (methodNode == null) {
 				return newMethodName;
@@ -223,24 +223,6 @@ public class ClassNodeHelper {
 			String currentMethodName = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage)){
-				return methodNode;
-			}
-		}
-
-		return null;
-	}
-
-	public static MethodNode findMethodByName( // XYX move to method node helper
-			ClassNode classNode,
-			String methodNameInIntrLanguage) {
-
-		List<MethodNode> methods = classNode.getMethods();
-
-		for (MethodNode methodNode : methods) {
-
-			String currentMethodName = methodNode.getName();
-
-			if (currentMethodName.equals(methodNameInIntrLanguage)){
 				return methodNode;
 			}
 		}
