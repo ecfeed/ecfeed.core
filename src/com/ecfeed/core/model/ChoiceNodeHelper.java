@@ -1067,7 +1067,7 @@ public class ChoiceNodeHelper {
 		}
 	}
 
-	public static ChoiceNode findChoiceByName( // XYX SIMILAR TO FIND CHOICE
+	public static ChoiceNode findChoiceByName(
 			IChoicesParentNode choicesParentNode,
 			String methodNameInIntrLanguage) {
 
@@ -1085,7 +1085,9 @@ public class ChoiceNodeHelper {
 		return null;
 	}
 
-	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) {
+	public static ChoiceNode findChoiceByQualifiedName(
+			BasicParameterNode basicParameterNode, 
+			String choiceQualifiedName) {
 
 		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
 

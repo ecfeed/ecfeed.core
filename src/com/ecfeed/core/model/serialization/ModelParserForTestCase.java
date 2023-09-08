@@ -177,7 +177,7 @@ public class ModelParserForTestCase {
 			return Optional.empty();
 		}
 
-		ChoiceNode choiceNode = ChoiceNodeHelper.findChoice(choicesParentParameter, choiceQualifiedName);
+		ChoiceNode choiceNode = ChoiceNodeHelper.findChoiceByQualifiedName(choicesParentParameter, choiceQualifiedName);
 
 		if (choiceNode == null) {
 			return Optional.empty();
