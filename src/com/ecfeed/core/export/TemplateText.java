@@ -49,6 +49,10 @@ public class TemplateText {
 
         fCurrentTemplateText = completeTemplateText;
 
+        if (completeTemplateText.startsWith("RFC")) {
+        	return;
+        }
+        
         try {
             divideIntoSubtemplates(
                     completeTemplateText,

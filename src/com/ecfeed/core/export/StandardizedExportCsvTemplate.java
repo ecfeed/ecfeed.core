@@ -16,10 +16,16 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 
 	public StandardizedExportCsvTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguageManager);
+		super(methodNode, createDefaultTemplateText(), extLanguageManager);
+	}
+	
+	public StandardizedExportCsvTemplate(MethodNode methodNode, String templateText, IExtLanguageManager extLanguageManager) {
+
+		super(methodNode, createDefaultTemplateText(), extLanguageManager);
+		setTemplateText(templateText);
 	}
 
-	private static String createDefaultTemplateText(int methodParametersCount) {
+	private static String createDefaultTemplateText() {
 		String template = 
 				"RFC 4180\n" +
 				"Delimiter:\t ,\n" +
@@ -40,7 +46,7 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 	}
 	
 	public static String getTemplateFormatSt() {
-		return "CSV - RFC 4180";
+		return "RFC 4180 - CSV";
 	}
 
 	@Override 
@@ -49,18 +55,27 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 	}
 	
 	@Override
+	public String getTestCaseTemplate() {
+		return "N/A";
+	}
+	
+	@Override
 	public String createPreview(
 			Collection<TestCaseNode> selectedTestCases, 
 			MethodNode methodNode,
 			List<ParameterWithLinkingContext> deployedParameters) {
 		
-		Map<String, String> parameters = StanderdizedExportHelper.getParameters(getTemplateText());
+		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
 		String delimiter = parameters.get("Delimiter");
 		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
 		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
 		
 		ModelDataExport parser = ModelDataExportCSV.getModelDataExport(delimiter, nested, explicit);
+		
+		if (selectedTestCases == null) {
+			selectedTestCases = StandardizedExportHelper.getTestSuite(StandardizedExportHelper.getMethod()).getTestCaseNodes();
+		}
 		
 		return parser.getFilePreview(new ArrayList<>(selectedTestCases));
 	}

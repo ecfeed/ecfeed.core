@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -293,6 +294,21 @@ public abstract class MethodDeployer {
 			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, nodeMapper);
 
 			result.add(revertedTestCaseNode);
+		}
+
+		return result;
+	}
+	
+	public static List<TestCaseNode> createListOfOriginalTestCaseNodes(
+			List<TestCaseNode> deployedTestCases, NodeMapper nodeMapper) {
+
+		List<TestCaseNode> result = new ArrayList<>();
+
+		for (TestCase deployedTestCase : deployedTestCases.stream().map(e -> e.getTestCase()).collect(Collectors.toList())) {
+
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, nodeMapper);
+
+			result.add(new TestCaseNode("suite", null, revertedTestCaseNode.getListOfChoiceNodes()));
 		}
 
 		return result;

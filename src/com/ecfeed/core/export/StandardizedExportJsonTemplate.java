@@ -16,10 +16,16 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 
 	public StandardizedExportJsonTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguageManager);
+		super(methodNode, createDefaultTemplateText(), extLanguageManager);
+	}
+	
+	public StandardizedExportJsonTemplate(MethodNode methodNode, String templateText, IExtLanguageManager extLanguageManager) {
+
+		super(methodNode, createDefaultTemplateText(), extLanguageManager);
+		setTemplateText(templateText);
 	}
 
-	private static String createDefaultTemplateText(int methodParametersCount) {
+	private static String createDefaultTemplateText() {
 		String template = 
 				"RFC 4627\n" +
 				"Indent:\t\t 2\n" +
@@ -40,7 +46,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	}
 	
 	public static String getTemplateFormatSt() {
-		return "JSON - RFC 4627";
+		return "RFC 4627 - JSON";
 	}
 
 	@Override 
@@ -49,18 +55,27 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	}
 	
 	@Override
+	public String getTestCaseTemplate() {
+		return "N/A";
+	}
+	
+	@Override
 	public String createPreview(
 			Collection<TestCaseNode> selectedTestCases, 
 			MethodNode methodNode,
 			List<ParameterWithLinkingContext> deployedParameters) {
 		
-		Map<String, String> parameters = StanderdizedExportHelper.getParameters(getTemplateText());
+		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
 		int indent = Integer.parseInt(parameters.get("Indent"));
 		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
 		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
 		
 		ModelDataExport parser = ModelDataExportJSON.getModelDataExport(indent, nested, explicit);
+		
+		if (selectedTestCases == null) {
+			selectedTestCases = StandardizedExportHelper.getTestSuite(StandardizedExportHelper.getMethod()).getTestCaseNodes();
+		}
 		
 		return parser.getFilePreview(new ArrayList<>(selectedTestCases));
 	}
