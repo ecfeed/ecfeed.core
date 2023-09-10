@@ -71,7 +71,7 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
 		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
 		
-		ModelDataExport parser = ModelDataExportCSV.getModelDataExport(delimiter, nested, explicit);
+		ModelDataExport parser = ModelDataExportCSV.getModelDataExport(methodNode, delimiter, nested, explicit);
 		
 		if (selectedTestCases == null) {
 			selectedTestCases = StandardizedExportHelper.getTestSuite(StandardizedExportHelper.getMethod()).getTestCaseNodes();

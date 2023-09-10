@@ -7,24 +7,17 @@ import com.ecfeed.core.parser.model.export.ModelDataExport;
 import com.ecfeed.core.parser.model.export.ModelDataExportJSON;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ModelParserExportNestedBodyJSONTest {
-    private ModelDataExport parser;
-    private ModelDataExport parserExplicit;
-
-    @BeforeEach
-    void setup() {
-
-        parser = ModelDataExportJSON.getModelDataExport(0, true, false);
-        parserExplicit = ModelDataExportJSON.getModelDataExport(0, true, true);
-    }
 
     @Test
     void bodyLocalTest() {
         MethodNode method = ModelParserExportHelper.modelLocal();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
 
         String result = parser.getTest(test, 0);
 
@@ -56,6 +49,9 @@ public class ModelParserExportNestedBodyJSONTest {
         MethodNode method = ModelParserExportHelper.modelGlobalClass();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
         String result = parser.getTest(test, 0);
 
         JSONObject json = new JSONObject(result);
@@ -86,6 +82,9 @@ public class ModelParserExportNestedBodyJSONTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRoot();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
         String result = parser.getTest(test, 0);
 
         JSONObject json = new JSONObject(result);
@@ -115,6 +114,9 @@ public class ModelParserExportNestedBodyJSONTest {
     void bodyMixedTest() {
         MethodNode method = ModelParserExportHelper.modelMixed();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
 
         String result = parser.getTest(test, 0);
 
@@ -148,6 +150,9 @@ public class ModelParserExportNestedBodyJSONTest {
         MethodNode method = ModelParserExportHelper.modelLocalStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
         String result = parser.getTest(test, 0);
 
         JSONObject json = new JSONObject(result);
@@ -177,6 +182,9 @@ public class ModelParserExportNestedBodyJSONTest {
     void bodyGlobalClassStructureTest() {
         MethodNode method = ModelParserExportHelper.modelGlobalClassStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
 
         String result = parser.getTest(test, 0);
 
@@ -208,6 +216,9 @@ public class ModelParserExportNestedBodyJSONTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRootStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
         String result = parser.getTest(test, 0);
 
         JSONObject json = new JSONObject(result);
@@ -237,6 +248,9 @@ public class ModelParserExportNestedBodyJSONTest {
     void bodyMixedStructureTest() {
         MethodNode method = ModelParserExportHelper.modelMixedStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
 
         String result = parser.getTest(test, 0);
 
@@ -270,6 +284,9 @@ public class ModelParserExportNestedBodyJSONTest {
         MethodNode method = ModelParserExportHelper.modelRandom();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
         String result = parser.getTest(test, 0);
 
         JSONObject json = new JSONObject(result);
@@ -295,6 +312,9 @@ public class ModelParserExportNestedBodyJSONTest {
     void bodyNestedTest() {
         MethodNode method = ModelParserExportHelper.modelNested();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
 
         String result = parser.getTest(test, 0);
 

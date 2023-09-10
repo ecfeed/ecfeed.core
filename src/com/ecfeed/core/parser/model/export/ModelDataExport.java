@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface ModelDataExport {
 
     String getFile(List<TestCaseNode> suite);
-    Optional<String> getHeader(MethodNode method);
-    Optional<String> getFooter(MethodNode method);
+    Optional<String> getHeader();
+    Optional<String> getFooter();
     String getTest(TestCaseNode test);
     String getTest(TestCaseNode test, int index);
 

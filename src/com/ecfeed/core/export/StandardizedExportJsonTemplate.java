@@ -71,7 +71,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
 		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
 		
-		ModelDataExport parser = ModelDataExportJSON.getModelDataExport(indent, nested, explicit);
+		ModelDataExport parser = ModelDataExportJSON.getModelDataExport(methodNode, indent, nested, explicit);
 		
 		if (selectedTestCases == null) {
 			selectedTestCases = StandardizedExportHelper.getTestSuite(StandardizedExportHelper.getMethod()).getTestCaseNodes();

@@ -6,16 +6,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModelDataExportCSV implements ModelDataExport {
+    private final MethodNode method;
+
     private final ModelDataParser parser;
+
     private final String separator;
     private final boolean nested;
 
-    public static ModelDataExport getModelDataExport(String separator, boolean nested, boolean explicit) {
+    public static ModelDataExport getModelDataExport(MethodNode method, String separator, boolean nested, boolean explicit) {
 
-        return new ModelDataExportCSV(separator, nested, explicit);
+        return new ModelDataExportCSV(method, separator, nested, explicit);
     }
 
-    private ModelDataExportCSV(String separator, boolean nested, boolean explicit) {
+    private ModelDataExportCSV(MethodNode method, String separator, boolean nested, boolean explicit) {
+        this.method = method;
 
         this.separator = separator;
         this.nested = nested;
@@ -32,7 +36,7 @@ public class ModelDataExportCSV implements ModelDataExport {
 
         List<String> file = new ArrayList<>();
 
-        file.add(getHeader(suite.get(0).getMethod()).orElse(""));
+        file.add(getHeader().orElse(""));
 
         suite.forEach(e -> file.add(getTest(e)));
 
@@ -40,14 +44,14 @@ public class ModelDataExportCSV implements ModelDataExport {
     }
 
     @Override
-    public Optional<String> getHeader(MethodNode method) {
+    public Optional<String> getHeader() {
        List<String> names = parser.getParameterNameList(method);
 
        return Optional.of(String.join(separator, names));
     }
 
     @Override
-    public Optional<String> getFooter(MethodNode method) {
+    public Optional<String> getFooter() {
 
         return Optional.empty();
     }
@@ -57,7 +61,7 @@ public class ModelDataExportCSV implements ModelDataExport {
         Queue<ChoiceNode> choices = new LinkedList<>(test.getTestData());
 
         if (nested) {
-            return getTestNested(test.getMethod(), choices);
+            return getTestNested(choices);
         } else {
             return getTestFlat(choices);
         }
@@ -69,7 +73,7 @@ public class ModelDataExportCSV implements ModelDataExport {
         return getTest(test);
     }
 
-    public String getTestNested(MethodNode method, Queue<ChoiceNode> choices) {
+    public String getTestNested(Queue<ChoiceNode> choices) {
         List<String> line = new ArrayList<>();
 
         method.getParameters().forEach(e -> {
