@@ -1,5 +1,6 @@
 package com.ecfeed.core.parser.export.csv;
 
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.parser.export.ModelParserExportHelper;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
@@ -11,10 +12,12 @@ public class ModelParserExportCSVTest {
 
     @Test
     void fileFlat() {
-        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(",", false, false);
-        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(",", false, true);
+        MethodNode method = ModelParserExportHelper.modelSuite();
 
-        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(ModelParserExportHelper.modelSuite());
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", false, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", false, true);
+
+        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(method);
 
         String result = parser.getFile(suite);
 
@@ -33,10 +36,12 @@ public class ModelParserExportCSVTest {
 
     @Test
     void fileNested() {
-        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(",", true, false);
-        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(",", true, true);
+        MethodNode method = ModelParserExportHelper.modelSuite();
 
-        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(ModelParserExportHelper.modelSuite());
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
+        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(method);
 
         String result = parser.getFile(suite);
 

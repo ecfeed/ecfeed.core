@@ -6,24 +6,17 @@ import com.ecfeed.core.parser.export.ModelParserExportHelper;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
 import com.ecfeed.core.parser.model.export.ModelDataExportCSV;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ModelParserExportNestedBodyCSVTest {
-    private ModelDataExport parser;
-    private ModelDataExport parserExplicit;
-
-    @BeforeEach
-    void setup() {
-
-        parser = ModelDataExportCSV.getModelDataExport(",", true, false);
-        parserExplicit = ModelDataExportCSV.getModelDataExport(",", true, true);
-    }
 
     @Test
     void bodyLocalTest() {
         MethodNode method = ModelParserExportHelper.modelLocal();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
 
         String result = parser.getTest(test);
 
@@ -41,6 +34,9 @@ public class ModelParserExportNestedBodyCSVTest {
         MethodNode method = ModelParserExportHelper.modelGlobalClass();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
         String result = parser.getTest(test);
 
         System.out.println(result);
@@ -57,6 +53,9 @@ public class ModelParserExportNestedBodyCSVTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRoot();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
         String result = parser.getTest(test);
 
         System.out.println(result);
@@ -72,6 +71,9 @@ public class ModelParserExportNestedBodyCSVTest {
     void bodyMixedTest() {
         MethodNode method = ModelParserExportHelper.modelMixed();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
 
         String result = parser.getTest(test);
 
@@ -91,6 +93,9 @@ public class ModelParserExportNestedBodyCSVTest {
         MethodNode method = ModelParserExportHelper.modelLocalStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
         String result = parser.getTest(test);
 
         System.out.println(result);
@@ -108,6 +113,9 @@ public class ModelParserExportNestedBodyCSVTest {
     void bodyGlobalClassStructureTest() {
         MethodNode method = ModelParserExportHelper.modelGlobalClassStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
 
         String result = parser.getTest(test);
 
@@ -127,6 +135,9 @@ public class ModelParserExportNestedBodyCSVTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRootStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
         String result = parser.getTest(test);
 
         System.out.println(result);
@@ -144,6 +155,9 @@ public class ModelParserExportNestedBodyCSVTest {
     void bodyMixedStructureTest() {
         MethodNode method = ModelParserExportHelper.modelMixedStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
 
         String result = parser.getTest(test);
 
@@ -165,6 +179,9 @@ public class ModelParserExportNestedBodyCSVTest {
         MethodNode method = ModelParserExportHelper.modelRandom();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
+
         String result = parser.getTest(test);
 
         System.out.println(result);
@@ -180,6 +197,9 @@ public class ModelParserExportNestedBodyCSVTest {
     void bodyNestedTest() {
         MethodNode method = ModelParserExportHelper.modelNested();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportCSV.getModelDataExport(method, ",", true, false);
+        ModelDataExport parserExplicit = ModelDataExportCSV.getModelDataExport(method, ",", true, true);
 
         String result = parser.getTest(test);
 

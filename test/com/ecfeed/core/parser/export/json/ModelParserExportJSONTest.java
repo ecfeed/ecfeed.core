@@ -1,9 +1,9 @@
 package com.ecfeed.core.parser.export.json;
 
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.parser.export.ModelParserExportHelper;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
-import com.ecfeed.core.parser.model.export.ModelDataExportCSV;
 import com.ecfeed.core.parser.model.export.ModelDataExportJSON;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -13,10 +13,12 @@ public class ModelParserExportJSONTest {
 
     @Test
     void fileFlat() {
-        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(0,false, false);
-        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(0,false, true);
+        MethodNode method = ModelParserExportHelper.modelSuite();
 
-        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(ModelParserExportHelper.modelSuite());
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, false, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, false, true);
+
+        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(method);
 
         String result = parser.getFile(suite);
 
@@ -45,10 +47,12 @@ public class ModelParserExportJSONTest {
 
     @Test
     void fileNested() {
-        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(0, true, false);
-        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(0, true, true);
+        MethodNode method = ModelParserExportHelper.modelSuite();
 
-        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(ModelParserExportHelper.modelSuite());
+        ModelDataExport parser = ModelDataExportJSON.getModelDataExport(method, 0, true, false);
+        ModelDataExport parserExplicit = ModelDataExportJSON.getModelDataExport(method, 0, true, true);
+
+        TestSuiteNode suite = ModelParserExportHelper.getTestSuite(method);
 
         String result = parser.getFile(suite);
         System.out.println(result);

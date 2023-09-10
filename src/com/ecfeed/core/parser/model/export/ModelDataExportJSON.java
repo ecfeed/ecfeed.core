@@ -3,24 +3,29 @@ package com.ecfeed.core.parser.model.export;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.TestSuiteNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
 public class ModelDataExportJSON implements ModelDataExport {
+    private final MethodNode method;
+
     private final ModelDataParser parser;
 
     private final boolean nested;
     private final int indent;
 
-    public static ModelDataExport getModelDataExport(int indent, boolean nested, boolean explicit) {
+    public static ModelDataExport getModelDataExport(MethodNode method, int indent, boolean nested, boolean explicit) {
 
-        return new ModelDataExportJSON(indent, nested, explicit);
+        return new ModelDataExportJSON(method, indent, nested, explicit);
     }
 
-    private ModelDataExportJSON(int indent, boolean nested, boolean explicit) {
+    private ModelDataExportJSON(MethodNode method, int indent, boolean nested, boolean explicit) {
+        this.method = method;
 
         this.nested = nested;
         this.indent = indent;
@@ -49,13 +54,13 @@ public class ModelDataExportJSON implements ModelDataExport {
     }
 
     @Override
-    public Optional<String> getHeader(MethodNode method) {
+    public Optional<String> getHeader() {
 
         return Optional.empty();
     }
 
     @Override
-    public Optional<String> getFooter(MethodNode method) {
+    public Optional<String> getFooter() {
 
         return Optional.empty();
     }
@@ -78,9 +83,9 @@ public class ModelDataExportJSON implements ModelDataExport {
         Queue<ChoiceNode> choices = new LinkedList<>(test.getChoices());
 
         if (this.nested) {
-            return getTestJSONNested(test, choices);
+            return getTestJSONNested(choices);
         } else {
-            return getTestJSONFlat(test, choices);
+            return getTestJSONFlat(choices);
         }
     }
 
@@ -92,8 +97,8 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONFlat(TestCaseNode test, Queue<ChoiceNode> choices) {
-        List<String> names = parser.getParameterNameList(test.getMethod());
+    private JSONObject getTestJSONFlat(Queue<ChoiceNode> choices) {
+        List<String> names = parser.getParameterNameList(method);
 
         JSONObject json = new JSONObject();
 
@@ -102,8 +107,8 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONNested(TestCaseNode test, Queue<ChoiceNode> choices) {
+    private JSONObject getTestJSONNested(Queue<ChoiceNode> choices) {
 
-        return parser.getJSON(choices, test.getMethod().getParameters());
+        return parser.getJSON(choices, method.getParameters());
     }
 }
