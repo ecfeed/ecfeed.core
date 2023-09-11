@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -867,6 +868,85 @@ public class MethodDeployerTest {
 		assertEquals(compositeParameterNode, parameterWithContext22.getParameter().getParent());
 	}
 
+	@Test
+	public void deployWithAssignmentConstraint() {
+
+		MethodNode sourceMethod = new MethodNode("method");
+
+		BasicParameterNode basicParameterNode =
+				MethodNodeHelper.addNewBasicParameter(sourceMethod, "p1", "String", "A", true, null);
+		basicParameterNode.setExpected(true);
+
+		RelationStatement precondition =
+				RelationStatement.createRelationStatementWithValueCondition(
+						basicParameterNode, null, EMathRelation.EQUAL, "X");
+
+		StatementArray postcondition = new StatementArray(StatementArrayOperator.ASSIGN, null);
+
+		AssignmentStatement assignment = 
+				AssignmentStatement.createAssignmentWithValueCondition(basicParameterNode, "B");
+
+		postcondition.addStatement(assignment);
+
+		Constraint constraint = new Constraint("Constraint", ConstraintType.ASSIGNMENT, precondition, postcondition,null);
+		sourceMethod.addConstraint(new ConstraintNode("Constraint", constraint, null));
+
+		String sourceSignature = MethodNodeHelper.createSignatureNewStandard(sourceMethod, new ExtLanguageManagerForJava());
+		System.out.println(sourceSignature);
+
+		// deploy
+
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
+
+		String destinationSignature = MethodNodeHelper.createSignatureNewStandard(deployedMethod, new ExtLanguageManagerForJava());
+		System.out.println(destinationSignature);
+
+		Constraint deployedConstraint = deployedMethod.getConstraintNodes().get(0).getConstraint();
+
+		// check parameter parent from precondition
+
+		RelationStatement relationStatement1 = (RelationStatement) deployedConstraint.getPrecondition();
+		BasicParameterNode basicPar1 = relationStatement1.getLeftParameter();
+		IParametersParentNode parent1 = basicPar1.getParent();
+
+		assertEquals(deployedMethod, parent1);
+
+		// check parameter parent from postcondition
+
+		AbstractStatement deployedPostcondition = deployedConstraint.getPostcondition();
+
+		if (!(deployedPostcondition instanceof StatementArray)) {
+			fail("Statement array expected.");
+		}
+
+		StatementArray deployedStatementArray = (StatementArray) deployedPostcondition;
+
+		assertEquals(StatementArrayOperator.ASSIGN, deployedStatementArray.getOperator());
+
+		AbstractStatement firstDeployedStatement = deployedStatementArray.getStatements().get(0);
+
+		if (!(firstDeployedStatement instanceof AssignmentStatement)) {
+			fail("Assignment statement expected.");
+		}
+
+		AssignmentStatement deployedAssignment = (AssignmentStatement) firstDeployedStatement;
+		BasicParameterNode basicPar2 = deployedAssignment.getLeftParameter();
+		IParametersParentNode parent2 = basicPar2.getParent();
+		assertEquals(deployedMethod, parent2);
+
+		IStatementCondition deployedCondition = deployedAssignment.getCondition();
+
+		if (!(deployedCondition instanceof ValueCondition)) {
+			fail("Value condition expected.");
+		}
+
+		ValueCondition deployedValueCondition = (ValueCondition) deployedCondition;
+
+		assertEquals("B", deployedValueCondition.getRightValue());
+	}
+
+
 	//	private MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
 	//
 	//		RootNode rootNode = new RootNode("Root", null);
@@ -1000,54 +1080,6 @@ public class MethodDeployerTest {
 	//		assertEquals(count2, count1);
 	//
 	//		return count1;
-	//	}
-
-	//	@Test
-	//	public void AAATestDeployWithExpectedValue() {
-	//
-	//		MethodNode sourceMethod = new MethodNode("method");
-	//
-	//		BasicParameterNode basicParameterNode = 
-	//				MethodNodeHelper.addNewBasicParameter(sourceMethod, "p1", "String", "A", null);
-	//		basicParameterNode.setExpected(true);
-	//
-	//		RelationStatement precondition =
-	//				RelationStatement.createRelationStatementWithValueCondition(
-	//						basicParameterNode, null, EMathRelation.EQUAL, "X");
-	//
-	//		AssignmentStatement postcondition = 
-	//				AssignmentStatement.createAssignmentWithValueCondition(basicParameterNode, "B");
-	//
-	//		Constraint constraint = new Constraint("Constraint", ConstraintType.ASSIGNMENT, precondition, postcondition,null);
-	//		sourceMethod.addConstraint(new ConstraintNode("Constraint", constraint, null));
-	//
-	//		String sourceSignature = MethodNodeHelper.createSignatureNewStandard(sourceMethod, new ExtLanguageManagerForJava());
-	//		System.out.println(sourceSignature);
-	//
-	//		NodeMapper nodeMapper = new NodeMapper();
-	//		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod, nodeMapper);
-	//
-	//		String destinationSignature = MethodNodeHelper.createSignatureNewStandard(deployedMethod, new ExtLanguageManagerForJava());
-	//		System.out.println(destinationSignature);
-	//
-	//		Constraint constraint1 = deployedMethod.getConstraintNodes().get(0).getConstraint();
-	//
-	//		// check parameter parent from precondition
-	//
-	//		RelationStatement relationStatement1 = (RelationStatement) constraint1.getPrecondition();
-	//		BasicParameterNode basicPar1 = relationStatement1.getLeftParameter();
-	//		IParametersParentNode parent1 = basicPar1.getParent();
-	//
-	//		assertEquals(deployedMethod, parent1);
-	//
-	//		// check parameter parent from postcondition
-	//
-	//		AbstractStatement postcondition2 = constraint1.getPostcondition();
-	//		AssignmentStatement assignmentStatement2 = (AssignmentStatement) postcondition2;
-	//		BasicParameterNode basicPar2 = assignmentStatement2.getLeftParameter();
-	//		IParametersParentNode parent2 = basicPar2.getParent();
-	//
-	//		assertEquals(deployedMethod, parent2);
 	//	}
 
 }
