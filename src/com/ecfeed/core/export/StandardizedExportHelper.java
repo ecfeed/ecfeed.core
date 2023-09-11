@@ -16,6 +16,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StandardizedExportHelper {
 	
@@ -36,16 +37,34 @@ public class StandardizedExportHelper {
 		return parameters;
 	}
 	
+	public static boolean isStandardized(String template) {
+		
+		return template.startsWith("RFC");
+	}
+	
+	public static IExportTemplate getStandardizedExportTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
+		
+		if (StandardizedExportCsvTemplate.isTemplateIdValid(template)) {
+			return StandardizedExportCsvTemplate.get(method, template, extLanguageManager);
+		}
+		
+		if (StandardizedExportJsonTemplate.isTemplateIdValid(template)) {
+			return StandardizedExportJsonTemplate.get(method, template, extLanguageManager);
+		}
+		
+		throw new RuntimeException("Invalid template standard!");
+	}
+	
 //-----------------------------------------------------------------------------------------------------	
 	
 	public static MethodNode getMethod() {
 		MethodNode method = getBaseMethodNode();
 
-        AbstractParameterNode gr1 = getParameterNode("dest1", "String", "Lorem Ipsum", "Value");
+        AbstractParameterNode gr1 = getParameterNode("dest1", "String", "Lorem Ipsum");
         AbstractParameterNode sgr1 = getStructureNode("sgr1", gr1);
         addParameterAsGlobalRoot(sgr1, method);
 
-        AbstractParameterNode gc1 = getParameterNode("dest2", "String", "Lorem \"Ipsum\"", "Value");
+        AbstractParameterNode gc1 = getParameterNode("dest2", "String", "Lorem \"Ipsum\"");
         AbstractParameterNode sgc1 = getStructureNode("sgc1", gc1);
         addParameterAsGlobalClass(sgc1, method);
 
@@ -55,11 +74,11 @@ public class StandardizedExportHelper {
         AbstractParameterNode p2 = getLinkedParameterNode("p2", sgc1);
         addParameterAsLocal(p2, method);
 
-        AbstractParameterNode p3 = getParameterNode("dest3", "String", "Lorem, Ipsum", "Value");
+        AbstractParameterNode p3 = getParameterNode("dest3", "String", "Lorem, Ipsum");
         AbstractParameterNode s1 = getStructureNode("s1", p3);
         addParameterAsLocal(s1, method);
 
-        AbstractParameterNode p4 = getParameterNode("dest4", "String", "Lorem, \"Ipsum\"", "Value");
+        AbstractParameterNode p4 = getParameterNode("dest4", "String", "Lorem, \"Ipsum\"");
         addParameterAsLocal(p4, method);
 
         return method;
@@ -127,7 +146,7 @@ public class StandardizedExportHelper {
         BasicParameterNode parameter = BasicParameterNode.createLocalStandardParameter(parameterName, parameterType, null, null);
 
         for (int i = 0 ; i < choiceValue.length ; i++) {
-            ChoiceNode choice = new ChoiceNode("choice" + i, choiceValue[0], null);
+            ChoiceNode choice = new ChoiceNode("choice" + i, choiceValue[i], null);
             choice.setRandomizedValue(true);
             parameter.addChoice(choice);
         }
@@ -161,9 +180,6 @@ public class StandardizedExportHelper {
             suite.addTestCase(test);
         }
 
-        suite.setParent(method);
-
         return suite;
     }
-
 }

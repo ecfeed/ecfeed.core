@@ -58,10 +58,10 @@ public class ExportTemplateFactory {
 			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(StandardizedExportCsvTemplate.getTemplateFormatSt())) {
-			return new StandardizedExportCsvTemplate(fMethodNode, fExtLanguageManager);
+			return StandardizedExportCsvTemplate.get(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(StandardizedExportJsonTemplate.getTemplateFormatSt())) {
-			return new StandardizedExportJsonTemplate(fMethodNode, fExtLanguageManager);
+			return StandardizedExportJsonTemplate.get(fMethodNode, fExtLanguageManager);
 		}
 		
 		return null;

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.MethodDeployerContainer;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -13,21 +14,37 @@ import com.ecfeed.core.parser.model.export.ModelDataExportJSON;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
+	private static String ID = "RFC 4627";
 
-	public StandardizedExportJsonTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		super(methodNode, createDefaultTemplateText(), extLanguageManager);
+	public static IExportTemplate get(MethodNode method, IExtLanguageManager extLanguageManager) {
+		
+		return new StandardizedExportJsonTemplate(method, extLanguageManager);
 	}
 	
-	public StandardizedExportJsonTemplate(MethodNode methodNode, String templateText, IExtLanguageManager extLanguageManager) {
+	public static IExportTemplate get(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
+		
+		return new StandardizedExportJsonTemplate(method, template, extLanguageManager);
+	}
+	
+	private StandardizedExportJsonTemplate(MethodNode method, IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, createDefaultTemplateText(), extLanguageManager);
-		setTemplateText(templateText);
+		super(method, createDefaultTemplateText(), extLanguageManager);
+	}
+	
+	private StandardizedExportJsonTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
+
+		super(method, createDefaultTemplateText(), extLanguageManager);
+		setTemplateText(template);
+	}
+	
+	public static boolean isTemplateIdValid(String template) {
+		
+		return template.startsWith(ID);
 	}
 
 	private static String createDefaultTemplateText() {
 		String template = 
-				"RFC 4627\n" +
+				ID + "\n" +
 				"Indent:\t\t 2\n" +
 				"Explicit:\t\t false\n" +
 				"Nested:\t\t false";
@@ -36,7 +53,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	}
 
 	@Override
-	public boolean isStanderdized() {
+	public boolean isStandardized() {
 		return true;
 	}
 	
@@ -61,8 +78,8 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	
 	@Override
 	public String createPreview(
-			Collection<TestCaseNode> selectedTestCases, 
-			MethodNode methodNode,
+			Collection<TestCaseNode> testCases, 
+			MethodDeployerContainer methodDeployerContainer,
 			List<ParameterWithLinkingContext> deployedParameters) {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
@@ -71,12 +88,16 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
 		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
 		
-		ModelDataExport parser = ModelDataExportJSON.getModelDataExport(methodNode, indent, nested, explicit);
+		ModelDataExport parser;
 		
-		if (selectedTestCases == null) {
-			selectedTestCases = StandardizedExportHelper.getTestSuite(StandardizedExportHelper.getMethod()).getTestCaseNodes();
+		if (testCases == null) {
+			MethodNode method = StandardizedExportHelper.getMethod();
+			testCases = StandardizedExportHelper.getTestSuite(method).getTestCaseNodes();
+			parser = ModelDataExportJSON.getModelDataExport(method, indent, nested, explicit);
+		} else {
+			parser = ModelDataExportJSON.getModelDataExport(methodDeployerContainer.getReference(), indent, nested, explicit);
 		}
 		
-		return parser.getFilePreview(new ArrayList<>(selectedTestCases));
+		return parser.getFilePreview(new ArrayList<>(testCases));
 	}
 }

@@ -1,6 +1,5 @@
 package com.ecfeed.core.parser.model.export;
 
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 
