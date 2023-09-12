@@ -40,6 +40,10 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
+		
+		if (text == null) {
+			return null;
+		}
 
 		String errorMessage = verifySeparatorsInText(text);
 

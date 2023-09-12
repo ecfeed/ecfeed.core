@@ -21,7 +21,7 @@ public class RegexTest {
 	}
 
 	boolean matchTextWithRegexAlphaSp64(String text) {
-		return matchTextWithRegex(text, RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_64);
+		return matchTextWithRegex(text, RegexHelper.REGEX_ALPHANUMERIC_WITH_SPACES_300);
 	}
 
 	@Test

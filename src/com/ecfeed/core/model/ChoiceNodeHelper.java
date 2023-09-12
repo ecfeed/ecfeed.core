@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -1064,6 +1065,43 @@ public class ChoiceNodeHelper {
 		for(String label : labels){
 			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
+	}
+
+	public static ChoiceNode findChoiceByName(
+			IChoicesParentNode choicesParentNode,
+			String methodNameInIntrLanguage) {
+
+		List<ChoiceNode> choices = choicesParentNode.getChoices();
+
+		for (ChoiceNode choiceNode : choices) {
+
+			String currentName = choiceNode.getName();
+
+			if (currentName.equals(methodNameInIntrLanguage)){
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
+	public static ChoiceNode findChoiceByQualifiedName(
+			BasicParameterNode basicParameterNode, 
+			String choiceQualifiedName) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
 	}
 
 }

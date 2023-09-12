@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -201,6 +202,28 @@ public class AssignmentStatement extends RelationStatement {
 		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
 	}
 
+	@Override
+	public AssignmentStatement makeClone(Optional<NodeMapper> mapper) {
+
+		if (mapper.isPresent()) {
+			
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(getLeftParameter());
+
+			AssignmentStatement clonedStatement = 
+					new AssignmentStatement(clonedParameter, getCondition().makeClone());
+			
+			IStatementCondition clonedCondition = getCondition().makeClone(clonedStatement, mapper);
+			clonedStatement.setCondition(clonedCondition);
+
+			return clonedStatement;
+		}
+
+		AssignmentStatement assignmentStatement = 
+				new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
+						
+		return assignmentStatement;
+	}
+	
 	@Override
 	public AssignmentStatement createCopy(NodeMapper mapper) {
 

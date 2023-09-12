@@ -20,7 +20,6 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.NameHelper;
-import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TestCaseNodeHelper {
@@ -279,7 +278,7 @@ public class TestCaseNodeHelper {
 
 		return isAmbiguous;
 	}
-	
+
 	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
 
 		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
@@ -409,11 +408,6 @@ public class TestCaseNodeHelper {
 				ChoiceNodeHelper.compareChoices(testCase1.getTestData().get(i),testCase2.getTestData().get(i));
 			}
 		}
-	}
-
-	public static boolean isValidTestCaseName(String name) {
-
-		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
 }
