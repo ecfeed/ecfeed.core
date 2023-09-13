@@ -61,14 +61,18 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	public String getFileExtension() {
 		return "json";
 	}
-	
+
+	public static String getStandard() {
+		return ID;
+	}
+
 	public static String getTemplateFormatSt() {
-		return "RFC 4627 - JSON";
+		return ID + " - JSON";
 	}
 
 	@Override 
 	public String getTemplateFormat() {
-		return "RFC 4627";
+		return ID;
 	}
 	
 	@Override
@@ -84,9 +88,9 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
-		int indent = Integer.parseInt(parameters.get("Indent"));
-		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
-		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
+		int indent = Integer.parseInt(parameters.get("indent"));
+		boolean nested = Boolean.parseBoolean(parameters.get("nested"));
+		boolean explicit = Boolean.parseBoolean(parameters.get("explicit"));
 		
 		ModelDataExport parser;
 		

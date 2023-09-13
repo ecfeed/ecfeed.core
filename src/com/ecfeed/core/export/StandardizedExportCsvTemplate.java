@@ -61,14 +61,18 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 	public String getFileExtension() {
 		return "csv";
 	}
-	
+
+	public static String getStandard() {
+		return ID;
+	}
+
 	public static String getTemplateFormatSt() {
-		return "RFC 4180 - CSV";
+		return ID + " - CSV";
 	}
 
 	@Override 
 	public String getTemplateFormat() {
-		return "RFC 4180";
+		return ID;
 	}
 	
 	@Override
@@ -84,9 +88,9 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
-		String delimiter = parameters.get("Delimiter");
-		boolean nested = Boolean.parseBoolean(parameters.get("Nested"));
-		boolean explicit = Boolean.parseBoolean(parameters.get("Explicit"));
+		String delimiter = parameters.get("delimiter");
+		boolean nested = Boolean.parseBoolean(parameters.get("nested"));
+		boolean explicit = Boolean.parseBoolean(parameters.get("explicit"));
 		
 		ModelDataExport parser;
 		

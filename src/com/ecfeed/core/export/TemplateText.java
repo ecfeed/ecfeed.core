@@ -27,6 +27,7 @@ public class TemplateText {
     private StringHolder fTestCaseTemplateText;
     private StringHolder fFooterTemplateText;
     private boolean fIsCorrect;
+    private boolean fIsStandardized;
     private String fErrorMessage;
 
     public TemplateText(String completeTemplateText) {
@@ -50,6 +51,8 @@ public class TemplateText {
         fCurrentTemplateText = completeTemplateText;
 
         if (completeTemplateText.startsWith("RFC")) {
+            fIsCorrect = true;
+            fIsStandardized = true;
         	return;
         }
         

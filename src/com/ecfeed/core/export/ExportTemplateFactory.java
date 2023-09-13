@@ -38,9 +38,7 @@ public class ExportTemplateFactory {
 
 	public IExportTemplate createTemplate(String formatName) {
 
-		IExportTemplate exportTemplate = createTemplateIntr(formatName);
-
-		return exportTemplate;
+		return createTemplateIntr(formatName);
 	}
 
 	private IExportTemplate createTemplateIntr(String formatName) {
@@ -57,11 +55,11 @@ public class ExportTemplateFactory {
 		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
 			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
 		}
-		if (formatName.equals(StandardizedExportCsvTemplate.getTemplateFormatSt())) {
-			return StandardizedExportCsvTemplate.get(fMethodNode, fExtLanguageManager);
+		if (formatName.startsWith(StandardizedExportCsvTemplate.getStandard())) {
+			return StandardizedExportCsvTemplate.get(fMethodNode, formatName, fExtLanguageManager);
 		}
-		if (formatName.equals(StandardizedExportJsonTemplate.getTemplateFormatSt())) {
-			return StandardizedExportJsonTemplate.get(fMethodNode, fExtLanguageManager);
+		if (formatName.startsWith(StandardizedExportJsonTemplate.getStandard())) {
+			return StandardizedExportJsonTemplate.get(fMethodNode, formatName, fExtLanguageManager);
 		}
 		
 		return null;

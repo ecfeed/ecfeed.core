@@ -6,10 +6,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 public class ModelDataExportJSON implements ModelDataExport {
     private final MethodNode method;
@@ -19,9 +16,25 @@ public class ModelDataExportJSON implements ModelDataExport {
     private final boolean nested;
     private final int indent;
 
+    public static ModelDataExport getModelDataExport(MethodNode method, Map<String, String> parameters) {
+
+        return new ModelDataExportJSON(method, parameters);
+    }
+
     public static ModelDataExport getModelDataExport(MethodNode method, int indent, boolean nested, boolean explicit) {
 
         return new ModelDataExportJSON(method, indent, nested, explicit);
+    }
+
+    private ModelDataExportJSON(MethodNode method, Map<String, String> parameters) {
+        this.method = method;
+
+        this.nested = Boolean.parseBoolean(parameters.getOrDefault("nested", "false"));
+        this.indent = Integer.parseInt(parameters.getOrDefault("indent", "2"));
+
+        var explicit =Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
+
+        this.parser = ModelDataParserDefault.get(explicit, nested);
     }
 
     private ModelDataExportJSON(MethodNode method, int indent, boolean nested, boolean explicit) {

@@ -13,9 +13,25 @@ public class ModelDataExportCSV implements ModelDataExport {
     private final String separator;
     private final boolean nested;
 
+    public static ModelDataExport getModelDataExport(MethodNode method, Map<String, String> parameters) {
+
+        return new ModelDataExportCSV(method, parameters);
+    }
+
     public static ModelDataExport getModelDataExport(MethodNode method, String separator, boolean nested, boolean explicit) {
 
         return new ModelDataExportCSV(method, separator, nested, explicit);
+    }
+
+    private ModelDataExportCSV(MethodNode method, Map<String, String> parameters) {
+        this.method = method;
+
+        this.separator = parameters.getOrDefault("separator", ",");
+        this.nested = Boolean.parseBoolean(parameters.getOrDefault("nested", "false"));
+
+        var explicit =Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
+
+        this.parser = ModelDataParserDefault.get(explicit, nested);
     }
 
     private ModelDataExportCSV(MethodNode method, String separator, boolean nested, boolean explicit) {

@@ -30,7 +30,7 @@ public class StandardizedExportHelper {
 			if (line.contains(":")) {
 				line = line.replaceAll(" ", "").replaceAll("\t", "");
 				String[] elements = line.split(":");
-				parameters.put(elements[0], elements[1]);
+				parameters.put(elements[0].toLowerCase(), elements[1]);
 			}
 		}
 		

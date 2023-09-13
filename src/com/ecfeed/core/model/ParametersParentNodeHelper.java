@@ -97,16 +97,13 @@ public class ParametersParentNodeHelper {
 	}
 
 	public static BasicParameterNode getBasicParameter(int parameterNumber, IParametersParentNode parametersParentNode) {
-
-		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
+		var abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
 
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
 		}
 
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-		return basicParameterNode;
+		return (BasicParameterNode) abstractParameterNode;
 	}
 
 	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
