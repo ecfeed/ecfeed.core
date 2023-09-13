@@ -97,7 +97,7 @@ public class ParametersParentNodeHelper {
 	}
 
 	public static BasicParameterNode getBasicParameter(int parameterNumber, IParametersParentNode parametersParentNode) {
-		var abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
+		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
 
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Basic parameter expected.");

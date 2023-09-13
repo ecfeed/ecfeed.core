@@ -29,7 +29,7 @@ public class ModelDataExportCSV implements ModelDataExport {
         this.separator = parameters.getOrDefault("separator", ",");
         this.nested = Boolean.parseBoolean(parameters.getOrDefault("nested", "false"));
 
-        var explicit =Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
+        boolean explicit = Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
 
         this.parser = ModelDataParserDefault.get(explicit, nested);
     }

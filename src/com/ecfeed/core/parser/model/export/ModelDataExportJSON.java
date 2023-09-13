@@ -32,7 +32,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         this.nested = Boolean.parseBoolean(parameters.getOrDefault("nested", "false"));
         this.indent = Integer.parseInt(parameters.getOrDefault("indent", "2"));
 
-        var explicit =Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
+        boolean explicit = Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));
 
         this.parser = ModelDataParserDefault.get(explicit, nested);
     }
