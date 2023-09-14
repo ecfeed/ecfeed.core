@@ -34,7 +34,10 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	private StandardizedExportJsonTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
 
 		super(method, createDefaultTemplateText(), extLanguageManager);
-		setTemplateText(template);
+		
+		if (!template.equals(getTemplateFormatSt())) {
+			setTemplateText(template);
+		}
 	}
 	
 	public static boolean isTemplateIdValid(String template) {
@@ -72,7 +75,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 
 	@Override 
 	public String getTemplateFormat() {
-		return ID;
+		return getTemplateFormatSt();
 	}
 	
 	@Override
@@ -88,9 +91,9 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
-		int indent = Integer.parseInt(parameters.get("indent"));
-		boolean nested = Boolean.parseBoolean(parameters.get("nested"));
-		boolean explicit = Boolean.parseBoolean(parameters.get("explicit"));
+		int indent = Integer.parseInt(StandardizedExportHelper.getParameter(parameters, "indent", "2"));
+		boolean nested = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "nested", "false"));
+		boolean explicit = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "explicit", "false"));
 		
 		ModelDataExport parser;
 		

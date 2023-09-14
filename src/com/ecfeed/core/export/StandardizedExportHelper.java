@@ -37,6 +37,15 @@ public class StandardizedExportHelper {
 		return parameters;
 	}
 	
+	public static String getParameter(Map<String, String> parameters, String key, String value) {
+		
+		if (parameters.containsKey(key)) {
+			return parameters.get(key);
+		}
+		
+		return value;
+	}
+	
 	public static boolean isStandardized(String template) {
 		
 		return template.startsWith("RFC");

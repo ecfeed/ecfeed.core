@@ -34,7 +34,10 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 	private StandardizedExportCsvTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
 
 		super(method, createDefaultTemplateText(), extLanguageManager);
-		setTemplateText(template);
+		
+		if (!template.equals(getTemplateFormatSt())) {
+			setTemplateText(template);
+		}
 	}
 	
 	public static boolean isTemplateIdValid(String template) {
@@ -72,7 +75,7 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 
 	@Override 
 	public String getTemplateFormat() {
-		return ID;
+		return getTemplateFormatSt();
 	}
 	
 	@Override
@@ -88,9 +91,9 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
-		String delimiter = parameters.get("delimiter");
-		boolean nested = Boolean.parseBoolean(parameters.get("nested"));
-		boolean explicit = Boolean.parseBoolean(parameters.get("explicit"));
+		String delimiter = StandardizedExportHelper.getParameter(parameters, "delimiter", ",");
+		boolean nested = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "nested", "false"));
+		boolean explicit = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "explicit", "false"));
 		
 		ModelDataExport parser;
 		

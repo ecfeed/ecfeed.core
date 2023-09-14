@@ -94,9 +94,9 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		testCasesUserInput.setDataSource(generatorType.toString());
 
-//		if  (!allChoicesSelected) {
-//			testCasesUserInput.setChoices(argsAndChoiceNames);
-//		}
+		if  (!allChoicesSelected) {
+			testCasesUserInput.setChoices(argsAndChoiceNames);
+		}
 
 		setConstraints(allConstraintsSelected, constraintNames, testCasesUserInput);
 
