@@ -178,5 +178,4 @@ public class DataTypeGeneralTest {
 
         Assertions.assertNotEquals("long", type.determine());
     }
-
 }

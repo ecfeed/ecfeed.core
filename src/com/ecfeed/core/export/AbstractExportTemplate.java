@@ -17,6 +17,7 @@ import java.util.Random;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodDeployerContainer;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -38,6 +39,11 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		fExtLanguageManager = extLanguageManager;
 	}
 
+	@Override
+	public boolean isStandardized() {
+		return false;
+	}
+	
 	@Override
 	public String getDefaultTemplateText() {
 		
@@ -86,7 +92,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	@Override
 	public String createPreview(
 			Collection<TestCaseNode> selectedTestCases, 
-			MethodNode methodNode,
+			MethodDeployerContainer methodDeployerContainer,
 			List<ParameterWithLinkingContext> deployedParameters) {
 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -97,7 +103,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append("\n");
 
-		appendPreviewOfTestCases(selectedTestCases, methodNode, deployedParameters, stringBuilder);
+		appendPreviewOfTestCases(selectedTestCases, methodDeployerContainer, deployedParameters, stringBuilder);
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
@@ -113,7 +119,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
-			MethodNode methodNode,
+			MethodDeployerContainer methodDeployerContainer,
 			List<ParameterWithLinkingContext> deployedParameters,
 			StringBuilder inOutStringBuilder) {
 
@@ -126,7 +132,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
-							methodNode,
+							methodDeployerContainer.getDeployment(),
 							deployedParameters,
 							fTemplateText.getTestCaseTemplateText(), 
 							fExtLanguageManager));

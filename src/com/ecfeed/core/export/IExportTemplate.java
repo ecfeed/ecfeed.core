@@ -12,7 +12,7 @@ package com.ecfeed.core.export;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodDeployerContainer;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 
@@ -29,6 +29,8 @@ public interface IExportTemplate {
 	String getFooterTemplate();
 	String getHeaderTemplate();
 	String getTestCaseTemplate();
+	
+	boolean isStandardized();
 
-	String createPreview(Collection<TestCaseNode> testCases, MethodNode methodNode, List<ParameterWithLinkingContext> deployedParameters);
+	String createPreview(Collection<TestCaseNode> testCases, MethodDeployerContainer methodDeployerContainer, List<ParameterWithLinkingContext> deployedParameters);
 }

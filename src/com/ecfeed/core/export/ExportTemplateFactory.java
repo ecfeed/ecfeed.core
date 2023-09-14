@@ -38,9 +38,7 @@ public class ExportTemplateFactory {
 
 	public IExportTemplate createTemplate(String formatName) {
 
-		IExportTemplate exportTemplate = createTemplateIntr(formatName);
-
-		return exportTemplate;
+		return createTemplateIntr(formatName);
 	}
 
 	private IExportTemplate createTemplateIntr(String formatName) {
@@ -56,7 +54,13 @@ public class ExportTemplateFactory {
 		}
 		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
 			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
-		}		
+		}
+		if (formatName.startsWith(StandardizedExportCsvTemplate.getStandard())) {
+			return StandardizedExportCsvTemplate.get(fMethodNode, formatName, fExtLanguageManager);
+		}
+		if (formatName.startsWith(StandardizedExportJsonTemplate.getStandard())) {
+			return StandardizedExportJsonTemplate.get(fMethodNode, formatName, fExtLanguageManager);
+		}
 		
 		return null;
 	}
@@ -64,6 +68,8 @@ public class ExportTemplateFactory {
 	public static String[] getAvailableExportFormats() {
 
 		String[] formats = { 
+				StandardizedExportCsvTemplate.getTemplateFormatSt(), 
+				StandardizedExportJsonTemplate.getTemplateFormatSt(), 
 				CsvExportTemplate.getTemplateFormatSt(), 
 				XmlExportTemplate.getTemplateFormatSt(), 
 				GherkinExportTemplate.getTemplateFormatSt(),
