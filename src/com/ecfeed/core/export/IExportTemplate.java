@@ -20,9 +20,12 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 public interface IExportTemplate {
 
 	String getDefaultTemplateText();
-	void setTemplateText(String summaryTemplate);
+	boolean setTemplateText(String summaryTemplate);
 	String getTemplateText();
 	boolean isTemplateTextModified();
+	boolean isCorrect();
+	String getErrorMessage();
+	
 	String getFileExtension();
 	String getTemplateFormat();
 

@@ -45,7 +45,7 @@ public class TemplateText {
         setTemplateText(completeTemplateText);
     }
 
-    public void setTemplateText(String completeTemplateText) {
+    public boolean setTemplateText(String completeTemplateText) {
 
         fCurrentTemplateText = completeTemplateText;
 
@@ -59,7 +59,10 @@ public class TemplateText {
         } catch (Exception e) {
 
             markTemplateAsFaulty(e.getMessage());
+            return false;
         }
+        
+        return true;
     }
 
     private void divideIntoSubtemplates(
