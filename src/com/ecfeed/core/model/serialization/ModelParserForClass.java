@@ -121,8 +121,8 @@ public class ModelParserForClass {
 		if (existingMethodNode != null) {
 
 			String newMethodName = 
-					ClassNodeHelper.generateNewMethodName(
-							targetClassNode, existingMethodNode.getName(), new ExtLanguageManagerForJava());
+					ClassNodeHelper.generateUniqueMethodName(
+							targetClassNode, existingMethodNode.getName(), null, new ExtLanguageManagerForJava());
 
 			methodNode.setName(newMethodName);
 		}

@@ -470,23 +470,6 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static ChoiceNode findChoice(BasicParameterNode basicParameterNode, String choiceQualifiedName) {
-
-		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
-
-		Iterator<ChoiceNode> it = choiceNodes.iterator();
-
-		while(it.hasNext()) {
-			ChoiceNode choiceNode = it.next();
-
-			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
-				return choiceNode;
-			}
-		}
-
-		return null;
-	}
-
 	public static boolean choiceNodeExists(
 			BasicParameterNode basicParameterNode, 
 			ChoiceNode choiceNodeToFind) {
@@ -743,6 +726,52 @@ public class BasicParameterNodeHelper {
 		}
 
 		return basicParameterNodesToReturn;
+	}
+
+	public static BasicParameterNode findGlobalBasicParameter(
+			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
+
+		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
+			return null;
+		}
+
+		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
+		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(parametersParentNode);
+
+		ClassNode classNode = methodNode.getClassNode();
+		String className = classNode.getName();
+
+		if (StringHelper.isEqual(className, parentName)) {
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return (BasicParameterNode)abstractParameterNode;
+		}
+
+		RootNode rootNode = classNode.getRoot();
+		String rootName = rootNode.getName();
+
+		if (parentName == null || rootName.equals(parentName)) {
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return (BasicParameterNode)abstractParameterNode;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
+		return null;
+	}
+
+	public static BasicParameterNode getBasicParameter(
+			int parameterNumber, IParametersParentNode parametersParentNode) {
+
+		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+		return basicParameterNode;
 	}
 
 }

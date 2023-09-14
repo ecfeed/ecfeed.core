@@ -44,7 +44,7 @@ public class OnMethodOperationConvertTo extends AbstractModelOperation {
 		String methodName = AbstractNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
 		//List<String> methodParameters = ParametersParentNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
 
-		if (ClassNodeHelper.findMethodByExtLanguage(
+		if (ClassNodeHelper.findMethodByName(
 				classNode, 
 				methodName, 
 				getExtLanguageManager()) != null) {

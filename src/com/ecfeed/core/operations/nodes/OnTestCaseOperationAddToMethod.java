@@ -16,6 +16,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
@@ -25,7 +26,6 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
@@ -97,7 +97,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 				if (newValue == null) {
 					ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
 				}
-				
+
 				choice.setValueString(newValue);
 			}
 		}
@@ -115,7 +115,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			return true;
 		}
 
-		if (!name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME)) {
+		if (!NodeNameHelper.testCaseNodeNameCompliesWithRules(name)) {
 			return false;
 		}
 

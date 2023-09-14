@@ -14,13 +14,13 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.RegexHelper;
 
 public class OnTestCasesOperationRename extends CompositeOperation { 
 
@@ -31,7 +31,7 @@ public class OnTestCasesOperationRename extends CompositeOperation {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguageManager);
 
-		if (newName.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false) {
+		if (!NodeNameHelper.testCaseNodeNameCompliesWithRules(newName)) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 

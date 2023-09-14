@@ -81,8 +81,8 @@ public class OnMethodOperationAddToClass extends AbstractModelOperation{
 		// List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 		String newNameInExtLanguage = 
-				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNameInExtLanguage, extLanguageManager);
+				ClassNodeHelper.generateUniqueMethodName(
+						fClassNode, methodNameInExtLanguage, null, extLanguageManager);
 
 		//methodNode.setParent(fClassNode);
 		AbstractNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguageManager);

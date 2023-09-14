@@ -26,10 +26,10 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("pack.class_1", null);
 
-		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
 
 
@@ -52,10 +52,10 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class_1", null);
 
-		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
 
 		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
@@ -225,7 +225,7 @@ public class ClassNodeHelperTest {
 	}
 
 	@Test
-	public void generateNewMethodNameTest() {
+	public void generateUniqueMethodNameTest() {
 
 		// class node without methods
 
@@ -234,8 +234,8 @@ public class ClassNodeHelperTest {
 		// String[] userTypes1 = {"User1", "com.User2"};
 
 		String result =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", new ExtLanguageManagerForJava());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method", null, new ExtLanguageManagerForJava());
 
 		assertEquals("method1", result);
 
@@ -244,8 +244,8 @@ public class ClassNodeHelperTest {
 		// String[] userTypes2 = {"User1", "User2"};
 
 		result =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", new ExtLanguageManagerForSimple());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method", null, new ExtLanguageManagerForSimple());
 		assertEquals("method1", result);
 
 		// java language
@@ -254,16 +254,16 @@ public class ClassNodeHelperTest {
 
 		//		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-					classNode, "method_1", new ExtLanguageManagerForJava());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method_1", null, new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// simple language
 
 		// String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", new ExtLanguageManagerForSimple());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method 1", null, new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
 		// add method with the same name but only one parameter
@@ -277,15 +277,15 @@ public class ClassNodeHelperTest {
 		// check in java language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", new ExtLanguageManagerForJava());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method_1", null, new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		// check in simple language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", new ExtLanguageManagerForSimple());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method 1", null, new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 
 		// adding the second parameter
@@ -296,13 +296,13 @@ public class ClassNodeHelperTest {
 		// check in Java and Simple language
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", new ExtLanguageManagerForJava());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method_1", null, new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		methodName =
-				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", new ExtLanguageManagerForSimple());
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode, "method 1", null, new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 	}
 
@@ -327,8 +327,8 @@ public class ClassNodeHelperTest {
 
 		List<String> convertedTypes =
 				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
-					Arrays.asList(parameterTypes),
-					new ExtLanguageManagerForJava());
+						Arrays.asList(parameterTypes),
+						new ExtLanguageManagerForJava());
 
 		assertEquals(9, convertedTypes.size());
 		assertEquals("byte", convertedTypes.get(0));

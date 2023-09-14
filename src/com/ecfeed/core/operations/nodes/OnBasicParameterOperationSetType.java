@@ -145,7 +145,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			String methodNameInExtLanguage = AbstractNodeHelper.getName(methodNode, fExtLanguageManager);
 
 			MethodNode foundMethodNode = 
-					ClassNodeHelper.findMethodByExtLanguage(
+					ClassNodeHelper.findMethodByName(
 							classNode, methodNameInExtLanguage, fExtLanguageManager);
 
 			if (foundMethodNode == null) {

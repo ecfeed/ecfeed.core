@@ -225,6 +225,24 @@ public abstract class AbstractParameterNodeHelper {
 		PATH_WITHOUT_TOP_NODE
 	}
 
+	public static AbstractParameterNode findParameterByName(
+			String methodNameInIntrLanguage,
+			IParametersParentNode parametersParentNode) {
+
+		List<AbstractParameterNode> parameters = parametersParentNode.getParameters();
+
+		for (AbstractParameterNode parameterNode : parameters) {
+
+			String currentName = parameterNode.getName();
+
+			if (StringHelper.isEqual(currentName, methodNameInIntrLanguage)) {
+				return parameterNode;
+			}
+		}
+
+		return null;
+	}
+
 	public static AbstractParameterNode findParameter(
 			String path, 
 			IParametersParentNode parent) {
@@ -337,13 +355,14 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static boolean isTopLocalParameter(AbstractParameterNode abstractParameterNode) {
-		
+
 		IAbstractNode parent = abstractParameterNode.getParent();
-		
+
 		if (parent instanceof MethodNode) {
 			return true;
 		}
-		
+
 		return false;
 	}
+
 }

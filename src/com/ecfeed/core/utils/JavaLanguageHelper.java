@@ -35,6 +35,7 @@ import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 
 public final class JavaLanguageHelper {
 
+	private static final char UNDERLINE_CHAR = '_';
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
 	public static final String TYPE_NAME_BYTE = "byte";
 	public static final String TYPE_NAME_CHAR = "char";
@@ -126,6 +127,8 @@ public final class JavaLanguageHelper {
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier";
 	public static final String NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS = "Name must not contain only underline characters.";
+
+	private static final String REGEX_OF_SIMPLIFIED_IDENTIFIER = "[A-Za-z0-9_]*";
 
 	public static String verifySeparatorsInName(String name) {
 
@@ -1504,6 +1507,33 @@ public final class JavaLanguageHelper {
 		}
 
 		return packageName + "." + nonQualifiedName;
+	}
+
+	public static String correctJavaIdentifier(String identifier) {
+
+		String result = identifier;
+
+		result = replaceInvalidCharacters(result);
+
+		result = StringHelper.replaceAllSubstrings(result, "__", "_");
+
+		result = StringHelper.trimmStringByCharacter(result, UNDERLINE_CHAR);
+
+		return result;
+	}
+
+	private static String replaceInvalidCharacters(String result) {
+
+		for (int index = 0; index < result.length(); index++) {
+
+			String substr = result.substring(index, index + 1);
+
+			if (!RegexHelper.stringMatchesRegex(substr, REGEX_OF_SIMPLIFIED_IDENTIFIER)) {
+				result = StringHelper.replaceCharacterInString(result, UNDERLINE_CHAR, index);
+			}
+		}
+
+		return result;
 	}
 
 	public static String checkCompatibilityWithSimpleMode(String name) {
