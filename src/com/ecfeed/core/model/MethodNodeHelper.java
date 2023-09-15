@@ -181,17 +181,26 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//	public static String createSignature(
+	//			MethodNode methodNode, 
+	//			boolean isParamNameAdded, 
+	//			boolean expectedDecorationsAdded, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		return createSignature( 
+	//				methodNode,
+	//				isParamNameAdded,
+	//				false, extLanguageManager);
+	//	}
+	//
+	public static String createLongSignature(
+			MethodNode methodNode, 
+			boolean isParamNameAdded,
+			boolean expectedDecorationsAdded,
+			IExtLanguageManager extLanguageManager) {
 
-		return createSignature( 
-				methodNode,
-				isParamNameAdded,
-				false, extLanguageManager);
-	}
-
-	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
-
-		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
+		String shortSignature = 
+				createSignature(methodNode, isParamNameAdded, expectedDecorationsAdded, extLanguageManager);
 
 		IAbstractNode parent = methodNode.getParent();
 
@@ -996,6 +1005,22 @@ public class MethodNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static String generateUniqueTestSuiteName(MethodNode methodNode) {
+		
+		String startName = "test suite ";
+
+		for (int i = 1;   ; i++) {
+
+			String newTestSuiteName = startName + String.valueOf(i);
+
+			TestSuiteNode testSuiteNode = methodNode.findTestSuite(newTestSuiteName);
+
+			if (testSuiteNode == null) {
+				return newTestSuiteName;
+			}
+		}
 	}
 
 }

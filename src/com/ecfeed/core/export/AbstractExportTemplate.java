@@ -50,13 +50,13 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return fTemplateText.getInitialTemplateText();
 	}
 	@Override
-	public void setTemplateText(String templateText) {
+	public boolean setTemplateText(String templateText) {
 
 		if (templateText == null) {
 			ExceptionHelper.reportRuntimeException("Template text must not be empty.");
 		}
 
-		fTemplateText.setTemplateText(templateText);
+		return fTemplateText.setTemplateText(templateText);
 	}
 
 	@Override
@@ -117,6 +117,17 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return result;
 	}
 
+	@Override
+	public boolean isCorrect() {
+		return fTemplateText.isCorrect();
+	}
+	
+	@Override
+	public String getErrorMessage() {
+		return fTemplateText.getErrorMessage();
+	}
+	
+	
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
 			MethodDeployerContainer methodDeployerContainer,

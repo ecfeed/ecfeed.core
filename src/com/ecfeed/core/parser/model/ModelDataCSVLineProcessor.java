@@ -1,8 +1,10 @@
 package com.ecfeed.core.parser.model;
 
-import com.ecfeed.core.model.ChoiceNodeHelper;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class ModelDataCSVLineProcessor {
     private static final String nameTemplate = "COL_";
