@@ -70,8 +70,11 @@ public abstract class ChoicesParentNodeHelper {
 
 			if (inOutParameterConversionItems != null) {
 
-				ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(choiceNode);
-				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
+				ParameterConversionItemPartForChoice srcPart = 
+						new ParameterConversionItemPartForChoice(choiceNode.getParameter(), choiceNode);
+				
+				ParameterConversionItemPartForChoice dstPart = 
+						new ParameterConversionItemPartForChoice(choiceNode.getParameter(), clonedChoiceNode);
 
 				boolean isRandomized = choiceNode.isRandomizedValue();
 				

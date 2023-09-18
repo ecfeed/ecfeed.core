@@ -10,10 +10,12 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+
 public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForLabel(String label) {
-		super(label);
+	public ParameterConversionItemPartForLabel(AbstractParameterNode abstractParameterNode, String label) {
+		super(abstractParameterNode, label);
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForLabel clone = 
-				new ParameterConversionItemPartForLabel(getLabel());
+				new ParameterConversionItemPartForLabel(getParameter(), getLabel());
 
 		return clone;
 	}

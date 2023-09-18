@@ -10,12 +10,15 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+
 public class ParameterConversionItemPartForRaw extends ParameterConversionItemPart {
 
 	String fCode;
 
-	public ParameterConversionItemPartForRaw(String code, String name) {
-		super(name);
+	public ParameterConversionItemPartForRaw(
+			AbstractParameterNode abstractParameterNode, String code, String name) {
+		super(abstractParameterNode, name);
 
 		fCode = code;
 	}
@@ -67,7 +70,7 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForRaw clone = 
-				new ParameterConversionItemPartForRaw(getCode(), getStr());
+				new ParameterConversionItemPartForRaw(getParameter(), getCode(), getStr());
 
 		return clone;
 	}

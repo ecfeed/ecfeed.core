@@ -10,18 +10,22 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+
 public abstract class ParameterConversionItemPart implements IParameterConversionItemPart {
 
 	private String fStr;
+	private AbstractParameterNode fAbstractParameterNode;
 
 	public abstract Integer getTypeSortOrder();
 
-	public ParameterConversionItemPart(String str) {
+	public ParameterConversionItemPart(AbstractParameterNode abstractParameterNode, String str) {
 
 		if (str == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
 		}
 
+		fAbstractParameterNode = abstractParameterNode; 
 		fStr = str;
 	}
 
@@ -31,6 +35,11 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		return fStr;
 	}
 
+	@Override
+	public AbstractParameterNode getParameter() {
+		return fAbstractParameterNode;
+	}
+	
 	@Override
 	public String getStr() {
 		return fStr;

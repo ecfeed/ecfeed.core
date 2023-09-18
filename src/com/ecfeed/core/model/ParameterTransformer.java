@@ -216,18 +216,18 @@ public class ParameterTransformer {
 			return;
 		}
 
-		BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
+		BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
 
-		if (methodParameterNode.isExpected()) {
+		if (basicParameterNode.isExpected()) {
 			addDefaultValueToConversionDefinition(
-					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
+					basicParameterNode, basicParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
 		}
 
 		ChoiceNodeHelper.verifyConversionOfChoices(
-				methodParameterNode, newType, inOutParameterConversionDefinition);
+				basicParameterNode, newType, inOutParameterConversionDefinition);
 
 		ConstraintHelper.verifyConversionOfConstraints(
-				methodParameterNode, newType, inOutParameterConversionDefinition);
+				basicParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
 	public static void convertChoicesAndConstraintsToType(
@@ -420,10 +420,12 @@ public class ParameterTransformer {
 	}
 
 	private static void addDefaultValueToConversionDefinition(
+			AbstractParameterNode abstractParameterNode,
 			String defaultValue,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
+		ParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForValue(abstractParameterNode, defaultValue);
 
 		boolean isRandomized = false;
 

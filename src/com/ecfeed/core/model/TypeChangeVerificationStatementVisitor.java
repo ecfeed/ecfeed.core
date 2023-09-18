@@ -51,7 +51,8 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
-		verifyConversionOfValue(fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
+		verifyConversionOfValue(
+				fMethodParameterNode, fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
 
 		return null;
 	}
@@ -77,7 +78,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		}
 		
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(fOldType, valueString, false, fConstraintName + "(constraint)");
+		verifyConversionOfValue(fMethodParameterNode, fOldType, valueString, false, fConstraintName + "(constraint)");
 
 		return null;
 	}
@@ -114,14 +115,18 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	}
 
 	private void verifyConversionOfValue(
-			String oldType, String valueString, boolean isRandomized, String objectsContainingItem) {
+			AbstractParameterNode abstractParameterNode,
+			String oldType, 
+			String valueString, 
+			boolean isRandomized, 
+			String objectsContainingItem) {
 
 		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(oldType, valueString, false);
 
 		if (!canConvert) {
 
 			ParameterConversionItemPartForValue srcPart = 
-					new ParameterConversionItemPartForValue(valueString);
+					new ParameterConversionItemPartForValue(abstractParameterNode, valueString);
 			
 			ParameterConversionItem parameterConversionItem = 
 					new ParameterConversionItem(

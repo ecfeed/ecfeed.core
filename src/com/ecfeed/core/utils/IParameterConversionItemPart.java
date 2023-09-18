@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+
 public interface IParameterConversionItemPart  {
 
 	enum ItemPartType {
@@ -70,6 +72,7 @@ public interface IParameterConversionItemPart  {
 
 	}
 
+	public AbstractParameterNode getParameter();
 	public ItemPartType getType();
 	public String getStr();
 	public String getDescription();

@@ -231,7 +231,8 @@ public class ChoiceNodeHelper {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(choiceNode.getValueString());
+				new ParameterConversionItemPartForValue(
+						choiceNode.getParameter(), choiceNode.getValueString());
 
 		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
 
