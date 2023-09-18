@@ -49,20 +49,20 @@ public class ParametersAndConstraintsParentNodeHelper {
 	//		return constraints;
 	//	}
 
-//	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
-//			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
-//
-//		Set<ChoiceNode> choices = new HashSet<>();
-//
-//		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
-//			for (ConstraintNode constraint : constraints) {
-//
-//				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
-//			}
-//		}
-//
-//		return choices;
-//	}
+	//	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
+	//			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+	//
+	//		Set<ChoiceNode> choices = new HashSet<>();
+	//
+	//		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
+	//			for (ConstraintNode constraint : constraints) {
+	//
+	//				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
+	//			}
+	//		}
+	//
+	//		return choices;
+	//	}
 
 	public static Collection<BasicParameterNode> getParametersUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
@@ -85,7 +85,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return parameters;
 	}
 
-	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraints(
 			AbstractParameterNode localTopParameterNode) {
 
 		IParametersAndConstraintsParentNode parent =
@@ -176,7 +176,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return resultChoiceNodes;
 	}
 
-	public static List<BasicParameterWithString> getParametersWithLabelsUsedInConstraintsForLocalTopParameter(
+	public static List<BasicParameterWithString> getParametersWithLabelsUsedInConstraints(
 			AbstractParameterNode localTopParameterNode) {
 
 		IParametersAndConstraintsParentNode parent =
