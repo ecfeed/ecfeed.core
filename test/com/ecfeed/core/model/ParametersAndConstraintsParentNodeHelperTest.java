@@ -65,7 +65,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						basicParameterNode);
 
 		assertEquals(0, parametersWithChoices.size());
@@ -107,7 +107,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint, true, null);
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						basicParameterNode1);
 
 		assertEquals(1, parametersWithChoices.size());
@@ -158,7 +158,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//         constraint (child of str1)
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						compositeParameterNode);
 
 		assertEquals(1, parametersWithChoices.size());
@@ -209,7 +209,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//       constraint (child of method)
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						compositeParameterNode);
 
 		assertEquals(1, parametersWithChoices.size());
@@ -265,7 +265,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//       constraint (child of method)
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						compositeParameterNode1);
 
 		assertEquals(1, parametersWithChoices.size());
@@ -324,7 +324,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//       constraint with choice2 (child of method)
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						compositeParameterNode1);
 
 		assertEquals(1, parametersWithChoices.size());
@@ -391,7 +391,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//       constraint with choice1 and choice2 (child of method)
 
 		List<BasicParameterWithChoice> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithChoicesUsedInConstraints(
 						compositeParameterNode1);
 
 		assertEquals(2, parametersWithChoices.size());
@@ -459,7 +459,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//         choice1 with label1 and label2
 
 		List<BasicParameterWithString> parametersWithLabels =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithLabelsUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithLabelsUsedInConstraints(
 						basicParameterNode);
 
 		assertEquals(1, parametersWithLabels.size());
@@ -514,7 +514,7 @@ public class ParametersAndConstraintsParentNodeHelperTest {
 		//         constraint (child of str1)
 
 		List<BasicParameterWithString> parametersWithChoices =
-				ParametersAndConstraintsParentNodeHelper.getParametersWithLabelsUsedInConstraintsForLocalTopParameter(
+				ParametersAndConstraintsParentNodeHelper.getParametersWithLabelsUsedInConstraints(
 						compositeParameterNode);
 
 		assertEquals(1, parametersWithChoices.size());
