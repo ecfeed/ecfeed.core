@@ -37,10 +37,10 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 		return IParameterConversionItemPart.ItemPartType.CHOICE;
 	}
 
-	@Override
-	public String getDescription() {
-		return super.getDescription(ItemPartType.CHOICE.getCode());
-	}
+	//	@Override
+	//	public String getDescription() {
+	//		return super.getDescription(ItemPartType.CHOICE.getCode());
+	//	}
 
 	@Override
 	public IParameterConversionItemPart makeClone() {

@@ -28,10 +28,10 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 		return 1;
 	}
 
-	@Override
-	public String getDescription() {
-		return super.getDescription(ItemPartType.LABEL.getCode());
-	}
+	//	@Override
+	//	public String getDescription() {
+	//		return super.getDescription(ItemPartType.LABEL.getCode());
+	//	}
 
 	public String getLabel() {
 		return super.getStr();

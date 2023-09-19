@@ -28,10 +28,10 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 		return 1;
 	}
 
-	@Override
-	public String getDescription() {
-		return super.getDescription(ItemPartType.VALUE.getCode());
-	}
+	//	@Override
+	//	public String getDescription() {
+	//		return super.getDescription(ItemPartType.VALUE.getCode());
+	//	}
 
 	public String getValue() {
 		return super.getStr();

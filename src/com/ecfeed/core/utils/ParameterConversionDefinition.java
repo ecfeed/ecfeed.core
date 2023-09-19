@@ -19,6 +19,11 @@ public class ParameterConversionDefinition {
 
 	private List<ParameterConversionItem> fParameterConversionItems;
 
+	@Override
+	public String toString() {
+		return "(" + fParameterConversionItems.size() + ") " + fParameterConversionItems.toString(); 
+	}
+	
 	public ParameterConversionDefinition() {
 		fParameterConversionItems = new ArrayList<>();
 	}

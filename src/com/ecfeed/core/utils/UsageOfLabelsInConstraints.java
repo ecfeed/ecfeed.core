@@ -23,6 +23,10 @@ public class UsageOfLabelsInConstraints {
 
 	private Map<String, List<String>> fMapOfUsages;
 
+	@Override
+	public String toString() {
+		return fMapOfUsages.toString();
+	}
 
 	public UsageOfLabelsInConstraints(BasicParameterNode methodParameterNode) {
 

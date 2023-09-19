@@ -26,14 +26,13 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		}
 
 		fAbstractParameterNode = abstractParameterNode; 
-		fStr = abstractParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR + str; // XYX
-		//fStr = str;
+		fStr = str;
 	}
 
 	@Override
 	public String toString() {
 
-		return fStr;
+		return "(" + fAbstractParameterNode.getName() + ", " + fStr + ")";
 	}
 
 	@Override
@@ -61,13 +60,16 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	public int compareTo(IParameterConversionItemPart other) {
 
 		return getStr().compareTo(other.getStr());
-
 	}
 
-	public String getDescription(String code) {
+	@Override
+	public String getTypeDescription() {
 
-		String typeDescription = ItemPartType.convertCodeToDescription(code);
-		return getStr() + "[" + typeDescription +"]";
+		ItemPartType itemPartType = getType();
+		
+		String typeDescription = ItemPartType.convertCodeToDescription(itemPartType.getCode());
+		
+		return typeDescription;
 	}
 
 	public static boolean isMatch(IParameterConversionItemPart part1, IParameterConversionItemPart part2) {

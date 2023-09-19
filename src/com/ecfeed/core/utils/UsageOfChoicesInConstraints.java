@@ -25,6 +25,10 @@ public class UsageOfChoicesInConstraints { // XYX rename
 
 	private Map<BasicParameterWithChoice, List<String>> fMapOfUsages;
 
+	@Override
+	public String toString() {
+		return fMapOfUsages.toString();
+	}
 
 	public UsageOfChoicesInConstraints(BasicParameterNode basicParameterNode) {
 
@@ -71,16 +75,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return constraintNames;
 	}
 
-	public List<String> getConstraintNames(String parameterWithchoiceName) { // XYX
-
-		String parameterName = 
-				StringHelper.getFirstToken(
-						parameterWithchoiceName, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-		String choiceName = 
-				StringHelper.getLastToken(
-						parameterWithchoiceName, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
+	public List<String> getConstraintNames(String parameterName, String choiceName) {
 
 		for (BasicParameterWithChoice basicParameterWithChoice : fMapOfUsages.keySet()) {
 

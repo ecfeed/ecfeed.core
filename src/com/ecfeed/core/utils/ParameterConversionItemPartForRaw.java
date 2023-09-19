@@ -24,17 +24,6 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	}
 
 	@Override
-	public String toString() {
-		return getDescription();
-	}
-
-	@Override
-	public String getDescription() {
-
-		return super.getDescription(fCode);
-	}
-
-	@Override
 	public ItemPartType getType() {
 		return IParameterConversionItemPart.ItemPartType.RAW;
 	}
