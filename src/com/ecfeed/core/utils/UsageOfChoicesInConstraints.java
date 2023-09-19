@@ -37,7 +37,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		for (Constraint constraint : constraints) {
 
 			//List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(basicParameterNode);
-			
+
 			List<BasicParameterWithChoice> itemsUsedInConstraint = 
 					getParametersWithChoicesUsedInConstraint(constraint, basicParameterNode);
 
@@ -48,19 +48,19 @@ public class UsageOfChoicesInConstraints { // XYX rename
 	private List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
 			Constraint constraint,
 			BasicParameterNode basicParameterNode) {
-		
+
 		List<BasicParameterWithChoice> result = new ArrayList<>();
-		
+
 		List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(basicParameterNode);
-		
+
 		for (ChoiceNode choiceNode : choiceNodesUsedInConstraint) {
-			
+
 			BasicParameterWithChoice basicParameterWithChoice = 
 					new BasicParameterWithChoice(basicParameterNode, choiceNode);
-			
+
 			result.add(basicParameterWithChoice);
 		}
-		
+
 		return result;
 	}
 
@@ -71,15 +71,28 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return constraintNames;
 	}
 
-	public List<String> getConstraintNames(String parameterName, String choiceName) {
+	public List<String> getConstraintNames(String parameterWithchoiceName) { // XYX
+
+		String parameterName = 
+				StringHelper.getFirstToken(
+						parameterWithchoiceName, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		String choiceName = 
+				StringHelper.getLastToken(
+						parameterWithchoiceName, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
 
 		for (BasicParameterWithChoice basicParameterWithChoice : fMapOfUsages.keySet()) {
 
-			if (!StringHelper.isEqual(basicParameterWithChoice.getBasicParameterNode().getName(), parameterName)) {
+			String currentParameterName = basicParameterWithChoice.getBasicParameterNode().getName();
+
+			if (!StringHelper.isEqual(currentParameterName, parameterName)) {
 				continue;
 			}
-			
-			if (!StringHelper.isEqual(basicParameterWithChoice.getChoiceNode().getQualifiedName(), choiceName)) {
+
+			String currentChoiceName = basicParameterWithChoice.getChoiceNode().getQualifiedName();
+
+			if (!StringHelper.isEqual(currentChoiceName, choiceName)) {
 				continue;
 			}
 
@@ -102,7 +115,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 				return true;
 			}
 		}
-        	
+
 		return false;
 	}
 
