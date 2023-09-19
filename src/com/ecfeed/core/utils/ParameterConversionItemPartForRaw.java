@@ -64,5 +64,16 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 		return clone;
 	}
 
+	public String createDescription() {
+
+		String rawTypeDescription = 
+				IParameterConversionItemPart.ItemPartType.convertCodeToDescription(getCode());
+		return 
+				getParameter().getName() + 
+				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+				getStr() + 
+				"[" + rawTypeDescription + "]";
+	}
+
 }
 
