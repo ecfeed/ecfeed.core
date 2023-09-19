@@ -26,7 +26,8 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		}
 
 		fAbstractParameterNode = abstractParameterNode; 
-		fStr = str;
+		fStr = abstractParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR + str; // XYX
+		//fStr = str;
 	}
 
 	@Override
