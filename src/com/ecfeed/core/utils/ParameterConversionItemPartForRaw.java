@@ -11,6 +11,7 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.utils.IParameterConversionItemPart.ItemPartType;
 
 public class ParameterConversionItemPartForRaw extends ParameterConversionItemPart {
 
@@ -64,16 +65,25 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 		return clone;
 	}
 
-	public String createDescription() {
+	@Override
+	public String getTypeDescription() {
 
 		String rawTypeDescription = 
 				IParameterConversionItemPart.ItemPartType.convertCodeToDescription(getCode());
-		return 
-				getParameter().getName() + 
-				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
-				getStr() + 
-				"[" + rawTypeDescription + "]";
+		
+		return rawTypeDescription;
 	}
+	
+//	public String createDescription() {
+//
+//		String rawTypeDescription = 
+//				IParameterConversionItemPart.ItemPartType.convertCodeToDescription(getCode());
+//		return 
+//				getParameter().getName() + 
+//				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+//				getStr() + 
+//				"[" + rawTypeDescription + "]";
+//	}
 
 }
 

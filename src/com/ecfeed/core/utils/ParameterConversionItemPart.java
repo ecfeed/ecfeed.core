@@ -32,14 +32,18 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	@Override
 	public String toString() {
 
-		return "(" + fAbstractParameterNode.getName() + ", " + fStr + ")";
+		return 
+				getParameter().getName() + 
+				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+				getStr() + 
+				"[" + getTypeDescription() + "]";
 	}
 
 	@Override
 	public AbstractParameterNode getParameter() {
 		return fAbstractParameterNode;
 	}
-	
+
 	@Override
 	public String getStr() {
 		return fStr;
@@ -66,9 +70,9 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	public String getTypeDescription() {
 
 		ItemPartType itemPartType = getType();
-		
+
 		String typeDescription = ItemPartType.convertCodeToDescription(itemPartType.getCode());
-		
+
 		return typeDescription;
 	}
 
