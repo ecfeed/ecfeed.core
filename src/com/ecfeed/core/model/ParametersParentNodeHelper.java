@@ -64,8 +64,8 @@ public class ParametersParentNodeHelper {
 		return result;
 	}
 
-	public static BasicParameterNode findGlobalParameter(
-			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
+	public static AbstractParameterNode findGlobalParameter(
+			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
 			return null;
@@ -74,14 +74,14 @@ public class ParametersParentNodeHelper {
 		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
 		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
 
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(parametersParentNode);
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParametersParentNode);
 
 		ClassNode classNode = methodNode.getClassNode();
 		String className = classNode.getName();
 
 		if (StringHelper.isEqual(className, parentName)) {
 			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
+			return abstractParameterNode;
 		}
 
 		RootNode rootNode = classNode.getRoot();
@@ -89,7 +89,7 @@ public class ParametersParentNodeHelper {
 
 		if (parentName == null || rootName.equals(parentName)) {
 			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
+			return abstractParameterNode;
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
