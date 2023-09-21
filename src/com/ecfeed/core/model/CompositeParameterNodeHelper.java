@@ -58,7 +58,8 @@ public class CompositeParameterNodeHelper {
 		return parameterNode;
 	}
 
-	public static List<BasicParameterNode> getAllChildBasicParameters(CompositeParameterNode compositeParameterNode) {
+	public static List<BasicParameterNode> getAllChildBasicParameters( // XYX move to basic parameter node helper
+			CompositeParameterNode compositeParameterNode) {
 
 		List<BasicParameterNode> result = new ArrayList<>();
 

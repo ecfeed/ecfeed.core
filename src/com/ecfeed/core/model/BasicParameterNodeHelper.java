@@ -207,10 +207,26 @@ public class BasicParameterNodeHelper {
 			return null;
 		}
 		
-		ExceptionHelper.reportRuntimeException("TODO for composite parameter"); // XYX TODO
-		return null;
+		BasicParameterNode basicParameterNode = 
+				findBasicParameterWithoutChoicesForComposite((CompositeParameterNode) topAbstractParameterNode);
+		
+		return basicParameterNode;
 	}
 
+	public static BasicParameterNode findBasicParameterWithoutChoicesForComposite(CompositeParameterNode compositeParameterNode) {
+		
+		List<BasicParameterNode> basicParameterNodes = 
+				CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
+		
+		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+			if (basicParameterNode.getChoiceCount() == 0) {
+				return basicParameterNode;
+			}
+		}
+		
+		return null;
+	}
+	
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
 
 		if (linkedParameterSignature == null) {
@@ -725,9 +741,9 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> selectedNodes) {
+	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> abstractNodes) {
 
-		List<BasicParameterNode> parameters = selectedNodes.stream()
+		List<BasicParameterNode> parameters = abstractNodes.stream()
 				.filter(e -> e instanceof BasicParameterNode)
 				.map(e -> (BasicParameterNode)e)
 				.collect(Collectors.toList());
