@@ -15,52 +15,73 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintsParentNodeHelper;
 import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
 
 public class UsageOfChoicesInConstraints { // XYX rename
 
-	private Map<BasicParameterWithChoice, List<String>> fMapOfUsages;
+	private Map<BasicParameterWithChoice, ListOfStrings /* names of constraints */> fMapOfUsages;
 
+	public UsageOfChoicesInConstraints(AbstractParameterNode abstractParameterNode) {
+
+		IConstraintsParentNode constraintParentNode = (IConstraintsParentNode) abstractParameterNode.getParent();
+
+		List<ConstraintNode> constraintNodes = 
+				ConstraintsParentNodeHelper.findChildConstraints(constraintParentNode);
+		
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(abstractParameterNode);
+
+		fMapOfUsages = createMapOfUsages(constraintNodes, basicParameterNodes);
+	}
+	
 	@Override
 	public String toString() {
 		return fMapOfUsages.toString();
 	}
 
-	public UsageOfChoicesInConstraints(BasicParameterNode basicParameterNode) {
+	private Map<BasicParameterWithChoice, ListOfStrings> createMapOfUsages(
+			List<ConstraintNode> constraintNodes,
+			List<BasicParameterNode> basicParameterNodes) {
+		
+		Map<BasicParameterWithChoice, ListOfStrings> mapOfUsages = new HashMap<>();
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
 
-		IConstraintsParentNode methodNode = (IConstraintsParentNode) basicParameterNode.getParent();
-
-		fMapOfUsages = new HashMap<>();
-
-		List<Constraint> constraints = methodNode.getConstraints();
-
-		for (Constraint constraint : constraints) {
-
-			//List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(basicParameterNode);
-
-			List<BasicParameterWithChoice> itemsUsedInConstraint = 
-					getParametersWithChoicesUsedInConstraint(constraint, basicParameterNode);
-
-			updateMapOfUsages(constraint, itemsUsedInConstraint);
+			Constraint constraint = constraintNode.getConstraint();
+		
+			for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+				
+				List<BasicParameterWithChoice> itemsUsedInConstraint = 
+						getParametersWithChoicesUsedInConstraint(
+								constraint, basicParameterNode);
+	
+				updateMapOfUsages(constraint, itemsUsedInConstraint);
+			}
 		}
+		
+		return mapOfUsages;
 	}
 
 	private List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
 			Constraint constraint,
-			BasicParameterNode basicParameterNode) {
+			BasicParameterNode abstractParameterNode) {
 
 		List<BasicParameterWithChoice> result = new ArrayList<>();
 
-		List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(basicParameterNode);
+		List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(abstractParameterNode);
 
 		for (ChoiceNode choiceNode : choiceNodesUsedInConstraint) {
 
 			BasicParameterWithChoice basicParameterWithChoice = 
-					new BasicParameterWithChoice(basicParameterNode, choiceNode);
+					new BasicParameterWithChoice(abstractParameterNode, choiceNode);
 
 			result.add(basicParameterWithChoice);
 		}
@@ -68,14 +89,14 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return result;
 	}
 
-	public List<String> getConstraintNames(BasicParameterWithChoice basicParameterWithChoice) {
+	public ListOfStrings getConstraintNames(BasicParameterWithChoice basicParameterWithChoice) {
 
-		List<String> constraintNames = fMapOfUsages.get(basicParameterWithChoice);
+		ListOfStrings constraintNames = fMapOfUsages.get(basicParameterWithChoice);
 
 		return constraintNames;
 	}
 
-	public List<String> getConstraintNames(String parameterName, String choiceName) {
+	public ListOfStrings getConstraintNames(String parameterName, String choiceName) {
 
 		for (BasicParameterWithChoice basicParameterWithChoice : fMapOfUsages.keySet()) {
 
@@ -91,7 +112,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 				continue;
 			}
 
-			List<String> choiceNames = fMapOfUsages.get(basicParameterWithChoice);
+			ListOfStrings choiceNames = fMapOfUsages.get(basicParameterWithChoice);
 			return choiceNames;
 		}
 
@@ -118,21 +139,21 @@ public class UsageOfChoicesInConstraints { // XYX rename
 			Constraint constraint, 
 			List<BasicParameterWithChoice> itemsUsedInConstraint) {
 
-		for (BasicParameterWithChoice choiceNode : itemsUsedInConstraint) {
+		for (BasicParameterWithChoice basicParameterWithChoice : itemsUsedInConstraint) {
 
-			if (fMapOfUsages.containsKey(choiceNode)) {
+			if (fMapOfUsages.containsKey(basicParameterWithChoice)) {
 
-				updateExistingElement(choiceNode, constraint);
+				updateExistingElement(basicParameterWithChoice, constraint);
 				return;
 			}
 
-			addNewElement(choiceNode, constraint);
+			addNewElement(basicParameterWithChoice, constraint);
 		}
 	}
 
 	private void addNewElement(BasicParameterWithChoice basicParameterWithChoice, Constraint constraint) {
 
-		List<String> constraintNames = new ArrayList<>();
+		ListOfStrings constraintNames = new ListOfStrings();
 		constraintNames.add(constraint.getName());
 
 		fMapOfUsages.put(basicParameterWithChoice, constraintNames);
@@ -141,7 +162,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 
 	private void updateExistingElement(BasicParameterWithChoice basicParameterWithChoice, Constraint constraint) {
 
-		List<String> constraintNames = fMapOfUsages.get(basicParameterWithChoice);
+		ListOfStrings constraintNames = fMapOfUsages.get(basicParameterWithChoice);
 
 		String constraintName = constraint.getName();
 
@@ -151,6 +172,5 @@ public class UsageOfChoicesInConstraints { // XYX rename
 
 		constraintNames.add(constraintName);
 	}
-
 
 }

@@ -36,6 +36,15 @@ public class ListOfStrings {
 		return fStrings.get(0);
 	}
 	
+	public boolean contains(String strg) {
+		
+		if (fStrings.contains(strg)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public String getErrorsAsText() {
 		
 		String text = "";
