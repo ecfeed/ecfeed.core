@@ -193,6 +193,12 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
+	
+	public static BasicParameterNode findBasicParameterWithoutChoices(AbstractParameterNode topAbstractParameterNode) {
+		
+		ExceptionHelper.reportRuntimeException("TODO"); // XYX TODO
+		return null;
+	}
 
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
 
