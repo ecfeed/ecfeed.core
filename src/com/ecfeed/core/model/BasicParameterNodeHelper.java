@@ -196,7 +196,18 @@ public class BasicParameterNodeHelper {
 	
 	public static BasicParameterNode findBasicParameterWithoutChoices(AbstractParameterNode topAbstractParameterNode) {
 		
-		ExceptionHelper.reportRuntimeException("TODO"); // XYX TODO
+		if (topAbstractParameterNode instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) topAbstractParameterNode;
+			
+			if (basicParameterNode.getChoiceCount() == 0) {
+				return basicParameterNode;
+			}
+			
+			return null;
+		}
+		
+		ExceptionHelper.reportRuntimeException("TODO for composite parameter"); // XYX TODO
 		return null;
 	}
 
