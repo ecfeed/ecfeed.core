@@ -741,7 +741,7 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> abstractNodes) {
+	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> abstractNodes) { // XYX remove to filterBasicParameters
 
 		List<BasicParameterNode> parameters = abstractNodes.stream()
 				.filter(e -> e instanceof BasicParameterNode)

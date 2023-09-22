@@ -79,7 +79,7 @@ public abstract class ConstraintsParentNodeHelper {
 		}
 	}
 
-	public static List<ConstraintNode> findChildConstraints(IConstraintsParentNode constraintsParentNode) {
+	public static List<ConstraintNode> findChildConstraints(IConstraintsParentNode constraintsParentNode) { // XYX move to ConstraintNodeHelper
 
 		return findChildConstraintsRecursive(constraintsParentNode);
 	}
