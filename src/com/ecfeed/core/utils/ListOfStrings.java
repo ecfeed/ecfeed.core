@@ -45,7 +45,7 @@ public class ListOfStrings {
 		return false;
 	}
 	
-	public String getErrorsAsText() {
+	public String getErrorsAsText() {  // XYX rename
 		
 		String text = "";
 		
@@ -56,4 +56,24 @@ public class ListOfStrings {
 		
 		return text;
 	}
+	
+	public String getAsStringWithSeparators(String separator) {
+
+		int listSize = fStrings.size();
+		int lastIndex = listSize - 1;
+
+		String convertedString = "";
+
+		for (int index = 0; index < listSize; index++) {
+
+			convertedString += fStrings.get(index);
+
+			if (index < lastIndex) {
+				convertedString += separator;
+			}
+		}
+
+		return convertedString;
+	}
+
 }
