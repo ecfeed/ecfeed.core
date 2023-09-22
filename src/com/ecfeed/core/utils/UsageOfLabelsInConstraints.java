@@ -10,52 +10,66 @@
 
 package com.ecfeed.core.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintsParentNodeHelper;
 import com.ecfeed.core.model.IConstraintsParentNode;
 
 public class UsageOfLabelsInConstraints {
 
-	private Map<String, List<String>> fMapOfUsages;
+	private Map<String /* label */, ListOfStrings /* names of constraints */> fMapOfUsages;
 
 	@Override
 	public String toString() {
 		return fMapOfUsages.toString();
 	}
 
-	public UsageOfLabelsInConstraints(BasicParameterNode methodParameterNode) {
+	public UsageOfLabelsInConstraints(AbstractParameterNode abstractParameterNode) {
 
-		IConstraintsParentNode methodNode = (IConstraintsParentNode) methodParameterNode.getParent();
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) abstractParameterNode.getParent();
 
-		fMapOfUsages = new HashMap<>();
+		List<ConstraintNode> constraintNodes = 
+				ConstraintsParentNodeHelper.findChildConstraints(constraintsParentNode);
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(abstractParameterNode);
 
-		for (Constraint constraint : constraints) {
-
-			List<String> choiceNodesUsedInConstraint = constraint.getLabels(methodParameterNode);
-
-			updateMapOfUsages(constraint, choiceNodesUsedInConstraint);
-		}
+		fMapOfUsages = createMapOfUsages(constraintNodes, basicParameterNodes);
 	}
 
-	public List<String> getConstraintNames(String label) {
+	private Map<String, ListOfStrings> createMapOfUsages
+	(List<ConstraintNode> constraintNodes,
+			List<BasicParameterNode> basicParameterNodes) {
 
-		for (String tmpLabel : fMapOfUsages.keySet()) {
+		Map<String, ListOfStrings> mapOfUsages = new HashMap<>();
 
-			if (StringHelper.isEqual(label, tmpLabel)) {
+		for (ConstraintNode constraintNode : constraintNodes) {
 
-				List<String> choiceNames = fMapOfUsages.get(label);
-				return choiceNames;
+			Constraint constraint = constraintNode.getConstraint();
+
+			for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+
+				List<String> choiceNodesUsedInConstraint = constraint.getLabels(basicParameterNode);
+
+				updateMapOfUsages(constraint, choiceNodesUsedInConstraint);
 			}
 		}
 
-		return null;
+		return mapOfUsages;
+	}
+
+	public ListOfStrings getConstraintNames(String label) {
+
+		ListOfStrings constraintNames = fMapOfUsages.get(label);
+
+		return constraintNames;
 	}
 
 	public boolean choiceNameExists(String choiceName) {
@@ -86,7 +100,7 @@ public class UsageOfLabelsInConstraints {
 
 	private void addNewElement(String label, Constraint constraint) {
 
-		List<String> labels = new ArrayList<>();
+		ListOfStrings labels = new ListOfStrings();
 		labels.add(constraint.getName());
 
 		fMapOfUsages.put(label, labels);
@@ -95,7 +109,7 @@ public class UsageOfLabelsInConstraints {
 
 	private void updateExistingElement(String label, Constraint constraint) {
 
-		List<String> constraintNames = fMapOfUsages.get(label);
+		ListOfStrings constraintNames = fMapOfUsages.get(label);
 
 		String constraintName = constraint.getName();
 
