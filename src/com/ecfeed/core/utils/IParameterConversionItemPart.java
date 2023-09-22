@@ -72,7 +72,7 @@ public interface IParameterConversionItemPart  {
 
 	}
 
-	public AbstractParameterNode getParameter();
+	public AbstractParameterNode getParameter(); // XYX can BasicParameterNode be used ?
 	public ItemPartType getType();
 	public String getTypeDescription();
 	public String getStr();

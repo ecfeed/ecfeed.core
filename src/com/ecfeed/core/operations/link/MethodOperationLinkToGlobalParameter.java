@@ -12,7 +12,7 @@ package com.ecfeed.core.operations.link;
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.NodeMapper;
 import com.ecfeed.core.model.ParameterTransformer;
@@ -23,26 +23,26 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation {
 
-	private BasicParameterNode fSrcMethodParameterNode;
-	private BasicParameterNode fDstParameterForChoices;
+	private AbstractParameterNode fSrcMethodParameterNode;
+	private AbstractParameterNode fDstParameterForChoices;
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private Optional<NodeMapper> fNodeMapper;
 	private IExtLanguageManager fExtLanguageManager;
 
 	ListOfModelOperations fReverseOperations;
-	
+
 
 	public MethodOperationLinkToGlobalParameter(
-			BasicParameterNode srcMethodParameterNode,
-			BasicParameterNode dstParameterForChoices, 
+			AbstractParameterNode localParameterNode,
+			AbstractParameterNode globalParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);
 
-		fSrcMethodParameterNode = srcMethodParameterNode;
-		fDstParameterForChoices = dstParameterForChoices;
+		fSrcMethodParameterNode = localParameterNode;
+		fDstParameterForChoices = globalParameterNode;
 		fParameterConversionDefinition = parameterConversionDefinition;
 		fNodeMapper = nodeMapper;
 		fExtLanguageManager = extLanguageManager;
@@ -55,7 +55,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 
 		fReverseOperations = new ListOfModelOperations();
 
-		ParameterTransformer.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkLocalParameteToGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
 				fParameterConversionDefinition,
