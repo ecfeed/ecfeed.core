@@ -47,7 +47,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return fMapOfUsages.toString();
 	}
 
-	private Map<BasicParameterWithChoice, ListOfStrings> createMapOfUsages(
+	private static Map<BasicParameterWithChoice, ListOfStrings> createMapOfUsages(
 			List<ConstraintNode> constraintNodes,
 			List<BasicParameterNode> basicParameterNodes) {
 
@@ -63,14 +63,14 @@ public class UsageOfChoicesInConstraints { // XYX rename
 						getParametersWithChoicesUsedInConstraint(
 								constraint, basicParameterNode);
 
-				updateMapOfUsages(constraint, itemsUsedInConstraint);
+				updateMapOfUsages(constraint, itemsUsedInConstraint, mapOfUsages);
 			}
 		}
 
 		return mapOfUsages;
 	}
 
-	private List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
+	private static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraint(
 			Constraint constraint,
 			BasicParameterNode abstractParameterNode) {
 
@@ -135,34 +135,41 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return false;
 	}
 
-	private void updateMapOfUsages(
+	private static void updateMapOfUsages(
 			Constraint constraint, 
-			List<BasicParameterWithChoice> itemsUsedInConstraint) {
+			List<BasicParameterWithChoice> itemsUsedInConstraint,
+			Map<BasicParameterWithChoice, ListOfStrings> inOutMapOfUsages) {
 
 		for (BasicParameterWithChoice basicParameterWithChoice : itemsUsedInConstraint) {
 
-			if (fMapOfUsages.containsKey(basicParameterWithChoice)) {
+			if (inOutMapOfUsages.containsKey(basicParameterWithChoice)) {
 
-				updateExistingElement(basicParameterWithChoice, constraint);
+				updateExistingElement(basicParameterWithChoice, constraint, inOutMapOfUsages);
 				return;
 			}
 
-			addNewElement(basicParameterWithChoice, constraint);
+			addNewElement(basicParameterWithChoice, constraint, inOutMapOfUsages);
 		}
 	}
 
-	private void addNewElement(BasicParameterWithChoice basicParameterWithChoice, Constraint constraint) {
+	private static void addNewElement(
+			BasicParameterWithChoice basicParameterWithChoice, 
+			Constraint constraint,
+			Map<BasicParameterWithChoice, ListOfStrings> inOutMapOfUsages) {
 
 		ListOfStrings constraintNames = new ListOfStrings();
 		constraintNames.add(constraint.getName());
 
-		fMapOfUsages.put(basicParameterWithChoice, constraintNames);
+		inOutMapOfUsages.put(basicParameterWithChoice, constraintNames);
 	}
 
 
-	private void updateExistingElement(BasicParameterWithChoice basicParameterWithChoice, Constraint constraint) {
+	private static void updateExistingElement(
+			BasicParameterWithChoice basicParameterWithChoice, 
+			Constraint constraint,
+			Map<BasicParameterWithChoice, ListOfStrings> inOutMapOfUsages) {
 
-		ListOfStrings constraintNames = fMapOfUsages.get(basicParameterWithChoice);
+		ListOfStrings constraintNames = inOutMapOfUsages.get(basicParameterWithChoice);
 
 		String constraintName = constraint.getName();
 

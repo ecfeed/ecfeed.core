@@ -44,7 +44,7 @@ public class UsageOfLabelsInConstraints {
 		fMapOfUsages = createMapOfUsages(constraintNodes, basicParameterNodes);
 	}
 
-	private Map<String, ListOfStrings> createMapOfUsages
+	private static Map<String, ListOfStrings> createMapOfUsages
 	(List<ConstraintNode> constraintNodes,
 			List<BasicParameterNode> basicParameterNodes) {
 
@@ -58,7 +58,7 @@ public class UsageOfLabelsInConstraints {
 
 				List<String> choiceNodesUsedInConstraint = constraint.getLabels(basicParameterNode);
 
-				updateMapOfUsages(constraint, choiceNodesUsedInConstraint);
+				updateMapOfUsages(constraint, choiceNodesUsedInConstraint, mapOfUsages);
 			}
 		}
 
@@ -84,32 +84,41 @@ public class UsageOfLabelsInConstraints {
 		return false;
 	}
 
-	private void updateMapOfUsages(Constraint constraint, List<String> labelsUsedInConstraint) {
+	private static void updateMapOfUsages(
+			Constraint constraint, 
+			List<String> labelsUsedInConstraint,
+			Map<String, ListOfStrings> inOutMapOfUsages) {
 
 		for (String label : labelsUsedInConstraint) {
 
-			if (fMapOfUsages.containsKey(label)) {
+			if (inOutMapOfUsages.containsKey(label)) {
 
-				updateExistingElement(label, constraint);
+				updateExistingElement(label, constraint, inOutMapOfUsages);
 				return;
 			}
 
-			addNewElement(label, constraint);
+			addNewElement(label, constraint, inOutMapOfUsages);
 		}
 	}
 
-	private void addNewElement(String label, Constraint constraint) {
+	private static void addNewElement(
+			String label, 
+			Constraint constraint,
+			Map<String, ListOfStrings> inOutMapOfUsages) {
 
 		ListOfStrings labels = new ListOfStrings();
 		labels.add(constraint.getName());
 
-		fMapOfUsages.put(label, labels);
+		inOutMapOfUsages.put(label, labels);
 	}
 
 
-	private void updateExistingElement(String label, Constraint constraint) {
+	private static void updateExistingElement(
+			String label,
+			Constraint constraint, 
+			Map<String, ListOfStrings> inOutMapOfUsages) {
 
-		ListOfStrings constraintNames = fMapOfUsages.get(label);
+		ListOfStrings constraintNames = inOutMapOfUsages.get(label);
 
 		String constraintName = constraint.getName();
 
