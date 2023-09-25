@@ -40,13 +40,11 @@ public class ParameterTransformer {
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
+		checkParametersForNotNull(localParameterNode, globalParameterNode);
 
 		// XYX TODO - remove basic parameters and implement
 		BasicParameterNode localBasicParameterNode = (BasicParameterNode) localParameterNode;
 		BasicParameterNode globalBasicParameterNode = (BasicParameterNode) globalParameterNode;
-
-
-		checkParametersForNotNull(localParameterNode, globalParameterNode);
 
 		String oldMethodParameterType = localBasicParameterNode.getType();
 		String globalParameterType = globalBasicParameterNode.getType();
@@ -59,8 +57,6 @@ public class ParameterTransformer {
 		if (parameterConversionDefinition != null) {
 			convertByConversionListForLinking(
 					parameterConversionDefinition, 
-					localBasicParameterNode, 
-					globalBasicParameterNode,
 					outReverseOperations,
 					extLanguageManager);
 		}
@@ -192,8 +188,8 @@ public class ParameterTransformer {
 
 	public static void convertByConversionListForLinking(
 			ParameterConversionDefinition parameterConversionItems,
-			BasicParameterNode srcParameterNode, 
-			BasicParameterNode dstParameterNode,
+			//BasicParameterNode srcParameterNode, 
+			//BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -204,8 +200,8 @@ public class ParameterTransformer {
 
 			convertByConversionItemForLinking(
 					parameterConversionItem, 
-					srcParameterNode, dstParameterNode,
-					inOutReverseOperations, extLanguageManager); 
+					inOutReverseOperations, 
+					extLanguageManager); 
 		}
 	}
 
@@ -392,10 +388,13 @@ public class ParameterTransformer {
 
 	private static void convertByConversionItemForLinking(
 			ParameterConversionItem parameterConversionItem, 
-			BasicParameterNode srcParameterNode, 
-			BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
+
+		AbstractParameterNode srcAbstractParameterNode = 
+				parameterConversionItem.getSrcPart().getParameter();
+
+		BasicParameterNode srcParameterNode = (BasicParameterNode) srcAbstractParameterNode; 
 
 		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
 
