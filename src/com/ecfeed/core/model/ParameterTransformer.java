@@ -57,14 +57,7 @@ public class ParameterTransformer {
 				outReverseOperations,
 				extLanguageManager);
 
-		// XYX TODO - remove basic parameters and implement
-		BasicParameterNode localBasicParameterNode = (BasicParameterNode) localParameterNode;
-		BasicParameterNode globalBasicParameterNode = (BasicParameterNode) globalParameterNode;
-
-		String oldMethodParameterType = localBasicParameterNode.getType();
-		String globalParameterType = globalBasicParameterNode.getType();
-
-		deleteRemainingChoices(localBasicParameterNode, outReverseOperations, extLanguageManager);
+		deleteRemainingChoices(parameterConversionDefinition, extLanguageManager, outReverseOperations);
 
 		IAbstractNode parent = localParameterNode.getParent();
 		IParametersParentNode methodNode = (IParametersParentNode) parent;
@@ -75,6 +68,14 @@ public class ParameterTransformer {
 		}
 
 		setLink(localParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
+
+
+		// XYX TODO - remove basic parameters and implement
+		BasicParameterNode localBasicParameterNode = (BasicParameterNode) localParameterNode;
+		BasicParameterNode globalBasicParameterNode = (BasicParameterNode) globalParameterNode;
+
+		String oldMethodParameterType = localBasicParameterNode.getType();
+		String globalParameterType = globalBasicParameterNode.getType();
 
 		OnMethodParameterOperationSimpleSetType reverseSetTypeOperation = 
 				new OnMethodParameterOperationSimpleSetType(
@@ -90,6 +91,19 @@ public class ParameterTransformer {
 		return (MethodNode) parent;
 	}
 
+	private static void deleteRemainingChoices(
+			ParameterConversionDefinition parameterConversionDefinition,
+			IExtLanguageManager extLanguageManager, 
+			ListOfModelOperations outReverseOperations) {
+
+		List<BasicParameterNode> localBasicParameterNodes = 
+				parameterConversionDefinition.createListOfUniqueSourceLocalParameters();
+
+		for (BasicParameterNode localBasicParameterNode : localBasicParameterNodes) {
+			deleteRemainingChoicesForBasicParameter(localBasicParameterNode, outReverseOperations, extLanguageManager);
+		}
+	}
+
 	private static void createReverseOperationsForConstraints(
 			ParameterConversionDefinition parameterConversionDefinition,
 			Optional<NodeMapper> nodeMapper,
@@ -97,8 +111,7 @@ public class ParameterTransformer {
 			ListOfModelOperations outReverseOperations) {
 
 		List<BasicParameterNode> localBasicParameterNodes = 
-				parameterConversionDefinition.createListOfUniqueSourceLocalParameters(
-						parameterConversionDefinition);
+				parameterConversionDefinition.createListOfUniqueSourceLocalParameters();
 
 		for (BasicParameterNode localBasicParameterNode : localBasicParameterNodes) {
 			OnConstraintsOperationSetOnMethod reverseOperation = 
@@ -282,7 +295,7 @@ public class ParameterTransformer {
 		return isCompatible;
 	}
 
-	private static void deleteRemainingChoices(
+	private static void deleteRemainingChoicesForBasicParameter(
 			IChoicesParentNode srcMethodParameterNode,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {

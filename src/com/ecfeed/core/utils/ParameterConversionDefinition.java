@@ -204,8 +204,7 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems.clear();
 	}
 
-	public List<BasicParameterNode> createListOfUniqueSourceLocalParameters(
-			ParameterConversionDefinition parameterConversionDefinition) {
+	public List<BasicParameterNode> createListOfUniqueSourceLocalParameters() {
 
 		Set<BasicParameterNode> uniqueBasicParameters = new HashSet<>();
 
