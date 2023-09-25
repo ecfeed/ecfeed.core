@@ -12,6 +12,11 @@ public class ListOfStrings {
         fStrings = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+    	return fStrings.toString();
+    }
+    
     public void add(String string) {
 
         fStrings.add(string);
