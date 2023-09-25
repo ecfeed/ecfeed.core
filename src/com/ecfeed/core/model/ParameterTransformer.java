@@ -40,7 +40,22 @@ public class ParameterTransformer {
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
+		if (parameterConversionDefinition == null) {
+			ExceptionHelper.reportRuntimeException("Missing parameter conversion definition");
+		}
+
 		checkParametersForNotNull(localParameterNode, globalParameterNode);
+
+		createReverseOperationsForConstraints(
+				parameterConversionDefinition, 
+				nodeMapper, 
+				extLanguageManager,
+				outReverseOperations);
+
+		convertByConversionListForLinking(
+				parameterConversionDefinition, 
+				outReverseOperations,
+				extLanguageManager);
 
 		// XYX TODO - remove basic parameters and implement
 		BasicParameterNode localBasicParameterNode = (BasicParameterNode) localParameterNode;
@@ -48,18 +63,6 @@ public class ParameterTransformer {
 
 		String oldMethodParameterType = localBasicParameterNode.getType();
 		String globalParameterType = globalBasicParameterNode.getType();
-
-		OnConstraintsOperationSetOnMethod reverseOperation = 
-				createReverseOperationSetConstraints(localBasicParameterNode, nodeMapper, extLanguageManager);
-
-		outReverseOperations.add(reverseOperation);
-
-		if (parameterConversionDefinition != null) {
-			convertByConversionListForLinking(
-					parameterConversionDefinition, 
-					outReverseOperations,
-					extLanguageManager);
-		}
 
 		deleteRemainingChoices(localBasicParameterNode, outReverseOperations, extLanguageManager);
 
@@ -86,6 +89,25 @@ public class ParameterTransformer {
 
 		return (MethodNode) parent;
 	}
+
+	private static void createReverseOperationsForConstraints(
+			ParameterConversionDefinition parameterConversionDefinition,
+			Optional<NodeMapper> nodeMapper,
+			IExtLanguageManager extLanguageManager,
+			ListOfModelOperations outReverseOperations) {
+
+		List<BasicParameterNode> localBasicParameterNodes = 
+				parameterConversionDefinition.createListOfUniqueSourceLocalParameters(
+						parameterConversionDefinition);
+
+		for (BasicParameterNode localBasicParameterNode : localBasicParameterNodes) {
+			OnConstraintsOperationSetOnMethod reverseOperation = 
+					createReverseOperationSetConstraints(localBasicParameterNode, nodeMapper, extLanguageManager);
+
+			outReverseOperations.add(reverseOperation);
+		}
+	}
+
 
 	public static void unlinkMethodParameteFromGlobalParameter(
 			AbstractParameterNode methodParameterNode,
