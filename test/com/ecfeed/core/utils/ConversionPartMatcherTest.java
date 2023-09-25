@@ -17,18 +17,22 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.BasicParameterNode;
+
 public class ConversionPartMatcherTest {
 
 	@Test
 	public void findSimilarPairs1() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+		
 		List<ParameterConversionItemPartForRaw> items1 = new ArrayList<>();
-		items1.add(new ParameterConversionItemPartForRaw("C", "RC1"));
-		items1.add(new ParameterConversionItemPartForRaw("C", "RC2"));
+		items1.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC1"));
+		items1.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC2"));
 
 		List<ParameterConversionItemPartForRaw> items2 = new ArrayList<>();
-		items2.add(new ParameterConversionItemPartForRaw("C", "MC1"));
-		items2.add(new ParameterConversionItemPartForRaw("C", "MC2"));
+		items2.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"));
+		items2.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC2"));
 
 		List<Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw>> pairs = 
 				ConversionPartMatcher.createListOfSimilarStringPairs(items1, items2, 0.1);
@@ -47,16 +51,18 @@ public class ConversionPartMatcherTest {
 	@Test
 	public void findSimilarPairs2() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+		
 		List<ParameterConversionItemPartForRaw> items1 = new ArrayList<>();
-		items1.add(new ParameterConversionItemPartForRaw("C", "German"));
-		items1.add(new ParameterConversionItemPartForRaw("C", "Chinese"));
-		items1.add(new ParameterConversionItemPartForRaw("C", "Eng."));
+		items1.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "German"));
+		items1.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "Chinese"));
+		items1.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "Eng."));
 
 
 		List<ParameterConversionItemPartForRaw> items2 = new ArrayList<>();
-		items2.add(new ParameterConversionItemPartForRaw("C", "chinese"));
-		items2.add(new ParameterConversionItemPartForRaw("C", "ger language"));
-		items2.add(new ParameterConversionItemPartForRaw("C", "english"));
+		items2.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "chinese"));
+		items2.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ger language"));
+		items2.add(new ParameterConversionItemPartForRaw(basicParameterNode, "C", "english"));
 
 		// high similarity
 

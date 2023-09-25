@@ -14,36 +14,42 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.BasicParameterNode;
+
 public class StringSimilarityCalculatorTest {
 
 	@Test
 	public void checkSimilarityOfStrings1() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "AB"), 
-						new ParameterConversionItemPartForRaw("C", "A"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "A"));
+
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "A"), 
-						new ParameterConversionItemPartForRaw("C", "AB"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "A"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"));
+
 		assertTrue(result1 == result2);
 	}
 
 	@Test
 	public void checkSimilarityOfStrings2() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "MC1"), 
-						new ParameterConversionItemPartForRaw("C", "RC1"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC1"));
+
 		double result2 =
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "MC1"), 
-						new ParameterConversionItemPartForRaw("C", "RC2"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC2"));
 
 		assertTrue(result1 > result2);
 	}
@@ -51,15 +57,17 @@ public class StringSimilarityCalculatorTest {
 	@Test
 	public void checkSimilarityOfStrings3() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "MC1"), 
-						new ParameterConversionItemPartForRaw("C", "MC2"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC2"));
+
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "MC1"),
-						new ParameterConversionItemPartForRaw("C", "MCA"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"),
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MCA"));
 
 		assertTrue(result1 > result2);
 	}	
@@ -67,23 +75,25 @@ public class StringSimilarityCalculatorTest {
 	@Test
 	public void checkSimilarityOfStrings4() {
 
+		BasicParameterNode basicParameterNode = new BasicParameterNode("p1", "String", "", true, null);
+
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "ABCD"), 
-						new ParameterConversionItemPartForRaw("C", "ABD"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABD"));
+
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "ABCD"), 
-						new ParameterConversionItemPartForRaw("C", "AB"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"));
+
 		assertTrue(result1 > result2);
 
 		double result3 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw("C", "ABCD"),
-						new ParameterConversionItemPartForRaw("C", "B"));
-		
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"),
+						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "B"));
+
 		assertTrue(result2 > result3);
 	}
 
