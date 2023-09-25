@@ -12,6 +12,8 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -95,12 +97,23 @@ public class ParametersAndConstraintsParentNodeHelper {
 			ExceptionHelper.reportRuntimeException("Invalid position of parameter - top parameter expected.");
 		}
 
-		MethodNode parentMethodNode = (MethodNode)parent;
+		Set<BasicParameterWithChoice> resultSet = createResultSet(localTopParameterNode, parent);
+
+		List<BasicParameterWithChoice> resultList = createResultList(resultSet);
+
+		return resultList;
+	}
+
+	private static Set<BasicParameterWithChoice> createResultSet(
+			AbstractParameterNode localTopParameterNode,
+			IParametersAndConstraintsParentNode parent) {
 
 		Set<BasicParameterWithChoice> resultSet = new HashSet<BasicParameterWithChoice>();
 
 		List<BasicParameterNode> basicParameterNodes = 
 				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
+
+		MethodNode parentMethodNode = (MethodNode)parent;
 
 		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
 
@@ -112,7 +125,37 @@ public class ParametersAndConstraintsParentNodeHelper {
 			resultSet.addAll(resultForOneConstraint);
 		}
 
-		return new ArrayList<>(resultSet);
+		return resultSet;
+	}
+
+	private static List<BasicParameterWithChoice> createResultList(Set<BasicParameterWithChoice> resultSet) {
+
+		List<BasicParameterWithChoice> list = new ArrayList<>(resultSet);
+
+		Collections.sort(list, new Comparator<BasicParameterWithChoice>() {
+
+			@Override
+			public int compare(BasicParameterWithChoice paramWithChoice1, BasicParameterWithChoice paramWithChoice2) {
+
+				String parameterName1 = paramWithChoice1.getBasicParameterNode().getName();
+				String parameterName2 = paramWithChoice2.getBasicParameterNode().getName();
+
+				int result = parameterName1.compareTo(parameterName2);
+
+				if (result != 0) {
+					return result;
+				}
+
+				String choiceName1 = paramWithChoice1.getChoiceNode().getQualifiedName();
+				String choiceName2 = paramWithChoice2.getChoiceNode().getQualifiedName();
+
+				result = choiceName1.compareTo(choiceName2);
+
+				return result;
+			}
+		});
+
+		return list;
 	}
 
 	private static Set<BasicParameterWithChoice> getParametersWithChoicesUsedInOneConstraint(
