@@ -76,6 +76,7 @@ public interface IParameterConversionItemPart  {
 	public ItemPartType getType();
 	public String getTypeDescription();
 	public String getStr();
+	public String getDescription();
 	public void setName(String name);
 	public Integer getTypeSortOrder();
 	public Integer getSortOrder();

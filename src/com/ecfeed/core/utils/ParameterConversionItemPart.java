@@ -75,6 +75,12 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 
 		return typeDescription;
 	}
+	
+	@Override 
+	public String getDescription() {
+		
+		return fStr + "[" + getTypeDescription() + "]";
+	}
 
 	public static boolean isMatch(IParameterConversionItemPart part1, IParameterConversionItemPart part2) {
 
