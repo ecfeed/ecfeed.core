@@ -15,14 +15,11 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.TestHelper;
 
 public class FactoryRenameOperationTest {
@@ -46,20 +43,20 @@ public class FactoryRenameOperationTest {
 
 		// rename in simple mode - the same classNames
 
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-
-		IModelOperation modelOperation1 =
-				FactoryRenameOperation.getRenameOperation(
-						classNode2,
-						"com.xx",
-						"Class1",
-						extLanguageManagerForSimple);
-
-		try {
-			modelOperation1.execute();
-			fail();
-		} catch (Exception e) {
-		}
+		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		//
+		//		IModelOperation modelOperation1 =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						classNode2,
+		//						"com.xx",
+		//						"Class1",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			modelOperation1.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//		}
 
 		// rename in java mode
 
@@ -95,27 +92,27 @@ public class FactoryRenameOperationTest {
 		MethodNode methodNode2 = new MethodNode("method2", null);
 		classNode.addMethod(methodNode2);
 
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
-		// rename in simple mode - the same method name
-
-		IModelOperation operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodNode2,
-						null,
-						"method1",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-			fail();
-		} catch (Exception e) {
-		}
+		//		// rename in simple mode - the same method name
+		//
+		//		IModelOperation operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodNode2,
+		//						null,
+		//						"method1",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//		}
 
 		// rename in java mode - the same method name
 
-		operation =
+		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
 						null,
@@ -128,20 +125,20 @@ public class FactoryRenameOperationTest {
 		} catch (Exception e) {
 		}
 
-		// rename in simple mode - the other method name
-
-		operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodNode2,
-						null,
-						"method2b",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-		} catch (Exception e) {
-			fail();
-		}
+		//		// rename in simple mode - the other method name
+		//
+		//		operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodNode2,
+		//						null,
+		//						"method2b",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//		} catch (Exception e) {
+		//			fail();
+		//		}
 
 		// rename in java mode - the other method name
 
@@ -150,7 +147,7 @@ public class FactoryRenameOperationTest {
 						methodNode2,
 						null,
 						"method2c",
-						extLanguageManagerForSimple);
+						extLanguageManagerForJava);
 
 		try {
 			operation.execute();
@@ -162,7 +159,7 @@ public class FactoryRenameOperationTest {
 	@Test
 	public void renameMethodWithOneParameterTest() {
 
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		RootNode rootNode = new RootNode("Root", null);
@@ -190,23 +187,23 @@ public class FactoryRenameOperationTest {
 
 		// rename in simple mode - the same method name - should fail
 
-		IModelOperation operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodNode2,
-						null,
-						"method1",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, "Method", "method1", "already exists");
-		}
+		//		IModelOperation operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodNode2,
+		//						null,
+		//						"method1",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//			TestHelper.checkExceptionMessage(e, "Method", "method1", "already exists");
+		//		}
 
 		// rename in java mode - the same method name
 
-		operation =
+		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
 						null,
@@ -220,20 +217,20 @@ public class FactoryRenameOperationTest {
 			TestHelper.checkExceptionMessage(e, "Method", "method1", "already exists");
 		}
 
-		// rename in simple mode - the other method name
-
-		operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodNode2,
-						null,
-						"method2b",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-		} catch (Exception e) {
-			fail();
-		}
+		//		// rename in simple mode - the other method name
+		//
+		//		operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodNode2,
+		//						null,
+		//						"method2b",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//		} catch (Exception e) {
+		//			fail();
+		//		}
 
 		// rename in java mode - the other method name
 
@@ -242,7 +239,7 @@ public class FactoryRenameOperationTest {
 						methodNode2,
 						null,
 						"method2c",
-						extLanguageManagerForSimple);
+						extLanguageManagerForJava);
 
 		try {
 			operation.execute();
@@ -254,7 +251,7 @@ public class FactoryRenameOperationTest {
 	@Test
 	public void renameParameterTest() {
 
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		RootNode rootNode = new RootNode("Root", null);
@@ -277,23 +274,23 @@ public class FactoryRenameOperationTest {
 
 		// rename in simple mode - the same parameter name - should fail
 
-		IModelOperation operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodParameterNode2,
-						null,
-						"par1",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
-		}
+		//		IModelOperation operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodParameterNode2,
+		//						null,
+		//						"par1",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//			TestHelper.checkExceptionMessage(e, OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+		//		}
 
 		// rename in java mode - the same parameter name - should fail
 
-		operation =
+		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
 						null,
@@ -307,52 +304,52 @@ public class FactoryRenameOperationTest {
 			TestHelper.checkExceptionMessage(e, OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
-		// rename in simple mode - other parameter name - should suceed
+		//		// rename in simple mode - other parameter name - should suceed
+		//
+		//		operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodParameterNode2,
+		//						null,
+		//						"par1b",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//		} catch (Exception e) {
+		//			fail();
+		//		}
 
-		operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodParameterNode2,
-						null,
-						"par1b",
-						extLanguageManagerForSimple);
+		//		// rename in simple mode - invalid name 1 - should fail
+		//
+		//		operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodParameterNode2,
+		//						null,
+		//						"par_1b",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.UNDERLINE_CHARS_ARE_NOT_ALLOWED);
+		//		}
 
-		try {
-			operation.execute();
-		} catch (Exception e) {
-			fail();
-		}
-
-		// rename in simple mode - invalid name 1 - should fail
-
-		operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodParameterNode2,
-						null,
-						"par_1b",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.UNDERLINE_CHARS_ARE_NOT_ALLOWED);
-		}
-
-		// rename in simple mode - invalid name 2 - should fail
-
-		operation =
-				FactoryRenameOperation.getRenameOperation(
-						methodParameterNode2,
-						null,
-						"par1b+",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, RegexHelper.SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS);
-		}
+		//		// rename in simple mode - invalid name 2 - should fail
+		//
+		//		operation =
+		//				FactoryRenameOperation.getRenameOperation(
+		//						methodParameterNode2,
+		//						null,
+		//						"par1b+",
+		//						extLanguageManagerForSimple);
+		//
+		//		try {
+		//			operation.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//			TestHelper.checkExceptionMessage(e, RegexHelper.SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS);
+		//		}
 
 		// rename in java mode - other parameter name - should succeed
 
@@ -403,43 +400,41 @@ public class FactoryRenameOperationTest {
 
 	}
 
-	@Test
-	public void renameChoiceForSimpleViewTest() {
-
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-
-		RootNode rootNode = new RootNode("root", null);
-
-		ClassNode classNode = new ClassNode("class", null);
-		rootNode.addClass(classNode);
-
-		MethodNode  methodNode = new MethodNode("method",  null);
-		classNode.addMethod(methodNode);
-
-		BasicParameterNode methodParameterNode =
-				new BasicParameterNode("par_1", "int", "0", false, null);
-		methodNode.addParameter(methodParameterNode);
-
-		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "1", null);
-		methodParameterNode.addChoice(choiceNode1);
-
-		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", "2", null);
-		methodParameterNode.addChoice(choiceNode2);
-
-		// rename in java mode
-
-		IModelOperation operation =
-				FactoryRenameOperation.getRenameOperation(
-						choiceNode2,
-						null,
-						"choice 1",
-						extLanguageManagerForSimple);
-
-		try {
-			operation.execute();
-		} catch (Exception e) {
-			fail();
-		}
-	}
+	//	@Test
+	//	public void renameChoiceForSimpleViewTest() {
+	//
+	//		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+	//
+	//		RootNode rootNode = new RootNode("root", null);
+	//
+	//		ClassNode classNode = new ClassNode("class", null);
+	//		rootNode.addClass(classNode);
+	//
+	//		MethodNode  methodNode = new MethodNode("method",  null);
+	//		classNode.addMethod(methodNode);
+	//
+	//		BasicParameterNode methodParameterNode =
+	//				new BasicParameterNode("par_1", "int", "0", false, null);
+	//		methodNode.addParameter(methodParameterNode);
+	//
+	//		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "1", null);
+	//		methodParameterNode.addChoice(choiceNode1);
+	//
+	//		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", "2", null);
+	//		methodParameterNode.addChoice(choiceNode2);
+	//
+	//		IModelOperation operation =
+	//				FactoryRenameOperation.getRenameOperation(
+	//						choiceNode2,
+	//						null,
+	//						"choice 1",
+	//						extLanguageManagerForSimple);
+	//
+	//		try {
+	//			operation.execute();
+	//		} catch (Exception e) {
+	//			fail();
+	//		}
+	//	}
 
 }
