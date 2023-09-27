@@ -35,7 +35,7 @@ public class ModelParserForChoice {
 			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
@@ -50,7 +50,7 @@ public class ModelParserForChoice {
 				if (node != null) {
 					choice.addChoice(node);
 				} else {
-					errorList.add("Cannot parse choice.");
+					errorList.addIfUnique("Cannot parse choice.");
 					return null;
 				}
 			}

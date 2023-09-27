@@ -79,7 +79,7 @@ public class ModelParserForRoot {
 			if (globalBasicParameter != null) {
 				targetRootNode.addParameter(globalBasicParameter);
 			} else {
-				inOutErrorList.add("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
+				inOutErrorList.addIfUnique("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
 			}
 			return;
 		} 
@@ -98,7 +98,7 @@ public class ModelParserForRoot {
 			if (globalCompositeParameter!= null) {
 				targetRootNode.addParameter(globalCompositeParameter);
 			} else {
-				inOutErrorList.add("Cannot parse structure of root: " + targetRootNode.getName() + ".");
+				inOutErrorList.addIfUnique("Cannot parse structure of root: " + targetRootNode.getName() + ".");
 			}
 
 			ModelParserForParameterHelper.parseLocalAndChildConstraints(

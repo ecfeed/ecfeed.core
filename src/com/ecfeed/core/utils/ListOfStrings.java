@@ -5,46 +5,55 @@ import java.util.List;
 
 public class ListOfStrings {
 
-    List<String> fStrings;
+	List<String> fStrings;
 
-    public ListOfStrings() {
+	public ListOfStrings() {
 
-        fStrings = new ArrayList<>();
-    }
+		fStrings = new ArrayList<>();
+	}
 
-    public void add(String string) {
+	public void add(String string) {
 
-        fStrings.add(string);
-    }
+		fStrings.add(string);
+	}
 
-    public boolean isEmpty() {
+	public void addIfUnique(String string) {
 
-        if (fStrings.size() == 0) {
-            return true;
-        }
+		if (fStrings.contains(string)) {
+			return;
+		}
 
-        return false;
-    }
+		fStrings.add(string);
+	}
+
+	public boolean isEmpty() {
+
+		if (fStrings.size() == 0) {
+			return true;
+		}
+
+		return false;
+	}
 
 	public List<String> getCollectionOfStrings() {
-		
+
 		return fStrings;
 	}
-	
+
 	public String getFirstString() {
-		
+
 		return fStrings.get(0);
 	}
-	
+
 	public String getErrorsAsText() {
-		
+
 		String text = "";
-		
+
 		for (String error : fStrings) {
-			
+
 			text += error + "\n";
 		}
-		
+
 		return text;
 	}
 }

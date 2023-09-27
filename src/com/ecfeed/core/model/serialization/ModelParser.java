@@ -72,7 +72,7 @@ public class ModelParser {
 			return rootNode;
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -102,7 +102,7 @@ public class ModelParser {
 					document.getRootElement(), null, elementToNodeMapper, outErrorList);
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -117,7 +117,7 @@ public class ModelParser {
 
 			return ModelParserForMethod.parseMethod(document.getRootElement(), null, new ElementToNodeMapper(), outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -135,7 +135,7 @@ public class ModelParser {
 					outErrorList);
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -148,7 +148,7 @@ public class ModelParser {
 			return ModelParserBasicForParameter.parseParameter(
 					document.getRootElement(), method, method.getModelChangeRegistrator(), outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -161,7 +161,7 @@ public class ModelParser {
 			return ModelParserForChoice.parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList);
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 
 		} 
@@ -174,7 +174,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForTestCase.parseTestCase(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -186,7 +186,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseConstraint(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -198,7 +198,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseStatement(document.getRootElement(), method, outErrorList).get();
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -210,7 +210,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -222,7 +222,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseChoiceStatement(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return null;
 		} 
 	}
@@ -234,7 +234,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return new ExpectedValueStatement(null, null, null, null);
 		} 
 	}
@@ -246,7 +246,7 @@ public class ModelParser {
 			Document document = fBuilder.build(istream);
 			return ModelParserForConstraint.parseStatementArray(document.getRootElement(), method, outErrorList);
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return new StatementArray(null, method.getModelChangeRegistrator());
 		} 
 	}

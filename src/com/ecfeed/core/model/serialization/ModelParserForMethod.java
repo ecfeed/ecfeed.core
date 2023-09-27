@@ -70,7 +70,7 @@ public class ModelParserForMethod {
 
 			name = ModelParserHelper.getElementName(methodElement, inOutErrorList);
 		} catch (Exception e) {
-			inOutErrorList.add("Cannot parse name of method.");
+			inOutErrorList.addIfUnique("Cannot parse name of method.");
 			return null;
 		}
 
@@ -95,12 +95,12 @@ public class ModelParserForMethod {
 				if (testCase != null) {
 					targetMethodNode.addTestCase(testCase);
 				} else {
-					inOutErrorList.add("Cannot parse test case for method: " + targetMethodNode.getName() + ".");
+					inOutErrorList.addIfUnique("Cannot parse test case for method: " + targetMethodNode.getName() + ".");
 				}
 
 			}
 		} catch (Exception e) {
-			inOutErrorList.add("Failed to parse test cases.");
+			inOutErrorList.addIfUnique("Failed to parse test cases.");
 		}
 	}
 
@@ -132,7 +132,7 @@ public class ModelParserForMethod {
 						deploymentElement, SerializationHelperVersion1.getBasicParameterNodeName());
 
 		for (Element childElement : childElements) {
-			
+
 			ParameterWithLinkingContext parameterWithLinkingContext = 
 					ModelParserForMethodDeployedParameter.parseMethodDeployedParameter(
 							childElement, targetMethodNode, inOutErrorList);
@@ -140,7 +140,7 @@ public class ModelParserForMethod {
 			if (parameterWithLinkingContext != null) {
 				inOutParametersWithContexts.add(parameterWithLinkingContext);
 			} else {
-				inOutErrorList.add("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
+				inOutErrorList.addIfUnique("Cannot parse deployed element for method: " + targetMethodNode.getName() + ".");
 			}
 
 		}
