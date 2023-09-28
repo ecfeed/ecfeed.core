@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -1102,6 +1103,35 @@ public class ChoiceNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static String correctChoiceName(
+			String name,
+			String availableName,
+			IChoicesParentNode parametersParent) {
+
+		String correctedNameInIntrLanguage = NodeNameHelper.correctParameterNameSyntax(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedNameInIntrLanguage, availableName, parametersParent);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			IChoicesParentNode parametersParent) {
+
+		if (null == ChoiceNodeHelper.findChoiceByName(parametersParent, nameInIntrLanguage)) {
+			return nameInIntrLanguage;
+		}
+
+		String uniqueName = 
+				ChoicesParentNodeHelper.generateUniqueChoiceName(
+						parametersParent, nameInIntrLanguage, availableNameInIntrLanguage);
+
+		return uniqueName;
 	}
 
 }
