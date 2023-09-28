@@ -63,7 +63,7 @@ public class Messages {
 
 	public static String WRONG_NUMBER_OF_TEST_PAREMETERS(String testSuiteName){
 		return "Number of test parameters in test case of " + testSuiteName 
-				+ "suite is different than number of deployed parameters in parent method";
+				+ " suite is different than number of deployed parameters in parent method";
 	}
 
 	public static String TEST_VALUE_NAME_ATTRIBUTE_MISSING(String testSuiteName) {

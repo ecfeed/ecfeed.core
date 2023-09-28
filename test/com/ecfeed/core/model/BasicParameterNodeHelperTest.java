@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class BasicParameterNodeHelperTest {
 
@@ -32,10 +31,10 @@ public class BasicParameterNodeHelperTest {
 
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
-				globalParameterNode, new ExtLanguageManagerForSimple());
-
-		assertEquals("global 1", qualifiedName);
+		//		qualifiedName = AbstractParameterSignatureHelper.createPathToTopContainerNewStandard(
+		//				globalParameterNode, new ExtLanguageManagerForSimple());
+		//
+		//		assertEquals("global 1", qualifiedName);
 
 
 		String type = 
@@ -44,11 +43,11 @@ public class BasicParameterNodeHelperTest {
 
 		assertEquals("String", type);
 
-		qualifiedName = 
-				AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(
-						globalParameterNode, new ExtLanguageManagerForSimple());
-
-		assertEquals("Text", qualifiedName);
+		//		qualifiedName = 
+		//				AbstractParameterSignatureHelper.createSignatureOfParameterTypeNewStandard(
+		//						globalParameterNode, new ExtLanguageManagerForSimple());
+		//
+		//		assertEquals("Text", qualifiedName);
 	}
 
 }

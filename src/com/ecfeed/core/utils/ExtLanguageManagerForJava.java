@@ -161,7 +161,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String createQualifiedName(String packageName, String nonQualifiedName) {
 
-		if (packageName == null) {
+		if (packageName == null || packageName.isEmpty()) {
 			return nonQualifiedName;
 		}
 

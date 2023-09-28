@@ -14,7 +14,6 @@ public class DataTypeDefault implements DataType {
 	private boolean dataInteger = true;
 	private boolean dataLong = true;
 
-
 	public static DataType create(boolean unified) {
 
 		return new DataTypeDefault(unified);

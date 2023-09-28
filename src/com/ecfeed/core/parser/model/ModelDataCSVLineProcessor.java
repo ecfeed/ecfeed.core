@@ -1,6 +1,10 @@
 package com.ecfeed.core.parser.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class ModelDataCSVLineProcessor {
     private static final String nameTemplate = "COL_";
@@ -9,8 +13,9 @@ public class ModelDataCSVLineProcessor {
 
     private int nameIndex = 0;
 
-    private StringBuilder valueCandidate = new StringBuilder();
-    private Queue<Character> characterQueue = new LinkedList<>();
+    private final StringBuilder valueCandidate = new StringBuilder();
+    private final Queue<Character> characterQueue = new LinkedList<>();
+
     private boolean isQuotation = false;
 
     private ModelDataCSVLineProcessor() {

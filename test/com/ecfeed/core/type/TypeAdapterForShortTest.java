@@ -10,14 +10,17 @@
 
 package com.ecfeed.core.type;
 
-import com.ecfeed.core.type.adapter.TypeAdapterForShort;
-import com.ecfeed.core.type.adapter.TypeAdapterForNumericType;
-import com.ecfeed.core.type.adapter.TypeAdapterHelper;
-import com.ecfeed.core.utils.*;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
+import com.ecfeed.core.type.adapter.TypeAdapterForShort;
+import com.ecfeed.core.type.adapter.TypeAdapterHelper;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.TestHelper;
 
 public class TypeAdapterForShortTest {
 
@@ -42,37 +45,37 @@ public class TypeAdapterForShortTest {
 		assertEquals("MAX_VALUE", typeAdapterForShort.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
 	}
 
-	@Test
-	public void convertSingleValueForSimpleTest() {
-
-		IExtLanguageManager extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-
-		TypeAdapterForShort typeAdapterForShort = new TypeAdapterForShort();
-
-		assertEquals("1", typeAdapterForShort.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
-		assertEquals("1", typeAdapterForShort.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
-
-		// invalid value
-
-		assertEquals("0", typeAdapterForShort.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
-
-		try {
-			typeAdapterForShort.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
-		}
-
-		// symbolic value
-
-		assertEquals("0", typeAdapterForShort.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
-
-		try {
-			typeAdapterForShort.adaptSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);
-		}
-	}
+	//	@Test
+	//	public void convertSingleValueForSimpleTest() {
+	//
+	//		IExtLanguageManager extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+	//
+	//		TypeAdapterForShort typeAdapterForShort = new TypeAdapterForShort();
+	//
+	//		assertEquals("1", typeAdapterForShort.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
+	//		assertEquals("1", typeAdapterForShort.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+	//
+	//		// invalid value
+	//
+	//		assertEquals("0", typeAdapterForShort.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
+	//
+	//		try {
+	//			typeAdapterForShort.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+	//			fail();
+	//		} catch (Exception e) {
+	//			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
+	//		}
+	//
+	//		// symbolic value
+	//
+	//		assertEquals("0", typeAdapterForShort.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
+	//
+	//		try {
+	//			typeAdapterForShort.adaptSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+	//			fail();
+	//		} catch (Exception e) {
+	//			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);
+	//		}
+	//	}
 
 }

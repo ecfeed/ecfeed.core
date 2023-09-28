@@ -24,7 +24,7 @@ public class XomModelVersionDetector {
 		String qualifiedName = element.getQualifiedName(); 
 
 		if(qualifiedName.equals(ROOT_NODE_NAME) == false){
-			outErrorList.add("Unexpected root node name: " + qualifiedName);
+			outErrorList.addIfUnique("Unexpected root node name: " + qualifiedName);
 			return 0;
 		}
 

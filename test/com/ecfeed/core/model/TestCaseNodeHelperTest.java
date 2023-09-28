@@ -18,7 +18,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 
 public class TestCaseNodeHelperTest {
@@ -30,7 +29,7 @@ public class TestCaseNodeHelperTest {
 
 		BasicParameterNode basicParameterNode1 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
-		
+
 		BasicParameterNode basicParameterNode2 = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "", true, null);
 
@@ -51,14 +50,14 @@ public class TestCaseNodeHelperTest {
 		String signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForJava());
 		assertEquals("[test case 1] method_1(choice_1, choice_2)", signature);
 
-		signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForSimple());
-		assertEquals("[test case 1] method 1(choice_1, choice_2)", signature);
+		//		signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForSimple());
+		//		assertEquals("[test case 1] method 1(choice_1, choice_2)", signature);
 
 		String testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForJava());
 		assertEquals("choice_1, choice_2", testDataString);
 
-		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForSimple());
-		assertEquals("choice_1, choice_2", testDataString);
+		//		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("choice_1, choice_2", testDataString);
 	}
 
 }

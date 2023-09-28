@@ -42,7 +42,7 @@ public class ModelParserHelper  {
 			String qualifiedName, String expectedName, ListOfStrings errorList) {
 
 		if (qualifiedName.equals(expectedName) == false) {
-			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
+			errorList.addIfUnique("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class ModelParserHelper  {
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
 
 		if (name == null) {
-			errorList.add(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
+			errorList.addIfUnique(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
 			return null;
 		}
 
@@ -110,7 +110,7 @@ public class ModelParserHelper  {
 		String value = element.getAttributeValue(attributeName);
 
 		if (value == null) {
-			errorList.add(Messages.MISSING_ATTRIBUTE(element, attributeName));
+			errorList.addIfUnique(Messages.MISSING_ATTRIBUTE(element, attributeName));
 		}
 
 		return WhiteCharConverter.getInstance().decode(value);
@@ -142,7 +142,7 @@ public class ModelParserHelper  {
 		EMathRelation relation = EMathRelation.parse(relationName);
 
 		if (relation == null) {
-			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
+			errorList.addIfUnique(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 		}
 
 		return relation;

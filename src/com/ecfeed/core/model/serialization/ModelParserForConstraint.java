@@ -58,7 +58,7 @@ public class ModelParserForConstraint {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
@@ -70,7 +70,7 @@ public class ModelParserForConstraint {
 		if ((ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME).size() != 1) ||
 				(ModelParserHelper.getIterableChildren(element, SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME).size() != 1)) {
 
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
+			errorList.addIfUnique(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
 			return null;
 		}
 
@@ -81,7 +81,7 @@ public class ModelParserForConstraint {
 					//a single statement or statement array
 					precondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
+					errorList.addIfUnique(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
 					return null;
 				}
 			}
@@ -92,17 +92,17 @@ public class ModelParserForConstraint {
 				if (ModelParserHelper.getIterableChildren(child).size() == 1) {
 					postcondition = parseStatement(child.getChildElements().get(0), parent, errorList);
 				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
+					errorList.addIfUnique(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
 					return null;
 				}
 			} else {
-				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
+				errorList.addIfUnique(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
 				return null;
 			}
 		}
 
 		if (!precondition.isPresent() || !postcondition.isPresent()) {
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
+			errorList.addIfUnique(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(parent.getName(), name));
 			return null;
 		}
 
@@ -134,7 +134,7 @@ public class ModelParserForConstraint {
 		try {
 			constraintType = ConstraintType.parseCode(type);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 		}
 
 		return constraintType;
@@ -205,7 +205,7 @@ public class ModelParserForConstraint {
 			break;
 
 		default:
-			errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(parent.getName(), operatorValue));
+			errorList.addIfUnique(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(parent.getName(), operatorValue));
 			return null;
 		}
 
@@ -235,7 +235,7 @@ public class ModelParserForConstraint {
 		case SerializationConstants.STATIC_STATEMENT_FALSE_VALUE:
 			return new StaticStatement(false, modelChangeRegistrator);
 		default:
-			errorList.add(Messages.WRONG_STATIC_STATEMENT_VALUE(valueString));
+			errorList.addIfUnique(Messages.WRONG_STATIC_STATEMENT_VALUE(valueString));
 			return null;
 		}
 
@@ -277,7 +277,7 @@ public class ModelParserForConstraint {
 
 		ChoiceNode choice = parameterNode.getChoice(choiceName);
 		if (choice == null) {
-			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterNode.getName(), parent.getName()));
+			errorList.addIfUnique(Messages.WRONG_PARTITION_NAME(choiceName, parameterNode.getName(), parent.getName()));
 			return null;
 		}
 
@@ -390,7 +390,7 @@ public class ModelParserForConstraint {
 		if (relation == EMathRelation.ASSIGN) {
 
 			if (!leftParameterNode.isExpected()) {
-				errorList.add("Left parameter of value statement in assignment should be expected.");
+				errorList.addIfUnique("Left parameter of value statement in assignment should be expected.");
 				return false;
 			}
 
@@ -398,7 +398,7 @@ public class ModelParserForConstraint {
 		} 
 
 		if (leftParameterNode.isExpected()) {
-			errorList.add("Left parameter of value statement should not be expected.");
+			errorList.addIfUnique("Left parameter of value statement should not be expected.");
 			return false;
 		}
 
@@ -435,7 +435,7 @@ public class ModelParserForConstraint {
 				element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 
 		if (parameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
+			errorList.addIfUnique(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
 			return null;
 		}
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
@@ -471,7 +471,7 @@ public class ModelParserForConstraint {
 				element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 
 		if (!parameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
+			errorList.addIfUnique(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
 			return null;
 		}
 
@@ -529,11 +529,11 @@ public class ModelParserForConstraint {
 		AbstractParameterNode parameter = findParameterForPathWhichStartsFromTopAllowedNode(pathToParameter, parent);
 
 		if (parameter == null) {
-			errorList.add("Cannot find parameter: " + pathToParameter + " for parsed attribute: " + attributeName + ".");
+			errorList.addIfUnique("Cannot find parameter: " + pathToParameter + " for parsed attribute: " + attributeName + ".");
 		}
 
 		if (!(parameter instanceof BasicParameterNode)) {
-			errorList.add("Parameter type is invalid. Expected basic parameter.");
+			errorList.addIfUnique("Parameter type is invalid. Expected basic parameter.");
 		}
 
 		return (BasicParameterNode) parameter;

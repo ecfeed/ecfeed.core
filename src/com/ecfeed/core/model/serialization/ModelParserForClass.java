@@ -81,7 +81,7 @@ public class ModelParserForClass {
 			ModelParserHelper.assertNameEqualsExpectedName(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(classElement, errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
