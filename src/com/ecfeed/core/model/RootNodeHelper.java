@@ -21,9 +21,9 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
-	public static final String CLASS_NEW_NAME = "TestClass";
-	public static final String CLASS_WITH_NAME = "Class with name";
-	public static final String ALREADY_EXISTS = "already exists";
+	private static final String CLASS_NEW_NAME = "TestClass";
+	private static final String CLASS_WITH_NAME = "Class with name";
+	private static final String ALREADY_EXISTS = "already exists";
 
 	public static BasicParameterNode addNewBasicParameter(
 			RootNode rootNode, 
