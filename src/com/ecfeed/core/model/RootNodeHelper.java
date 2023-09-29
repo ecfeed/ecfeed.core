@@ -133,6 +133,10 @@ public class RootNodeHelper {
 			String oldNameInIntrLanguage,
 			String availableClassName) {
 
+		if (availableClassName != null && StringHelper.isEqual(oldNameInIntrLanguage, availableClassName)) {
+			return availableClassName;
+		}
+
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
 
 		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore, availableClassName);
