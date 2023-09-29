@@ -166,6 +166,10 @@ public class ClassNodeHelper {
 		if (!NodeNameHelper.methodNameCompliesWithNamingRules(startMethodName)) {
 			ExceptionHelper.reportRuntimeException("Method name is invalid.");
 		}
+		
+		if (availableMethodName != null && StringHelper.isEqual(startMethodName, availableMethodName)) {
+			return availableMethodName;
+		}
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
 
