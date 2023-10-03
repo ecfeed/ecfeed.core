@@ -364,7 +364,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return false;
 	}
-	
+
 	public static String correctUniquenessOfParameterName(
 			String nameInIntrLanguage, 
 			String availableNameInIntrLanguage,
@@ -380,6 +380,6 @@ public abstract class AbstractParameterNodeHelper {
 
 		return uniqueName;
 	}
-	
+
 
 }
