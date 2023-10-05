@@ -44,7 +44,10 @@ public class ModelDataExportGherkin implements ModelDataExport {
         List<List<String>> parametersTrimmed = getFileParametersTrimmed(parametersRaw);
         List<List<String>> parametersInverted = getFileParametersInverted(parametersTrimmed);
 
-        return parametersInverted.stream().map(e -> String.join(" | ", e)).reduce("", (acc, p) -> acc + p + "\n");
+        String header = getHeader().get();
+        String body = parametersInverted.stream().map(e -> String.join(" | ", e)).reduce("", (acc, p) -> acc + "    "  + p + "\n");
+
+        return header + body;
     }
 
     private List<List<String>> getFileParametersRaw(List<TestCaseNode> suite) {
