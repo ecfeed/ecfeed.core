@@ -146,9 +146,9 @@ public class ModelDataExportGherkin implements ModelDataExport {
             ChoiceNode choice = test.getChoices().get(i);
 
             if (choice.getParameter().getType() == "String" || choice.getParameter().getType() == "char") {
-                choices.add("\"" + choice.getValueString() + "\"");
+                choices.add("\"" + choice.getDerandomizedValue() + "\"");
             } else {
-                choices.add(choice.getValueString());
+                choices.add(choice.getDerandomizedValue());
             }
         }
 
