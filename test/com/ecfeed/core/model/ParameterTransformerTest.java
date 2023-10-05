@@ -74,7 +74,7 @@ public class ParameterTransformerTest {
 		final String globalChoiceName1 = "GC1";
 		
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -233,7 +233,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for class
 
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -370,7 +370,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for class
 
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -510,7 +510,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for class
 
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -645,7 +645,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for class
 
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		BasicParameterNodeHelper.addNewChoice(
 				globalParameterNodeOfClass, globalChoiceName1, "0", false, false, null);
@@ -780,7 +780,7 @@ public class ParameterTransformerTest {
 		// add global parameter and choice for class
 
 		BasicParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, globalParameterName, "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, globalParameterName, "String", "", true, null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -916,7 +916,7 @@ public class ParameterTransformerTest {
 		final String choiceValueString = "1";
 
 		BasicParameterNode globalParameterNodeOfClass1 = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "CP1", parameterType, null);
+				ClassNodeHelper.addNewBasicParameter(classNode, "CP1", parameterType, "", true, null);
 
 		ChoiceNode globalChoiceNode11 = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -1037,7 +1037,7 @@ public class ParameterTransformerTest {
 		final String choiceValueString = "1";
 
 		BasicParameterNode globalParameterNodeOfClass1 = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "CP1", parameterType, null);
+				ClassNodeHelper.addNewBasicParameter(classNode, "CP1", parameterType, "", true, null);
 
 		ChoiceNode globalChoiceNode1 = 
 				BasicParameterNodeHelper.addNewChoice(
@@ -1175,7 +1175,7 @@ public class ParameterTransformerTest {
 		final String choiceValueString = "1";
 
 		BasicParameterNode globalParameterNodeOfClass1 = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "CP1", parameterType, null);
+				ClassNodeHelper.addNewBasicParameter(classNode, "CP1", parameterType, "", true, null);
 
 		ChoiceNode globalChoiceOfClass11 =
 				BasicParameterNodeHelper.addNewChoice(

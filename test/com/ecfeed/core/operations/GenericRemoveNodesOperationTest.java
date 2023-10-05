@@ -787,7 +787,7 @@ public class GenericRemoveNodesOperationTest {
 		// global basic parameter
 
 		BasicParameterNode globalBasicParameterNode = 
-				ClassNodeHelper.addNewGlobalBasicParameter(classNode, "GP1", "String", null);
+				ClassNodeHelper.addNewBasicParameter(classNode, "GP1", "String", "", true, null);
 
 		// global choice
 

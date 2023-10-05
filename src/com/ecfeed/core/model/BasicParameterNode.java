@@ -34,11 +34,13 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private ChoicesListHolder fChoicesListHolder;
 
 	public static BasicParameterNode createGlobalParameter(
-			String name, String type,
+			String name, 
+			String type,
+			String defaultValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode =
-				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
 
 		return globalParameterNode;
 	}
