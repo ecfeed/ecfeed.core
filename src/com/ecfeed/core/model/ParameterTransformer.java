@@ -40,11 +40,7 @@ public class ParameterTransformer {
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
-		if (parameterConversionDefinition == null) {
-			ExceptionHelper.reportRuntimeException("Missing parameter conversion definition");
-		}
-
-		checkParametersForNotNull(localParameterNode, globalParameterNode);
+		checkParameters(localParameterNode, globalParameterNode, parameterConversionDefinition);
 
 		createReverseOperationsForConstraints(
 				parameterConversionDefinition, 
@@ -69,8 +65,43 @@ public class ParameterTransformer {
 
 		setLink(localParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
 
+		if (localParameterNode instanceof BasicParameterNode 
+				&& globalParameterNode instanceof BasicParameterNode) {
 
-		// XYX TODO - remove basic parameters and implement
+			setTypeOfLocalParameter(localParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
+		}
+
+		return (MethodNode) parent;
+	}
+
+	private static void checkParameters(
+			AbstractParameterNode localParameterNode,
+			AbstractParameterNode globalParameterNode, 
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		if (parameterConversionDefinition == null) {
+			ExceptionHelper.reportRuntimeException("Missing parameter conversion definition");
+		}
+
+		checkParametersForNotNull(localParameterNode, globalParameterNode);
+
+		if (localParameterNode instanceof BasicParameterNode 
+				&& !(globalParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Type mismatch for local and global parameter");
+		}
+
+		if (localParameterNode instanceof CompositeParameterNode 
+				&& !(globalParameterNode instanceof CompositeParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Type mismatch for local and global parameter");
+		}
+	}
+
+	private static void setTypeOfLocalParameter(
+			AbstractParameterNode localParameterNode, 
+			AbstractParameterNode globalParameterNode,
+			ListOfModelOperations outReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
 		BasicParameterNode localBasicParameterNode = (BasicParameterNode) localParameterNode;
 		BasicParameterNode globalBasicParameterNode = (BasicParameterNode) globalParameterNode;
 
@@ -85,10 +116,7 @@ public class ParameterTransformer {
 
 		outReverseOperations.add(reverseSetTypeOperation);
 
-
 		localBasicParameterNode.setType(globalParameterType);
-
-		return (MethodNode) parent;
 	}
 
 	private static void deleteRemainingChoices(
