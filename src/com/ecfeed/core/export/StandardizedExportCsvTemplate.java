@@ -14,7 +14,7 @@ import com.ecfeed.core.parser.model.export.ModelDataExportCSV;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
-	private static String ID = "RFC 4180";
+	private static String ID = "STD - RFC 4180";
 
 	public static IExportTemplate get(MethodNode method, IExtLanguageManager extLanguageManager) {
 		

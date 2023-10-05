@@ -10,28 +10,28 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
-import com.ecfeed.core.parser.model.export.ModelDataExportJSON;
+import com.ecfeed.core.parser.model.export.ModelDataExportGherkin;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
-	private static String ID = "STD - RFC 4627";
-
+public class StandardizedExportGherkinTemplate extends AbstractExportTemplate {
+	private static String ID = "STD - Gherkin";
+	
 	public static IExportTemplate get(MethodNode method, IExtLanguageManager extLanguageManager) {
 		
-		return new StandardizedExportJsonTemplate(method, extLanguageManager);
+		return new StandardizedExportGherkinTemplate(method, extLanguageManager);
 	}
 	
 	public static IExportTemplate get(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
 		
-		return new StandardizedExportJsonTemplate(method, template, extLanguageManager);
+		return new StandardizedExportGherkinTemplate(method, template, extLanguageManager);
 	}
 	
-	private StandardizedExportJsonTemplate(MethodNode method, IExtLanguageManager extLanguageManager) {
+	private StandardizedExportGherkinTemplate(MethodNode method, IExtLanguageManager extLanguageManager) {
 
 		super(method, createDefaultTemplateText(), extLanguageManager);
 	}
 	
-	private StandardizedExportJsonTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
+	private StandardizedExportGherkinTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
 
 		super(method, createDefaultTemplateText(), extLanguageManager);
 		
@@ -44,17 +44,15 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		
 		return template.startsWith(ID);
 	}
-
+	
 	private static String createDefaultTemplateText() {
 		String template = 
 				ID + "\n" +
-				"Indent:\t\t 2\n" +
-				"Explicit:\t\t false\n" +
-				"Nested:\t\t false";
+				"Explicit:\t\t false";
 
 		return template;
 	}
-
+	
 	@Override
 	public boolean isStandardized() {
 		return true;
@@ -62,7 +60,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	
 	@Override
 	public String getFileExtension() {
-		return "json";
+		return "feature";
 	}
 
 	public static String getStandard() {
@@ -70,7 +68,7 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-		return ID + " - JSON";
+		return ID;
 	}
 
 	@Override 
@@ -91,8 +89,6 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		
 		Map<String, String> parameters = StandardizedExportHelper.getParameters(getTemplateText());
 		
-		int indent = Integer.parseInt(StandardizedExportHelper.getParameter(parameters, "indent", "2"));
-		boolean nested = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "nested", "false"));
 		boolean explicit = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "explicit", "false"));
 		
 		ModelDataExport parser;
@@ -100,11 +96,12 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 		if (testCases == null) {
 			MethodNode method = StandardizedExportHelper.getMethod();
 			testCases = StandardizedExportHelper.getTestSuite(method).getTestCaseNodes();
-			parser = ModelDataExportJSON.getModelDataExport(method, indent, nested, explicit);
+			parser = ModelDataExportGherkin.getModelDataExport(method, explicit);
 		} else {
-			parser = ModelDataExportJSON.getModelDataExport(methodDeployerContainer.getReference(), indent, nested, explicit);
+			parser = ModelDataExportGherkin.getModelDataExport(methodDeployerContainer.getReference(), explicit);
 		}
 		
 		return parser.getFilePreview(new ArrayList<>(testCases));
 	}
+	
 }

@@ -1,5 +1,6 @@
 package com.ecfeed.core.parser.model.export;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -147,8 +148,9 @@ public class ModelDataExportGherkin implements ModelDataExport {
 
         for (int i = 0 ; i < test.getChoices().size() ; i++) {
             ChoiceNode choice = test.getChoices().get(i);
-
-            if (choice.getParameter().getType() == "String" || choice.getParameter().getType() == "char") {
+            BasicParameterNode parent = choice.getOrigChoiceNode().getParameter();
+            
+            if (parent.getType().equals("String") || parent.getType().equals("char")) {
                 choices.add("\"" + choice.getDerandomizedValue() + "\"");
             } else {
                 choices.add(choice.getDerandomizedValue());

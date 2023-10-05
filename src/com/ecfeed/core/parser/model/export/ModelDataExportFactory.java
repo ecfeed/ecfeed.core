@@ -2,6 +2,7 @@ package com.ecfeed.core.parser.model.export;
 
 import com.ecfeed.core.export.IExportTemplate;
 import com.ecfeed.core.export.StandardizedExportCsvTemplate;
+import com.ecfeed.core.export.StandardizedExportGherkinTemplate;
 import com.ecfeed.core.export.StandardizedExportJsonTemplate;
 import com.ecfeed.core.model.MethodNode;
 
@@ -19,6 +20,10 @@ public class ModelDataExportFactory {
 
             if (template.getTemplateFormat().startsWith(StandardizedExportJsonTemplate.getStandard())) {
                 return ModelDataExportJSON.getModelDataExport(method, parameters);
+            }
+            
+            if (template.getTemplateFormat().startsWith(StandardizedExportGherkinTemplate.getStandard())) {
+                return ModelDataExportGherkin.getModelDataExport(method, parameters);
             }
         }
 
