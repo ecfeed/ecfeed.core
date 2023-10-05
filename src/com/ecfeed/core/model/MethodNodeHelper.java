@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
@@ -1008,7 +1009,7 @@ public class MethodNodeHelper {
 	}
 
 	public static String generateUniqueTestSuiteName(MethodNode methodNode) {
-		
+
 		String startName = "test suite ";
 
 		for (int i = 1;   ; i++) {
@@ -1022,5 +1023,37 @@ public class MethodNodeHelper {
 			}
 		}
 	}
+
+	public static String correctMethodName(
+			String name,
+			String availableName,
+			ClassNode classNode) {
+
+		String correctedName = 
+				NodeNameHelper.correctMethodNameSyntax(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedName, availableName, classNode);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			ClassNode classNode) {
+
+		if (null == MethodNodeHelper.findMethodByName(classNode, nameInIntrLanguage)) {
+
+			return nameInIntrLanguage;
+		}
+
+		String uniqueNameInIntrLanguage =
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode,  nameInIntrLanguage, availableNameInIntrLanguage);
+
+		return uniqueNameInIntrLanguage;
+	}
+
 
 }

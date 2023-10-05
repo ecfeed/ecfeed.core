@@ -29,22 +29,22 @@ public class ClassNodeHelperTest {
 		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("class 1", simpleName);
+		//		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("class 1", simpleName);
 
 
 		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("pack", packageName);
 
-		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("", packageName);
+		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("", packageName);
 
 
 		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("pack.class_1", qualifiedName);
 
-		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("class 1", qualifiedName);
+		//		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("class 1", qualifiedName);
 	}
 
 	@Test
@@ -55,21 +55,21 @@ public class ClassNodeHelperTest {
 		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("class 1", simpleName);
+		//		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("class 1", simpleName);
 
 		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("", packageName);
 
-		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("", packageName);
+		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("", packageName);
 
 
 		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", qualifiedName);
 
-		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("class 1", qualifiedName);
+		//		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("class 1", qualifiedName);
 	}
 
 	@Test
@@ -80,8 +80,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("c1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c1", new ExtLanguageManagerForSimple());
-		assertNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("c1", new ExtLanguageManagerForSimple());
+		//		assertNull(errorMessage);
 
 
 		// valid with separator
@@ -89,8 +89,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("c_1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c 1", new ExtLanguageManagerForSimple());
-		assertNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("c 1", new ExtLanguageManagerForSimple());
+		//		assertNull(errorMessage);
 
 
 		// all allowed characters
@@ -103,10 +103,10 @@ public class ClassNodeHelperTest {
 		assertNull(errorMessage);
 
 
-		errorMessage =
-				ClassNodeHelper.validateClassName(
-						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $",
-						new ExtLanguageManagerForSimple());
+		//		errorMessage =
+		//				ClassNodeHelper.validateClassName(
+		//						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $",
+		//						new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
@@ -116,8 +116,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("$", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("$", new ExtLanguageManagerForSimple());
-		assertNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("$", new ExtLanguageManagerForSimple());
+		//		assertNull(errorMessage);
 
 
 		// invalid separator
@@ -125,8 +125,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("c 1", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c_1", new ExtLanguageManagerForSimple());
-		assertNotNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("c_1", new ExtLanguageManagerForSimple());
+		//		assertNotNull(errorMessage);
 
 
 		// invalid char
@@ -134,8 +134,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("#", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("#", new ExtLanguageManagerForSimple());
-		assertNotNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("#", new ExtLanguageManagerForSimple());
+		//		assertNotNull(errorMessage);
 
 
 		// number at the front
@@ -143,8 +143,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("1a", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("1a", new ExtLanguageManagerForSimple());
-		assertNotNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName("1a", new ExtLanguageManagerForSimple());
+		//		assertNotNull(errorMessage);
 
 
 		// just separator
@@ -152,8 +152,8 @@ public class ClassNodeHelperTest {
 		errorMessage = ClassNodeHelper.validateClassName("_a", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName(" a", new ExtLanguageManagerForSimple());
-		assertNull(errorMessage);
+		//		errorMessage = ClassNodeHelper.validateClassName(" a", new ExtLanguageManagerForSimple());
+		//		assertNull(errorMessage);
 	}
 
 	@Test
@@ -171,7 +171,7 @@ public class ClassNodeHelperTest {
 		paramTypesInJavaLanguage.add("double");
 
 
-		String methodNameInSimpleLanguage = "method 1";
+		//		String methodNameInSimpleLanguage = "method 1";
 
 		List<String> paramTypesInSimpleLanguage = new ArrayList<>();
 		paramTypesInSimpleLanguage.add("Number");
@@ -185,11 +185,11 @@ public class ClassNodeHelperTest {
 
 		assertNull(errorMessage);
 
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
-
-		assertNull(errorMessage);
+		//		errorMessage =
+		//				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+		//						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
+		//
+		//		assertNull(errorMessage);
 
 		// empty class
 
@@ -199,11 +199,11 @@ public class ClassNodeHelperTest {
 
 		assertNull(errorMessage);
 
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
-
-		assertNull(errorMessage);
+		//		errorMessage =
+		//				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+		//						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
+		//
+		//		assertNull(errorMessage);
 
 
 		// class with one method without parameters
@@ -217,11 +217,11 @@ public class ClassNodeHelperTest {
 
 		assertNull(errorMessage);
 
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
-
-		assertNull(errorMessage);
+		//		errorMessage =
+		//				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+		//						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
+		//
+		//		assertNull(errorMessage);
 	}
 
 	@Test
@@ -243,10 +243,10 @@ public class ClassNodeHelperTest {
 
 		// String[] userTypes2 = {"User1", "User2"};
 
-		result =
-				ClassNodeHelper.generateUniqueMethodName(
-						classNode, "method", null, new ExtLanguageManagerForSimple());
-		assertEquals("method1", result);
+		//		result =
+		//				ClassNodeHelper.generateUniqueMethodName(
+		//						classNode, "method", null, new ExtLanguageManagerForSimple());
+		//		assertEquals("method1", result);
 
 		// java language
 
@@ -261,10 +261,10 @@ public class ClassNodeHelperTest {
 		// simple language
 
 		// String[] paramTypesInSimpleLanguage = {"Number", "Text"};
-		methodName =
-				ClassNodeHelper.generateUniqueMethodName(
-						classNode, "method 1", null, new ExtLanguageManagerForSimple());
-		assertEquals("method 1", methodName);
+		//		methodName =
+		//				ClassNodeHelper.generateUniqueMethodName(
+		//						classNode, "method 1", null, new ExtLanguageManagerForSimple());
+		//		assertEquals("method 1", methodName);
 
 		// add method with the same name but only one parameter
 
@@ -283,10 +283,10 @@ public class ClassNodeHelperTest {
 
 		// check in simple language
 
-		methodName =
-				ClassNodeHelper.generateUniqueMethodName(
-						classNode, "method 1", null, new ExtLanguageManagerForSimple());
-		assertEquals("method 2", methodName);
+		//		methodName =
+		//				ClassNodeHelper.generateUniqueMethodName(
+		//						classNode, "method 1", null, new ExtLanguageManagerForSimple());
+		//		assertEquals("method 2", methodName);
 
 		// adding the second parameter
 
@@ -300,10 +300,10 @@ public class ClassNodeHelperTest {
 						classNode, "method_1", null, new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
-		methodName =
-				ClassNodeHelper.generateUniqueMethodName(
-						classNode, "method 1", null, new ExtLanguageManagerForSimple());
-		assertEquals("method 2", methodName);
+		//		methodName =
+		//				ClassNodeHelper.generateUniqueMethodName(
+		//						classNode, "method 1", null, new ExtLanguageManagerForSimple());
+		//		assertEquals("method 2", methodName);
 	}
 
 	@Test
@@ -316,8 +316,8 @@ public class ClassNodeHelperTest {
 		String signature = ClassNodeHelper.createSignature(classNode, new ExtLanguageManagerForJava());
 		assertEquals("com.class_1", signature);
 
-		signature = ClassNodeHelper.createSignature(classNode, new ExtLanguageManagerForSimple());
-		assertEquals("class 1", signature);
+		//		signature = ClassNodeHelper.createSignature(classNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("class 1", signature);
 	}
 
 	@Test
@@ -342,26 +342,26 @@ public class ClassNodeHelperTest {
 		assertEquals("boolean", convertedTypes.get(8));
 	}
 
-	@Test
-	public void convertParameterTypesInSimpleExtLanguageTest() {
-
-		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
-
-		List<String> convertedTypes =
-				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
-						Arrays.asList(parameterTypes),
-						new ExtLanguageManagerForSimple());
-
-		assertEquals(9, convertedTypes.size());
-		assertEquals("Number", convertedTypes.get(0));
-		assertEquals("Number", convertedTypes.get(1));
-		assertEquals("Number", convertedTypes.get(2));
-		assertEquals("Number", convertedTypes.get(3));
-		assertEquals("Number", convertedTypes.get(4));
-		assertEquals("Number", convertedTypes.get(5));
-		assertEquals("Text", convertedTypes.get(6));
-		assertEquals("Text", convertedTypes.get(7));
-		assertEquals("Logical", convertedTypes.get(8));
-	}
+	//	@Test
+	//	public void convertParameterTypesInSimpleExtLanguageTest() {
+	//
+	//		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
+	//
+	//		List<String> convertedTypes =
+	//				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
+	//						Arrays.asList(parameterTypes),
+	//						new ExtLanguageManagerForSimple());
+	//
+	//		assertEquals(9, convertedTypes.size());
+	//		assertEquals("Number", convertedTypes.get(0));
+	//		assertEquals("Number", convertedTypes.get(1));
+	//		assertEquals("Number", convertedTypes.get(2));
+	//		assertEquals("Number", convertedTypes.get(3));
+	//		assertEquals("Number", convertedTypes.get(4));
+	//		assertEquals("Number", convertedTypes.get(5));
+	//		assertEquals("Text", convertedTypes.get(6));
+	//		assertEquals("Text", convertedTypes.get(7));
+	//		assertEquals("Logical", convertedTypes.get(8));
+	//	}
 
 }

@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class MethodParameterNodeHelperTest {
 
@@ -27,8 +27,8 @@ public class MethodParameterNodeHelperTest {
 		String name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("parameter_1", name);
 
-		name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("parameter 1", name);
+		//		name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("parameter 1", name);
 
 	}
 

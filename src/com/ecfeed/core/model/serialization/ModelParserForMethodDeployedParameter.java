@@ -50,14 +50,14 @@ public class ModelParserForMethodDeployedParameter {
 
 	private static AbstractParameterNode parseParameter(
 			Element parameterElement, MethodNode methodNode, ListOfStrings errorList) {
-		
+
 		AbstractParameterNode parameter = 
 				parseDeployedNode(
 						parameterElement, 
 						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER, 
 						methodNode, 
 						errorList);
-		
+
 		if (parameter != null) {
 			return parameter;
 		}
@@ -68,7 +68,7 @@ public class ModelParserForMethodDeployedParameter {
 						SerializationConstants.METHOD_DEPLOYED_PATH_OF_PARAMETER_OLD, 
 						methodNode, 
 						errorList);
-		
+
 		return parameter;
 	}
 
@@ -77,7 +77,7 @@ public class ModelParserForMethodDeployedParameter {
 			String attributeName,
 			MethodNode methodNode,
 			ListOfStrings errorList) {
-		
+
 		String path = "";
 
 		path = parameterElement.getAttributeValue(attributeName);
@@ -89,7 +89,7 @@ public class ModelParserForMethodDeployedParameter {
 		AbstractParameterNode foundParameter = AbstractParameterNodeHelper.findParameter(path, methodNode);
 
 		if (foundParameter == null) {
-			errorList.add("Original parameter not found by path: " + path);
+			errorList.addIfUnique("Original parameter not found by path: " + path);
 			return null;
 		}
 
@@ -123,7 +123,7 @@ public class ModelParserForMethodDeployedParameter {
 			}
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return Optional.empty();
 		}
 
@@ -150,11 +150,11 @@ public class ModelParserForMethodDeployedParameter {
 				if (basicParameterNode != null) {
 					parameter.setLinkToGlobalParameter(basicParameterNode);
 				} else {
-					outErrorList.add("Cannot parse link of parameter: " + parameter.getName() + ".");
+					outErrorList.addIfUnique("Cannot parse link of parameter: " + parameter.getName() + ".");
 				}
 
 			} catch (Exception e) {
-				outErrorList.add(e.getMessage());
+				outErrorList.addIfUnique(e.getMessage());
 				return Optional.empty();
 			}
 		}

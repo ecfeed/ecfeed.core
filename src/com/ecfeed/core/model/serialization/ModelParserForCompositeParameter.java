@@ -75,7 +75,7 @@ public class ModelParserForCompositeParameter {
 		try {
 			linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return;
 		}
 
@@ -85,7 +85,7 @@ public class ModelParserForCompositeParameter {
 		if (link != null) {
 			targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) link);
 		} else {
-			errorList.add("Cannot find link for parameter: " + targetCompositeParameterNode.getName());
+			errorList.addIfUnique("Cannot find link for parameter: " + targetCompositeParameterNode.getName());
 		}
 	}
 

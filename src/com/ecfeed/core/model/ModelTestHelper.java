@@ -16,7 +16,7 @@ public class ModelTestHelper {
 
 			return parser.parseModel(istream, null, listOfErrors);
 		} catch(Exception e) {
-			listOfErrors.add(e.getMessage());
+			listOfErrors.addIfUnique(e.getMessage());
 		}
 
 		return null;
@@ -30,7 +30,7 @@ public class ModelTestHelper {
 
 			ListOfStrings listOfErrors = new ListOfStrings();
 			RootNode rootNode = parser.parseModel(istream, null, listOfErrors);
-			
+
 			if (!listOfErrors.isEmpty()) {
 				String firstError = listOfErrors.getFirstString();
 				ExceptionHelper.reportRuntimeException(firstError);
@@ -43,5 +43,5 @@ public class ModelTestHelper {
 
 		return null;
 	}
-	
+
 }

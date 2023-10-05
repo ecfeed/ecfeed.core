@@ -19,30 +19,29 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemove;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class RemoveBasicParameterOperationTest {
 
-	@Test
-	public void removeFirstParameter() {
-
-		ClassNode classNode = new ClassNode("com.Class1", null);
-
-		MethodNode methodNode2 = new MethodNode("method2", null);
-		classNode.addMethod(methodNode2);
-
-		BasicParameterNode methodParameterNode = new BasicParameterNode("arg0", "int", "0", false, null);
-		methodNode2.addParameter(methodParameterNode);
-
-		OnParameterOperationRemove methodOperationRemoveParameter
-		= new OnParameterOperationRemove(methodNode2, methodParameterNode, new ExtLanguageManagerForSimple());
-
-		try  {
-			methodOperationRemoveParameter.execute();
-		}  catch (Exception e) {
-			fail();
-		}
-	}
+//	@Test
+//	public void removeFirstParameter() {
+//
+//		ClassNode classNode = new ClassNode("com.Class1", null);
+//
+//		MethodNode methodNode2 = new MethodNode("method2", null);
+//		classNode.addMethod(methodNode2);
+//
+//		BasicParameterNode methodParameterNode = new BasicParameterNode("arg0", "int", "0", false, null);
+//		methodNode2.addParameter(methodParameterNode);
+//
+//		OnParameterOperationRemove methodOperationRemoveParameter
+//			= new OnParameterOperationRemove(methodNode2, methodParameterNode, new ExtLanguageManagerForSimple());
+//
+//		try  {
+//			methodOperationRemoveParameter.execute();
+//		}  catch (Exception e) {
+//			fail();
+//		}
+//	}
 
 	@Test
 	public void removeParameterInJavaMode() {

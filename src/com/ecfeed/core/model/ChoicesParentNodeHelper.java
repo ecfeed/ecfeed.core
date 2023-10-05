@@ -77,7 +77,7 @@ public abstract class ChoicesParentNodeHelper {
 				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
 
 				boolean isRandomized = choiceNode.isRandomizedValue();
-				
+
 				ParameterConversionItem parameterConversionItemForChoice = 
 						new ParameterConversionItem(srcPart, dstPart, isRandomized);
 
@@ -111,21 +111,27 @@ public abstract class ChoicesParentNodeHelper {
 
 	public static String generateUniqueChoiceName(
 			IChoicesParentNode choicesParentNode,
-			String startMethodName,
-			String availableMethodName) {
+			String oldName,
+			String availableName) {
 
-		if (!NodeNameHelper.choiceNameCompliesWithNamingRules(startMethodName)) {
+		if (!NodeNameHelper.choiceNameCompliesWithNamingRules(oldName)) {
 			ExceptionHelper.reportRuntimeException("Choice name is invalid.");
 		}
 
-		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
+		if (availableName != null 
+				&& StringHelper.isEqual(oldName, availableName)) {
+
+			return availableName;
+		}
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 
 		for (int i = 1;   ; i++) {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (availableMethodName != null && StringHelper.isEqual(newMethodName, availableMethodName)) {
-				return availableMethodName;
+			if (availableName != null && StringHelper.isEqual(newMethodName, availableName)) {
+				return availableName;
 			}
 
 			ChoiceNode choiceNode = ChoiceNodeHelper.findChoiceByName(choicesParentNode, newMethodName);
@@ -135,5 +141,5 @@ public abstract class ChoicesParentNodeHelper {
 			}
 		}
 	}
-	
+
 }

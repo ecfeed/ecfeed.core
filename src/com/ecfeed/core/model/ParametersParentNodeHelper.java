@@ -90,6 +90,11 @@ public class ParametersParentNodeHelper {
 			String availableNameInIntrLanguage,
 			IParametersParentNode parametersParent) {
 
+		if (availableNameInIntrLanguage != null 
+				&& StringHelper.isEqual(nameInIntrLanguage, availableNameInIntrLanguage)) {
+			return availableNameInIntrLanguage;
+		}
+
 		String nameCore = StringHelper.removeFromNumericPostfix(nameInIntrLanguage);
 
 		String newName = generateUniqueParameterNameFromNameCore(nameCore, availableNameInIntrLanguage, parametersParent);

@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
-	public static final String CLASS_NEW_NAME = "TestClass";
+	private static final String CLASS_NEW_NAME = "TestClass";
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
@@ -132,6 +132,10 @@ public class RootNodeHelper {
 			RootNode rootNode, 
 			String oldNameInIntrLanguage,
 			String availableClassName) {
+
+		if (availableClassName != null && StringHelper.isEqual(oldNameInIntrLanguage, availableClassName)) {
+			return availableClassName;
+		}
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
 

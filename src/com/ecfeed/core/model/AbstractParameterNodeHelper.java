@@ -365,4 +365,21 @@ public abstract class AbstractParameterNodeHelper {
 		return false;
 	}
 
+	public static String correctUniquenessOfParameterName(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			IParametersParentNode parametersParent) {
+
+		if (null == AbstractParameterNodeHelper.findParameterByName(nameInIntrLanguage, parametersParent)) {
+			return nameInIntrLanguage;
+		}
+
+		String uniqueName = 
+				ParametersParentNodeHelper.generateUniqueParameterName(
+						nameInIntrLanguage, availableNameInIntrLanguage, parametersParent);
+
+		return uniqueName;
+	}
+
+
 }

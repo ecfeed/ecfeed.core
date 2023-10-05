@@ -166,6 +166,10 @@ public class ClassNodeHelper {
 		if (!NodeNameHelper.methodNameCompliesWithNamingRules(startMethodName)) {
 			ExceptionHelper.reportRuntimeException("Method name is invalid.");
 		}
+		
+		if (availableMethodName != null && StringHelper.isEqual(startMethodName, availableMethodName)) {
+			return availableMethodName;
+		}
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
 
@@ -305,5 +309,33 @@ public class ClassNodeHelper {
 		return null;
 	}
 
+	public static String correctsClassName(
+			String name,
+			String availableName,
+			RootNode rootNode) {
+
+		String correctedNameInIntrLanguage = 
+				NodeNameHelper.correctSyntaxClassNameWithoutPackage(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedNameInIntrLanguage, rootNode, availableName);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			RootNode rootNode,
+			String availableClassName) {
+
+		if (null == ClassNodeHelper.findClassByName(nameInIntrLanguage, rootNode)) {
+			return nameInIntrLanguage;
+		}
+
+		String uniqueName = 
+				RootNodeHelper.generateUniqueClassName(rootNode, nameInIntrLanguage,availableClassName);
+
+		return uniqueName;
+	}
 
 }
