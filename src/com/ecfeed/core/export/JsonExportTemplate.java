@@ -44,8 +44,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-
-		return "JSON";
+		return "Template - JSON";
 	}	
 
 	private static String createDefaultHeaderTemplate() {

@@ -50,7 +50,7 @@ public class TemplateText {
 
         fCurrentTemplateText = completeTemplateText;
 
-        if (completeTemplateText.startsWith("RFC")) {
+        if (completeTemplateText.startsWith("RFC") || completeTemplateText.startsWith("STD")) {
             fIsCorrect = true;
             //fIsStandardized = true;
         	return true;

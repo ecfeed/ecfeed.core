@@ -26,7 +26,7 @@ public class ModelDataExportCSV implements ModelDataExport {
     private ModelDataExportCSV(MethodNode method, Map<String, String> parameters) {
         this.method = method;
 
-        this.separator = parameters.getOrDefault("separator", ",");
+        this.separator = parameters.getOrDefault("delimiter", ",");
         this.nested = Boolean.parseBoolean(parameters.getOrDefault("nested", "false"));
 
         boolean explicit = Boolean.parseBoolean(parameters.getOrDefault("explicit", "explicit"));

@@ -49,8 +49,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-		final String FORMAT_GHERKIN = "Gherkin";
-		return FORMAT_GHERKIN;
+		return "Template - Gherkin";
 	}
 
 	private static String createDefaultHeaderTemplate(MethodNode methodNode) {

@@ -48,7 +48,7 @@ public class StandardizedExportHelper {
 	
 	public static boolean isStandardized(String template) {
 		
-		return template.startsWith("RFC");
+		return template.startsWith("RFC") || template.startsWith("STD");
 	}
 	
 	public static IExportTemplate getStandardizedExportTemplate(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
@@ -59,6 +59,10 @@ public class StandardizedExportHelper {
 		
 		if (StandardizedExportJsonTemplate.isTemplateIdValid(template)) {
 			return StandardizedExportJsonTemplate.get(method, template, extLanguageManager);
+		}
+		
+		if (StandardizedExportGherkinTemplate.isTemplateIdValid(template)) {
+			return StandardizedExportGherkinTemplate.get(method, template, extLanguageManager);
 		}
 		
 		throw new RuntimeException("Invalid template standard!");
