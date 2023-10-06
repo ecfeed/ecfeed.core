@@ -48,7 +48,7 @@ public class StandardizedExportGherkinTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText() {
 		String template = 
 				ID + "\n" +
-				"Explicit:\t\t false";
+				"Explicit:      false";
 
 		return template;
 	}

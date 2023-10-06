@@ -48,9 +48,9 @@ public class StandardizedExportCsvTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText() {
 		String template = 
 				ID + "\n" +
-				"Delimiter:\t ,\n" +
-				"Explicit:\t\t false\n" +
-				"Nested:\t\t false";
+				"Delimiter:         ,\n" +
+				"Explicit:      false\n" +
+				"Nested:        false";
 
 		return template;
 	}
