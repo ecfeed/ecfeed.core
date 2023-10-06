@@ -48,9 +48,9 @@ public class StandardizedExportJsonTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText() {
 		String template = 
 				ID + "\n" +
-				"Indent:\t\t 2\n" +
-				"Explicit:\t\t false\n" +
-				"Nested:\t\t false";
+				"Indent:            2\n" +
+				"Explicit:      false\n" +
+				"Nested:        false";
 
 		return template;
 	}
