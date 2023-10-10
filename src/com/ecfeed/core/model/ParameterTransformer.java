@@ -377,9 +377,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem parameterConversionItem : parameterConversionItems) {
 
-			ParametersAndConstraintsParentNodeHelper.convertConstraints(
-					methodNode.getConstraintNodes(),
-					parameterConversionItem);
+			convertOneItemForOneConstraintsParent(parameterConversionItem, methodNode);
 		}
 	}
 
@@ -459,11 +457,9 @@ public class ParameterTransformer {
 
 		BasicParameterNode srcParameterNode = (BasicParameterNode) srcAbstractParameterNode; 
 
-		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
-
-		ParametersAndConstraintsParentNodeHelper.convertConstraints(
-				methodNode.getConstraintNodes(),
-				parameterConversionItem); 
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) srcParameterNode.getParent();
+		
+		convertConstraintsAtAllLevelsForOneItem(parameterConversionItem, constraintsParentNode);
 
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 
@@ -477,6 +473,35 @@ public class ParameterTransformer {
 					inOutReverseOperations, 
 					extLanguageManager);
 		}
+	}
+
+	private static void convertConstraintsAtAllLevelsForOneItem(
+			ParameterConversionItem parameterConversionItem,
+			IConstraintsParentNode constraintsParentNode) {
+		
+		for (;;) {
+			
+			if (constraintsParentNode == null) {
+				break;
+			}
+			
+			convertOneItemForOneConstraintsParent(parameterConversionItem, constraintsParentNode);
+			
+			if (constraintsParentNode instanceof MethodNode) {
+				break;
+			}
+			
+			constraintsParentNode = (IConstraintsParentNode) constraintsParentNode.getParent();
+		}
+	}
+
+	private static void convertOneItemForOneConstraintsParent(
+			ParameterConversionItem parameterConversionItem,
+			IConstraintsParentNode constraintsParentNode) {
+		
+		ParametersAndConstraintsParentNodeHelper.convertConstraints(
+				constraintsParentNode.getConstraintNodes(),
+				parameterConversionItem);
 	}
 
 	private static void removeSourceChoice(
