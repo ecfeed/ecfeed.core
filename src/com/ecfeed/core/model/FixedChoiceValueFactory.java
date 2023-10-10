@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.implementation.ModelClassLoader;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -32,7 +31,7 @@ public class FixedChoiceValueFactory {
 	public Object createValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		if(choice.getParameter() != null) {
-			String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+			String context = "Model path: " + AbstractNodeHelper.getFullPath(choice, extLanguageManager);
 			
 			return createValue(
 					choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType(), context);
@@ -51,8 +50,7 @@ public class FixedChoiceValueFactory {
 
 		if (isRandomized) {
 
-			TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
-			ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+			ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(typeName);
 			convertedValueString = typeAdapter.generateValueAsString(valueString, context);  
 		}
 

@@ -12,17 +12,17 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationPopulateParameterWithChoices extends AbstractModelOperation {
 
-	private AbstractParameterNode fParentNode;
+	private BasicParameterNode fParentNode;
 	private List<ChoiceNode> fChoiceNodes;
 
 	public GenericOperationPopulateParameterWithChoices(
-			AbstractParameterNode parentNode, 
+			BasicParameterNode parentNode, 
 			List<ChoiceNode> choiceNodes,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -51,11 +51,11 @@ public class GenericOperationPopulateParameterWithChoices extends AbstractModelO
 
 	protected class ReverseOperation extends AbstractModelOperation{
 
-		private AbstractParameterNode fParentNode;
+		private BasicParameterNode fParentNode;
 		private List<ChoiceNode> fChoiceNodes;
 		
 		public ReverseOperation(
-				AbstractParameterNode parentNode, 
+				BasicParameterNode parentNode, 
 				List<ChoiceNode> choiceNodes, 
 				IExtLanguageManager extLanguageManager) {
 			

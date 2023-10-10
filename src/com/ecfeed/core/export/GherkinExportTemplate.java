@@ -12,8 +12,10 @@ package com.ecfeed.core.export;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -47,8 +49,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-		final String FORMAT_GHERKIN = "Gherkin";
-		return FORMAT_GHERKIN;
+		return "Template - Gherkin";
 	}
 
 	private static String createDefaultHeaderTemplate(MethodNode methodNode) {
@@ -72,13 +73,20 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		int methodParametersCount = methodNode.getParametersCount();
 
 		int counter = 0;
+		
 		for (int parameterIndex = 0; 
 				parameterIndex < methodParametersCount; 
 				++parameterIndex) {
 
-			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(parameterIndex);
+			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(parameterIndex);
+			
+			if (methodParameterNode instanceof CompositeParameterNode) {
+				continue;
+			}
 
-			if (methodParameterNode.isExpected()) {
+			BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+			
+			if (basicParameterNode.isExpected()) {
 				continue;
 			}
 
@@ -109,8 +117,8 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 		for (int parameterIndex = 0; parameterIndex < methodParametersCount; ++parameterIndex) {
 
-			MethodParameterNode methodParameterNode = 
-					(MethodParameterNode) methodNode.getParameter(parameterIndex);
+			BasicParameterNode methodParameterNode = 
+					(BasicParameterNode) methodNode.getParameter(parameterIndex);
 
 			if (!methodParameterNode.isExpected()) {
 				continue;
@@ -146,7 +154,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		
 		for (int parameterIndex = 0; parameterIndex < methodParametersCount; ++parameterIndex) {
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.getParameter(parameterIndex);
+			BasicParameterNode methodParameterNode = (BasicParameterNode)methodNode.getParameter(parameterIndex);
 
 			String parameterDescription = createParameterDescription(methodParameterNode); 
 			stringBuilder.append(parameterDescription + " | ");
@@ -157,7 +165,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		return stringBuilder.toString();
 	}
 
-	private static String createParameterDescription(MethodParameterNode methodParameterNode) {
+	private static String createParameterDescription(BasicParameterNode methodParameterNode) {
 
 		String parameterName = methodParameterNode.getName();
 		int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
@@ -169,7 +177,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		return "(" + string + ").min_width(" + minWidth + ", " + JustifyType.convertToString(justifyType) +  ")";	
 	}
 
-	private static int getMaxParamValueLength(MethodParameterNode methodParameterNode, String parameterName) {
+	private static int getMaxParamValueLength(BasicParameterNode methodParameterNode, String parameterName) {
 
 		Set<ChoiceNode> choices = methodParameterNode.getAllChoices();
 
@@ -196,12 +204,19 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 		for (int index = 0; index < methodParametersCount; ++index) {
 
-			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(index);  
-			String parameterName = methodParameterNode.getName(); 
+			AbstractParameterNode abstractParameterNode = methodNode.getMethodParameter(index); 
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			String parameterName = basicParameterNode.getName(); 
 
-			int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
+			int maxParamValueLength = getMaxParamValueLength(basicParameterNode, parameterName);
 
-			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(methodParameterNode.getType());
+			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(basicParameterNode.getType());
 
 			String paramDescription = embedInMinWidthOperator("$" + parameterName + "." + "value", maxParamValueLength, justifyType);
 			stringBuilder.append(paramDescription);

@@ -10,21 +10,26 @@
 
 package com.ecfeed.core.export;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
-import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
@@ -53,45 +58,57 @@ public class TestCasesExportHelper {
 	private static final String ARITHMETIC_EXPRESSION_SEQUENCE_GENERIC_PATTERN = "\\$\\(.*\\)";
 	private static final String PARAMETER_SEPARATOR = ",";
 
-	public static String generateSection(MethodNode method, String template, IExtLanguageManager extLanguageManager) {
+	public static String generateSection(
+			MethodNode method, 
+			List<ParameterWithLinkingContext> deployedParameters,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
 		if (template == null) {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(method.getClassNode(), extLanguageManager));
 		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
 		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 
-		result = replaceParameterNameSequences(method, result, extLanguageManager);
+		result = replaceParameterNameSequences(method, deployedParameters, result, extLanguageManager);
 		result = evaluateExpressions(result);
 		result = evaluateMinWidthOperators(result);
 
 		return result;
 	}
 
-	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCaseNode, String template, IExtLanguageManager extLanguageManager) {
-
-		MethodNode method = testCaseNode.getMethod();
+	public static String generateTestCaseString(
+			int sequenceIndex, 
+			TestCaseNode testCaseNode,
+			MethodNode methodNode,
+			List<ParameterWithLinkingContext> deployedParameters,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
 		if (template == null) {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
-		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
-		result = result.replace(METHOD_NAME_SEQUENCE, MethodNodeHelper.getName(method, extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(methodNode.getClassNode(), extLanguageManager));
+		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(methodNode.getClassNode(), extLanguageManager));
+		result = result.replace(METHOD_NAME_SEQUENCE, AbstractNodeHelper.getName(methodNode, extLanguageManager));
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, AbstractNodeHelper.getName(testCaseNode, extLanguageManager));
 
-		result = replaceParameterSequences(testCaseNode, result, extLanguageManager);
+		result = replaceParameterSequences(testCaseNode, methodNode, deployedParameters, result, extLanguageManager);
 		result = evaluateExpressions(result);
 		result = evaluateMinWidthOperators(result);
 
 		return result;
 	}	
 
-	private static String replaceParameterNameSequences(MethodNode methodNode, String template, IExtLanguageManager extLanguageManager) {
+	private static String replaceParameterNameSequences(
+			MethodNode methodNode,
+			List<ParameterWithLinkingContext> deployedParameters,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
 		String result = template;
 
@@ -102,7 +119,11 @@ public class TestCasesExportHelper {
 		while(matcher.find()){
 
 			String parameterCommandSequence = matcher.group();
-			String parameterSubstitute = getParameterSubstitute(parameterCommandSequence, methodNode, extLanguageManager);
+			String parameterSubstitute = getParameterSubstitute(
+					parameterCommandSequence, 
+					methodNode,
+					deployedParameters,
+					extLanguageManager);
 
 			result = result.replace(parameterCommandSequence, parameterSubstitute);
 		}		
@@ -117,29 +138,67 @@ public class TestCasesExportHelper {
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE);
 	}
 
-	private static String getParameterSubstitute(String parameterCommandSequence, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	private static String getParameterSubstitute(
+			String parameterCommandSequence, 
+			MethodNode methodNode, 
+			List<ParameterWithLinkingContext> deployedParameters,
+			IExtLanguageManager extLanguageManager) {
 
 		String command = getParameterCommand(parameterCommandSequence);
-		int parameterNumber = getParameterNumber(parameterCommandSequence, methodNode, extLanguageManager) - 1;
 
-		if (parameterNumber == -1) {
-			return null;
-		}
+		int parameterIndex = getParameterIndexFromSequence(parameterCommandSequence, methodNode, extLanguageManager);
 
-		MethodParameterNode parameter = methodNode.getMethodParameters().get(parameterNumber);
-		String substitute = resolveParameterCommand(command, parameter, extLanguageManager);
+		//		BasicParameterNode parameter = 
+		//				getBasicParameterFromSequence(parameterCommandSequence, methodNode, extLanguageManager);
+
+		ParameterWithLinkingContext parameterWithLinkingContext = deployedParameters.get(parameterIndex);
+
+		String substitute = resolveParameterCommand(command, parameterWithLinkingContext, extLanguageManager);
 
 		return substitute;
 	}
 
-	private static String resolveParameterCommand(String command, MethodParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	//	private static BasicParameterNode getBasicParameterFromSequence(
+	//			String parameterCommandSequence,
+	//			MethodNode methodNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		int parameterIndex = getParameterIndexFromSequence(parameterCommandSequence, methodNode, extLanguageManager);
+	//
+	//		List<AbstractParameterNode> parameters = methodNode.getParameters();
+	//
+	//		BasicParameterNode parameter = (BasicParameterNode) parameters.get(parameterIndex);
+	//
+	//		return parameter;
+	//	}
+
+	private static String resolveParameterCommand(
+			String command, 
+			ParameterWithLinkingContext parameterWithContext, 
+			IExtLanguageManager extLanguageManager) {
+
+
 		String result = command;
-		switch(command){
+
+		switch(command) {
 		case PARAMETER_COMMAND_NAME:
-			result = MethodParameterNodeHelper.getName(parameter, extLanguageManager);
+
+			//result = MethodParameterNodeHelper.getName(parameter, extLanguageManager);
+
+			result = AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
+					parameterWithContext.getLinkingContext(), // may be parameter with link or linking context
+					ExtendedName.PATH_TO_TOP_CONTAINTER,
+					TypeOfLink.NORMAL,
+					parameterWithContext.getParameter(),
+					ExtendedName.PATH_TO_TOP_CONTAINTER,
+					Decorations.NO,
+					TypeIncluded.NO,
+					extLanguageManager);
+
 			break;
 		case PARAMETER_COMMAND_TYPE:
-			result = MethodParameterNodeHelper.getType(parameter, extLanguageManager);
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameterWithContext.getParameter();
+			result = MethodParameterNodeHelper.getType(basicParameterNode, extLanguageManager);
 		default:
 			break;
 		}
@@ -150,17 +209,23 @@ public class TestCasesExportHelper {
 		return parameterCommandSequence.substring(parameterCommandSequence.indexOf(".") + 1, parameterCommandSequence.length());
 	}
 
-	private static int getParameterNumber(String parameterSequence, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	private static int getParameterIndexFromSequence(
+			String parameterSequence,
+			MethodNode methodNode, 
+			IExtLanguageManager extLanguageManager) {
 
 		String parameterDescriptionString = parameterSequence.substring(1, parameterSequence.indexOf("."));
 
 		try {
-			return Integer.parseInt(parameterDescriptionString);
+			int parameterIndex = Integer.parseInt(parameterDescriptionString) - 1;
+			return parameterIndex;
+
 		} catch(NumberFormatException e) {
 
 			parameterDescriptionString = extLanguageManager.convertTextFromExtToIntrLanguage(parameterDescriptionString);
-			final int parameterNumber = methodNode.getParameterIndex(parameterDescriptionString) + 1;
-			return parameterNumber;
+
+			int parameterIndex = methodNode.getParameterIndex(parameterDescriptionString);
+			return parameterIndex;
 		}
 	}
 
@@ -309,9 +374,14 @@ public class TestCasesExportHelper {
 		return null;
 	}
 
-	private static String replaceParameterSequences(TestCaseNode testCase, String template, IExtLanguageManager extLanguageManager) {
+	private static String replaceParameterSequences(
+			TestCaseNode testCase,
+			MethodNode methodNode,
+			List<ParameterWithLinkingContext> deployedParameters,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
-		String result = replaceParameterNameSequences(testCase.getMethod(), template, extLanguageManager);
+		String result = replaceParameterNameSequences(methodNode, deployedParameters, template, extLanguageManager);
 
 		String pattern = getParameterSequencePattern(extLanguageManager);
 
@@ -321,7 +391,9 @@ public class TestCasesExportHelper {
 
 			String parameterCommandSequence = matcher.group();
 
-			String valueSubstitute = createValueSubstitute(parameterCommandSequence, testCase, extLanguageManager);
+			String valueSubstitute = 
+					createValueSubstitute(parameterCommandSequence, testCase, methodNode, extLanguageManager);
+
 			if (valueSubstitute != null) {
 				result = result.replace(parameterCommandSequence, valueSubstitute);
 			}
@@ -338,28 +410,46 @@ public class TestCasesExportHelper {
 
 	}
 
-	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
+	private static String createValueSubstitute(
+			String parameterCommandSequence, 
+			TestCaseNode testCase, 
+			MethodNode methodNode,
+			IExtLanguageManager extLanguageManager) {
 
-		int parameterNumber = getParameterNumber(parameterCommandSequence, testCase.getMethod(), extLanguageManager) - 1;
+		int parameterIndex = 
+				getParameterIndexFromSequence(
+						parameterCommandSequence, methodNode, extLanguageManager);
 
-		if (parameterNumber == -1) {
+		if (parameterIndex == -1) {
 			return null;
 		}
-		if (parameterNumber >= testCase.getTestData().size()) {
+
+		if (parameterIndex >= testCase.getTestData().size()) {
 			return null;
 		}
 
-		ChoiceNode choice = testCase.getTestData().get(parameterNumber);
+		BasicParameterNode basicParameterNode = 
+				BasicParameterNodeHelper.getBasicParameter(parameterIndex, methodNode);
+
+		String parameterType = basicParameterNode.getType();
+
+		ChoiceNode choice = testCase.getTestData().get(parameterIndex);
 
 		String command = getParameterCommand(parameterCommandSequence);
-		String substitute = resolveChoiceCommand(command, choice, extLanguageManager);
+		String substitute = resolveChoiceCommand(command, choice, parameterType, extLanguageManager);
 
 		return substitute;
 	}
 
-	private static String resolveChoiceCommand(String command, ChoiceNode choice, IExtLanguageManager extLanguageManager) {
+	private static String resolveChoiceCommand(
+			String command, 
+			ChoiceNode choice, 
+			String parameterType,
+			IExtLanguageManager extLanguageManager) {
+
 		String result = command;
-		switch(command){
+
+		switch(command) {
 		case CHOICE_COMMAND_SHORT_NAME:
 			result = ChoiceNodeHelper.getName(choice, extLanguageManager);
 			break;
@@ -367,17 +457,21 @@ public class TestCasesExportHelper {
 			result = ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 			break;
 		case CHOICE_COMMAND_VALUE:
-			result = getValue(choice, extLanguageManager);
+			result = getValue(choice, parameterType, extLanguageManager);
 			break;
 		default:
 			break;
 		}
+
 		return result;
 	}
 
-	private static String getValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
+	private static String getValue(
+			ChoiceNode choice,
+			String parameterType,
+			IExtLanguageManager extLanguageManager) {
 
-		String convertedValue = convertValue(choice, extLanguageManager);
+		String convertedValue = convertValue(choice, parameterType, extLanguageManager);
 
 		if (convertedValue != null) {
 			return convertedValue;
@@ -386,26 +480,19 @@ public class TestCasesExportHelper {
 		return ChoiceNodeHelper.getValueString(choice, extLanguageManager);
 	}
 
-	private static String convertValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
-
-		AbstractParameterNode parameter = choice.getParameter();
-		if (parameter == null) {
-			return null;
-		}
-
-		String argType = choice.getParameter().getType();
-		if (argType == null) {
-			return null;
-		}
+	private static String convertValue(
+			ChoiceNode choice,
+			String parameterType,
+			IExtLanguageManager extLanguageManager) {
 
 		FixedChoiceValueFactory fixedValueFactory = new FixedChoiceValueFactory(null, true);
-		
-		String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
-		
+
+		String context = "Model path: " + AbstractNodeHelper.getFullPath(choice, extLanguageManager);
+
 		Object parsedObject = 
 				fixedValueFactory.createValue(
-						choice.getValueString(), choice.isRandomizedValue(), argType, context);
-		
+						choice.getValueString(), choice.isRandomizedValue(), parameterType, context);
+
 		if (parsedObject == null) {
 			return null;
 		}

@@ -13,49 +13,45 @@ package com.ecfeed.core.model.serialization;
 import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
 
-import java.util.Optional;
-
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForChoice implements IModelParserForChoice {
+public class ModelParserForChoice {
 
-	private IModelChangeRegistrator fModelChangeRegistrator;
-
-	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
-		fModelChangeRegistrator = modelChangeRegistrator;
-	}
-
-	public Optional<ChoiceNode> parseChoice(
-			Element element, ListOfStrings errorList) {
+	public static ChoiceNode parseChoice(
+			Element element,
+			IModelChangeRegistrator modelChangeRegistrator,
+			ListOfStrings errorList) {
 
 		String name, value;
 		boolean isRandomized;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getChoiceNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getChoiceNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
-		} catch (ParserException e) {
-			return Optional.empty();
+		} catch (Exception e) {
+			errorList.addIfUnique(e.getMessage());
+			return null;
 		}
 
-		ChoiceNode choice = new ChoiceNode(name, value, fModelChangeRegistrator);
+		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element)) {
 
 			if (child.getLocalName() == SerializationHelperVersion1.getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, errorList);
-				if (node.isPresent()) {
-					choice.addChoice(node.get());
+				ChoiceNode node = parseChoice(child, modelChangeRegistrator, errorList);
+				if (node != null) {
+					choice.addChoice(node);
 				} else {
-					return Optional.empty();
+					errorList.addIfUnique("Cannot parse choice.");
+					return null;
 				}
 			}
 
@@ -64,7 +60,7 @@ public class ModelParserForChoice implements IModelParserForChoice {
 			}
 		}
 
-		return Optional.ofNullable(choice);
+		return choice;
 	}
 
 }

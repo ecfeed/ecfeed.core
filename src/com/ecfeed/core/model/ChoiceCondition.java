@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -50,12 +52,34 @@ public class ChoiceCondition implements IStatementCondition {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
-		return evaluateChoice(choice);
+		EvaluationResult evaluateChoice = evaluateChoice(choice);
+
+		return evaluateChoice;
 	}
 
 	@Override
 	public boolean adapt(List<ChoiceNode> values) {
 		return false;
+	}
+
+	@Override
+	public ChoiceCondition makeClone(
+			RelationStatement clonedParentRelationStatement, Optional<NodeMapper>nodeMapper) {
+
+		if (nodeMapper.isPresent()) {
+
+			ChoiceNode clonedChoiceNode = convertChoice(nodeMapper.get());
+
+			return new ChoiceCondition(clonedChoiceNode, clonedParentRelationStatement);
+		}
+
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
+	}
+
+	@Override
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
+
+		fRightChoice = nodeMapper.getMappedNode(fRightChoice, mappingDirection);
 	}
 
 	@Override
@@ -65,21 +89,42 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		MethodParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
+		ChoiceNode newChoiceNode = convertChoice(mapper);
 
-		String choiceName = fRightChoice.getQualifiedName();
-		ChoiceNode choiceNode = methodParameterNode.getChoice(choiceName);
+		return new ChoiceCondition(newChoiceNode, statement);
+	}
 
-		if (choiceNode == null) {
-			return false;
+	private ChoiceNode convertChoice(NodeMapper mapper) {
+
+		ChoiceNode choiceNode;
+
+		//		if (isSourceLinked()) {
+		//			choiceNode = fRightChoice;
+		//		} else {
+		//			choiceNode = mapper.getDestinationNode(fRightChoice);
+		//		}
+
+		choiceNode = mapper.getDestinationNode(fRightChoice);
+
+		choiceNode.setOrigChoiceNode(null);
+
+		return choiceNode;
+	}
+
+	boolean isSourceLinked() {
+		// If the source node is linked, there is no complementary deployment node.
+		// The copy is not created, and it is safe to use the original node (linked) instead.
+		// Also, there is no way to check whether it is a linked node "from the inside".
+		IAbstractNode node = fRightChoice.getParameter();
+
+		node = node.getParent();
+		while (node instanceof CompositeParameterNode) {
+			node = node.getParent();
 		}
 
-		fRightChoice = choiceNode;
-
-		return true;
+		return !(node instanceof MethodNode);
 	}
 
 	@Override
@@ -134,9 +179,9 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
-		MethodParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+		BasicParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
 
 		if (!(methodParameterNode.equals(methodParameterNode2))) {
 			return new ArrayList<ChoiceNode>();
@@ -148,6 +193,15 @@ public class ChoiceCondition implements IStatementCondition {
 		return choices;
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+
+	@Override
+	public void setParentRelationStatement(RelationStatement relationStatement) {
+		fParentRelationStatement = relationStatement;
+	}
 
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;
@@ -329,7 +383,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 
 		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
 			return true;
@@ -339,7 +393,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 
@@ -349,6 +403,47 @@ public class ChoiceCondition implements IStatementCondition {
 			fRightChoice = newChoiceNode;
 		}
 	}
+
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode topParentNode) {
+
+		RelationStatement parentRelationStatement = getParentRelationStatement();
+
+		BasicParameterNode leftBasicParameterNode = parentRelationStatement.getLeftParameter();
+
+		AbstractParameterNode leftParameterLinkingContext = parentRelationStatement.getLeftParameterLinkingContext();
+
+		BasicParameterNode parameterWithChoices = 
+				BasicParameterNodeHelper.findParameterWithChoices(leftBasicParameterNode, leftParameterLinkingContext);
+
+		if (BasicParameterNodeHelper.choiceNodeExists(parameterWithChoices, fRightChoice)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		ChoiceNode sourceChoiceNode = getRightChoice();
+	//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+	//
+	//		RelationStatement sourceParentRelationStatement = fParentRelationStatement;
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(sourceParentRelationStatement);
+	//
+	//		if (deployedParentRelationStatement == null) {
+	//			ExceptionHelper.reportRuntimeException("Empyt parent relation statement.");
+	//		}
+	//
+	//		IStatementCondition deployeChoiceCondition =
+	//				new ChoiceCondition(
+	//						deployedChoiceNode,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployeChoiceCondition;
+	//	}
 
 }
 

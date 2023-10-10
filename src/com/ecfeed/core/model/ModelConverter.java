@@ -43,6 +43,9 @@ public class ModelConverter {
 		case 3:
 			model = convertFrom3To4(model);
 			break;
+		case 4:
+			model = convertFrom4To5(model);
+			break;
 			
 		default:
 			ExceptionHelper.reportRuntimeException(INVALID_MODEL_VERSION); 
@@ -85,6 +88,12 @@ public class ModelConverter {
 		return rootNode;
 	}
 
+	public static RootNode convertFrom4To5(RootNode model) {
+		// Only new features were added, the model is compatible with previous versions.
+		model.setVersion(5);
+		return model;
+	}
+
 	private static void convertClassFrom3To4(ClassNode classNode) {
 
 		List<MethodNode> methodNodes = classNode.getMethods();
@@ -117,7 +126,7 @@ public class ModelConverter {
 
 		ExpectedValueStatement oldExpectedValueStatement = (ExpectedValueStatement)oldAbstractStatement;
 
-		MethodParameterNode methodParameterNode = oldExpectedValueStatement.getLeftMethodParameterNode();
+		BasicParameterNode methodParameterNode = oldExpectedValueStatement.getLeftMethodParameterNode();
 		String value = oldExpectedValueStatement.getChoice().getValueString();
 
 		AbstractStatement newPostcondition =

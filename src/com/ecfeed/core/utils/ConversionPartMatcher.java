@@ -248,7 +248,7 @@ public class ConversionPartMatcher {
 		Collections.sort(similarityDataList, comparatorBySimilarityIndex);
 	}
 
-	private static class SimilarityItem { // TODO DE-NO template class ?
+	private static class SimilarityItem {
 
 		private ParameterConversionItemPartForRaw fItem1;
 		private ParameterConversionItemPartForRaw fItem2;

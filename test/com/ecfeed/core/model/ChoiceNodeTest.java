@@ -23,6 +23,19 @@ import org.junit.Test;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class ChoiceNodeTest{
+
+	@Test 
+	public void getParentTest() {
+		
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		
+		choice1.addChoice(choice11);
+		ChoiceNode parentChoice = choice11.getParentChoice();
+		
+		assertEquals(parentChoice, choice1);
+	}
+	
 	@Test
 	public void testValue() {
 		ChoiceNode choice = new ChoiceNode("name", "value", null);
@@ -35,7 +48,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testGetParameter(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -59,7 +72,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testLevel(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -384,8 +397,8 @@ public class ChoiceNodeTest{
 	@Test
 	public void derandomizeNumberTest(){
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", 
 						"int",
 						"0",
@@ -414,8 +427,8 @@ public class ChoiceNodeTest{
 	@Test
 	public void derandomizeTextTest(){
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", 
 						"String",
 						"0",
@@ -439,6 +452,27 @@ public class ChoiceNodeTest{
 			assertTrue(result <= 5);
 			assertTrue(result >= 1);
 		}
+	}
+
+	@Test
+	public void copyChoiceTest(){
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
+		ChoiceNode choice21 = new ChoiceNode("choice21", "0", null);
+		ChoiceNode choice22 = new ChoiceNode("choice22", "0", null);
+
+		choice.addChoice(choice1);
+		choice.addChoice(choice2);
+		choice1.addChoice(choice11);
+		choice1.addChoice(choice12);
+		choice2.addChoice(choice21);
+		choice2.addChoice(choice22);
+
+		ChoiceNode copy = choice.makeClone();
+		assertTrue(choice.isMatch(copy));
 	}
 
 }

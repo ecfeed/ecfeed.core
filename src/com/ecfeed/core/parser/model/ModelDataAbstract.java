@@ -11,13 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParametersParentNode;
 import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
@@ -70,10 +68,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateFile(path);
+
         initializeDataFile(path);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -83,10 +85,14 @@ abstract class ModelDataAbstract implements ModelData {
         this.headerAffected = new ArrayList<>();
 
         validateText(data);
+
         initializeDataText(data);
+
+        updateProperties();
 
         initializeHeader();
         initializeBody();
+
         process();
 
         validateSize();
@@ -132,9 +138,11 @@ abstract class ModelDataAbstract implements ModelData {
         this.body = new ArrayList<>();
 
         for (int i = 0 ; i < this.header.size() ; i++) {
-        	this.body.add(new HashSet<String>());
+        	this.body.add(new HashSet<>());
         }
     }
+
+    protected abstract void updateProperties();
 
     protected abstract void initializeHeader();
 
@@ -151,12 +159,12 @@ abstract class ModelDataAbstract implements ModelData {
     }
     
     @Override
-    public List<AbstractParameterNode> parse(ParametersParentNode node) {
-    	List<AbstractParameterNode> list = new ArrayList<>();
+    public List<BasicParameterNode> parse(IParametersParentNode node) {
+    	List<BasicParameterNode> list = new ArrayList<>();
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
         	List<ChoiceNode> choices = new ArrayList<>();
-        	DataType type = DataTypeFactory.create();
+        	DataType type = DataTypeFactory.create(false);
 
             int j = 0;
             for (String choice : this.body.get(i)) {
@@ -169,14 +177,14 @@ abstract class ModelDataAbstract implements ModelData {
                 choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
             
-            AbstractParameterNode parameter;
+            BasicParameterNode parameter;
             
             if (node instanceof MethodNode) {
-            	parameter = new MethodParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
             } else if (node instanceof ClassNode) {
-            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else if (node instanceof RootNode) {
-            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
             } else {
             	throw new IllegalArgumentException("The node type is not supported.");
             }

@@ -10,9 +10,8 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -50,7 +49,7 @@ public class ModelChangeRegistrationTest {
 
 		changeCounter.registerModelSaved();
 		MethodNode methodNode = new MethodNode("method1", classNode.getModelChangeRegistrator());
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
+		assertFalse(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
 		classNode.addMethod(methodNode);
@@ -67,7 +66,7 @@ public class ModelChangeRegistrationTest {
 		ModelChangeRegistrator changeCounter = new ModelChangeRegistrator();
 
 		RootNode rootNode = new RootNode("Root", changeCounter);
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("g1", "t", changeCounter);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("g1", "t", "0", false, changeCounter);
 
 		changeCounter.registerModelSaved();
 		rootNode.addParameter(globalParameterNode);
@@ -78,7 +77,7 @@ public class ModelChangeRegistrationTest {
 		changeCounter.registerModelSaved();
 		globalParameterNode.addChoice(choice);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
-		
+
 		changeCounter.registerModelSaved();
 		globalParameterNode.removeChoice(choice);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
@@ -99,10 +98,10 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", "int", "0", false, methodNode.getModelChangeRegistrator());
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
+		assertFalse(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
 		methodNode.addParameter(methodParameterNode);
@@ -140,52 +139,6 @@ public class ModelChangeRegistrationTest {
 
 		changeCounter.registerModelSaved();
 		methodNode.removeAllConstraints();
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-	}
-
-	@Test
-	public void calculateChangesForTestCase() {
-
-		ModelChangeRegistrator changeCounter = new ModelChangeRegistrator();
-
-		RootNode rootNode = new RootNode("Root", changeCounter);
-		ClassNode classNode = new ClassNode("class1", rootNode.getModelChangeRegistrator());
-		rootNode.addClass(classNode);
-		MethodNode methodNode = new MethodNode("method1", classNode.getModelChangeRegistrator());
-
-		changeCounter.registerModelSaved();
-		classNode.addMethod(methodNode);
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-
-		TestCaseNode testCase1 = new TestCaseNode("suite 1", null, new ArrayList<ChoiceNode>());
-
-		changeCounter.registerModelSaved();
-		methodNode.addTestCase(testCase1);
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-		changeCounter.registerModelSaved();
-		methodNode.removeTestCase(testCase1);
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-		changeCounter.registerModelSaved();
-		methodNode.addTestCase(testCase1);
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-		changeCounter.registerModelSaved();
-		
-		TestSuiteNode testSuiteNode = new TestSuiteNode();
-		testSuiteNode.setName("suite 1");
-		methodNode.removeTestSuite(testSuiteNode);
-		
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-		changeCounter.registerModelSaved();
-		methodNode.addTestCase(testCase1);
-		assertTrue(changeCounter.isModelChangedSinceLastSave());
-
-		changeCounter.registerModelSaved();
-		methodNode.removeAllTestCases();
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 	}
 

@@ -38,12 +38,7 @@ public enum ENodeType {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			return null;
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return null;
 		}
 
@@ -59,6 +54,11 @@ public enum ENodeType {
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
+			return null;
+		}
+
+		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
 			return null;
 		}
 	}

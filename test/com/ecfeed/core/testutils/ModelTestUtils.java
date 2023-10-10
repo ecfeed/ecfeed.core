@@ -20,19 +20,20 @@ import com.ecfeed.core.model.*;
 
 public class ModelTestUtils {
 
-	public static void assertElementsEqual(AbstractNode n, AbstractNode n1) {
+	public static void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
 		ModelStringifier stringifier = new ModelStringifier();
-		if(n.isMatch(n1) == false){
-			fail("Parsed element differs from original\n" + stringifier.stringify(n, 0) + "\n" + stringifier.stringify(n1, 0));
+		if(!n.isMatch(n1)){
+			String message = "Parsed element differs from original\n" + stringifier.stringify(n, 0) + "\n" + stringifier.stringify(n1, 0);
+			fail(message);
 		}
 	}
 
-	public static void assertCollectionsEqual(Collection<? extends AbstractNode> col1, Collection<? extends AbstractNode> col2){
+	public static void assertCollectionsEqual(Collection<? extends IAbstractNode> col1, Collection<? extends IAbstractNode> col2){
 		if(col1.size() != col2.size()){
 			fail("Parsed collection differs from original\n" + col1 + "\n" + col2);
 		}
-		List<AbstractNode> l1 = new ArrayList<>(col1);
-		List<AbstractNode> l2 = new ArrayList<>(col2);
+		List<IAbstractNode> l1 = new ArrayList<>(col1);
+		List<IAbstractNode> l2 = new ArrayList<>(col2);
 		for(int i = 0; i < col1.size(); ++i){
 			if(l1.get(i).isMatch(l2.get(i)) == false){
 				fail("Parsed collection differs from original at element " + i +"\n" + l1.get(i) + "\n" + l2.get(i));
@@ -40,7 +41,7 @@ public class ModelTestUtils {
 		}
 	}
 
-	public static AbstractNode getNode(ENodeType type, String name){
+	public static IAbstractNode getNode(ENodeType type, String name){
 		switch(type){
 		case CHOICE: return new ChoiceNode(name, "value", null);
 		case CLASS: return new ClassNode(name, null);
@@ -54,9 +55,9 @@ public class ModelTestUtils {
 						null),
 				null);
 		case METHOD: return new MethodNode(name, null);
-		case PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
-		case METHOD_PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
-		case GLOBAL_PARAMETER: return new GlobalParameterNode(name, "int", null);
+		case PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
+		case METHOD_PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
+		case GLOBAL_PARAMETER: return new BasicParameterNode(name, "int", "0", false, null);
 		case PROJECT: return new RootNode(name, null);
 		case TEST_CASE: return new TestCaseNode(name, null, new ArrayList<ChoiceNode>());
 		}

@@ -12,13 +12,19 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeOfLink;
+import com.ecfeed.core.model.NodeMapper.MappingDirection;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -28,16 +34,19 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
-	private MethodParameterNode fLeftParameter;
+	private BasicParameterNode fLeftParameter;
+	private CompositeParameterNode fLeftParameterLinkingContext;
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
 	public static RelationStatement createRelationStatementWithLabelCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			String label) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new LabelCondition(label, relationStatement);
 		relationStatement.setCondition(condition);
@@ -46,11 +55,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithChoiceCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			ChoiceNode choiceNode) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement =
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
 
@@ -60,13 +71,17 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
-			MethodParameterNode rightParameter) {
+			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
-		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+		IStatementCondition condition = 
+				new ParameterCondition(rightParameter, rightParameterLinkingContext, relationStatement);
 
 		relationStatement.setCondition(condition);
 
@@ -74,11 +89,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithValueCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			String textValue) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new ValueCondition(textValue, relationStatement);
 		relationStatement.setCondition(condition);
@@ -87,13 +104,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	protected RelationStatement(
-			MethodParameterNode parameter, 
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkinContext,
 			EMathRelation relation, 
 			IStatementCondition condition) {
 
-		super(parameter.getModelChangeRegistrator());
+		super(leftParameter.getModelChangeRegistrator());
 
-		fLeftParameter = parameter;
+		fLeftParameter = leftParameter;
+		fLeftParameterLinkingContext = leftParameterLinkinContext;
 		fRelation = relation;
 		fRightCondition = condition;
 	}
@@ -154,15 +173,29 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public String getLeftParameterName() {
+	public String getLeftOperandName() {
 
-		return getLeftParameter().getName();
+		BasicParameterNode leftParameter = getLeftParameter();
+		CompositeParameterNode linkingContext = getLeftParameterLinkingContext();
+
+		String nameInIntrLanguage = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
+						linkingContext,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						leftParameter,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM, buf statement editor requires full path 
+						Decorations.NO,
+						TypeIncluded.NO,
+						new ExtLanguageManagerForJava());
+
+		return nameInIntrLanguage;
 	}
 
 	@Override
 	public String toString() {
 
-		return getLeftParameterName() + getRelation() + fRightCondition.toString();
+		return createSignature(new ExtLanguageManagerForJava());
 	}
 
 	@Override
@@ -170,10 +203,25 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
 
-		MethodParameterNode methodParameterNode = getLeftParameter();
-		String parameterName = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+		BasicParameterNode leftBasicParameterNode = getLeftParameter();
+		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
 
-		return parameterName + getRelation() + conditionSignature;
+		String signatureNew = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithLinkNewStandard(
+						leftParameterLinkingCondition,
+						ExtendedName.PATH_TO_TOP_CONTAINTER,
+						TypeOfLink.NORMAL,
+						leftBasicParameterNode,
+						ExtendedName.PATH_TO_TOP_CONTAINTER, // was PATH_TO_TOP_CONTAINTER_WITHOUT_TOP_LINKED_ITEM but display of signatures should be? with full paths
+						Decorations.NO,
+						TypeIncluded.NO,
+						extLanguageManager);
+
+		//		String parameterName = 
+		//				AbstractParameterSignatureHelper.getQualifiedName(
+		//						leftBasicParameterNode, leftParameterLinkingCondition, extLanguageManager);
+
+		return signatureNew + getRelation() + conditionSignature;
 	}
 
 	@Override
@@ -183,29 +231,80 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement makeClone() {
+	public RelationStatement makeClone(Optional<NodeMapper> mapper) {
 
-		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.makeClone());
+		if (mapper.isPresent()) {
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(fLeftParameter);
+
+			RelationStatement clonedStatement = 
+					new RelationStatement(clonedParameter, fLeftParameterLinkingContext, fRelation, null);
+
+			IStatementCondition clonedCondition = fRightCondition.makeClone(clonedStatement, mapper);
+			clonedStatement.setCondition(clonedCondition);
+
+			return clonedStatement;
+		}
+
+		RelationStatement relationStatement = new RelationStatement(
+				fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
+
+		return relationStatement;
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public void replaceReferences(NodeMapper nodeMapper, MappingDirection mappingDirection) {
 
-		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
+		fLeftParameter = nodeMapper.getMappedNode(fLeftParameter, mappingDirection); 
+		fLeftParameterLinkingContext  = nodeMapper.getMappedNode(fLeftParameterLinkingContext, mappingDirection);
 
-		if (tmpParameterNode != null) {
-
-			if (!tmpParameterNode.isExpected()) {
-				if (fRightCondition.updateReferences(methodNode)) {
-					fLeftParameter = tmpParameterNode;
-					return true;
-				}
-			} else {
-				return true;
-			}
-		}
-		return false;
+		fRightCondition.replaceReferences(nodeMapper, mappingDirection);
 	}
+
+	@Override
+	public RelationStatement makeClone() {
+
+		return 
+				new RelationStatement(
+						fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
+	}
+
+	@Override
+	public RelationStatement createCopy(NodeMapper mapper) {
+
+		BasicParameterNode parameter = mapper.getDestinationNode(fLeftParameter);
+
+		RelationStatement statement = 
+				new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);
+
+		IStatementCondition condition = fRightCondition.createCopy(statement, mapper);
+		statement.setCondition(condition);
+
+		return statement;
+	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fLeftParameter);
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
+	//						compositeName, parent);
+	//
+	//		if (basicParameterNode == null) {
+	//			return false;
+	//		}
+	//
+	//		if (basicParameterNode.isExpected()) {
+	//			return true;
+	//		}
+	//
+	//				if (fRightCondition.updateReferences(parent)) {
+	//					fLeftParameter = basicParameterNode;
+	//				}
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement) {
@@ -251,13 +350,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(AbstractParameterNode parameter, String label) {
 
 		return getLeftParameter() == parameter && getConditionValue().equals(label);
 	}
 
 	@Override
-	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(AbstractParameterNode parameter) {
 
 		if (!(parameter.isMatch(fLeftParameter))) {
 			return false;
@@ -279,8 +378,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		MethodNode methodNode = fLeftParameter.getMethod();
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		IParametersParentNode methodNode = (IParametersParentNode) fLeftParameter.getParent();
+		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;
@@ -295,8 +394,14 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 
-	public MethodParameterNode getLeftParameter(){
+	@Override
+	public BasicParameterNode getLeftParameter() {
 		return fLeftParameter;
+	}
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return fLeftParameterLinkingContext;
 	}
 
 	public void setCondition(IStatementCondition condition) {
@@ -305,9 +410,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			ParameterCondition parameterCondition = (ParameterCondition)condition;
 
-			MethodParameterNode rightParameter = parameterCondition.getRightParameterNode();
+			BasicParameterNode rightParameter = parameterCondition.getRightParameterNode();
 
-			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
+			BasicParameterNode leftParameter = getLeftParameter();
+			String leftParameterType =  leftParameter.getType();
+
+			if (!RelationStatementHelper.isRightParameterTypeAllowed(rightParameter.getType(), leftParameterType)) {
 				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
 			}
 		}
@@ -323,7 +431,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		fRightCondition = new ChoiceCondition(choice, this);
 	}
 
-	public void setCondition(MethodParameterNode parameter, ChoiceNode choice) {
+	public void setCondition(BasicParameterNode parameter, ChoiceNode choice) {
 		fRightCondition = new ChoiceCondition(choice, this);
 	}
 
@@ -347,55 +455,55 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public List<ChoiceNode> getChoices() {
 		return fRightCondition.getChoices();
 	}
-	
+
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return fRightCondition.getChoices(methodParameterNode);
 	}
 
-	public boolean isRightParameterTypeAllowed(String rightParameterType) {
-
-		MethodParameterNode leftParameter = getLeftParameter();
-		String leftParameterType =  leftParameter.getType();
-
-		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
-				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
-				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-
-			return false;
-		}
-
-		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
-				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
-				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-
-			return false;
-		}
-
-		return true;
-	}
+	//	public boolean isRightParameterTypeAllowed(String rightParameterType) {
+	//
+	//		BasicParameterNode leftParameter = getLeftParameter();
+	//		String leftParameterType =  leftParameter.getType();
+	//
+	//		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+	//				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+	//				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
+	//				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
+	//				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
+	//				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
+	//				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+	//
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
@@ -452,41 +560,41 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		fRightCondition = choiceCondition;
 	}
-	
+
 	private void convertChoicePartToLabelPart(
 			IParameterConversionItemPart srcPart,
 			IParameterConversionItemPart dstPart) {
-		
+
 		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
-		
+
 		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
 				(ParameterConversionItemPartForChoice) srcPart;
-		
+
 		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
 		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
-		
-		
+
+
 		if (!choiceOfCondition.equals(choiceOfItemPart)) {
 			return;
 		}
-		
+
 		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
 				(ParameterConversionItemPartForLabel) dstPart;
-		
+
 		String label = parameterConversionItemPartForLabel.getLabel();
-		
+
 		LabelCondition labelCondition = new LabelCondition(label, this);
 
 		fRightCondition = labelCondition;
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return fRightCondition.mentionsChoiceOfParameter(parameter);
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
 
@@ -499,5 +607,42 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return result;
 	}
 
+	@Override
+	public boolean isConsistent(IParametersAndConstraintsParentNode parentMethodNode) {
+
+		if (!BasicParameterNodeHelper.isParameterOfConstraintConsistent(
+				fLeftParameter, fLeftParameterLinkingContext, parentMethodNode)) {
+
+			return false;
+		}
+
+		if (!fRightCondition.isConsistent(parentMethodNode)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourceParameter = getLeftParameter();
+	//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+	//
+	//		IStatementCondition sourceCondition = getCondition();
+	//		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
+	//
+	//		EMathRelation sourceRelation = getRelation();
+	//
+	//		RelationStatement deployedRelationStatement =
+	//				new RelationStatement(
+	//						deployedParameter,
+	//						sourceRelation,
+	//						deployedStatementCondition);
+	//
+	//		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
+	//
+	//		return deployedRelationStatement;
+	//	}
 }
 

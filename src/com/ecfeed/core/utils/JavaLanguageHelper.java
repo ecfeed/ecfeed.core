@@ -16,10 +16,26 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterBaseForUserType;
+import com.ecfeed.core.type.adapter.TypeAdapterForBoolean;
+import com.ecfeed.core.type.adapter.TypeAdapterForByte;
+import com.ecfeed.core.type.adapter.TypeAdapterForChar;
+import com.ecfeed.core.type.adapter.TypeAdapterForDouble;
+import com.ecfeed.core.type.adapter.TypeAdapterForFloat;
+import com.ecfeed.core.type.adapter.TypeAdapterForInt;
+import com.ecfeed.core.type.adapter.TypeAdapterForLogical;
+import com.ecfeed.core.type.adapter.TypeAdapterForLong;
+import com.ecfeed.core.type.adapter.TypeAdapterForNumber;
+import com.ecfeed.core.type.adapter.TypeAdapterForShort;
+import com.ecfeed.core.type.adapter.TypeAdapterForString;
+import com.ecfeed.core.type.adapter.TypeAdapterForText;
+import com.ecfeed.core.type.adapter.TypeAdapterHelper;
 import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 
 public final class JavaLanguageHelper {
 
+	private static final char UNDERLINE_CHAR = '_';
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
 	public static final String TYPE_NAME_BYTE = "byte";
 	public static final String TYPE_NAME_CHAR = "char";
@@ -109,14 +125,15 @@ public final class JavaLanguageHelper {
 
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
-	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
-	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
+	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier";
 	public static final String NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS = "Name must not contain only underline characters.";
+
+	private static final String REGEX_OF_SIMPLIFIED_IDENTIFIER = "[A-Za-z0-9_]*";
 
 	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains(" ")) {
-			return SPACES_ARE_NOT_ALLOWED_IN_NAME;
+			return "Spaces are not allowed in name: " + name;
 		}
 
 		return null;
@@ -125,7 +142,16 @@ public final class JavaLanguageHelper {
 	public static String verifySeparatorsInText(String text) {
 
 		if (text.contains(" ")) {
-			return SPACES_ARE_NOT_ALLOWED_IN_NAME;
+
+			String trimmedText = StringHelper.cutToMaxSize(text, 60);
+
+			String finishingTag = "";
+
+			if (trimmedText.length() < text.length()) {
+				finishingTag = "...";
+			}
+
+			return "Spaces are not allowed in text: " + trimmedText + finishingTag;
 		}
 
 		return null;
@@ -180,7 +206,7 @@ public final class JavaLanguageHelper {
 	public static void verifyIsValidJavaIdentifier(String name) {
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
+			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER + " - " + name + ".");
 		}
 	}
 
@@ -1483,6 +1509,33 @@ public final class JavaLanguageHelper {
 		return packageName + "." + nonQualifiedName;
 	}
 
+	public static String correctJavaIdentifier(String identifier) {
+
+		String result = identifier;
+
+		result = replaceInvalidCharacters(result);
+
+		result = StringHelper.replaceAllSubstrings(result, "__", "_");
+
+		result = StringHelper.trimmStringByCharacter(result, UNDERLINE_CHAR);
+
+		return result;
+	}
+
+	private static String replaceInvalidCharacters(String result) {
+
+		for (int index = 0; index < result.length(); index++) {
+
+			String substr = result.substring(index, index + 1);
+
+			if (!RegexHelper.stringMatchesRegex(substr, REGEX_OF_SIMPLIFIED_IDENTIFIER)) {
+				result = StringHelper.replaceCharacterInString(result, UNDERLINE_CHAR, index);
+			}
+		}
+
+		return result;
+	}
+
 	public static String checkCompatibilityWithSimpleMode(String name) {
 
 		if (StringHelper.containsOnly('_', name)) {
@@ -1551,6 +1604,45 @@ public final class JavaLanguageHelper {
 
 		ExceptionHelper.reportRuntimeException("Invalid java type cathegory.");
 		return null;
+	}
+
+	public static ITypeAdapter<?> getTypeAdapter(String type) {
+		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
+			type = TypeAdapterHelper.USER_TYPE;
+		}
+		switch(type){
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
+			return new TypeAdapterForBoolean();
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
+			return new TypeAdapterForByte();
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
+			return new TypeAdapterForChar();
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
+			return new TypeAdapterForDouble();
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
+			return new TypeAdapterForFloat();
+		case JavaLanguageHelper.TYPE_NAME_INT:
+			return new TypeAdapterForInt();
+		case JavaLanguageHelper.TYPE_NAME_LONG:
+			return new TypeAdapterForLong();
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
+			return new TypeAdapterForShort();
+		case JavaLanguageHelper.TYPE_NAME_STRING:
+			return new TypeAdapterForString();
+		case SimpleLanguageHelper.TYPE_NAME_TEXT:
+			return new TypeAdapterForText();
+		case SimpleLanguageHelper.TYPE_NAME_NUMBER:
+			return new TypeAdapterForNumber();
+		case SimpleLanguageHelper.TYPE_NAME_LOGICAL:
+			return new TypeAdapterForLogical();
+		default:
+			return getTypeAdapterBaseForUserType(type);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {
+		return new TypeAdapterBaseForUserType(type);
 	}
 
 }

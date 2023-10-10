@@ -12,55 +12,60 @@ package com.ecfeed.core.operations;
 
 import java.util.Collection;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericAddChildrenOperation extends BulkOperation {
+public class GenericAddChildrenOperation extends CompositeOperation {
 
 	public GenericAddChildrenOperation(
-			AbstractNode target, 
-			Collection<? extends AbstractNode> children, 
-			ITypeAdapterProvider adapterProvider, 
+			IAbstractNode target, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
-		
-		this(target, children, -1, adapterProvider, validate, extLanguageManager);
+
+		this(target, childrenToAdd, -1, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
-			AbstractNode target, 
-			Collection<? extends AbstractNode> children, 
+			IAbstractNode target, 
+			Collection<? extends IAbstractNode> childrenToAdd, 
 			int index, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
 
-		for (AbstractNode child : children) {
-			IModelOperation operation;
+		for (IAbstractNode child : childrenToAdd) {
+
 			try {
-				if (index != -1) {
-					operation = 
-							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(
-											child, index++, adapterProvider, validate, getExtLanguageManager()));
-				} else {
-					operation = 
-							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(child, adapterProvider, validate, getExtLanguageManager()));
-				}
+				IModelOperation operation = createAddOperation(child, index, target, validate);
+
 				if (operation != null) {
 					addOperation(operation);
 				}
 			} catch (Exception e) {
 				LogHelperCore.logCatch(e);}
+
+			index++;
 		}
 	}
 
+	private IModelOperation createAddOperation(
+			IAbstractNode child, 
+			int index,
+			IAbstractNode target,
+			boolean validate) throws Exception {
+
+		AddChildOperationCreator addChildOperationCreator = 
+				new AddChildOperationCreator(child, index, validate, getExtLanguageManager());
+
+		IModelOperation operation = (IModelOperation)target.accept(addChildOperationCreator);
+
+		return operation;
+	}
+
 	public boolean enabled(){
-		return operations().isEmpty() == false;
+		return getOperations().isEmpty() == false;
 	}
 }

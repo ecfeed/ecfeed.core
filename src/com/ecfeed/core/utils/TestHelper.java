@@ -1,5 +1,16 @@
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.ChoiceCondition;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.IStatementCondition;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.RelationStatement;
+
 public class TestHelper {
 
 	public static void checkExceptionMessage(Exception e, String... expectedItems) { 
@@ -35,4 +46,82 @@ public class TestHelper {
 		}
 	}
 
+	public static void addSimpleChoiceConstraintToMethod(
+			MethodNode methodNode,
+			String constraintName,
+			BasicParameterNode methodParameterNode,
+			ChoiceNode choiceNode1,
+			ChoiceNode choiceNode2) {
+
+		RelationStatement relationStatement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode, null, EMathRelation.EQUAL, choiceNode1);
+
+		RelationStatement relationStatement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode, null, EMathRelation.LESS_THAN, choiceNode2);
+
+		Constraint constraint = new Constraint(
+				constraintName, 
+				ConstraintType.EXTENDED_FILTER, 
+				relationStatement1, 
+				relationStatement2, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+	}
+
+	public static ChoiceNode getChoiceNodeFromConstraintPrecondition(
+			MethodNode methodNode, 
+			int constraintIndex) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		ChoiceNode choiceNode = getChoiceNodeFromChoiceCondition(precondition);
+
+		return choiceNode;
+	}
+
+	public static ChoiceNode getChoiceNodeFromConstraintPrecondition(
+			MethodNode methodNode) {
+
+		return getChoiceNodeFromConstraintPrecondition( methodNode, 0);
+	}
+
+
+	public static ChoiceNode getChoiceNodeFromChoiceCondition(AbstractStatement abstractStatement) {
+
+		RelationStatement relationStatement = (RelationStatement)abstractStatement; 
+
+		IStatementCondition statementCondition = relationStatement.getCondition();
+
+		ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
+
+		ChoiceNode choiceNode = choiceCondition.getRightChoice();
+
+		return choiceNode;
+	}
+
+	public static ChoiceNode getChoiceNodeFromConstraintPostcondition(
+			MethodNode methodNode, int constraintIndex) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		ChoiceNode choiceNode = TestHelper.getChoiceNodeFromChoiceCondition(postcondition);
+
+		return choiceNode;
+	}
+
+	public static ChoiceNode getChoiceNodeFromConstraintPostcondition(MethodNode methodNode) {
+
+		return getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+	}
+	
 }
+

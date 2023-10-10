@@ -41,8 +41,7 @@ public class CsvExportTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-		final String FORMAT_CSV = "CSV";
-		return FORMAT_CSV;
+		return "Template - CSV";
 	}
 
 	private static String createDefaultHeaderTemplate(int methodParametersCount) {

@@ -20,12 +20,12 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelTestHelper;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
@@ -35,68 +35,73 @@ import com.ecfeed.core.utils.XmlComparator;
 
 public class ModelPartialSerializerTest {
 
-	@Test
-	public void shouldSerializePartially1() throws Exception {
-
-		String xml = prepareSourceXml1();
-
-		RootNode rootNode = ModelTestHelper.createModel(xml);
-		ClassNode classNode = rootNode.getClasses().get(0);
-		MethodNode methodNode = classNode.getMethods().get(0);
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(0);
-		ChoiceNode choiceNode = methodParameterNode.getChoices().get(0);
-
-		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
-		allowedChoices.add(choiceNode);
-		List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
-		domain.add(allowedChoices);
-
-		OutputStream outputStream = new ByteArrayOutputStream();
-
-		ModelPartialSerializer modelPartialSerializer = 
-				new ModelPartialSerializer(
-						outputStream, 
-						ModelVersionDistributor.getCurrentSoftwareVersion());
-
-		modelPartialSerializer.serializeModelPartForGenerator(methodNode, domain, null, false, false);
-
-		String resultXml = outputStream.toString();
-		String expectedResultXml = prepareResultXml1();
-
-		assertTrue(XmlComparator.areXmlsEqual(expectedResultXml, resultXml));
-	}
+		@Test
+		public void shouldSerializePartially1() throws Exception {
+	
+			String xml = prepareSourceXml1();
+	
+			RootNode rootNode = ModelTestHelper.createModel(xml);
+			ClassNode classNode = rootNode.getClasses().get(0);
+			MethodNode methodNode = classNode.getMethods().get(0);
+			BasicParameterNode methodParameterNode = (BasicParameterNode) methodNode.getMethodParameter(0);
+			ChoiceNode choiceNode = methodParameterNode.getChoices().get(0);
+	
+			List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
+			allowedChoices.add(choiceNode);
+			List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
+			domain.add(allowedChoices);
+	
+			OutputStream outputStream = new ByteArrayOutputStream();
+	
+			ModelPartialSerializer modelPartialSerializer = 
+					new ModelPartialSerializer(
+							outputStream, 
+							ModelVersionDistributor.getCurrentSoftwareVersion());
+	
+			modelPartialSerializer.serializeModelPartForGenerator(methodNode, domain, null, false, false);
+	
+			String resultXml = outputStream.toString();
+			String expectedResultXml = prepareExpectedResultXml1();
+	
+			assertTrue(XmlComparator.areXmlsEqual(expectedResultXml, resultXml));
+		}
 
 	private String prepareSourceXml1() {
 
 		StringBuilder sb = new StringBuilder(); 
 
-		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='3'>");
-		sb.append("    <Class name='com.example.test.TestClass1'>");
-		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
-		sb.append("                <Choice name='localChoice1' value='1' isRandomized='false'/>");
-		sb.append("                <Choice name='localChoice2' value='2' isRandomized='false'/>");
-		sb.append("            </Parameter>");
-		sb.append("            <TestCase testSuite='default suite'>");
-		sb.append("                <TestParameter choice='localChoice1'/>");
-		sb.append("            </TestCase>");
-		sb.append("        </Method>");
-		sb.append("        <Method name='testMethod2'>");
-		sb.append("            <Parameter name='arg1' type='byte' isExpected='false' expected='0' linked='false'>");
-		sb.append("            </Parameter>");
-		sb.append("        </Method>");
-		sb.append("    </Class>");
-		sb.append("    <Class name='com.example.test.TestClass2'>");
-		sb.append("    </Class>");
-		sb.append("</Model>");
+		sb.append("<?xml version='1.0' encoding='UTF-8'?>\n");
+		sb.append("<Model name='PartialSerializerTest' version='3'>\n");
+		sb.append("    <Class name='com.example.test.TestClass1'>\n");
+		sb.append("        <Method name='testMethod1'>\n");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>\n");
+		sb.append("                <Choice name='localChoice1' value='1' isRandomized='false'/>\n");
+		sb.append("                <Choice name='localChoice2' value='2' isRandomized='false'/>\n");
+		sb.append("            </Parameter>\n");
+		
+		sb.append("            <Deployment>\n");
+		sb.append("                <Parameter pathOfParameter='arg1'/>\n");
+		sb.append("            </Deployment>\n");
+		
+		sb.append("            <TestCase testSuite='default suite'>\n");
+		sb.append("                <TestParameter choice='localChoice1'/>\n");
+		sb.append("            </TestCase>\n");
+		sb.append("        </Method>\n");
+		sb.append("        <Method name='testMethod2'>\n");
+		sb.append("            <Parameter name='arg1' type='byte' isExpected='false' expected='0' linked='false'>\n");
+		sb.append("            </Parameter>\n");
+		sb.append("        </Method>\n");
+		sb.append("    </Class>\n");
+		sb.append("    <Class name='com.example.test.TestClass2'>\n");
+		sb.append("    </Class>\n");
+		sb.append("</Model>\n");
 
 		String xml = sb.toString();
 		xml = xml.replace("'", "\"");
 		return xml;
 	}
 
-	private String prepareResultXml1() {
+	private String prepareExpectedResultXml1() {
 
 		StringBuilder sb = new StringBuilder(); 
 
@@ -107,6 +112,11 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='localChoice1' value='1' isRandomized='false'/>");
 		sb.append("            </Parameter>");
+		
+		sb.append("            <Deployment>\n");
+		sb.append("                <Parameter pathOfParameter='arg1'/>\n");
+		sb.append("            </Deployment>\n");
+		
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("</Model>");
@@ -124,9 +134,9 @@ public class ModelPartialSerializerTest {
 		RootNode rootNode = ModelTestHelper.createModel(xml);
 		ClassNode classNode = rootNode.getClasses().get(1);
 		MethodNode methodNode = classNode.getMethods().get(1);
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = (BasicParameterNode) methodNode.getMethodParameter(0);
 		ChoiceNode choiceNode1 = methodParameterNode1.getChoices().get(1);
-		MethodParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode) methodNode.getMethodParameter(1);
 		ChoiceNode choiceNode2 = methodParameterNode2.getChoices().get(1);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
@@ -218,7 +228,7 @@ public class ModelPartialSerializerTest {
 
 		ClassNode classNode = rootNode.getClasses().get(0);
 		MethodNode methodNode = classNode.getMethods().get(0);
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = (BasicParameterNode) methodNode.getMethodParameter(0);
 
 		List<ChoiceNode> choicesFromSource = methodParameterNode1.getChoices();
 		ChoiceNode choiceNode2 = choicesFromSource.get(1); 
@@ -253,7 +263,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='arg1' type='int'>");
@@ -279,7 +289,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='arg1' type='int'>");
@@ -303,10 +313,10 @@ public class ModelPartialSerializerTest {
 		ClassNode classNode = rootNode.getClasses().get(0);
 		MethodNode methodNode = classNode.getMethods().get(0);
 
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = (BasicParameterNode) methodNode.getMethodParameter(0);
 		ChoiceNode choiceNode1 = methodParameterNode1.getChoices().get(0);
 
-		MethodParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode) methodNode.getMethodParameter(1);
 		ChoiceNode choiceNode2 = methodParameterNode2.getChoices().get(0);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
@@ -338,8 +348,8 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
-		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1:arg11'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg01'/>");
+		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:com.example.test.TestClass1:arg11'/>");
 		sb.append("        </Method>");
 		sb.append("        <Parameter name='arg11' type='int'>");
 		sb.append("            <Choice name='choice111' value='0' isRandomized='false'/>");
@@ -371,8 +381,8 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
-		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='com.example.test.TestClass1:arg11'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:arg01'/>");
+		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:com.example.test.TestClass1:arg11'/>");
 		sb.append("        </Method>");
 		sb.append("        <Parameter name='arg11' type='int'>");
 		sb.append("            <Choice name='choice111' value='0' isRandomized='false'/>");
@@ -471,7 +481,8 @@ public class ModelPartialSerializerTest {
 
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
 		List<ChoiceNode> allowedChoices = constraintNode.getListOfChoices();
-		allowedChoices.add(methodNode.getParameter(1).getChoices().get(0));
+		BasicParameterNode parameter = (BasicParameterNode) methodNode.getParameter(1);
+		allowedChoices.add(parameter.getChoices().get(0));
 
 		List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
 		domain.add(allowedChoices);
@@ -578,7 +589,8 @@ public class ModelPartialSerializerTest {
 
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(1);
 		List<ChoiceNode> allowedChoices = constraintNode.getListOfChoices();
-		allowedChoices.add(methodNode.getParameter(1).getChoices().get(0));
+		BasicParameterNode parameter = (BasicParameterNode) methodNode.getParameter(1);
+		allowedChoices.add(parameter.getChoices().get(0));
 
 		List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
 		domain.add(allowedChoices);
@@ -690,8 +702,13 @@ public class ModelPartialSerializerTest {
 		allowedConstraints.add(constraintNode.getConstraint());
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
-		allowedChoices.add(methodNode.getParameter(0).getChoices().get(0));
-		allowedChoices.add(methodNode.getParameter(1).getChoices().get(0));
+
+		BasicParameterNode parameter0 = (BasicParameterNode) methodNode.getParameter(0);
+		allowedChoices.add(parameter0.getChoices().get(0));
+
+		BasicParameterNode parameter1 = (BasicParameterNode) methodNode.getParameter(1);
+		allowedChoices.add(parameter1.getChoices().get(0));
+
 		List<List<ChoiceNode>> domain = new ArrayList<List<ChoiceNode>>();
 		domain.add(allowedChoices);
 
@@ -757,11 +774,13 @@ public class ModelPartialSerializerTest {
 		MethodNode methodNode = classNode.getMethods().get(0);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
-		ChoiceNode globalChoice1 = methodNode.getParameter(0).getChoices().get(0);
+
+		BasicParameterNode parameter0 = (BasicParameterNode) methodNode.getParameter(0);
+		ChoiceNode globalChoice1 = parameter0.getChoices().get(0);
 		ChoiceNode choice1 = globalChoice1.getChoices().get(0);
 		allowedChoices.add(choice1);
 
-		ChoiceNode globalChoice2 = methodNode.getParameter(0).getChoices().get(1);
+		ChoiceNode globalChoice2 = parameter0.getChoices().get(1);
 		ChoiceNode choice2 = globalChoice2.getChoices().get(1);
 		allowedChoices.add(choice2);
 
@@ -792,7 +811,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'>");
 		sb.append("                <Choice name='choice11' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
 		sb.append("        </Method>");
@@ -822,7 +841,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'/>");
 		sb.append("        </Method>");
 		sb.append("    </Class>");
 		sb.append("    <Parameter name='globalArg1' type='int'>");
@@ -877,7 +896,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'>");
 		sb.append("                <Choice name='choice11' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint'>");
@@ -910,7 +929,7 @@ public class ModelPartialSerializerTest {
 		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
-		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
+		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='@PartialSerializerTest:globalArg1'/>");
 		sb.append("            <Constraint name='constraint' type=\"EF\">");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='equal'/>");

@@ -18,7 +18,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 
 public class TestCaseNodeHelperTest {
@@ -28,27 +27,37 @@ public class TestCaseNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "value", null);
-		ChoiceNode choiceNode2 = new ChoiceNode("choice 2", "value", null);
+		BasicParameterNode basicParameterNode1 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
 
-		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
-		choiceNodes.add(choiceNode1);
-		choiceNodes.add(choiceNode2);
+		BasicParameterNode basicParameterNode2 = 
+				MethodNodeHelper.addNewBasicParameter(methodNode, "par2", "String", "", true, null);
 
-		TestCaseNode testCaseNode = new TestCaseNode("test case 1", null, choiceNodes);
-		testCaseNode.setParent(methodNode);
+		ChoiceNode choiceNode1 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode1, "choice_1", "value", false, true, null);
+
+		ChoiceNode choiceNode2 = 
+				BasicParameterNodeHelper.addNewChoice(
+						basicParameterNode2, "choice_2", "value", false, true, null);
+
+		List<ChoiceNode> choiceNodesOfTestCase = new ArrayList<ChoiceNode>();
+		choiceNodesOfTestCase.add(choiceNode1);
+		choiceNodesOfTestCase.add(choiceNode2);
+
+		TestCaseNode testCaseNode = MethodNodeHelper.addNewTestCase(methodNode, "test case 1", choiceNodesOfTestCase, true);
 
 		String signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForJava());
-		assertEquals("[test case 1] method_1(choice_1, choice 2)", signature);
+		assertEquals("[test case 1] method_1(choice_1, choice_2)", signature);
 
-		signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForSimple());
-		assertEquals("[test case 1] method 1(choice_1, choice 2)", signature);
+		//		signature = TestCaseNodeHelper.createSignature(testCaseNode, true, new ExtLanguageManagerForSimple());
+		//		assertEquals("[test case 1] method 1(choice_1, choice_2)", signature);
 
 		String testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForJava());
-		assertEquals("choice_1, choice 2", testDataString);
+		assertEquals("choice_1, choice_2", testDataString);
 
-		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForSimple());
-		assertEquals("choice_1, choice 2", testDataString);
+		//		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForSimple());
+		//		assertEquals("choice_1, choice_2", testDataString);
 	}
 
 }

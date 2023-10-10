@@ -17,13 +17,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.ecfeed.core.model.*;
 import org.junit.Test;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.MethodDeployer;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.NodeMapper;
+import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.RegexHelper;
 
 public class RandomModelGenerator {
 
@@ -42,7 +60,7 @@ public class RandomModelGenerator {
 	public int MAX_STATEMENTS = 5;
 	public int MAX_STATEMENTS_DEPTH = 3;
 
-	public AbstractNode generateNode(ENodeType type){
+	public IAbstractNode generateNode(ENodeType type){
 		switch(type){
 		case CHOICE:
 			return generateChoice(MAX_PARTITION_LEVELS, MAX_PARTITIONS, MAX_PARTITION_LABELS, randomType(true));
@@ -66,8 +84,8 @@ public class RandomModelGenerator {
 		return null;
 	}
 
-	public RootNode generateModel(int classes){
-		String name = generateString(RegexHelper.REGEX_ROOT_NODE_NAME);
+	public RootNode generateModel(int classes) {
+		String name = generateString(/* NodeNameHelper.REGEX_ROOT_NODE_NAME */);
 
 		RootNode root = new RootNode(name, null);
 
@@ -81,14 +99,15 @@ public class RandomModelGenerator {
 
 
 	public ClassNode generateClass(int methods) {
-		String name = generateString(RegexHelper.REGEX_CLASS_NODE_NAME);
+		String name = generateString(/* NodeNameHelper.REGEX_CLASS_NODE_NAME */);
 
 		ClassNode theClass = new ClassNode(name, null);
 
-//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, "true");
-//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, "runner");
+		//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, "true");
+		//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, "runner");
 
-		for(int i = 0; i < methods; i++){
+		for (int i = 0; i < methods; i++) {
+
 			int parameters = rand.nextInt(MAX_PARAMETERS);
 			int constraints = rand.nextInt(MAX_CONSTRAINTS);
 			int testCases = rand.nextInt(MAX_TEST_CASES);
@@ -99,41 +118,47 @@ public class RandomModelGenerator {
 		return theClass;
 	}
 
-	public MethodNode generateMethod(int parameters, int constraints, int testCases){
-		String name = generateString(RegexHelper.REGEX_METHOD_NODE_NAME);
+	public MethodNode generateMethod(int parameters, int constraints, int testCases) {
 
-		MethodNode method = new MethodNode(name, null);
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, "runner");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, "false");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, "Chrome");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, "driver");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, "false");
-		method.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_START_URL, "startUrl");
+		String name = generateString(/* NodeNameHelper.REGEX_METHOD_NODE_NAME */);
+
+		MethodNode methodNode = new MethodNode(name, null);
+
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER, "runner");
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, "false");
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, "Chrome");
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, "driver");
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, "false");
+		//		methodNode.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_START_URL, "startUrl");
 
 		for (int i = 0; i < parameters; i++) {
 			boolean expected = rand.nextInt(4) < 3 ? false : true;
 			String type = randomType(true);
 
-			method.addParameter(generateParameter(type, expected,
+			methodNode.addParameter(generateParameter(type, expected,
 					rand.nextInt(MAX_PARTITION_LEVELS), rand.nextInt(MAX_PARTITIONS) + 1,
 					rand.nextInt(MAX_PARTITION_LABELS)));
 		}
 
 		for(int i = 0; i < constraints; i++){
-			method.addConstraint(generateConstraint(method));
+			methodNode.addConstraint(generateConstraint(methodNode));
 		}
 
 		for(int i = 0; i < testCases; i++){
-			method.addTestCase(generateTestCase(method));
+			methodNode.addTestCase(generateTestCase(methodNode));
 		}
 
-		return method;
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParametersWithConversionToOriginals(deployedMethodNode, methodNode, nodeMapper);
+
+		return methodNode;
 	}
 
-	public MethodParameterNode generateParameter(String type, boolean expected, int choiceLevels, int choices, int labels){
-		String name = generateString(RegexHelper.REGEX_CATEGORY_NODE_NAME);
+	public BasicParameterNode generateParameter(String type, boolean expected, int choiceLevels, int choices, int labels){
+		String name = generateString(/* NodeNameHelper.REGEX_PARAMETER_NODE_NAME */);
 
-		MethodParameterNode parameter = new MethodParameterNode(name, type, randomChoiceValue(type), expected, null);
+		BasicParameterNode parameter = new BasicParameterNode(name, type, randomChoiceValue(type), expected, null);
 
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, "X");
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, "Y");
@@ -150,21 +175,28 @@ public class RandomModelGenerator {
 	}
 
 	public TestCaseNode generateTestCase(MethodNode method){
-		String name = generateString(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
+		String name = generateTestCaseName();
 		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 
-		for(MethodParameterNode c : method.getMethodParameters()){
-			if(c.isExpected()){
-				ChoiceNode expectedValue = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, randomChoiceValue(c.getType()), null);
-				expectedValue.setParent(c);
+		for(AbstractParameterNode abstractParameterNode : method.getParameters()){
+
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+			if(basicParameterNode.isExpected()){
+				ChoiceNode expectedValue = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, randomChoiceValue(basicParameterNode.getType()), null);
+				expectedValue.setParent(abstractParameterNode);
 				testData.add(expectedValue);
 			}
 			else{
-				List<ChoiceNode> choices = c.getChoices();
+				List<ChoiceNode> choices = basicParameterNode.getChoices();
 				if(choices.size() == 0){
 					System.out.println("Empty parameter!");
 				}
-				ChoiceNode p = c.getChoices().get(rand.nextInt(choices.size()));
+				ChoiceNode p = basicParameterNode.getChoices().get(rand.nextInt(choices.size()));
 				while(p.getChoices().size() > 0){
 					List<ChoiceNode> pchoices = p.getChoices();
 					p = pchoices.get(rand.nextInt(pchoices.size()));
@@ -179,15 +211,19 @@ public class RandomModelGenerator {
 		return targetTestCaseNode;
 	}
 
+	private String generateTestCaseName() {
+		return generateString(/* NodeNameHelper.REGEX_TEST_CASE_NODE_NAME */);
+	}
+
 	public ConstraintNode generateConstraint(MethodNode method){
-		String name = generateString(RegexHelper.REGEX_CONSTRAINT_NODE_NAME);
+		String name = generateString(/* NodeNameHelper.REGEX_CONSTRAINT_NODE_NAME */);
 
 		Constraint constraint = 
 				new Constraint(
 						"constraint",
 						ConstraintType.EXTENDED_FILTER,
 						generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
-                );
+						);
 
 		return new ConstraintNode(name, constraint, null);
 	}
@@ -217,21 +253,28 @@ public class RandomModelGenerator {
 	}
 
 	public RelationStatement generateChoicesParentStatement(MethodNode method) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 
-		for(MethodParameterNode parameter : method.getMethodParameters()){
-			if(parameter.isExpected() == false && parameter.getChoices().size() > 0){
-				parameters.add(parameter);
+		for(AbstractParameterNode abstractParameterNode : method.getParameters()){
+
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+			if(basicParameterNode.isExpected() == false && basicParameterNode.getChoices().size() > 0){
+				parameters.add(basicParameterNode);
 			}
 		}
 
 		if(parameters.size() == 0){
-			MethodParameterNode parameter = generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1);
+			BasicParameterNode parameter = generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1);
 			method.addParameter(parameter);
 			parameters.add(parameter);
 		}
 
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		EMathRelation relation = rand.nextBoolean() ? EMathRelation.EQUAL : EMathRelation.NOT_EQUAL;
 		if(parameter.getChoices().size() == 0){
 			ChoiceNode choice = generateChoice(0, 0, 1, parameter.getType());
@@ -242,43 +285,50 @@ public class RandomModelGenerator {
 			List<String> choiceNames = new ArrayList<String>(parameter.getAllChoiceNames());
 			String luckyChoiceName = choiceNames.get(rand.nextInt(choiceNames.size()));
 			ChoiceNode condition = parameter.getChoice(luckyChoiceName);
-			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, condition);
+			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, relation, condition);
 		}
 		else{
 			if(parameter.getLeafLabels().size() == 0){
-				parameter.getChoices().get(0).addLabel(generateString(RegexHelper.REGEX_PARTITION_LABEL));
+				parameter.getChoices().get(0).addLabel(generateString(/*RegexHelper.REGEX_PARTITION_LABEL*/));
 			}
 
 			Set<String>labels = parameter.getLeafLabels();
 
 			String label = labels.toArray(new String[]{})[rand.nextInt(labels.size())];
-			return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+			return RelationStatement.createRelationStatementWithLabelCondition(parameter, null, relation, label);
 		}
 	}
 
 	public ExpectedValueStatement generateExpectedValueStatement(MethodNode method) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 
-		for(MethodParameterNode parameter : method.getMethodParameters()){
-			if(parameter.isExpected() == true){
-				parameters.add(parameter);
+		for(AbstractParameterNode abstractParameterNode : method.getParameters()){
+
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+			if(basicParameterNode.isExpected() == true){
+				parameters.add(basicParameterNode);
 			}
 		}
 
 		if(parameters.size() == 0){
-			MethodParameterNode parameter = generateParameter(SUPPORTED_TYPES[rand.nextInt(SUPPORTED_TYPES.length)], true, 0, 1, 1);
+			BasicParameterNode parameter = generateParameter(SUPPORTED_TYPES[rand.nextInt(SUPPORTED_TYPES.length)], true, 0, 1, 1);
 			method.addParameter(parameter);
 			parameters.add(parameter);
 		}
 
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 
 
 		String value = randomChoiceValue(parameter.getType());
-		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
+		String name = generateString(/*NodeNameHelper.REGEX_CHOICE_NODE_NAME*/);
 		ChoiceNode choice = new ChoiceNode(name, value, null);
 		parameter.addChoice(choice);
-		return new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
 	}
 
 	public StatementArray generateStatementArray(MethodNode method, int depth) {
@@ -299,22 +349,30 @@ public class RandomModelGenerator {
 			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}
 
-		List<MethodParameterNode> parameters = method.getMethodParameters();
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		if(parameter.isExpected()){
+		List<AbstractParameterNode> parameters = method.getParameters();
+
+		AbstractParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+
+		if (!(parameter instanceof BasicParameterNode)) {
+			return null;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+
+		if(basicParameterNode.isExpected()){
 			return generateExpectedValueStatement(method);
 		}
 		return generateStatement(method, MAX_STATEMENTS_DEPTH);
 	}
 
 	public ChoiceNode generateChoice(int levels, int choices, int labels, String type) {
-		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
+		String name = generateString(/*NodeNameHelper.REGEX_CHOICE_NODE_NAME*/);
 		name = name.replaceAll(":", "_");
 		String value = randomChoiceValue(type);
 
 		ChoiceNode choice = new ChoiceNode(name, value, null);
 		for(int i = 0; i < labels; i++){
-			String label = generateString(RegexHelper.REGEX_PARTITION_LABEL);
+			String label = generateString(/*RegexHelper.REGEX_PARTITION_LABEL*/);
 			choice.addLabel(label);
 		}
 
@@ -334,7 +392,7 @@ public class RandomModelGenerator {
 			return SUPPORTED_TYPES[typeIdx];
 		}
 
-		return generateString(RegexHelper.REGEX_CATEGORY_TYPE_NAME);
+		return generateString(/*NodeNameHelper.REGEX_PARAMETER_NODE_NAME*/);
 	}
 
 	private String randomChoiceValue(String type){
@@ -377,7 +435,7 @@ public class RandomModelGenerator {
 	}
 
 	private String randomCharValue() {
-		return generateString(RegexHelper.REGEX_CHAR_TYPE_VALUE);
+		return generateString(/*RegexHelper.REGEX_CHAR_TYPE_VALUE*/);
 	}
 
 	private String randomDoubleValue() {
@@ -432,14 +490,14 @@ public class RandomModelGenerator {
 	}
 
 	private String randomStringValue() {
-		return generateString(RegexHelper.REGEX_STRING_TYPE_VALUE);
+		return generateString(/* RegexHelper.REGEX_STRING_TYPE_VALUE */);
 	}
 
 	private String randomUserTypeValue() {
-		return generateString(RegexHelper.REGEX_USER_TYPE_VALUE);
+		return generateString(/* RegexHelper.REGEX_USER_TYPE_VALUE */);
 	}
 
-	private String generateString(String regex){
+	private String generateString(/* String regex */){
 		return "name" + id++;
 
 		//		Xeger generator = new Xeger(regex);
@@ -476,7 +534,7 @@ public class RandomModelGenerator {
 				int choices = rand.nextInt(MAX_PARTITIONS);
 				int labels = rand.nextInt(MAX_PARTITION_LABELS);
 				int levels = rand.nextInt(MAX_PARTITION_LEVELS);
-				MethodParameterNode c = generateParameter(type, expected, levels, choices, labels);
+				BasicParameterNode c = generateParameter(type, expected, levels, choices, labels);
 				System.out.println(fStringifier.stringify(c, 0));
 			}
 		}

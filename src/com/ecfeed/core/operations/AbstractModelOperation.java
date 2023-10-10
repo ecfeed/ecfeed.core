@@ -13,8 +13,9 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractModelOperation implements IModelOperation {
 
@@ -22,12 +23,12 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	private String fName;
 	private IExtLanguageManager fExtLanguageManager;
 
-	private List<AbstractNode> fNodesToSelect;
+	private List<IAbstractNode> fNodesToSelect;
 
 	public AbstractModelOperation(String name, IExtLanguageManager extLanguageManager){
 		fName = name;
 		fExtLanguageManager = extLanguageManager;
-		fNodesToSelect = new ArrayList<AbstractNode>();
+		fNodesToSelect = new ArrayList<>();
 	}
 
 	@Override
@@ -50,22 +51,56 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	}
 
 	@Override
-	public void setNodesToSelect(List<AbstractNode> nodesToSelect) {
+	public void setNodesToSelect(List<IAbstractNode> nodesToSelect) {
 		fNodesToSelect = nodesToSelect;
 	}
+
+	public String createDescription(String... operationParameters) {
+
+		String parametersString = createDescriptionOfParameters(operationParameters);
+
+		return "OP:" + fName + "(" + parametersString + ")";
+	}
+
+	public String createDescriptionOfReverseOperation(String... operationParameters) {
+
+		String parametersString = createDescriptionOfParameters(operationParameters);
+
+		return "REVERSE OP:" + fName + "(" + parametersString + ")";
+	}
+	
+	public static String createReverseOperationName(String name) {
+		return "REVERSE " + name;
+	}
+
+	private String createDescriptionOfParameters(String... operationParameters) {
+
+		String parametersString = "";
+		String separator = ", ";
+
+		for (String operationParameter : operationParameters) {
+
+			parametersString = parametersString + operationParameter + separator;
+		}
+
+		parametersString = StringHelper.getAllBeforeLastToken(parametersString, separator);
+		return parametersString;
+	}
+
 
 	public IExtLanguageManager getExtLanguageManager() {
 		return fExtLanguageManager;
 	}
 
-	public void setOneNodeToSelect(AbstractNode nodeToSelect) {
-		List<AbstractNode> nodes = new ArrayList<AbstractNode>();
+	public void setOneNodeToSelect(IAbstractNode nodeToSelect) {
+
+		List<IAbstractNode> nodes = new ArrayList<>();
 		nodes.add(nodeToSelect);
 
 		setNodesToSelect(nodes);
 	}
 
-	public List<AbstractNode> getNodesToSelect() {
+	public List<IAbstractNode> getNodesToSelect() {
 		return fNodesToSelect;
 	}
 

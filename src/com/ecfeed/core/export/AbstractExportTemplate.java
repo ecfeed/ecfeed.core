@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.Random;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodDeployerContainer;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -38,18 +40,23 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
+	public boolean isStandardized() {
+		return false;
+	}
+	
+	@Override
 	public String getDefaultTemplateText() {
 		
 		return fTemplateText.getInitialTemplateText();
 	}
 	@Override
-	public void setTemplateText(String templateText) {
+	public boolean setTemplateText(String templateText) {
 
 		if (templateText == null) {
 			ExceptionHelper.reportRuntimeException("Template text must not be empty.");
 		}
 
-		fTemplateText.setTemplateText(templateText);
+		return fTemplateText.setTemplateText(templateText);
 	}
 
 	@Override
@@ -83,21 +90,24 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
-	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
+	public String createPreview(
+			Collection<TestCaseNode> selectedTestCases, 
+			MethodDeployerContainer methodDeployerContainer,
+			List<ParameterWithLinkingContext> deployedParameters) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
+					fMethodNode, deployedParameters, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
-		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
+		appendPreviewOfTestCases(selectedTestCases, methodDeployerContainer, deployedParameters, stringBuilder);
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
+						fMethodNode, deployedParameters, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -107,8 +117,21 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return result;
 	}
 
+	@Override
+	public boolean isCorrect() {
+		return fTemplateText.isCorrect();
+	}
+	
+	@Override
+	public String getErrorMessage() {
+		return fTemplateText.getErrorMessage();
+	}
+	
+	
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
+			MethodDeployerContainer methodDeployerContainer,
+			List<ParameterWithLinkingContext> deployedParameters,
 			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
@@ -120,6 +143,8 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
+							methodDeployerContainer.getDeployment(),
+							deployedParameters,
 							fTemplateText.getTestCaseTemplateText(), 
 							fExtLanguageManager));
 
@@ -175,7 +200,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 			
-			MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 			
 			ChoiceNode choiceNode;
 			
@@ -200,7 +225,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	ChoiceNode getRandomChoiceNode(MethodNode methodNode, String parameterName, Random randomGenerator) {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.findParameter(parameterName);
+		BasicParameterNode methodParameterNode = (BasicParameterNode)methodNode.findParameter(parameterName);
 		List<ChoiceNode> choices = methodParameterNode.getLeafChoicesWithCopies();
 
 		ChoiceNode choiceNode = choices.get(randomGenerator.nextInt(choices.size()));

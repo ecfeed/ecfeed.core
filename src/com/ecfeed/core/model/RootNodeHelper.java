@@ -10,31 +10,67 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NameHelper;
 import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	private static final String CLASS_NEW_NAME = "TestClass";
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
-	public static GlobalParameterNode addGlobalParameterToRoot(
-			RootNode rootNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
+	public static BasicParameterNode addNewBasicParameter(
+			RootNode rootNode, 
+			String name, 
+			String type,
+			String defaultValue,
+			boolean setParent,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode (name, type, modelChangeRegistrator);
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
+
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
+
 		rootNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
 	}
 
-	public static ClassNode addClassNodeToRoot(
-			RootNode rootNode, String className, IModelChangeRegistrator modelChangeRegistrator) {
+	public static CompositeParameterNode addNewCompositeParameter(
+			RootNode rootNode, String name, boolean setParent, IModelChangeRegistrator modelChangeRegistrator) {
 
-		ClassNode classNode = new ClassNode("Class1", modelChangeRegistrator);
+		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
+
+		if (setParent) {
+			globalParameterNode.setParent(rootNode);
+		}
+
+		rootNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static ClassNode addNewClassNode(
+			RootNode rootNode,
+			String className, 
+			boolean setParent,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ClassNode classNode = new ClassNode(className, modelChangeRegistrator);
+
+		if (setParent) {
+			classNode.setParent(classNode);
+		}
+
 		rootNode.addClass(classNode);
 
 		return classNode;
@@ -60,11 +96,69 @@ public class RootNodeHelper {
 		return null;
 	}
 
-	public static String generateNewClassName(RootNode rootNode, String startClassNameCore) {
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldName, 
+			String availableClassName,
+			IExtLanguageManager extLanguageManager) {
+
+		String oldNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(oldName);
+
+		String newNameInIntrLanguage = generateUniqueClassName(rootNode, oldNameInIntrLanguage, availableClassName);
+
+		String newNameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(newNameInIntrLanguage);
+
+		return newNameInExtLanguage;
+	}
+
+	public static String generateNewClassName(RootNode rootNode) {
+
+		String fullClassName = CLASS_NEW_NAME;
+		return generateUniqueClassNameFromClassNameCore(rootNode, fullClassName, null);
+	}
+
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldNameInIntrLanguage) {
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
+
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore, null);
+
+		return newName;
+	}
+
+	public static String generateUniqueClassName(
+			RootNode rootNode, 
+			String oldNameInIntrLanguage,
+			String availableClassName) {
+
+		if (availableClassName != null && StringHelper.isEqual(oldNameInIntrLanguage, availableClassName)) {
+			return availableClassName;
+		}
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldNameInIntrLanguage);
+
+		String newName = generateUniqueClassNameFromClassNameCore(rootNode, oldNameCore, availableClassName);
+
+		return newName;
+	}
+
+	public static String generateUniqueClassNameFromClassNameCore(
+			RootNode rootNode, 
+			String startClassNameCore,
+			String availableClassName) {
+
 		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
 		for (int i = 1;   ; i++) {
+
 			String newClassName = startClassNameCore + String.valueOf(i);
+
+			if (availableClassName != null && StringHelper.isEqual(newClassName, availableClassName)) {
+				return availableClassName;
+			}
+
 			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
 
 			if (validatedNewClassName.isPresent()) {
@@ -104,6 +198,52 @@ public class RootNodeHelper {
 		}
 
 		return true;
+	}
+
+	public static RootNode findRootNode(IAbstractNode anyNode) {
+
+		IAbstractNode parent = anyNode;
+
+		while (parent != null) {
+
+			if (parent instanceof RootNode) {
+				return (RootNode) parent;
+			}
+
+			parent = parent.getParent();
+		}
+
+		return null;
+	}
+
+	public static void compareRootNodes(RootNode rootNode1, RootNode rootNode2) {
+
+		NameHelper.compareNames(rootNode1.getName(), rootNode2.getName());
+
+		AbstractNodeHelper.compareSizes(rootNode1.getClasses(), rootNode2.getClasses(), "Number of classes differs.");
+
+		for (int i = 0; i < rootNode1.getClasses().size(); ++i) {
+
+			ClassNode classNode1 = rootNode1.getClasses().get(i);
+			ClassNode classNode2 = rootNode2.getClasses().get(i);
+
+			AbstractNodeHelper.compareParents(classNode1, rootNode1, classNode2, rootNode2);
+			ClassNodeHelper.compareClasses(classNode1, classNode2);
+		}
+	}
+
+	public static List<MethodNode> getAllMethodNodes(RootNode rootNode) {
+
+		List<MethodNode> result = new ArrayList<>();
+
+		List<ClassNode> classNodes = rootNode.getClasses();
+
+		for (ClassNode classNode : classNodes) {
+
+			result.addAll(classNode.getMethods());
+		}
+
+		return result;
 	}
 
 }

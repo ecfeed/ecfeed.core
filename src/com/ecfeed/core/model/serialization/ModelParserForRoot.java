@@ -12,60 +12,115 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 
-import java.util.Optional;
+import java.util.List;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForRoot implements IModelParserForRoot {
+public class ModelParserForRoot {
 
-	IModelChangeRegistrator fModelChangeRegistrator;
-	private int fModelVersion;
-	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
-	private IModelParserForClass fModelParserForClass;
+	public static RootNode parseRoot(
+			int modelVersion,
+			Element element,
+			ElementToNodeMapper elementToNodeMapper,
+			IModelChangeRegistrator modelChangeRegistrator,
+			ListOfStrings outErrorList) {
 
-	public ModelParserForRoot(
-			int modelVersion, 
-			IModelParserForGlobalParameter modelParserForGlobalParameter,
-			IModelParserForClass modelParserForClass,
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		fModelVersion = modelVersion;
-		fModelParserForGlobalParameter = modelParserForGlobalParameter;
-		fModelParserForClass = modelParserForClass;
-		fModelChangeRegistrator = modelChangeRegistrator;
-	}
-
-	public RootNode parseRoot(
-			Element element, ListOfStrings outErrorList) throws ParserException {
-
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
 
-		RootNode targetRootNode = new RootNode(name, fModelChangeRegistrator, fModelVersion);
+		RootNode targetRootNode = new RootNode(name, modelChangeRegistrator, modelVersion);
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			if (node.isPresent()) {
-				targetRootNode.addParameter(node.get());
-			}
-		}
+		parseGlobalParametersOfRoot(element, targetRootNode, elementToNodeMapper, outErrorList);
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME)) {
-			Optional<ClassNode> node = fModelParserForClass.parseClass(child, targetRootNode, outErrorList);
-			if (node.isPresent()) {
-				targetRootNode.addClass(node.get());
-			}
-		}
+		parseClasses(element, targetRootNode, elementToNodeMapper, outErrorList);
 
 		return targetRootNode;
+	}
+
+	private static void parseGlobalParametersOfRoot(
+			Element element, 
+			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
+
+		List<Element> parameterElements = 
+				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParametersAndConstraintsElementNames());
+
+		for (Element parameterElement : parameterElements) {
+
+			parseOneGlobalParameter(parameterElement, targetRootNode, elementToNodeMapper, outErrorList);
+		}
+	}
+
+	private static void parseOneGlobalParameter(
+			Element parameterElement, 
+			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings inOutErrorList) {
+
+		boolean isBasicParameterElement = 
+				ModelParserHelper.verifyElementName(
+						parameterElement, SerializationHelperVersion1.getBasicParameterNodeName());
+
+		if (isBasicParameterElement) {
+
+			BasicParameterNode globalBasicParameter = 
+					ModelParserBasicForParameter.parseParameter(
+							parameterElement, targetRootNode, targetRootNode.getModelChangeRegistrator(), inOutErrorList);
+
+			if (globalBasicParameter != null) {
+				targetRootNode.addParameter(globalBasicParameter);
+			} else {
+				inOutErrorList.addIfUnique("Cannot parse parameter of root: " + targetRootNode.getName() + ".");
+			}
+			return;
+		} 
+
+		boolean isCompositeParameterElement = 
+				ModelParserHelper.verifyElementName(
+						parameterElement, SerializationHelperVersion1.getCompositeParameterNodeName());
+
+		if (isCompositeParameterElement) {
+
+			CompositeParameterNode globalCompositeParameter = 
+					ModelParserForCompositeParameter.parseParameterWithoutConstraints(
+							parameterElement, targetRootNode, 
+							targetRootNode.getModelChangeRegistrator(), elementToNodeMapper, inOutErrorList);
+
+			if (globalCompositeParameter!= null) {
+				targetRootNode.addParameter(globalCompositeParameter);
+			} else {
+				inOutErrorList.addIfUnique("Cannot parse structure of root: " + targetRootNode.getName() + ".");
+			}
+
+			ModelParserForParameterHelper.parseLocalAndChildConstraints(
+					parameterElement, globalCompositeParameter, elementToNodeMapper, inOutErrorList);
+
+			return;
+		}
+	}
+
+	private static void parseClasses(
+			Element element, 
+			RootNode targetRootNode,
+			ElementToNodeMapper elementToNodeMapper,
+			ListOfStrings outErrorList) {
+
+		List<Element> childClassElements = 
+				ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME);
+
+		for (Element classElement : childClassElements) {
+
+			ModelParserForClass.parseAndAddClass(classElement, targetRootNode, elementToNodeMapper, outErrorList);
+		}
 	}
 
 }

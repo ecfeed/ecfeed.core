@@ -38,6 +38,10 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
+		
+		if (text == null) {
+			return null;
+		}
 
 		String errorMessage = verifySeparatorsInText(text);
 
@@ -50,7 +54,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromIntrToExtLanguage(String text) {
-
+		
 		String errorMessage = JavaLanguageHelper.verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
@@ -157,7 +161,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String createQualifiedName(String packageName, String nonQualifiedName) {
 
-		if (packageName == null) {
+		if (packageName == null || packageName.isEmpty()) {
 			return nonQualifiedName;
 		}
 

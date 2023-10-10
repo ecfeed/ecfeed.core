@@ -348,7 +348,7 @@
 //
 //	private static String convertValue(ChoiceNode choice) {
 //
-//		AbstractParameterNode parameter = choice.getParameter();
+//		BasicParameterNode parameter = choice.getParameter();
 //		if (parameter == null) {
 //			return null;
 //		}

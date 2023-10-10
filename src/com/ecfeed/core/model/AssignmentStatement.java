@@ -10,25 +10,26 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-
-import java.util.List;
 
 public class AssignmentStatement extends RelationStatement {
 
 	public static final String ASSIGNMENT_CHOICE_NAME = "@assignment";
 
 	private AssignmentStatement(
-			MethodParameterNode parameter, 
+			BasicParameterNode parameter, 
 			IStatementCondition condition) {
 
-		super(parameter, EMathRelation.ASSIGN, condition);
+		super(parameter, null, EMathRelation.ASSIGN, condition);
 	}
 
 	public static AssignmentStatement createAssignmentWithChoiceCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			ChoiceNode choiceNode) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
@@ -41,12 +42,14 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	public static AssignmentStatement createAssignmentWithParameterCondition(
-			MethodParameterNode parameter,
-			MethodParameterNode rightParameter) {
+			BasicParameterNode parameter,
+			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
 
-		IStatementCondition condition = new ParameterCondition(rightParameter, AssignmentStatement);
+		IStatementCondition condition = 
+				new ParameterCondition(rightParameter, rightParameterLinkingContext, AssignmentStatement);
 
 		AssignmentStatement.setCondition(condition);
 
@@ -54,7 +57,7 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	public static AssignmentStatement createAssignmentWithValueCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			String textValue) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
@@ -78,19 +81,19 @@ public class AssignmentStatement extends RelationStatement {
 			return true;
 		}
 
-		MethodParameterNode methodParameterNode = getLeftParameter();
+		BasicParameterNode methodParameterNode = getLeftParameter();
 
 		if (methodParameterNode == null) {
 			return true;
 		}
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IParametersParentNode methodNode = (IParametersParentNode) methodParameterNode.getParent();
 
 		if (methodNode == null) {
 			return true;
 		}
 
-		int countOfParameters = methodNode.getMethodParameterCount();
+		int countOfParameters = methodNode.getParametersCount();
 
 		if (testCaseValues.size() != countOfParameters) {
 			ExceptionHelper.reportRuntimeException("Invalid size of test case values list.");
@@ -119,7 +122,7 @@ public class AssignmentStatement extends RelationStatement {
 
 	private ChoiceNode createChoiceNodeWithResultValue(
 			List<ChoiceNode> testCaseValues,
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			List<AbstractParameterNode> parameters,
 			IStatementCondition statementCondition) {
 
@@ -155,9 +158,10 @@ public class AssignmentStatement extends RelationStatement {
 		return newChoiceNode;
 	}
 
-	private ChoiceNode createChoiceNodeForParameterCondition(List<ChoiceNode> testCaseValues, List<AbstractParameterNode> parameters, ParameterCondition parameterCondition) {
+	private ChoiceNode createChoiceNodeForParameterCondition(
+			List<ChoiceNode> testCaseValues, List<AbstractParameterNode> parameters, ParameterCondition parameterCondition) {
 
-		MethodParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
+		BasicParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
 
 		int indexOfRightParameter = parameters.indexOf(rightParameterNode);
 
@@ -172,7 +176,7 @@ public class AssignmentStatement extends RelationStatement {
 		return newChoiceNode;
 	}
 
-	private ChoiceNode createChoiceNodeForValueCondition(MethodParameterNode methodParameterNode, ValueCondition valueCondition) {
+	private ChoiceNode createChoiceNodeForValueCondition(BasicParameterNode methodParameterNode, ValueCondition valueCondition) {
 
 		String value = valueCondition.getRightValue();
 
@@ -197,5 +201,42 @@ public class AssignmentStatement extends RelationStatement {
 
 		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
 	}
+
+	@Override
+	public AssignmentStatement makeClone(Optional<NodeMapper> mapper) {
+
+		if (mapper.isPresent()) {
+			
+			BasicParameterNode clonedParameter = mapper.get().getDestinationNode(getLeftParameter());
+
+			AssignmentStatement clonedStatement = 
+					new AssignmentStatement(clonedParameter, getCondition().makeClone());
+			
+			IStatementCondition clonedCondition = getCondition().makeClone(clonedStatement, mapper);
+			clonedStatement.setCondition(clonedCondition);
+
+			return clonedStatement;
+		}
+
+		AssignmentStatement assignmentStatement = 
+				new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
+						
+		return assignmentStatement;
+	}
+	
+	@Override
+	public AssignmentStatement createCopy(NodeMapper mapper) {
+
+		BasicParameterNode deployedParameter = mapper.getDestinationNode(super.getLeftParameter());
+
+		AssignmentStatement statementCopy = new AssignmentStatement(deployedParameter, null);
+		IStatementCondition conditionCopy = super.getCondition().createCopy(this, mapper);
+
+		statementCopy.setCondition(conditionCopy);
+		conditionCopy.setParentRelationStatement(statementCopy);
+
+		return statementCopy;
+	}
+
 }
 

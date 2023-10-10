@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.Constraint;
@@ -52,7 +53,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		List<String> constraintNames = ConstraintHelper.createListOfConstraintNames(iConstraints);
 
-		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
+		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, false, new ExtLanguageManagerForJava());
 
 		String requestText = createRequestText(
 				sessionId, 
@@ -112,12 +113,21 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 			IExtLanguageManager extLanguageManager) {
 
 		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
+		
+		List<BasicParameterNode> parameters;
+		
+		if (methodNode.isDeployed()) {
+			parameters = methodNode.getDeployedParameters();
+		} else {
+			parameters = methodNode.getParametersAsBasic();
+		}
+		
 
-		int parametersCount = methodNode.getParametersCount();
+		int parametersCount = parameters.size();
 
 		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
 
-			String parameterName = methodNode.getParameter(parameterIndex).getName();
+			String parameterName = parameters.get(parameterIndex).getName();
 			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
 
 			paramAndChoiceNames.put(parameterName, ChoiceNodeHelper.getChoiceNames(choicesForParameter, extLanguageManager));

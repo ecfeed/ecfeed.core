@@ -13,13 +13,11 @@ package com.ecfeed.core.utils;
 import java.io.File;
 import java.nio.file.Paths;
 
-public class DiskPathHelper { // TODO - rename to DiskPathHelper
+public class DiskPathHelper {
 	
 	private static final String EXTENSION_SEPARATOR = ".";
-	// TODO - this looks like an ERROR because this is not platform independent (not working on Windows)
-	// TODO - potentially it status management in Windows plugin would fail (get implementation status etc.)
 	private static final String FILE_SEPARATOR = File.separator; // platform independent
-	private static final String CURRENT_DIR = "."; // TODO - private
+	private static final String CURRENT_DIR = ".";
 
 	public static String getApplicationPath() {
 		return Paths.get("").toAbsolutePath().toString();

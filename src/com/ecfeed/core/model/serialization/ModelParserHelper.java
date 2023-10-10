@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -28,62 +27,23 @@ import nu.xom.Node;
 
 public class ModelParserHelper  {
 
-	public static IModelParserForMethod createStandardModelParserForMethod() {
-		
-		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-		
-		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-		
-		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-		
-		IModelParserForMethod modelParserForMethod = 
-				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
-		return modelParserForMethod;
-	}
-	
 	public static ModelParserForClass createStandardModelParserForClass() {
-		
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
-		
-		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
-		
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
-		
-		ModelParserForClass modelParserForClass = 
-				new ModelParserForClass(
-						modelParserForGlobalParameter, modelParserForMethod);
+
+		ModelParserForClass modelParserForClass = new ModelParserForClass();
 		return modelParserForClass;
 	}
-	
-	public static IModelParserForRoot createStandardModelParserForRoot(
-			int modelVersion, 
-			IModelChangeRegistrator modelChangeRegistrator) {
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
-		
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
 
-		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
-		
-		IModelParserForRoot modelParserForRoot = 
-				new ModelParserForRoot(
-						modelVersion, 
-						modelParserForGlobalParameter,
-						modelParserForClass,
-						modelChangeRegistrator);
-		
-		return modelParserForRoot;
+	public static boolean verifyElementName(Element element, String expectedName) {
+
+		return element.getQualifiedName().equals(expectedName);
 	}
-	
-	public static void assertNodeTag(
-			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
+
+	public static void assertNameEqualsExpectedName(
+			String qualifiedName, String expectedName, ListOfStrings errorList) {
 
 		if (qualifiedName.equals(expectedName) == false) {
-			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
-			ParserException.create();
+			errorList.addIfUnique("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
 		}
-
 	}
 
 	static List<Element> getIterableChildren(Element element) {
@@ -132,32 +92,41 @@ public class ModelParserHelper  {
 	}
 
 	static String getElementName(
-			Element element, ListOfStrings errorList) throws ParserException {
+			Element element, ListOfStrings errorList) {
 
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
 
 		if (name == null) {
-			errorList.add(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
-			ParserException.create();
+			errorList.addIfUnique(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
+			return null;
 		}
 
 		return WhiteCharConverter.getInstance().decode(name);
 	}
 
 	static String getAttributeValue(
-			Element element, String attributeName, ListOfStrings errorList) throws ParserException {
+			Element element, String attributeName, ListOfStrings errorList) {
 
 		String value = element.getAttributeValue(attributeName);
 
 		if (value == null) {
-			errorList.add(Messages.MISSING_ATTRIBUTE(element, attributeName));
-			ParserException.create();
+			errorList.addIfUnique(Messages.MISSING_ATTRIBUTE(element, attributeName));
 		}
 
 		return WhiteCharConverter.getInstance().decode(value);
 	}
 
-	static boolean getIsRandomizedValue(Element element, String attributeName) throws ParserException {
+	static String getAttributeValue(Element element, String attributeName) {
+		String value = element.getAttributeValue(attributeName);
+
+		if (value == null) {
+			return null;
+		}
+
+		return WhiteCharConverter.getInstance().decode(value);
+	}
+
+	static boolean getIsRandomizedValue(Element element, String attributeName) {
 		String isRandomizedValue = element.getAttributeValue(attributeName);
 
 		if (isRandomizedValue == null) {
@@ -168,13 +137,12 @@ public class ModelParserHelper  {
 	}
 
 	static EMathRelation parseRelationName(
-			String relationName, ListOfStrings errorList) throws ParserException {
+			String relationName, ListOfStrings errorList) {
 
 		EMathRelation relation = EMathRelation.parse(relationName);
 
 		if (relation == null) {
-			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
-			ParserException.report(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
+			errorList.addIfUnique(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 		}
 
 		return relation;
@@ -196,6 +164,7 @@ public class ModelParserHelper  {
 	static String parseTypeComments(Element element) {
 
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
+
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 				Element typeComments = comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).get(0);
@@ -249,38 +218,37 @@ public class ModelParserHelper  {
 		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_VALUE);
 	}	
 
-	static void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
-				parameterElement, 
-				targetAbstractParameterNode);		
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
-				parameterElement, 
-				targetAbstractParameterNode);
+	static void parseParameterProperties(Element parameterElement, BasicParameterNode targetAbstractParameterNode) {
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);		
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
+		//
+		//		parseParameterProperty(
+		//				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
+		//				parameterElement, 
+		//				targetAbstractParameterNode);
 	}
 
 	static void parseParameterProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
-			AbstractParameterNode targetAbstractParameterNode) {
+			BasicParameterNode targetAbstractParameterNode) {
 
 		String value = ModelParserHelper.getPropertyValue(propertyId, methodElement);
 		if (StringHelper.isNullOrEmpty(value)) {

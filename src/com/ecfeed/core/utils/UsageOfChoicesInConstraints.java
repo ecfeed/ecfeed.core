@@ -15,19 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.IConstraintsParentNode;
 
 public class UsageOfChoicesInConstraints {
 
 	private Map<ChoiceNode, List<String>> fMapOfUsages;
 
 
-	public UsageOfChoicesInConstraints(MethodParameterNode methodParameterNode) {
+	public UsageOfChoicesInConstraints(BasicParameterNode methodParameterNode) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IConstraintsParentNode methodNode = (IConstraintsParentNode) methodParameterNode.getParent();
 
 		fMapOfUsages = new HashMap<>();
 

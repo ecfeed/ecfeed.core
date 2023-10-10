@@ -12,39 +12,46 @@ package com.ecfeed.core.operations;
 
 import java.util.Set;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IParameterVisitor;
+import com.ecfeed.core.model.IBasicParameterVisitor;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericOperationRemoveChoice extends BulkOperation {
+public class GenericOperationRemoveChoice extends CompositeOperation {
 
 	private class RemoveChoiceOperation extends AbstractModelOperation {
 
-		private ChoicesParentNode fTarget;
+		private IChoicesParentNode fTarget;
 		private ChoiceNode fChoice;
 		private String fOriginalDefaultValue;
 		private int fOriginalIndex;
-		private ITypeAdapterProvider fAdapterProvider;
 
 		private class ReverseOperation extends AbstractModelOperation{
+			
+			@Override
+			public String toString() {
+				return "reverse Remove choice " + fChoice.getName();
+			}
 
-			private class ReverseParameterAdapter implements IParameterVisitor{
+			private class ReverseParameterAdapter implements IBasicParameterVisitor{
 
 				@Override
-				public Object visit(MethodParameterNode node) throws Exception {
-					node.setDefaultValueString(fOriginalDefaultValue);
-					return null;
-				}
+				public Object visit(BasicParameterNode node) throws Exception {
 
-				@Override
-				public Object visit(GlobalParameterNode node) throws Exception {
-					return null;
+					if (node.isGlobalParameter()) {
+						return null;
+					} else {
+						node.setDefaultValueString(fOriginalDefaultValue);
+						return null;
+					}
 				}
 
 			}
@@ -64,7 +71,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider, getExtLanguageManager());
+				return new RemoveChoiceOperation(fTarget, fChoice, getExtLanguageManager());
 			}
 
 			private void reverseAdaptParameter() {
@@ -76,65 +83,71 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		}
 
-		private class OperationValidator implements IParameterVisitor{
+		private class OperationValidator implements IBasicParameterVisitor{
 
 			@Override
-			public Object visit(MethodParameterNode parameter) throws Exception {
-				if(parameter.isExpected() && JavaLanguageHelper.isJavaType(parameter.getType()) == false && parameter.getChoices().size() == 1 && parameter.getChoices().get(0) == fChoice){
-					// We are removing the only choice of expected parameter.
-					// The last parameter must represent the default expected value
-					ExceptionHelper.reportRuntimeException(OperationMessages.EXPECTED_USER_TYPE_CATEGORY_LAST_PARTITION_PROBLEM);
+			public Object visit(BasicParameterNode parameter) throws Exception {
+
+				if (parameter.isGlobalParameter()) {
+					return null;
+				} else {
+
+					if(parameter.isExpected() && JavaLanguageHelper.isJavaType(parameter.getType()) == false && parameter.getChoices().size() == 1 && parameter.getChoices().get(0) == fChoice){
+						// We are removing the only choice of expected parameter.
+						// The last parameter must represent the default expected value
+						ExceptionHelper.reportRuntimeException(OperationMessages.EXPECTED_USER_TYPE_CATEGORY_LAST_PARTITION_PROBLEM);
+					}
+					return null;
 				}
-				return null;
 			}
 
-			@Override
-			public Object visit(GlobalParameterNode node) throws Exception {
-				return null;
-			}
 		}
 
-		private class ParameterAdapter implements IParameterVisitor{
+		private class ParameterAdapter implements IBasicParameterVisitor{
 
 			@Override
-			public Object visit(MethodParameterNode parameter) throws Exception {
-				fOriginalDefaultValue = parameter.getDefaultValue();
-				if(parameter.isExpected() && fChoice.getValueString().equals(parameter.getDefaultValue())){
-					// the value of removed choice is the same as default expected value
-					// Check if there are leaf choices with the same value. If not, update the default value
-					Set<String> leafValues = parameter.getLeafChoiceValues();
-					if(leafValues.contains(parameter.getDefaultValue()) == false){
-						if(leafValues.size() > 0){
-							parameter.setDefaultValueString(leafValues.toArray(new String[]{})[0]);
-						}
-						else{
-							ExceptionHelper.reportRuntimeException(OperationMessages.UNEXPECTED_PROBLEM_WHILE_REMOVING_ELEMENT);
+			public Object visit(BasicParameterNode parameter) throws Exception {
+
+				if (parameter.isGlobalParameter()) {
+					return null;
+				} else {
+
+					fOriginalDefaultValue = parameter.getDefaultValue();
+					if(parameter.isExpected() && fChoice.getValueString().equals(parameter.getDefaultValue())){
+						// the value of removed choice is the same as default expected value
+						// Check if there are leaf choices with the same value. If not, update the default value
+						Set<String> leafValues = parameter.getLeafChoiceValues();
+						if(leafValues.contains(parameter.getDefaultValue()) == false){
+							if(leafValues.size() > 0){
+								parameter.setDefaultValueString(leafValues.toArray(new String[]{})[0]);
+							}
+							else{
+								ExceptionHelper.reportRuntimeException(OperationMessages.UNEXPECTED_PROBLEM_WHILE_REMOVING_ELEMENT);
+							}
 						}
 					}
+					return null;
 				}
-				return null;
-			}
-
-			@Override
-			public Object visit(GlobalParameterNode node) throws Exception {
-				return null;
 			}
 
 		}
 
 		public RemoveChoiceOperation(
-				ChoicesParentNode target, 
+				IChoicesParentNode target, 
 				ChoiceNode choice, 
-				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager){
 			
 			super(OperationNames.REMOVE_PARTITION, extLanguageManager);
-			fAdapterProvider = adapterProvider;
 			fTarget = target;
 			fChoice = choice;
 			fOriginalIndex = fChoice.getMyIndex();
 		}
 
+		@Override
+		public String toString() {
+			return "Remove choice " + fChoice.getName();
+		}
+		
 		@Override
 		public void execute() {
 
@@ -150,7 +163,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		private void adaptParentChoice(ChoiceNode parentChoiceNode) {
 			if(parentChoiceNode.isAbstract() == false){
-				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(parentChoiceNode.getParameter().getType());
+				ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(parentChoiceNode.getParameter().getType());
 				String newValue = 
 						adapter.adapt(
 								parentChoiceNode.getValueString(), 
@@ -189,19 +202,19 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 	}
 
 	public GenericOperationRemoveChoice(
-			ChoicesParentNode target, 
+			IChoicesParentNode target, 
 			ChoiceNode choice, 
-			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARTITION, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, extLanguageManager));
+		addOperation(new RemoveChoiceOperation(target, choice, extLanguageManager));
 
 		if (validate) {
+			
 			for (MethodNode method : target.getParameter().getMethods()) {
-				addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
+				addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 			}
 		}
 	}

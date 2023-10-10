@@ -12,15 +12,20 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
+
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ListOfStrings;
+
 import nu.xom.Element;
 
 public class XomModelVersionDetector {
 
-	public static int getVersion(Element element) throws ParserException {
+	public static int getVersion(Element element, ListOfStrings outErrorList) {
 		String qualifiedName = element.getQualifiedName(); 
 
 		if(qualifiedName.equals(ROOT_NODE_NAME) == false){
-			ParserException.report("Unexpected root node name: " + qualifiedName);
+			outErrorList.addIfUnique("Unexpected root node name: " + qualifiedName);
+			return 0;
 		}
 
 		String versionStr = element.getAttributeValue(VERSION_ATTRIBUTE);
@@ -31,21 +36,18 @@ public class XomModelVersionDetector {
 		return convertVersion(versionStr);
 	}
 
-	private static int convertVersion(String versionStr) throws ParserException {
+	private static int convertVersion(String versionStr) {
 		int version = 0;
 		try {
 			version = Integer.parseInt(versionStr);
 		} catch (NumberFormatException e) {
-			reportInvalidVersionException();
+			ExceptionHelper.reportRuntimeException("Invalid version");
 		}
 
 		if (version < 0) {
-			reportInvalidVersionException();
+			ExceptionHelper.reportRuntimeException("Invalid version");
 		}
 		return version;
 	}
 
-	private static void reportInvalidVersionException() throws ParserException {
-		ParserException.report("Invalid version of model.");
-	}
 }

@@ -50,6 +50,10 @@ public class AbstractParameterDefinition implements IParameterDefinition {
 	}
 
 	@Override
+	public void setAllowedValues(Object[] allowedValues) {
+	}
+	
+	@Override
 	public boolean test(Object value){
 		return false;
 	}

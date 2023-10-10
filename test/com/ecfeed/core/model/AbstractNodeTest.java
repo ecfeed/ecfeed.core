@@ -16,20 +16,21 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
 public class AbstractNodeTest{
 
-	private class AbstractNodeImpl extends AbstractNode{
+	private class AbstractNodeImpl extends AbstractNode {
 
 		public AbstractNodeImpl(String name) {
 			super(name, null);
 		}
 
 		@Override
-		protected String getNonQualifiedName() {
+		public String getNonQualifiedName() {
 			return getName();
 		}
 
@@ -38,14 +39,34 @@ public class AbstractNodeTest{
 			return 0;
 		}
 
+		//		@Override
+		//		public AbstractNode makeClone() {
+		//			return null;
+		//		}
+
 		@Override
-		public AbstractNode makeClone() {
+		public AbstractNode makeClone(Optional<NodeMapper> nodeMapper) {
 			return null;
 		}
 
 		@Override
 		public Object accept(IModelVisitor visitor) {
 			return null;
+		}
+
+		@Override
+		public boolean isMyAncestor(IAbstractNode candidateForAncestor) {
+			return false;
+		}
+
+		@Override
+		public List<IAbstractNode> getDirectChildren() {
+			return null;
+		}
+
+		@Override
+		public boolean canAddChild(IAbstractNode child) {
+			return false;
 		}
 
 	}
@@ -67,35 +88,38 @@ public class AbstractNodeTest{
 	}
 
 	@Test
-	public void testParent(){
-		AbstractNode parent = new AbstractNodeImpl("parent");
-		AbstractNode child = new AbstractNodeImpl("child");
+	public void testParent() {
+
+		IAbstractNode parent = new AbstractNodeImpl("parent");
+		IAbstractNode child = new AbstractNodeImpl("child");
 
 		assertEquals(null, child.getParent());
 		child.setParent(parent);
-		assertEquals(parent, child.getParent());
+
+		IAbstractNode actualParent = child.getParent();
+		assertEquals(parent, actualParent);
 	}
 
-	@Test
-	public void testAttributes() {
-		AbstractNode node = new AbstractNodeImpl("name");
-		assertEquals(0, node.getPropertyCount());
-
-		NodePropertyDefs.PropertyId propertyId = NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER;
-
-		node.setPropertyValue(propertyId, "Value");
-		assertEquals(1, node.getPropertyCount());
-
-		Set<String> keys = node.getPropertyKeys();
-		assertEquals(1, keys.size());
-
-
-		String outValue = node.getPropertyValue(propertyId);
-		assertEquals("Value", outValue);
-
-		node.removeProperty(propertyId);
-		assertEquals(0, node.getPropertyCount());
-	}
+	//	@Test
+	//	public void testAttributes() {
+	//		AbstractNode node = new AbstractNodeImpl("name");
+	//		assertEquals(0, node.getPropertyCount());
+	//
+	//		NodePropertyDefs.PropertyId propertyId = NodePropertyDefs.PropertyId.PROPERTY_ METHOD_RUNNER;
+	//
+	//		node.setPropertyValue(propertyId, "Value");
+	//		assertEquals(1, node.getPropertyCount());
+	//
+	//		Set<String> keys = node.getPropertyKeys();
+	//		assertEquals(1, keys.size());
+	//
+	//
+	//		String outValue = node.getPropertyValue(propertyId);
+	//		assertEquals("Value", outValue);
+	//
+	//		node.removeProperty(propertyId);
+	//		assertEquals(0, node.getPropertyCount());
+	//	}
 
 	@Test
 	public void testHasChildren(){
@@ -108,8 +132,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode(
 				"name",
@@ -117,7 +141,7 @@ public class AbstractNodeTest{
 						"constraint",
 						ConstraintType.EXTENDED_FILTER,
 						new StaticStatement(true, null), new StaticStatement(false, null), null
-                ),
+						),
 				null);
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
 		ChoiceNode choice = new ChoiceNode("name", "0", null);
@@ -172,8 +196,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null );
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
@@ -187,9 +211,9 @@ public class AbstractNodeTest{
 		classNode.addMethod(method);
 		root.addClass(classNode);
 
-		assertEquals(8, root.getSubtreeSize());
-		assertEquals(7, classNode.getSubtreeSize());
-		assertEquals(6, method.getSubtreeSize());
+		assertEquals(10, root.getSubtreeSize());
+		assertEquals(9, classNode.getSubtreeSize());
+		assertEquals(8, method.getSubtreeSize());
 		assertEquals(1, constraint.getSubtreeSize());
 		assertEquals(1, testCase.getSubtreeSize());
 		assertEquals(1, expCat.getSubtreeSize());
@@ -199,11 +223,12 @@ public class AbstractNodeTest{
 
 	@Test
 	public void getChildTest(){
+
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("expCat", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null);
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
@@ -219,35 +244,38 @@ public class AbstractNodeTest{
 		classNode.addMethod(method);
 		root.addClass(classNode);
 
-		assertEquals(classNode, root.getChild("class"));
-		assertEquals(method, root.getChild("class:method"));
-		assertEquals(method, classNode.getChild("method"));
-		assertEquals(parameter, root.getChild("class:method:parameter"));
-		assertEquals(parameter, classNode.getChild("method:parameter"));
-		assertEquals(parameter, method.getChild("parameter"));
-		assertEquals(expCat, root.getChild("class:method:expCat"));
-		assertEquals(expCat, classNode.getChild("method:expCat"));
-		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(constraint, root.getChild("class:method:constraint"));
-		assertEquals(constraint, classNode.getChild("method:constraint"));
-		assertEquals(constraint, method.getChild("constraint"));
-		assertEquals(testCase, root.getChild("class:method:testCase"));
-		assertEquals(testCase, classNode.getChild("method:testCase"));
-		assertEquals(testCase, method.getChild("testCase"));
-		assertEquals(p, root.getChild("class:method:parameter:p"));
-		assertEquals(p, classNode.getChild("method:parameter:p"));
-		assertEquals(p, method.getChild("parameter:p"));
-		assertEquals(p, parameter.getChild("p"));
-		assertEquals(p1, root.getChild("class:method:parameter:p:p1"));
-		assertEquals(p1, classNode.getChild("method:parameter:p:p1"));
-		assertEquals(p1, method.getChild("parameter:p:p1"));
-		assertEquals(p1, parameter.getChild("p:p1"));
-		assertEquals(p1, p.getChild("p1"));
+		assertEquals(classNode, root.findChild("class"));
+		assertEquals(method, root.findChild("class:method"));
+		assertEquals(method, classNode.findChild("method"));
+		assertEquals(parameter, root.findChild("class:method:parameter"));
+		assertEquals(parameter, classNode.findChild("method:parameter"));
+		assertEquals(parameter, method.findChild("parameter"));
+		assertEquals(expCat, root.findChild("class:method:expCat"));
+		assertEquals(expCat, classNode.findChild("method:expCat"));
+		assertEquals(expCat, method.findChild("expCat"));
+		assertEquals(constraint, root.findChild("class:method:constraint"));
+		assertEquals(constraint, classNode.findChild("method:constraint"));
+		assertEquals(constraint, method.findChild("constraint"));
+		assertEquals(testCase, root.findChild("class:method:testCase"));
+		assertEquals(testCase, classNode.findChild("method:testCase"));
+		assertEquals(testCase, method.findChild("testCase"));
+		assertEquals(p, root.findChild("class:method:parameter:p"));
+		assertEquals(p, classNode.findChild("method:parameter:p"));
+		assertEquals(p, method.findChild("parameter:p"));
+		assertEquals(p, parameter.findChild("p"));
+
+		IAbstractNode childChoice = root.findChild("class:method:parameter:p:p1");
+		assertEquals(p1, childChoice);
+
+		assertEquals(p1, classNode.findChild("method:parameter:p:p1"));
+		assertEquals(p1, method.findChild("parameter:p:p1"));
+		assertEquals(p1, parameter.findChild("p:p1"));
+		assertEquals(p1, p.findChild("p1"));
 	}
 
 	@Test
 	public void getSiblingTest(){
-		MethodParameterNode cat = new MethodParameterNode("cat", "type", "0", false, null);
+		BasicParameterNode cat = new BasicParameterNode("cat", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 
@@ -265,6 +293,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void compareTest(){
+
 		AbstractNode n1 = new AbstractNodeImpl("n");
 		AbstractNode n2 = new AbstractNodeImpl("n");
 

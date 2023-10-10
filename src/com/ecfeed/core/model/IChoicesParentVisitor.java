@@ -10,6 +10,6 @@
 
 package com.ecfeed.core.model;
 
-public interface IChoicesParentVisitor extends IParameterVisitor{
+public interface IChoicesParentVisitor extends IBasicParameterVisitor{
 	public Object visit(ChoiceNode node)throws Exception;
 }

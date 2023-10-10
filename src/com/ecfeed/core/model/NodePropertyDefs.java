@@ -161,50 +161,50 @@ public class NodePropertyDefs {
 		return fPropertyDefs[propertyId.getIndex()];
 	}
 
-	public static boolean isWebRunnerMethod(String value) {
-		if (value.equals(WEB_DRIVER)) {
-			return true;
-		}
-		return false;
-	}
+//	public static boolean isWebRunnerMethod(String value) {
+//		if (value.equals(WEB_DRIVER)) {
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	public static boolean isJavaRunnerMethod(String value) {
+//		if (value.equals(JAVA_RUNNER)) {
+//			return true;
+//		}
+//		return false;
+//	}	
 
-	public static boolean isJavaRunnerMethod(String value) {
-		if (value.equals(JAVA_RUNNER)) {
-			return true;
-		}
-		return false;
-	}	
-
-	public static String browserNameChrome() {
-		return BROWSER_CHROME;
-	}
-
-	public static String browserNameFirefox() {
-		return BROWSER_FIREFOX;
-	}
+//	public static String browserNameChrome() {
+//		return BROWSER_CHROME;
+//	}
+//
+//	public static String browserNameFirefox() {
+//		return BROWSER_FIREFOX;
+//	}
 
 	public static String getEmptyElement() {
 		return EMPTY_STR;
 	}
 
-	public static String browserNameIExplorer() {
-		return BROWSER_IEXPLORER;
-	}
+//	public static String browserNameIExplorer() {
+//		return BROWSER_IEXPLORER;
+//	}
+//
+//	public static String browserNameOpera() {
+//		return BROWSER_OPERA;
+//	}	
+//
+//	public static String browserNameSafari() {
+//		return BROWSER_SAFARI;
+//	}
 
-	public static String browserNameOpera() {
-		return BROWSER_OPERA;
-	}	
-
-	public static String browserNameSafari() {
-		return BROWSER_SAFARI;
-	}
-
-	public static boolean isValidBrowser(String browserName) {
-		if (webBrowser.matchesPossibleValueIgnoreCase(browserName)) {
-			return true;
-		}
-		return false;
-	}
+//	public static boolean isValidBrowser(String browserName) {
+//		if (webBrowser.matchesPossibleValueIgnoreCase(browserName)) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public static boolean isActionSendKeys(String value) {
 		if (value.equals(ACTION_SEND_KEYS)) {

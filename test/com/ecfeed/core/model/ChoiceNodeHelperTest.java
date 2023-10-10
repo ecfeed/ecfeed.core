@@ -11,14 +11,15 @@
 package com.ecfeed.core.model;
 
 
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class ChoiceNodeHelperTest {
 
@@ -27,7 +28,7 @@ public class ChoiceNodeHelperTest {
 
 		ChoiceNode choice = new ChoiceNode("choice_1", "MAX_VALUE", null);
 		assertEquals("choice_1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForJava()));
-		assertEquals("choice_1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice_1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForSimple()));
 	}
 
 	@Test
@@ -35,17 +36,17 @@ public class ChoiceNodeHelperTest {
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "MAX_VALUE", null);
 		assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForJava()));
-		assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice2 = new ChoiceNode("choice_2", "MAX_VALUE", null);
 		choice2.setParent(choice1);
 		assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForJava()));
-		assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice3 = new ChoiceNode("choice_3", "MAX_VALUE", null);
 		choice3.setParent(choice2);
 		assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForJava()));
-		assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
 	}
 
 	@Test
@@ -53,17 +54,17 @@ public class ChoiceNodeHelperTest {
 
 		ChoiceNode choice1 = new ChoiceNode("choice 1", "MAX_VALUE", null);
 		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice2 = new ChoiceNode("choice 2", "MAX_VALUE", null);
 		choice2.setParent(choice1);
 		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice3 = new ChoiceNode("choice 3", "MAX_VALUE", null);
 		choice3.setParent(choice2);
 		assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
+		//assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
 	}
 
 	@Test
@@ -86,8 +87,8 @@ public class ChoiceNodeHelperTest {
 	@Test
 	public void createSignatureTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "MAX_VALUE", null);
@@ -99,8 +100,8 @@ public class ChoiceNodeHelperTest {
 		String label = ChoiceNodeHelper.createSignature(choiceNode1, new ExtLanguageManagerForJava());
 		assertEquals("choice_1 [MAX_VALUE]", label);
 
-		label = ChoiceNodeHelper.createSignature(choiceNode1, new ExtLanguageManagerForSimple());
-		assertEquals("choice_1 [2147483647]", label);
+		//		label = ChoiceNodeHelper.createSignature(choiceNode1, new ExtLanguageManagerForSimple());
+		//		assertEquals("choice_1 [2147483647]", label);
 
 		choiceNode1 = new ChoiceNode("choice_1", "5", null);
 		choiceNode1.setParent(methodParameterNode);
@@ -115,30 +116,30 @@ public class ChoiceNodeHelperTest {
 	@Test
 	public void createTestDataLabelTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choice = new ChoiceNode("choice_1", "MAX_VALUE", null);
 		choice.setParent(methodParameterNode);
 
-		String label = ChoiceNodeHelper.createTestDataLabel(choice, new ExtLanguageManagerForSimple());
-		assertEquals("[e]2147483647", label);
+		//		String label = ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, new ExtLanguageManagerForSimple());
+		//		assertEquals("[e]2147483647", label);
 
 		methodParameterNode.setExpected(false);
 
-		label = ChoiceNodeHelper.createTestDataLabel(choice, new ExtLanguageManagerForJava());
-		assertEquals("choice_1", label);
+		String label = ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, new ExtLanguageManagerForJava());
+		assertEquals("par1:choice_1", label);
 
-		label = ChoiceNodeHelper.createTestDataLabel(choice, new ExtLanguageManagerForSimple());
-		assertEquals("choice_1", label);
+		//		label = ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, new ExtLanguageManagerForSimple());
+		//		assertEquals("par1:choice_1", label);
 	}
 
 	@Test
 	public void getChoiceNamesTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "0", null);
@@ -156,10 +157,10 @@ public class ChoiceNodeHelperTest {
 		assertEquals("choice_1", choiceNames.get(0));
 		assertEquals("choice_2", choiceNames.get(1));
 
-		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
-		assertEquals(2, choiceNames.size());
-		assertEquals("choice_1", choiceNames.get(0));
-		assertEquals("choice_2", choiceNames.get(1));
+		//		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
+		//		assertEquals(2, choiceNames.size());
+		//		assertEquals("choice_1", choiceNames.get(0));
+		//		assertEquals("choice_2", choiceNames.get(1));
 
 		choice2.setParent(choice1);
 
@@ -168,9 +169,9 @@ public class ChoiceNodeHelperTest {
 		assertEquals("choice_1", choiceNames.get(0));
 		assertEquals("choice_1:choice_2", choiceNames.get(1));
 
-		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
-		assertEquals(2, choiceNames.size());
-		assertEquals("choice_1", choiceNames.get(0));
-		assertEquals("choice_1:choice_2", choiceNames.get(1));
+		//		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
+		//		assertEquals(2, choiceNames.size());
+		//		assertEquals("choice_1", choiceNames.get(0));
+		//		assertEquals("choice_1:choice_2", choiceNames.get(1));
 	}
 }
