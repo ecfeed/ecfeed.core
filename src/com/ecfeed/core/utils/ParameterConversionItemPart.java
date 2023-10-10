@@ -11,15 +11,20 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 
 public abstract class ParameterConversionItemPart implements IParameterConversionItemPart {
 
 	private String fStr;
 	private AbstractParameterNode fAbstractParameterNode;
+	private CompositeParameterNode fLinkingContext;
 
 	public abstract Integer getTypeSortOrder();
 
-	public ParameterConversionItemPart(AbstractParameterNode abstractParameterNode, String str) {
+	public ParameterConversionItemPart(
+			AbstractParameterNode abstractParameterNode,
+			CompositeParameterNode linkingContext,
+			String str) {
 
 		if (str == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
@@ -32,11 +37,20 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	@Override
 	public String toString() {
 
+		if (fLinkingContext == null) {
+			return 
+					getParameter().getName() + 
+					SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+					getStr() + 
+					"[" + getTypeDescription() + "]";
+		}
+		
 		return 
-				getParameter().getName() + 
+				getLinkingContext() + "->" + getParameter().getName() + // XYX define constant for -> 
 				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
 				getStr() + 
 				"[" + getTypeDescription() + "]";
+		
 	}
 
 	@Override
@@ -44,6 +58,11 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		return fAbstractParameterNode;
 	}
 
+	@Override
+	public CompositeParameterNode getLinkingContext() {
+		return fLinkingContext;
+	}
+	
 	@Override
 	public String getStr() {
 		return fStr;
@@ -75,10 +94,10 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 
 		return typeDescription;
 	}
-	
+
 	@Override 
 	public String getDescription() {
-		
+
 		return fStr + "[" + getTypeDescription() + "]";
 	}
 

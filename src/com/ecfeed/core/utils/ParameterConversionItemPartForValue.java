@@ -11,11 +11,15 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 
 public class ParameterConversionItemPartForValue extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForValue(AbstractParameterNode abstractParameterNode, String value) {
-		super(abstractParameterNode, value);
+	public ParameterConversionItemPartForValue(
+			AbstractParameterNode abstractParameterNode, 
+			CompositeParameterNode linkingContext,
+			String value) {
+		super(abstractParameterNode, linkingContext, value);
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForValue clone = 
-				new ParameterConversionItemPartForValue(getParameter(), getValue());
+				new ParameterConversionItemPartForValue(getParameter(), getLinkingContext(), getValue());
 
 		return clone;
 	}

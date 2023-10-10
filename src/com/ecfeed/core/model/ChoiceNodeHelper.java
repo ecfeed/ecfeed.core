@@ -232,7 +232,7 @@ public class ChoiceNodeHelper {
 
 		IParameterConversionItemPart srcPart = 
 				new ParameterConversionItemPartForValue(
-						choiceNode.getParameter(), choiceNode.getValueString());
+						choiceNode.getParameter(), null, choiceNode.getValueString());
 
 		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
 

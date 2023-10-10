@@ -11,6 +11,7 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 
 public interface IParameterConversionItemPart  {
 
@@ -73,6 +74,7 @@ public interface IParameterConversionItemPart  {
 	}
 
 	public AbstractParameterNode getParameter(); // XYX can BasicParameterNode be used ?
+	public CompositeParameterNode getLinkingContext(); // XYX can BasicParameterNode be used ?
 	public ItemPartType getType();
 	public String getTypeDescription();
 	public String getStr();

@@ -508,6 +508,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
 
+		// XYX convert parameter here
+		
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
 

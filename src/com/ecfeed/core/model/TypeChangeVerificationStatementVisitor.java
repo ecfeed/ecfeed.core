@@ -126,7 +126,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		if (!canConvert) {
 
 			ParameterConversionItemPartForValue srcPart = 
-					new ParameterConversionItemPartForValue(abstractParameterNode, valueString);
+					new ParameterConversionItemPartForValue(abstractParameterNode, null, valueString);
 			
 			ParameterConversionItem parameterConversionItem = 
 					new ParameterConversionItem(

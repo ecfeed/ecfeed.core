@@ -12,13 +12,17 @@ package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 
 public class ParameterConversionItemPartForChoice extends ParameterConversionItemPart {
 
 	private ChoiceNode fChoiceNode;
 
-	public ParameterConversionItemPartForChoice(AbstractParameterNode abstractParameterNode, ChoiceNode choiceNode) {
-		super(abstractParameterNode, choiceNode.getName());
+	public ParameterConversionItemPartForChoice(
+			AbstractParameterNode abstractParameterNode,
+			CompositeParameterNode linkingContext,
+			ChoiceNode choiceNode) {
+		super(abstractParameterNode, linkingContext, choiceNode.getName());
 
 		fChoiceNode = choiceNode;
 	}
@@ -46,7 +50,7 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForChoice clone = 
-				new ParameterConversionItemPartForChoice(getParameter(), fChoiceNode);
+				new ParameterConversionItemPartForChoice(getParameter(), getLinkingContext(), fChoiceNode);
 
 		return clone;
 	}

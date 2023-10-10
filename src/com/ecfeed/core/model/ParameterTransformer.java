@@ -268,6 +268,7 @@ public class ParameterTransformer {
 		}
 	}
 
+	// XYX not part of parameter transformer ??
 	public static void verifyConversionOfParameterToType(
 			String newType, 
 			BasicParameterNode abstractParameterNode,
@@ -518,7 +519,7 @@ public class ParameterTransformer {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		ParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(abstractParameterNode, defaultValue);
+				new ParameterConversionItemPartForValue(abstractParameterNode, null, defaultValue);
 
 		boolean isRandomized = false;
 
