@@ -24,13 +24,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
-import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -517,7 +513,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		convertParameterAndLinkingContext(parameterConversionItem);
 
-		convertRightCondition(parameterConversionItem, this, fRightCondition);
+		StatementConditionHelper.convertRightCondition(parameterConversionItem, this, fRightCondition);
 	}
 
 	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) { // XYX move to helper
@@ -531,94 +527,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				parameterConversionItem.getDstPart().getLinkingContext();
 
 		fLeftParameterLinkingContext = dstLinkingContext;
-	}
-
-	private static void convertRightCondition(
-			ParameterConversionItem parameterConversionItem,
-			RelationStatement relationStatement,
-			IStatementCondition fRightCondition) { // XYX move to helper ?
-
-		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
-		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-
-		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
-		IParameterConversionItemPart.ItemPartType dstType = dstPart.getType();
-
-		if (srcType == dstType) {
-			fRightCondition.convert(parameterConversionItem);
-			return;
-		}
-
-		if (srcType == IParameterConversionItemPart.ItemPartType.LABEL && 
-				fRightCondition instanceof LabelCondition) {
-
-			convertLabelPartToChoicePart(srcPart, dstPart, relationStatement, fRightCondition);
-			return;
-		}
-
-		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
-				fRightCondition instanceof ChoiceCondition) {
-
-			convertChoicePartToLabelPart(srcPart, dstPart, relationStatement, fRightCondition);
-			return;
-		}
-	}
-
-	private static void convertLabelPartToChoicePart(
-			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart,
-			RelationStatement relationStatement,
-			IStatementCondition fRightCondition) {
-
-		LabelCondition labelCondition = (LabelCondition) fRightCondition;
-		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
-				(ParameterConversionItemPartForLabel) srcPart;
-
-		String labelOfCondition = labelCondition.getRightLabel();
-		String labelOfItemPart = parameterConversionItemPartForLabel.getLabel();
-
-
-		if (!StringHelper.isEqual(labelOfCondition, labelOfItemPart)) {
-			return;
-		}
-
-		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForChoice) dstPart;
-
-		ChoiceNode choiceNode = parameterConversionItemPartForChoice.getChoiceNode();
-
-		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode, relationStatement);
-
-		fRightCondition = choiceCondition;
-	}
-
-	private static void convertChoicePartToLabelPart(
-			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart,
-			RelationStatement relationStatement,
-			IStatementCondition fRightCondition) {
-
-		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
-
-		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForChoice) srcPart;
-
-		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
-		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
-
-
-		if (!choiceOfCondition.equals(choiceOfItemPart)) {
-			return;
-		}
-
-		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
-				(ParameterConversionItemPartForLabel) dstPart;
-
-		String label = parameterConversionItemPartForLabel.getLabel();
-
-		LabelCondition labelCondition = new LabelCondition(label, relationStatement);
-
-		fRightCondition = labelCondition;
 	}
 
 	@Override
