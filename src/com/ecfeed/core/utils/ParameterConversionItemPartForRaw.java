@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 
 public class ParameterConversionItemPartForRaw extends ParameterConversionItemPart {
@@ -18,11 +18,12 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	String fCode;
 
 	public ParameterConversionItemPartForRaw(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			CompositeParameterNode linkingContext,
 			String code, 
 			String name) {
-		super(abstractParameterNode, linkingContext, name);
+
+		super(basicParameterNode, linkingContext, name);
 
 		fCode = code;
 	}

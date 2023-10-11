@@ -10,19 +10,19 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 
 public abstract class ParameterConversionItemPart implements IParameterConversionItemPart {
 
 	private String fStr;
-	private AbstractParameterNode fAbstractParameterNode;
+	private BasicParameterNode fAbstractParameterNode;
 	private CompositeParameterNode fLinkingContext;
 
 	public abstract Integer getTypeSortOrder();
 
 	public ParameterConversionItemPart(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			CompositeParameterNode linkingContext,
 			String str) {
 
@@ -45,17 +45,17 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 					getStr() + 
 					"[" + getTypeDescription() + "]";
 		}
-		
+
 		return 
 				getLinkingContext().getName() + "->" + getParameter().getName() + // XYX define constant for -> 
 				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
 				getStr() + 
 				"[" + getTypeDescription() + "]";
-		
+
 	}
 
 	@Override
-	public AbstractParameterNode getParameter() {
+	public BasicParameterNode getParameter() {
 		return fAbstractParameterNode;
 	}
 
@@ -63,7 +63,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	public CompositeParameterNode getLinkingContext() {
 		return fLinkingContext;
 	}
-	
+
 	@Override
 	public String getStr() {
 		return fStr;

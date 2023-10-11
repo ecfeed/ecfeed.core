@@ -10,16 +10,16 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 
 public class ParameterConversionItemPartForValue extends ParameterConversionItemPart {
 
 	public ParameterConversionItemPartForValue(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			CompositeParameterNode linkingContext,
 			String value) {
-		super(abstractParameterNode, linkingContext, value);
+		super(basicParameterNode, linkingContext, value);
 	}
 
 	@Override

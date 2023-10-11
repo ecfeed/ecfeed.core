@@ -459,7 +459,7 @@ public class ParameterTransformer {
 		BasicParameterNode srcParameterNode = (BasicParameterNode) srcAbstractParameterNode; 
 
 		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) srcParameterNode.getParent();
-		
+
 		convertConstraintsAtAllLevelsForOneItem(parameterConversionItem, constraintsParentNode);
 
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
@@ -479,19 +479,19 @@ public class ParameterTransformer {
 	private static void convertConstraintsAtAllLevelsForOneItem(
 			ParameterConversionItem parameterConversionItem,
 			IConstraintsParentNode constraintsParentNode) {
-		
+
 		for (;;) {
-			
+
 			if (constraintsParentNode == null) {
 				break;
 			}
-			
+
 			convertOneItemForOneConstraintsParent(parameterConversionItem, constraintsParentNode);
-			
+
 			if (constraintsParentNode instanceof MethodNode) {
 				break;
 			}
-			
+
 			constraintsParentNode = (IConstraintsParentNode) constraintsParentNode.getParent();
 		}
 	}
@@ -499,7 +499,7 @@ public class ParameterTransformer {
 	private static void convertOneItemForOneConstraintsParent(
 			ParameterConversionItem parameterConversionItem,
 			IConstraintsParentNode constraintsParentNode) {
-		
+
 		ParametersAndConstraintsParentNodeHelper.convertConstraints(
 				constraintsParentNode.getConstraintNodes(),
 				parameterConversionItem);
@@ -514,12 +514,12 @@ public class ParameterTransformer {
 	}
 
 	private static void addDefaultValueToConversionDefinition(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode basicParameterNode,
 			String defaultValue,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		ParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(abstractParameterNode, null, defaultValue);
+				new ParameterConversionItemPartForValue(basicParameterNode, null, defaultValue);
 
 		boolean isRandomized = false;
 

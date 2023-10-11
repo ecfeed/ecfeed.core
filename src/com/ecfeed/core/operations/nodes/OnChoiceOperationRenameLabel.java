@@ -114,15 +114,15 @@ public class OnChoiceOperationRenameLabel extends AbstractModelOperation {
 
 
 	private ParameterConversionDefinition createParameterConversionDefinition(
-			AbstractParameterNode abstractParameterNode, String currentLabel, String newLabel) {
+			BasicParameterNode basicParameterNode, String currentLabel, String newLabel) {
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForLabel(abstractParameterNode, null, currentLabel);
+				new ParameterConversionItemPartForLabel(basicParameterNode, null, currentLabel);
 		
 		IParameterConversionItemPart dstPart = 
-				new ParameterConversionItemPartForLabel(abstractParameterNode, null, newLabel);
+				new ParameterConversionItemPartForLabel(basicParameterNode, null, newLabel);
 
 		boolean isRandomized = false;
 

@@ -41,13 +41,13 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
-		
+
 		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
@@ -70,13 +70,13 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	public Object visit(ValueCondition condition) throws Exception {
 
 		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
-		
+
 		BasicParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
-		
+
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		String valueString = condition.getRightValue();
 		verifyConversionOfValue(fMethodParameterNode, fOldType, valueString, false, fConstraintName + "(constraint)");
 
@@ -115,7 +115,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	}
 
 	private void verifyConversionOfValue(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode basicParameterNode,
 			String oldType, 
 			String valueString, 
 			boolean isRandomized, 
@@ -126,8 +126,8 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		if (!canConvert) {
 
 			ParameterConversionItemPartForValue srcPart = 
-					new ParameterConversionItemPartForValue(abstractParameterNode, null, valueString);
-			
+					new ParameterConversionItemPartForValue(basicParameterNode, null, valueString);
+
 			ParameterConversionItem parameterConversionItem = 
 					new ParameterConversionItem(
 							srcPart, null, isRandomized, objectsContainingItem);

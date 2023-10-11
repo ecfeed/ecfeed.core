@@ -10,16 +10,16 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 
 public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
 
 	public ParameterConversionItemPartForLabel(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			CompositeParameterNode linkingContext,
 			String label) {
-		super(abstractParameterNode, linkingContext, label);
+		super(basicParameterNode, linkingContext, label);
 	}
 
 	@Override
