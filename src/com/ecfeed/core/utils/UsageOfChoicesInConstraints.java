@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ConstraintsParentNodeHelper;
 import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
 
-public class UsageOfChoicesInConstraints { // XYX rename
+public class UsageOfChoicesInConstraints {
 
 	private Map<BasicParameterWithChoice, ListOfStrings /* names of constraints */> fMapOfUsages;
 
@@ -119,7 +119,7 @@ public class UsageOfChoicesInConstraints { // XYX rename
 		return null;
 	}
 
-	public boolean choiceNameExists(String parameterName, String choiceName) { // XYX rename
+	public boolean choiceNameExists(String parameterName, String choiceName) {
 
 		for (BasicParameterWithChoice basicParameterWithChoice : fMapOfUsages.keySet()) {
 
