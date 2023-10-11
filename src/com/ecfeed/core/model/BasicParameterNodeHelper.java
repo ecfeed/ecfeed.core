@@ -193,40 +193,40 @@ public class BasicParameterNodeHelper {
 
 		return null;
 	}
-	
+
 	public static BasicParameterNode findBasicParameterWithoutChoices(AbstractParameterNode topAbstractParameterNode) {
-		
+
 		if (topAbstractParameterNode instanceof BasicParameterNode) {
-			
+
 			BasicParameterNode basicParameterNode = (BasicParameterNode) topAbstractParameterNode;
-			
+
 			if (basicParameterNode.getChoiceCount() == 0) {
 				return basicParameterNode;
 			}
-			
+
 			return null;
 		}
-		
+
 		BasicParameterNode basicParameterNode = 
 				findBasicParameterWithoutChoicesForComposite((CompositeParameterNode) topAbstractParameterNode);
-		
+
 		return basicParameterNode;
 	}
 
 	public static BasicParameterNode findBasicParameterWithoutChoicesForComposite(CompositeParameterNode compositeParameterNode) {
-		
+
 		List<BasicParameterNode> basicParameterNodes = 
 				CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
-		
+
 		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
 			if (basicParameterNode.getChoiceCount() == 0) {
 				return basicParameterNode;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
 
 		if (linkedParameterSignature == null) {
@@ -741,7 +741,7 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> abstractNodes) { // XYX remove to filterBasicParameters
+	public static List<BasicParameterNode> filterBasicParameters(List<IAbstractNode> abstractNodes) {
 
 		List<BasicParameterNode> parameters = abstractNodes.stream()
 				.filter(e -> e instanceof BasicParameterNode)
@@ -795,5 +795,5 @@ public class BasicParameterNodeHelper {
 
 		return result;
 	}
-	
+
 }
