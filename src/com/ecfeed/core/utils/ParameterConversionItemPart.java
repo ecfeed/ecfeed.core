@@ -31,6 +31,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		}
 
 		fAbstractParameterNode = abstractParameterNode; 
+		fLinkingContext = linkingContext;
 		fStr = str;
 	}
 
@@ -46,7 +47,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		}
 		
 		return 
-				getLinkingContext() + "->" + getParameter().getName() + // XYX define constant for -> 
+				getLinkingContext().getName() + "->" + getParameter().getName() + // XYX define constant for -> 
 				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
 				getStr() + 
 				"[" + getTypeDescription() + "]";
