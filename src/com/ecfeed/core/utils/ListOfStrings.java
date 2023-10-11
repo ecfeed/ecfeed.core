@@ -5,63 +5,63 @@ import java.util.List;
 
 public class ListOfStrings {
 
-    List<String> fStrings;
+	List<String> fStrings;
 
-    public ListOfStrings() {
+	public ListOfStrings() {
 
-        fStrings = new ArrayList<>();
-    }
+		fStrings = new ArrayList<>();
+	}
 
-    @Override
-    public String toString() {
-    	return fStrings.toString();
-    }
-    
-    public void add(String string) {
+	@Override
+	public String toString() {
+		return fStrings.toString();
+	}
 
-        fStrings.add(string);
-    }
+	public void add(String string) {
 
-    public boolean isEmpty() {
+		fStrings.add(string);
+	}
 
-        if (fStrings.size() == 0) {
-            return true;
-        }
+	public boolean isEmpty() {
 
-        return false;
-    }
+		if (fStrings.size() == 0) {
+			return true;
+		}
+
+		return false;
+	}
 
 	public List<String> getCollectionOfStrings() {
-		
+
 		return fStrings;
 	}
-	
+
 	public String getFirstString() {
-		
+
 		return fStrings.get(0);
 	}
-	
+
 	public boolean contains(String strg) {
-		
+
 		if (fStrings.contains(strg)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	public String getErrorsAsText() {  // XYX rename
-		
+
+	public String getErrorsAsOneString() {
+
 		String text = "";
-		
+
 		for (String error : fStrings) {
-			
+
 			text += error + "\n";
 		}
-		
+
 		return text;
 	}
-	
+
 	public String getAsStringWithSeparators(String separator) {
 
 		int listSize = fStrings.size();
