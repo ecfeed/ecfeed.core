@@ -508,8 +508,36 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
 
-		// XYX convert parameter here
-		
+		BasicParameterNode srcParameter = 
+				(BasicParameterNode) parameterConversionItem.getSrcPart().getParameter();
+
+		if (fLeftParameter != srcParameter) {
+			return;
+		}
+
+		convertParameterAndLinkingContext(parameterConversionItem);
+
+		convertRightCondition(parameterConversionItem, this, fRightCondition);
+	}
+
+	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) { // XYX move to helper
+
+		BasicParameterNode dstParameter = 
+				(BasicParameterNode) parameterConversionItem.getDstPart().getParameter();
+
+		fLeftParameter = dstParameter;
+
+		CompositeParameterNode dstLinkingContext = 
+				parameterConversionItem.getDstPart().getLinkingContext();
+
+		fLeftParameterLinkingContext = dstLinkingContext;
+	}
+
+	private static void convertRightCondition(
+			ParameterConversionItem parameterConversionItem,
+			RelationStatement relationStatement,
+			IStatementCondition fRightCondition) { // XYX move to helper ?
+
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
 
@@ -524,22 +552,23 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		if (srcType == IParameterConversionItemPart.ItemPartType.LABEL && 
 				fRightCondition instanceof LabelCondition) {
 
-			convertLabelPartToChoicePart(srcPart, dstPart);
+			convertLabelPartToChoicePart(srcPart, dstPart, relationStatement, fRightCondition);
 			return;
 		}
 
 		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
 				fRightCondition instanceof ChoiceCondition) {
 
-			convertChoicePartToLabelPart(srcPart, dstPart);
+			convertChoicePartToLabelPart(srcPart, dstPart, relationStatement, fRightCondition);
 			return;
 		}
-
 	}
 
-	private void convertLabelPartToChoicePart(
+	private static void convertLabelPartToChoicePart(
 			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart) {
+			IParameterConversionItemPart dstPart,
+			RelationStatement relationStatement,
+			IStatementCondition fRightCondition) {
 
 		LabelCondition labelCondition = (LabelCondition) fRightCondition;
 		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
@@ -558,14 +587,16 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		ChoiceNode choiceNode = parameterConversionItemPartForChoice.getChoiceNode();
 
-		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode,	this);
+		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode, relationStatement);
 
 		fRightCondition = choiceCondition;
 	}
 
-	private void convertChoicePartToLabelPart(
+	private static void convertChoicePartToLabelPart(
 			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart) {
+			IParameterConversionItemPart dstPart,
+			RelationStatement relationStatement,
+			IStatementCondition fRightCondition) {
 
 		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
 
@@ -585,7 +616,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		String label = parameterConversionItemPartForLabel.getLabel();
 
-		LabelCondition labelCondition = new LabelCondition(label, this);
+		LabelCondition labelCondition = new LabelCondition(label, relationStatement);
 
 		fRightCondition = labelCondition;
 	}
