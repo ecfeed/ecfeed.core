@@ -21,6 +21,7 @@ public class SignatureHelper {
 	public static final String SIGNATURE_TYPE_SEPARATOR = " : ";  // name from type
 	public static final String SIGNATURE_CONTENT_SEPARATOR = " : "; // name from content
 	public static final String SIGNATURE_ROOT_MARKER = "@";  // informs that the first item is root node
+	public static final String SIGNATURE_LINK_ARROW = "->";	
 
 	public static String getLastSegment(String name) {
 

@@ -47,7 +47,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		}
 
 		return 
-				getLinkingContext().getName() + "->" + getParameter().getName() + // XYX define constant for -> 
+				getLinkingContext().getName() + SignatureHelper.SIGNATURE_LINK_ARROW + getParameter().getName() + 
 				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
 				getStr() + 
 				"[" + getTypeDescription() + "]";
