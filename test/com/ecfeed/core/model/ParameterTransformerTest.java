@@ -553,7 +553,7 @@ public class ParameterTransformerTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 		NodeMapper nodeMapper = new NodeMapper();
-		
+
 		ParameterTransformer.linkLocalParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
@@ -807,7 +807,10 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		TestHelper.addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
+		TestHelper.addSimpleChoiceConstraintToMethod
+			(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
+		
+		ConstraintNode tmpConstraintNode1 = methodNode.getConstraintNodes().get(0);
 
 		// creating choice conversion list - to method choices to one global choice
 
@@ -844,6 +847,9 @@ public class ParameterTransformerTest {
 				Optional.of(nodeMapper),
 				extLanguageManager);
 
+		
+		ConstraintNode tmpConstraintNode2 = methodNode.getConstraintNodes().get(0);
+		
 		// check global parameter of class
 
 		assertEquals(1, classNode.getParametersCount());

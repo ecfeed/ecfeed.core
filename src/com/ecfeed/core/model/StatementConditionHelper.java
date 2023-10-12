@@ -143,8 +143,6 @@ public class StatementConditionHelper {
 			RelationStatement relationStatement,
 			IStatementCondition rightCondition) {
 		
-		 
-
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
 
