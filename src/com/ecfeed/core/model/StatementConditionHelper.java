@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
@@ -136,10 +138,12 @@ public class StatementConditionHelper {
 		return StringHelper.removeFromPostfix("[" + typeDescription + "]", string);
 	}
 
-	public static void convertRightCondition(
+	public static IStatementCondition createConvertedRightCondition(
 			ParameterConversionItem parameterConversionItem,
 			RelationStatement relationStatement,
-			IStatementCondition inOutRightCondition) {
+			IStatementCondition rightCondition) {
+		
+		 
 
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
@@ -148,41 +152,49 @@ public class StatementConditionHelper {
 		IParameterConversionItemPart.ItemPartType dstType = dstPart.getType();
 
 		if (srcType == dstType) {
-			inOutRightCondition.convert(parameterConversionItem);
-			return;
+			IStatementCondition clonedRightCondition = rightCondition.makeClone(relationStatement, Optional.empty());
+			clonedRightCondition.convert(parameterConversionItem);
+			return clonedRightCondition;
 		}
 
 		if (srcType == IParameterConversionItemPart.ItemPartType.LABEL && 
-				inOutRightCondition instanceof LabelCondition) {
+				rightCondition instanceof LabelCondition) {
 
-			convertLabelPartToChoicePart(srcPart, dstPart, relationStatement, inOutRightCondition);
-			return;
+			IStatementCondition result = 
+					createConvertedLabelPartToChoicePart(
+							srcPart, dstPart, relationStatement, rightCondition);
+			return result;
 		}
 
 		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
-				inOutRightCondition instanceof ChoiceCondition) {
-
-			convertChoicePartToLabelPart(srcPart, dstPart, relationStatement, inOutRightCondition);
-			return;
+				rightCondition instanceof ChoiceCondition) {
+			
+			IStatementCondition result =
+					convertChoicePartToLabelPart(
+							srcPart, dstPart, relationStatement, rightCondition);
+			
+			return result;
 		}
+		
+		ExceptionHelper.reportRuntimeException("Invalid configuration of condition conversion.");
+		return null;
 	}
 
-	private static void convertLabelPartToChoicePart(
+	private static IStatementCondition createConvertedLabelPartToChoicePart(
 			IParameterConversionItemPart srcPart,
 			IParameterConversionItemPart dstPart,
 			RelationStatement relationStatement,
-			IStatementCondition inOutRightCondition) {
+			IStatementCondition sourceRightCondition) {
 
-		LabelCondition labelCondition = (LabelCondition) inOutRightCondition;
+		LabelCondition labelCondition = (LabelCondition) sourceRightCondition;
 		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
 				(ParameterConversionItemPartForLabel) srcPart;
 
 		String labelOfCondition = labelCondition.getRightLabel();
 		String labelOfItemPart = parameterConversionItemPartForLabel.getLabel();
 
-
 		if (!StringHelper.isEqual(labelOfCondition, labelOfItemPart)) {
-			return;
+			return sourceRightCondition;
 		}
 
 		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
@@ -192,10 +204,10 @@ public class StatementConditionHelper {
 
 		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode, relationStatement);
 
-		inOutRightCondition = choiceCondition;
+		return choiceCondition;
 	}
 
-	private static void convertChoicePartToLabelPart(
+	private static IStatementCondition convertChoicePartToLabelPart(
 			IParameterConversionItemPart srcPart,
 			IParameterConversionItemPart dstPart,
 			RelationStatement relationStatement,
@@ -209,9 +221,8 @@ public class StatementConditionHelper {
 		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
 		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
 
-
 		if (!choiceOfCondition.equals(choiceOfItemPart)) {
-			return;
+			return inOutRightCondition;
 		}
 
 		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
@@ -221,7 +232,7 @@ public class StatementConditionHelper {
 
 		LabelCondition labelCondition = new LabelCondition(label, relationStatement);
 
-		inOutRightCondition = labelCondition;
+		return labelCondition;
 	}
 
 }

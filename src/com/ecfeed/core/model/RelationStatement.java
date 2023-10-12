@@ -513,7 +513,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		convertParameterAndLinkingContext(parameterConversionItem);
 
-		StatementConditionHelper.convertRightCondition(parameterConversionItem, this, fRightCondition);
+		fRightCondition = 
+				StatementConditionHelper.createConvertedRightCondition(
+						parameterConversionItem, this, fRightCondition);
 	}
 
 	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) { // XYX move to helper

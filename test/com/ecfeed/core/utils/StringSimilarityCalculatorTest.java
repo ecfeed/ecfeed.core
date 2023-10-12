@@ -25,13 +25,13 @@ public class StringSimilarityCalculatorTest {
 
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "A"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "AB"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "A"));
 
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "A"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "A"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "AB"));
 
 		assertTrue(result1 == result2);
 	}
@@ -43,13 +43,13 @@ public class StringSimilarityCalculatorTest {
 
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC1"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "RC1"));
 
 		double result2 =
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "RC2"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "RC2"));
 
 		assertTrue(result1 > result2);
 	}
@@ -61,13 +61,13 @@ public class StringSimilarityCalculatorTest {
 
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC2"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MC1"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MC2"));
 
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MC1"),
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "MCA"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MC1"),
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "MCA"));
 
 		assertTrue(result1 > result2);
 	}	
@@ -79,20 +79,20 @@ public class StringSimilarityCalculatorTest {
 
 		double result1 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABD"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "ABCD"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "ABD"));
 
 		double result2 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"), 
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "AB"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "ABCD"), 
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "AB"));
 
 		assertTrue(result1 > result2);
 
 		double result3 = 
 				StringSimilarityCalculator.calculateSimilarityIndex(
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "ABCD"),
-						new ParameterConversionItemPartForRaw(basicParameterNode, "C", "B"));
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "ABCD"),
+						new ParameterConversionItemPartForRaw(basicParameterNode, null, "C", "B"));
 
 		assertTrue(result2 > result3);
 	}
