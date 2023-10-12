@@ -187,25 +187,26 @@ public class ParameterTransformer {
 
 		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
-		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
-
-		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 
 		BasicParameterNode global2 = (BasicParameterNode) globalParameterNode; 
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
+		
+		ChoicesParentNodeHelper.createCopyOfChoicesAndConversionList(
+				methodParameterNode,
 				global2, methodParameterNode, 
-				reverseOperationsForChoicesCopy,
+				reverseOperations,
 				parameterConversionItems,
 				extLanguageManager);
-
+		
 		convertConstraints(
 				methodNode, 
 				globalParameterNode, methodParameterNode, 
 				parameterConversionItems, outReverseOperations, 
 				extLanguageManager);
 
-		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
+		outReverseOperations.addAll(reverseOperations);
 
 		if (parent instanceof ITestCasesParentNode) {
 			removeTestCases((ITestCasesParentNode)parent, outReverseOperations, extLanguageManager);

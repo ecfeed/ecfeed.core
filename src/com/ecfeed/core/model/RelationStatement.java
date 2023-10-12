@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
@@ -25,12 +24,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -461,54 +457,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getChoices(methodParameterNode);
 	}
 
-	//	public boolean isRightParameterTypeAllowed(String rightParameterType) {
-	//
-	//		BasicParameterNode leftParameter = getLeftParameter();
-	//		String leftParameterType =  leftParameter.getType();
-	//
-	//		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-	//				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-	//				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
-	//				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
-	//				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
-	//				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
-	//				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		return true;
-	//	}
-
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
 
-		if (!shouldConvertRelation(this, parameterConversionItem)) {
+		if (!RelationStatementHelper.shouldConvertRelation(this, parameterConversionItem)) {
 			return;
 		}
 
@@ -519,95 +471,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 						parameterConversionItem, this, fRightCondition);
 	}
 
-	private static boolean shouldConvertRelation( // XYX move to helper
-			RelationStatement relationStatement, 
-			ParameterConversionItem parameterConversionItem) {
-
-		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
-
-		BasicParameterNode srcParameter = (BasicParameterNode) srcPart.getParameter();
-
-		BasicParameterNode relationParameter = relationStatement.getLeftParameter();
-
-		if (relationParameter != srcParameter) {
-			return false;
-		}
-
-		IStatementCondition statementCondition = relationStatement.getCondition();
-
-		if (!shouldConvertCondition(relationParameter, statementCondition, srcPart)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private static boolean shouldConvertCondition( // XYX move to condition helper
-			BasicParameterNode leftBasicParameterNode,
-			IStatementCondition statementCondition,
-			IParameterConversionItemPart srcPart) { 
-
-		if (statementCondition instanceof ChoiceCondition) {
-			return shouldConvertChoiceCondition((ChoiceCondition)statementCondition, srcPart);
-		}
-
-		if (statementCondition instanceof LabelCondition) {
-			return shouldConvertLabelCondition(leftBasicParameterNode, srcPart);
-		}
-
-		return false;
-	}
-
-	private static boolean shouldConvertChoiceCondition(
-			ChoiceCondition statementCondition, // XYX move to helper
-			IParameterConversionItemPart srcPart) {
-
-		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
-
-		if (srcType != IParameterConversionItemPart.ItemPartType.CHOICE) {
-			return false;
-		}
-
-		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForChoice)srcPart;
-
-		ChoiceNode choiceFromCondition = statementCondition.getRightChoice();
-		ChoiceNode choiceFromSrcPart = parameterConversionItemPartForChoice.getChoiceNode();
-
-		if (choiceFromCondition == choiceFromSrcPart) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static boolean shouldConvertLabelCondition( // XYX move to helper
-			BasicParameterNode basicParameterNode,
-			IParameterConversionItemPart srcPart) {
-
-		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
-
-		if (srcType != IParameterConversionItemPart.ItemPartType.LABEL) {
-			return false;
-		}
-
-		ParameterConversionItemPartForLabel parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForLabel)srcPart;
-
-		String label = parameterConversionItemPartForChoice.getLabel();
-
-		Set<ChoiceNode> labeledChoices = basicParameterNode.getLabeledChoices(label);
-
-		if (labeledChoices == null) {
-			return false;
-		}
-
-		if (labeledChoices.isEmpty()) {
-			return false;
-		}
-
-		return true;
-	}
 
 	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) { // XYX move to helper
 

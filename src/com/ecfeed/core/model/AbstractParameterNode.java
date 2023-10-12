@@ -37,7 +37,13 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 	public boolean isLinked() {
 
-		return getLinkToGlobalParameter() != null;
+		AbstractParameterNode linkToGlobalParameter = getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter == null) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override

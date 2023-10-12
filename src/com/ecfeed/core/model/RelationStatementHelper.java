@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatementHelper {
@@ -97,6 +99,29 @@ public class RelationStatementHelper {
 		String type2 = condition2.getClass().getTypeName();
 
 		ExceptionHelper.reportRuntimeException("Unknown or not same types of compared conditions of types: " + type1 + ", " + type2 + ".");
+	}
+
+	public static boolean shouldConvertRelation(
+			RelationStatement relationStatement, 
+			ParameterConversionItem parameterConversionItem) {
+
+		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+
+		BasicParameterNode srcParameter = (BasicParameterNode) srcPart.getParameter();
+
+		BasicParameterNode relationParameter = relationStatement.getLeftParameter();
+
+		if (relationParameter != srcParameter) {
+			return false;
+		}
+
+		IStatementCondition statementCondition = relationStatement.getCondition();
+
+		if (!StatementConditionHelper.shouldConvertCondition(relationParameter, statementCondition, srcPart)) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

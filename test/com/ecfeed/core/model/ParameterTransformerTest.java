@@ -808,9 +808,7 @@ public class ParameterTransformerTest {
 		// add constraint
 
 		TestHelper.addSimpleChoiceConstraintToMethod
-			(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
-		
-		ConstraintNode tmpConstraintNode1 = methodNode.getConstraintNodes().get(0);
+		(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
 
 		// creating choice conversion list - to method choices to one global choice
 
@@ -847,9 +845,6 @@ public class ParameterTransformerTest {
 				Optional.of(nodeMapper),
 				extLanguageManager);
 
-		
-		ConstraintNode tmpConstraintNode2 = methodNode.getConstraintNodes().get(0);
-		
 		// check global parameter of class
 
 		assertEquals(1, classNode.getParametersCount());
@@ -1263,17 +1258,17 @@ public class ParameterTransformerTest {
 		final String parameterType = "String";
 
 		BasicParameterNode globalParameterNodeOfRoot1 = 
-				RootNodeHelper.addNewBasicParameter(rootNode, "RP1", parameterType, "", true, null);
+				RootNodeHelper.addNewBasicParameter(rootNode, "GP1", parameterType, "", true, null);
 
 		final String choiceValueString = "1";
 
 		ChoiceNode globalChoiceNodeOfRoot1 = 
 				BasicParameterNodeHelper.addNewChoice(
-						globalParameterNodeOfRoot1, "C1", choiceValueString, false, true, null);
+						globalParameterNodeOfRoot1, "GC1", choiceValueString, false, true, null);
 
 		ChoiceNode globalChoiceNodeOfRoot2 = 
 				BasicParameterNodeHelper.addNewChoice(
-						globalParameterNodeOfRoot1, "C2", choiceValueString, false, true, null);
+						globalParameterNodeOfRoot1, "GC2", choiceValueString, false, true, null);
 
 		// add class node
 
@@ -1287,7 +1282,8 @@ public class ParameterTransformerTest {
 		// add parameter and choice to method
 
 		BasicParameterNode methodParameterNode = 
-				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", parameterType);
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
+						methodNode, "MP1", parameterType);
 
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNodeOfRoot1);
 
@@ -1295,6 +1291,8 @@ public class ParameterTransformerTest {
 
 		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode, globalChoiceNodeOfRoot1, globalChoiceNodeOfRoot1);
+		
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
 
 		// unlink
 
@@ -1302,7 +1300,10 @@ public class ParameterTransformerTest {
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
 		ParameterTransformer.unlinkMethodParameteFromGlobalParameter(
-				methodParameterNode, globalParameterNodeOfRoot1, reverseOperations, extLanguageManager);
+				methodParameterNode, 
+				globalParameterNodeOfRoot1, 
+				reverseOperations, 
+				extLanguageManager);
 
 		// check if linked
 
@@ -1311,20 +1312,22 @@ public class ParameterTransformerTest {
 
 		// change names of global choices to avoid confusion during check
 
-		globalChoiceNodeOfRoot1.setName("RC1");
-		globalChoiceNodeOfRoot2.setName("RC2");
+		globalChoiceNodeOfRoot1.setName("RootC1");
+		globalChoiceNodeOfRoot2.setName("RootC2");
 
 		// check choices copied to method parameter
 
 		List<ChoiceNode> resultChoices = methodParameterNode.getChoices();
 		assertEquals(2, resultChoices.size());
 
-		assertEquals("C1", resultChoices.get(0).getName());
-		assertEquals("C2", resultChoices.get(1).getName());
+		assertEquals("GC1", resultChoices.get(0).getName());
+		assertEquals("GC2", resultChoices.get(1).getName());
 
 		// check choices in constraints
 
-		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = 
+				TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		
 		assertEquals(resultChoices.get(0), choiceNodeFromPrecondition);
 
 		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);

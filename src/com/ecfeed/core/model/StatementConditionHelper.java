@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
@@ -142,7 +143,7 @@ public class StatementConditionHelper {
 			ParameterConversionItem parameterConversionItem,
 			RelationStatement relationStatement,
 			IStatementCondition rightCondition) {
-		
+
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
 
@@ -166,14 +167,14 @@ public class StatementConditionHelper {
 
 		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
 				rightCondition instanceof ChoiceCondition) {
-			
+
 			IStatementCondition result =
 					convertChoicePartToLabelPart(
 							srcPart, dstPart, relationStatement, rightCondition);
-			
+
 			return result;
 		}
-		
+
 		ExceptionHelper.reportRuntimeException("Invalid configuration of condition conversion.");
 		return null;
 	}
@@ -231,6 +232,73 @@ public class StatementConditionHelper {
 		LabelCondition labelCondition = new LabelCondition(label, relationStatement);
 
 		return labelCondition;
+	}
+
+	public static boolean shouldConvertCondition(
+			BasicParameterNode leftBasicParameterNode,
+			IStatementCondition statementCondition,
+			IParameterConversionItemPart srcPart) { 
+
+		if (statementCondition instanceof ChoiceCondition) {
+			return shouldConvertChoiceCondition((ChoiceCondition)statementCondition, srcPart);
+		}
+
+		if (statementCondition instanceof LabelCondition) {
+			return shouldConvertLabelCondition(leftBasicParameterNode, srcPart);
+		}
+
+		return false;
+	}
+
+	private static boolean shouldConvertChoiceCondition(
+			ChoiceCondition statementCondition,
+			IParameterConversionItemPart srcPart) {
+
+		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
+
+		if (srcType != IParameterConversionItemPart.ItemPartType.CHOICE) {
+			return false;
+		}
+
+		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
+				(ParameterConversionItemPartForChoice)srcPart;
+
+		ChoiceNode choiceFromCondition = statementCondition.getRightChoice();
+		ChoiceNode choiceFromSrcPart = parameterConversionItemPartForChoice.getChoiceNode();
+
+		if (choiceFromCondition == choiceFromSrcPart) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean shouldConvertLabelCondition(
+			BasicParameterNode basicParameterNode,
+			IParameterConversionItemPart srcPart) {
+
+		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
+
+		if (srcType != IParameterConversionItemPart.ItemPartType.LABEL) {
+			return false;
+		}
+
+		ParameterConversionItemPartForLabel parameterConversionItemPartForChoice = 
+				(ParameterConversionItemPartForLabel)srcPart;
+
+		String label = parameterConversionItemPartForChoice.getLabel();
+
+		Set<ChoiceNode> labeledChoices = basicParameterNode.getLabeledChoices(label);
+
+		if (labeledChoices == null) {
+			return false;
+		}
+
+		if (labeledChoices.isEmpty()) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
