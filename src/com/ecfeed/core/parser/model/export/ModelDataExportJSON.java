@@ -92,7 +92,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json.toString(indent);
     }
 
-    private JSONObject getTestJSON(TestCaseNode test) {
+    protected JSONObject getTestJSON(TestCaseNode test) {
         Queue<ChoiceNode> choices = new LinkedList<>(test.getChoices());
 
         if (this.nested) {
@@ -102,7 +102,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         }
     }
 
-    private JSONObject getTestJSON(TestCaseNode test, int index) {
+    protected JSONObject getTestJSON(TestCaseNode test, int index) {
         JSONObject json = getTestJSON(test);
 
         json.put("index", index);
@@ -110,7 +110,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONFlat(Queue<ChoiceNode> choices) {
+    protected JSONObject getTestJSONFlat(Queue<ChoiceNode> choices) {
         List<String> names = parser.getParameterNameList(method);
 
         JSONObject json = new JSONObject();
@@ -120,7 +120,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONNested(Queue<ChoiceNode> choices) {
+    protected JSONObject getTestJSONNested(Queue<ChoiceNode> choices) {
 
         return parser.getJSON(choices, method.getParameters());
     }

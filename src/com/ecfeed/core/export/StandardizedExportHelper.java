@@ -64,6 +64,10 @@ public class StandardizedExportHelper {
 		if (StandardizedExportGherkinTemplate.isTemplateIdValid(template)) {
 			return StandardizedExportGherkinTemplate.get(method, template, extLanguageManager);
 		}
+
+        if (StandardizedExportXMLTemplate.isTemplateIdValid(template)) {
+            return StandardizedExportXMLTemplate.get(method, template, extLanguageManager);
+        }
 		
 		throw new RuntimeException("Invalid template standard!");
 	}

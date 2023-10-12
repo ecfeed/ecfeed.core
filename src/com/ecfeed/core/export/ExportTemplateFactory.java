@@ -64,6 +64,9 @@ public class ExportTemplateFactory {
 		if (formatName.startsWith(StandardizedExportGherkinTemplate.getStandard())) {
 			return StandardizedExportGherkinTemplate.get(fMethodNode, formatName, fExtLanguageManager);
 		}
+		if (formatName.startsWith(StandardizedExportXMLTemplate.getStandard())) {
+			return StandardizedExportXMLTemplate.get(fMethodNode, formatName, fExtLanguageManager);
+		}
 		
 		return null;
 	}
@@ -72,7 +75,8 @@ public class ExportTemplateFactory {
 
 		String[] formats = { 
 				StandardizedExportCsvTemplate.getTemplateFormatSt(), 
-				StandardizedExportJsonTemplate.getTemplateFormatSt(), 
+				StandardizedExportJsonTemplate.getTemplateFormatSt(),
+				StandardizedExportXMLTemplate.getTemplateFormatSt(),
 				StandardizedExportGherkinTemplate.getTemplateFormatSt(),
 				CsvExportTemplate.getTemplateFormatSt(), 
 				JsonExportTemplate.getTemplateFormatSt(),
