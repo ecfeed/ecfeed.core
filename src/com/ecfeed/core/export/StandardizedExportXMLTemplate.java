@@ -49,7 +49,6 @@ public class StandardizedExportXMLTemplate extends AbstractExportTemplate {
         String template =
                 ID + "\n" +
                         "Indent:            2\n" +
-                        "Explicit:      false\n" +
                         "Nested:        false";
 
         return template;
@@ -93,16 +92,15 @@ public class StandardizedExportXMLTemplate extends AbstractExportTemplate {
 
         int indent = Integer.parseInt(StandardizedExportHelper.getParameter(parameters, "indent", "2"));
         boolean nested = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "nested", "false"));
-        boolean explicit = Boolean.parseBoolean(StandardizedExportHelper.getParameter(parameters, "explicit", "false"));
 
         ModelDataExport parser;
 
         if (testCases == null) {
             MethodNode method = StandardizedExportHelper.getMethod();
             testCases = StandardizedExportHelper.getTestSuite(method).getTestCaseNodes();
-            parser = ModelDataExportXML.getModelDataExport(method, indent, nested, explicit);
+            parser = ModelDataExportXML.getModelDataExport(method, indent, nested);
         } else {
-            parser = ModelDataExportXML.getModelDataExport(methodDeployerContainer.getReference(), indent, nested, explicit);
+            parser = ModelDataExportXML.getModelDataExport(methodDeployerContainer.getReference(), indent, nested);
         }
 
         return parser.getFilePreview(new ArrayList<>(testCases));

@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class ModelDataExportJSON implements ModelDataExport {
+    private final static String HEADER_SUITE = "suite";
+
     private final MethodNode method;
 
     private final ModelDataParser parser;
@@ -48,6 +50,12 @@ public class ModelDataExportJSON implements ModelDataExport {
 
     @Override
     public String getFile(List<TestCaseNode> suite) {
+        JSONObject json = getFileJSON(suite);
+
+        return json.toString(this.indent);
+    }
+
+    protected JSONObject getFileJSON(List<TestCaseNode> suite) {
 
         if (suite.size() == 0) {
             throw new RuntimeException("The test suite should consist of at least one test case!");
@@ -61,9 +69,9 @@ public class ModelDataExportJSON implements ModelDataExport {
             jsonTests.put(getTestJSON(test, index++));
         }
 
-        json.put("tests", jsonTests);
+        json.put(HEADER_SUITE, jsonTests);
 
-        return json.toString(this.indent);
+        return json;
     }
 
     @Override

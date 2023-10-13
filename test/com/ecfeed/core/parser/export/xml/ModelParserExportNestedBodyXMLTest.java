@@ -7,17 +7,18 @@ import com.ecfeed.core.parser.model.export.ModelDataExport;
 import com.ecfeed.core.parser.model.export.ModelDataExportJSON;
 import com.ecfeed.core.parser.model.export.ModelDataExportXML;
 import org.json.JSONObject;
+import org.json.XML;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ModelParserExportFlatBodyXMLTest {
+public class ModelParserExportNestedBodyXMLTest {
 
     @Test
     void bodyLocalTest() {
         MethodNode method = ModelParserExportHelper.modelLocal();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
@@ -35,7 +36,7 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelGlobalClass();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
@@ -53,7 +54,7 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRoot();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
@@ -71,7 +72,7 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelMixed();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
@@ -91,16 +92,18 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelLocalStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
 
+        JSONObject json = XML.toJSONObject(result);
+
         Assertions.assertAll(() -> {
-            Assertions.assertTrue(result.contains("<s1_dest1>Lorem Ipsum</s1_dest1>"));
-            Assertions.assertTrue(result.contains("<s1_dest2>Lorem \"Ipsum\"</s1_dest2>"));
-            Assertions.assertTrue(result.contains("<s2_dest3>Lorem, Ipsum</s2_dest3>"));
-            Assertions.assertTrue(result.contains("<dest4>Lorem, \"Ipsum\"</dest4>"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("test").getJSONObject("s1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("test").getJSONObject("s1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("test").getJSONObject("s2").get("dest3"));
+            Assertions.assertEquals("Lorem, \"Ipsum\"", json.getJSONObject("test").get("dest4"));
         });
     }
 
@@ -109,16 +112,18 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelGlobalClassStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
 
+        JSONObject json = XML.toJSONObject(result);
+
         Assertions.assertAll(() -> {
-            Assertions.assertTrue(result.contains("<p1_dest1>Lorem Ipsum</p1_dest1>"));
-            Assertions.assertTrue(result.contains("<p1_dest2>Lorem \"Ipsum\"</p1_dest2>"));
-            Assertions.assertTrue(result.contains("<p3>Lorem, \"Ipsum\"</p3>"));
-            Assertions.assertTrue(result.contains("<p2_dest3>Lorem, Ipsum</p2_dest3>"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("test").getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("test").getJSONObject("p1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("test").getJSONObject("p2").get("dest3"));
+            Assertions.assertEquals("Lorem, \"Ipsum\"", json.getJSONObject("test").get("p3"));
         });
     }
 
@@ -127,16 +132,18 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelGlobalRootStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
 
+        JSONObject json = XML.toJSONObject(result);
+
         Assertions.assertAll(() -> {
-            Assertions.assertTrue(result.contains("<p1_dest1>Lorem Ipsum</p1_dest1>"));
-            Assertions.assertTrue(result.contains("<p1_dest2>Lorem \"Ipsum\"</p1_dest2>"));
-            Assertions.assertTrue(result.contains("<p3>Lorem, \"Ipsum\"</p3>"));
-            Assertions.assertTrue(result.contains("<p2_dest3>Lorem, Ipsum</p2_dest3>"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("test").getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("test").getJSONObject("p1").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("test").getJSONObject("p2").get("dest3"));
+            Assertions.assertEquals("Lorem, \"Ipsum\"", json.getJSONObject("test").get("p3"));
         });
     }
 
@@ -145,16 +152,57 @@ public class ModelParserExportFlatBodyXMLTest {
         MethodNode method = ModelParserExportHelper.modelMixedStructure();
         TestCaseNode test = ModelParserExportHelper.getTestCase(method);
 
-        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, false);
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
 
         String result = parser.getTest(test, 0);
         System.out.println(result);
 
+        JSONObject json = XML.toJSONObject(result);
+
         Assertions.assertAll(() -> {
-            Assertions.assertTrue(result.contains("<p1_dest1>Lorem Ipsum</p1_dest1>"));
-            Assertions.assertTrue(result.contains("<p2_dest2>Lorem \"Ipsum\"</p2_dest2>"));
-            Assertions.assertTrue(result.contains("<s1_dest3>Lorem, Ipsum</s1_dest3>"));
-            Assertions.assertTrue(result.contains("<dest4>Lorem, \"Ipsum\"</dest4>"));
+            Assertions.assertEquals("Lorem Ipsum", json.getJSONObject("test").getJSONObject("p1").get("dest1"));
+            Assertions.assertEquals("Lorem \"Ipsum\"", json.getJSONObject("test").getJSONObject("p2").get("dest2"));
+            Assertions.assertEquals("Lorem, Ipsum", json.getJSONObject("test").getJSONObject("s1").get("dest3"));
+            Assertions.assertEquals("Lorem, \"Ipsum\"", json.getJSONObject("test").get("dest4"));
         });
     }
+
+//---------------------------------------------------------------------------------------------------------------
+
+    @Test
+    void bodyRandomTest() {
+        MethodNode method = ModelParserExportHelper.modelRandom();
+        TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
+
+        String result = parser.getTest(test, 0);
+        System.out.println(result);
+
+        JSONObject json = XML.toJSONObject(result);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(5, json.getJSONObject("test").get("dest1").toString().length());
+            Assertions.assertEquals(1, json.getJSONObject("test").get("dest2").toString().length());
+        });
+    }
+
+    @Test
+    void bodyNestedTest() {
+        MethodNode method = ModelParserExportHelper.modelNested();
+        TestCaseNode test = ModelParserExportHelper.getTestCase(method);
+
+        ModelDataExport parser = ModelDataExportXML.getModelDataExport(method, 0, true);
+
+        String result = parser.getTest(test, 0);
+        System.out.println(result);
+
+        JSONObject json = XML.toJSONObject(result);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals("A", json.getJSONObject("test").getJSONObject("s3").getJSONObject("s2").getJSONObject("s1").get("p1"));
+            Assertions.assertEquals("B", json.getJSONObject("test").getJSONObject("s3").getJSONObject("s2").get("p2"));
+        });
+    }
+
 }

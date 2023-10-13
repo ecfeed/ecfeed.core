@@ -26,10 +26,10 @@ public class ModelParserExportJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals(5, json.getJSONArray("tests").getJSONObject(0).keySet().size());
-            Assertions.assertEquals(5, json.getJSONArray("tests").getJSONObject(1).keySet().size());
-            Assertions.assertEquals(0, json.getJSONArray("tests").getJSONObject(0).get("index"));
-            Assertions.assertEquals(1, json.getJSONArray("tests").getJSONObject(1).get("index"));
+            Assertions.assertEquals(5, json.getJSONArray("suite").getJSONObject(0).keySet().size());
+            Assertions.assertEquals(5, json.getJSONArray("suite").getJSONObject(1).keySet().size());
+            Assertions.assertEquals(0, json.getJSONArray("suite").getJSONObject(0).get("index"));
+            Assertions.assertEquals(1, json.getJSONArray("suite").getJSONObject(1).get("index"));
         });
 
         String resultExplicit = parserExplicit.getFile(suite);
@@ -38,10 +38,10 @@ public class ModelParserExportJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals(5, jsonExplicit.getJSONArray("tests").getJSONObject(0).keySet().size());
-            Assertions.assertEquals(5, jsonExplicit.getJSONArray("tests").getJSONObject(1).keySet().size());
-            Assertions.assertEquals(0, jsonExplicit.getJSONArray("tests").getJSONObject(0).get("index"));
-            Assertions.assertEquals(1, jsonExplicit.getJSONArray("tests").getJSONObject(1).get("index"));
+            Assertions.assertEquals(5, jsonExplicit.getJSONArray("suite").getJSONObject(0).keySet().size());
+            Assertions.assertEquals(5, jsonExplicit.getJSONArray("suite").getJSONObject(1).keySet().size());
+            Assertions.assertEquals(0, jsonExplicit.getJSONArray("suite").getJSONObject(0).get("index"));
+            Assertions.assertEquals(1, jsonExplicit.getJSONArray("suite").getJSONObject(1).get("index"));
         });
     }
 
@@ -61,10 +61,10 @@ public class ModelParserExportJSONTest {
         System.out.println(json);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals(5, json.getJSONArray("tests").getJSONObject(0).keySet().size());
-            Assertions.assertEquals(5, json.getJSONArray("tests").getJSONObject(1).keySet().size());
-            Assertions.assertEquals(0, json.getJSONArray("tests").getJSONObject(0).get("index"));
-            Assertions.assertEquals(1, json.getJSONArray("tests").getJSONObject(1).get("index"));
+            Assertions.assertEquals(5, json.getJSONArray("suite").getJSONObject(0).keySet().size());
+            Assertions.assertEquals(5, json.getJSONArray("suite").getJSONObject(1).keySet().size());
+            Assertions.assertEquals(0, json.getJSONArray("suite").getJSONObject(0).get("index"));
+            Assertions.assertEquals(1, json.getJSONArray("suite").getJSONObject(1).get("index"));
         });
 
         String resultExplicit = parserExplicit.getFile(suite);
@@ -73,10 +73,10 @@ public class ModelParserExportJSONTest {
         System.out.println(jsonExplicit);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals(5, jsonExplicit.getJSONArray("tests").getJSONObject(0).keySet().size());
-            Assertions.assertEquals(5, jsonExplicit.getJSONArray("tests").getJSONObject(1).keySet().size());
-            Assertions.assertEquals(0, jsonExplicit.getJSONArray("tests").getJSONObject(0).get("index"));
-            Assertions.assertEquals(1, jsonExplicit.getJSONArray("tests").getJSONObject(1).get("index"));
+            Assertions.assertEquals(5, jsonExplicit.getJSONArray("suite").getJSONObject(0).keySet().size());
+            Assertions.assertEquals(5, jsonExplicit.getJSONArray("suite").getJSONObject(1).keySet().size());
+            Assertions.assertEquals(0, jsonExplicit.getJSONArray("suite").getJSONObject(0).get("index"));
+            Assertions.assertEquals(1, jsonExplicit.getJSONArray("suite").getJSONObject(1).get("index"));
         });
     }
 }
