@@ -25,7 +25,8 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
+public class MethodNode extends AbstractNode 
+	implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
 	private ParametersWithContextLister fParametersHolder;
 	private ParametersWithContextLister fDeployedParametersHolder;
@@ -401,11 +402,12 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		return parameters.get(index);
 	}
 
-	public int getMethodParameterCount()
+	@Override
+	public int getConstraintsCount()
 	{
-		return getParameters().size();
+		return fConstraintNodeListHolder.getConstraintListSize();
 	}
-
+	
 	@Override
 	public List<ConstraintNode> getConstraintNodes() {
 		return fConstraintNodeListHolder.getConstraintNodes();

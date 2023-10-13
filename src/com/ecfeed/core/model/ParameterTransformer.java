@@ -32,7 +32,7 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformer {
 
-	public static MethodNode linkLocalParameteToGlobalParameter(
+	public static void linkLocalParameteToGlobalParameter(
 			AbstractParameterNode localParameterNode,
 			AbstractParameterNode globalParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition,
@@ -70,8 +70,6 @@ public class ParameterTransformer {
 
 			setTypeOfLocalParameter(localParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
 		}
-
-		return (MethodNode) parent;
 	}
 
 	private static void checkParameters(
@@ -192,14 +190,14 @@ public class ParameterTransformer {
 		BasicParameterNode global2 = (BasicParameterNode) globalParameterNode; 
 
 		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
-		
+
 		ChoicesParentNodeHelper.createCopyOfChoicesAndConversionList(
 				methodParameterNode,
 				global2, methodParameterNode, 
 				reverseOperations,
 				parameterConversionItems,
 				extLanguageManager);
-		
+
 		convertConstraints(
 				methodNode, 
 				globalParameterNode, methodParameterNode, 
