@@ -429,9 +429,9 @@ public class ParameterTransformer {
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
-		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(srcParameterNode);
 
-		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+		List<ConstraintNode> constraintNodes =  methodNode.getConstraintNodes();
 
 		List<ConstraintNode> listOfClonedConstraintNodes = new ArrayList<>();
 
@@ -442,7 +442,8 @@ public class ParameterTransformer {
 		}
 
 		OnConstraintsOperationSetOnMethod reverseOperation = 
-				new OnConstraintsOperationSetOnMethod(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+				new OnConstraintsOperationSetOnMethod(
+						methodNode, listOfClonedConstraintNodes, extLanguageManager);
 
 		return reverseOperation;
 	}

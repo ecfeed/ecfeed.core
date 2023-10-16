@@ -1522,8 +1522,8 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		//		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
-		//		assertEquals(localChoiceNode1, choiceNodeFromPostcondition);
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(localChoiceNode1, choiceNodeFromPostcondition);
 	}
 
 	// XYX verify tests below
