@@ -1497,34 +1497,31 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNode, choiceNodeFromPostcondition);
 
-		//		// reverse operation
-		//
-		//		reverseOperations.executeFromTail();
-		//
-		//		// check global parameter
-		//
-		//		assertEquals(1, classNode.getParametersCount());
-		//		assertEquals(1, globalParameterNode.getChoiceCount());
-		//		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
-		//		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
-		//
-		//		// check local parameter 
-		//
-		//		assertEquals(1, methodNode.getParametersCount());
-		//		assertEquals(1, localParameterNode.getChoiceCount());
-		//
-		//		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
-		//		assertEquals(false, methodParameterNode2.isLinked());
-		//		assertNull(methodParameterNode2.getLinkToGlobalParameter());
-		//
-		//		ChoiceNode choiceNodeFromMethodParam = localParameterNode.getChoice(localChoiceName1);
-		//		assertEquals(localChoiceNode1, choiceNodeFromMethodParam);
-		//
-		//		// check choices from constraints
-		//
-		//		choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
-		//		assertEquals(localChoiceNode1, choiceNodeFromPrecondition);
-		//
+		// reverse operation
+
+		reverseOperations.executeFromTail();
+
+		// check global parameter
+
+		assertEquals(1, rootNode.getParametersCount());
+		assertEquals(1, globalParameterNode.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(1, localParameterNode.getChoiceCount());
+
+		CompositeParameterNode compositeParameterNode3 = (CompositeParameterNode)methodNode.getParameter(0);
+		assertFalse(compositeParameterNode3.isLinked());
+		assertNull(compositeParameterNode3.getLinkToGlobalParameter());
+
+		ChoiceNode choiceNodeFromMethodParam = localParameterNode.getChoice(localChoiceName1);
+		assertEquals(localChoiceNode1, choiceNodeFromMethodParam);
+
+		// check choices from constraints
+
 		//		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		//		assertEquals(localChoiceNode1, choiceNodeFromPostcondition);
 	}
