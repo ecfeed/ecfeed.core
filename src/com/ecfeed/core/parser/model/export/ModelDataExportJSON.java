@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class ModelDataExportJSON implements ModelDataExport {
+    private final static String HEADER_SUITE = "suite";
+
     private final MethodNode method;
 
     private final ModelDataParser parser;
@@ -48,6 +50,12 @@ public class ModelDataExportJSON implements ModelDataExport {
 
     @Override
     public String getFile(List<TestCaseNode> suite) {
+        JSONObject json = getFileJSON(suite);
+
+        return json.toString(this.indent);
+    }
+
+    protected JSONObject getFileJSON(List<TestCaseNode> suite) {
 
         if (suite.size() == 0) {
             throw new RuntimeException("The test suite should consist of at least one test case!");
@@ -61,9 +69,9 @@ public class ModelDataExportJSON implements ModelDataExport {
             jsonTests.put(getTestJSON(test, index++));
         }
 
-        json.put("tests", jsonTests);
+        json.put(HEADER_SUITE, jsonTests);
 
-        return json.toString(this.indent);
+        return json;
     }
 
     @Override
@@ -92,7 +100,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json.toString(indent);
     }
 
-    private JSONObject getTestJSON(TestCaseNode test) {
+    protected JSONObject getTestJSON(TestCaseNode test) {
         Queue<ChoiceNode> choices = new LinkedList<>(test.getChoices());
 
         if (this.nested) {
@@ -102,7 +110,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         }
     }
 
-    private JSONObject getTestJSON(TestCaseNode test, int index) {
+    protected JSONObject getTestJSON(TestCaseNode test, int index) {
         JSONObject json = getTestJSON(test);
 
         json.put("index", index);
@@ -110,7 +118,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONFlat(Queue<ChoiceNode> choices) {
+    protected JSONObject getTestJSONFlat(Queue<ChoiceNode> choices) {
         List<String> names = parser.getParameterNameList(method);
 
         JSONObject json = new JSONObject();
@@ -120,7 +128,7 @@ public class ModelDataExportJSON implements ModelDataExport {
         return json;
     }
 
-    private JSONObject getTestJSONNested(Queue<ChoiceNode> choices) {
+    protected JSONObject getTestJSONNested(Queue<ChoiceNode> choices) {
 
         return parser.getJSON(choices, method.getParameters());
     }

@@ -43,6 +43,9 @@ public class ExportTemplateFactory {
 
 	private IExportTemplate createTemplateIntr(String formatName) {
 
+		if (formatName.equals(CustomExportTemplate.getTemplateFormatSt())) {
+			return new CustomExportTemplate(fMethodNode, fExtLanguageManager);
+		}
 		if (formatName.equals(CsvExportTemplate.getTemplateFormatSt())) {
 			return new CsvExportTemplate(fMethodNode, fExtLanguageManager);
 		}
@@ -64,6 +67,9 @@ public class ExportTemplateFactory {
 		if (formatName.startsWith(StandardizedExportGherkinTemplate.getStandard())) {
 			return StandardizedExportGherkinTemplate.get(fMethodNode, formatName, fExtLanguageManager);
 		}
+		if (formatName.startsWith(StandardizedExportXMLTemplate.getStandard())) {
+			return StandardizedExportXMLTemplate.get(fMethodNode, formatName, fExtLanguageManager);
+		}
 		
 		return null;
 	}
@@ -72,12 +78,14 @@ public class ExportTemplateFactory {
 
 		String[] formats = { 
 				StandardizedExportCsvTemplate.getTemplateFormatSt(), 
-				StandardizedExportJsonTemplate.getTemplateFormatSt(), 
+				StandardizedExportJsonTemplate.getTemplateFormatSt(),
+				StandardizedExportXMLTemplate.getTemplateFormatSt(),
 				StandardizedExportGherkinTemplate.getTemplateFormatSt(),
-				CsvExportTemplate.getTemplateFormatSt(), 
-				JsonExportTemplate.getTemplateFormatSt(),
-				XmlExportTemplate.getTemplateFormatSt(), 
-				GherkinExportTemplate.getTemplateFormatSt()
+//				CsvExportTemplate.getTemplateFormatSt(), 
+//				JsonExportTemplate.getTemplateFormatSt(),
+//				XmlExportTemplate.getTemplateFormatSt(), 
+//				GherkinExportTemplate.getTemplateFormatSt(),
+				CustomExportTemplate.getTemplateFormatSt()
 		};
 
 		return formats;
