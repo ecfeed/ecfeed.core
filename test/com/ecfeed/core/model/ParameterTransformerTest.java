@@ -1357,7 +1357,7 @@ public class ParameterTransformerTest {
 	}
 
 	@Test
-	public void AAAlinkingStructureToRootStructureBasicUseCaseForChoices() {
+	public void linkingStructureToRootStructureBasicUseCaseForChoices() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -1528,59 +1528,6 @@ public class ParameterTransformerTest {
 
 	// XYX verify tests below
 
-	@Test
-	public void checkValueConversionsForDifferentTypesAndValues() {
-
-		assertFalse(canConvert("ABC", tString, tInt, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("ABC", tString, tString, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("1", tString, tInt, IsChoiceRandomized.FALSE));
-
-		assertTrue(canConvert("123.0", tDouble, tInt, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("123.0:123.0", tDouble, tInt, IsChoiceRandomized.TRUE));
-
-		assertFalse(canConvert("123.1", tDouble, tInt, IsChoiceRandomized.FALSE));
-		assertFalse(canConvert("123.1:123.1", tDouble, tInt, IsChoiceRandomized.TRUE));
-
-		assertFalse(canConvert("123.54e+7", tDouble, tInt, IsChoiceRandomized.FALSE));
-		assertFalse(canConvert("123.54e+7:123.54e+7", tDouble, tInt, IsChoiceRandomized.TRUE));
-
-		assertTrue(canConvert("1234", tFloat, tDouble, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("1234:1234", tFloat, tDouble, IsChoiceRandomized.TRUE));
-
-		assertTrue(canConvert("1234", tFloat, tInt, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("1234:1234", tFloat, tInt, IsChoiceRandomized.TRUE));
-
-		assertFalse(canConvert("1234", tFloat, tByte, IsChoiceRandomized.FALSE));
-		assertFalse(canConvert("1234:1234", tFloat, tByte, IsChoiceRandomized.TRUE));
-
-		assertTrue(canConvert("123", tFloat, tByte, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("123:123", tFloat, tByte, IsChoiceRandomized.TRUE));
-
-		assertFalse(canConvert("false", tBoolean, tByte, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("false", tBoolean, tString, IsChoiceRandomized.FALSE));
-
-		assertTrue(canConvert("false", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("true", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-
-		assertFalse(canConvert("1", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-		assertTrue(canConvert("false", tString, tBoolean, IsChoiceRandomized.FALSE));
-	}
-
-	private boolean canConvert(
-			String value, 
-			String oldType, 
-			String newType, 
-			IsChoiceRandomized isChoiceRandomized) {
-
-		boolean isRandomized = false;
-
-		if (isChoiceRandomized == IsChoiceRandomized.TRUE) {
-			isRandomized = true;
-		}
-
-		boolean isCompatible = ParameterTransformer.isValueCompatibleWithType(value, newType, isRandomized);
-		return isCompatible;
-	}
 
 	@Test
 	public void convertChoicesWithCheckIfPossible() {
@@ -1724,7 +1671,7 @@ public class ParameterTransformerTest {
 						value);
 			}
 
-			ParameterTransformer.verifyConversionOfParameterToType(
+			BasicParameterNodeHelper.verifyConversionOfParameterToType(
 					newType, fMethodParameterNode, fParameterConversionDefinition);
 
 			if (successExpected == SuccessExpected.TRUE) {
@@ -1782,7 +1729,7 @@ public class ParameterTransformerTest {
 
 			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
 
-			ParameterTransformer.convertChoicesAndConstraintsToType(
+			BasicParameterNodeHelper.convertChoicesAndConstraintsToType(
 					fMethodParameterNode, fParameterConversionDefinition);
 		}
 

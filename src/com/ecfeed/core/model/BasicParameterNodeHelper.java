@@ -24,6 +24,10 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPart;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
 
@@ -796,4 +800,63 @@ public class BasicParameterNodeHelper {
 		return result;
 	}
 
+	public static void verifyConversionOfParameterToType(
+			String newType, 
+			BasicParameterNode abstractParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
+
+			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
+
+			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
+			return;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
+
+		if (basicParameterNode.isExpected()) {
+			addDefaultValueToConversionDefinition(
+					basicParameterNode, basicParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
+		}
+
+		ChoiceNodeHelper.verifyConversionOfChoices(
+				basicParameterNode, newType, inOutParameterConversionDefinition);
+
+		ConstraintHelper.verifyConversionOfConstraints(
+				basicParameterNode, newType, inOutParameterConversionDefinition);
+	}
+	
+	private static void addDefaultValueToConversionDefinition(
+			BasicParameterNode basicParameterNode,
+			String defaultValue,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		ParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForValue(basicParameterNode, null, defaultValue);
+
+		boolean isRandomized = false;
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, isRandomized, "default value");
+
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
+	}
+
+	public static void convertChoicesAndConstraintsToType(
+			BasicParameterNode methodParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
+
+		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+	}
+
+	public static void convertChoicesToType(
+			BasicParameterNode abstractParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
+	}
+	
 }

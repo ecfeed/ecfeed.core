@@ -19,16 +19,12 @@ import com.ecfeed.core.operations.nodes.OnChoiceOperationAddSimple;
 import com.ecfeed.core.operations.nodes.OnConstraintsOperationSetOnMethod;
 import com.ecfeed.core.operations.nodes.OnMethodParameterOperationSimpleSetType;
 import com.ecfeed.core.operations.nodes.OnTestCasesOperationSimpleSet;
-import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformer {
 
@@ -267,61 +263,7 @@ public class ParameterTransformer {
 		}
 	}
 
-	// XYX not part of parameter transformer ??
-	public static void verifyConversionOfParameterToType(
-			String newType, 
-			BasicParameterNode abstractParameterNode,
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
-		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
-
-			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
-
-			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
-			return;
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
-
-		if (basicParameterNode.isExpected()) {
-			addDefaultValueToConversionDefinition(
-					basicParameterNode, basicParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
-		}
-
-		ChoiceNodeHelper.verifyConversionOfChoices(
-				basicParameterNode, newType, inOutParameterConversionDefinition);
-
-		ConstraintHelper.verifyConversionOfConstraints(
-				basicParameterNode, newType, inOutParameterConversionDefinition);
-	}
-
-	public static void convertChoicesAndConstraintsToType(
-			BasicParameterNode methodParameterNode,
-			ParameterConversionDefinition parameterConversionDefinition) {
-
-		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
-
-		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
-	}
-
-	public static void convertChoicesToType(
-			BasicParameterNode abstractParameterNode,
-			ParameterConversionDefinition parameterConversionDefinition) {
-
-		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
-	}
-
-	public static boolean isValueCompatibleWithType(
-			String value, 
-			String newType, 
-			boolean isChoiceRandomized) {
-
-		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
-
-		boolean isCompatible = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
-
-		return isCompatible;
-	}
+	// XYX 
 
 	private static void deleteRemainingChoicesForBasicParameter(
 			IChoicesParentNode srcMethodParameterNode,
@@ -511,22 +453,6 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
-	}
-
-	private static void addDefaultValueToConversionDefinition(
-			BasicParameterNode basicParameterNode,
-			String defaultValue,
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
-		ParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(basicParameterNode, null, defaultValue);
-
-		boolean isRandomized = false;
-
-		ParameterConversionItem parameterConversionItem = 
-				new ParameterConversionItem(srcPart, null, isRandomized, "default value");
-
-		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
 
 }

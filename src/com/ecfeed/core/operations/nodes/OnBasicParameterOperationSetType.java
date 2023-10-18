@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -29,7 +30,6 @@ import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.IModelOperation;
@@ -87,7 +87,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 	public void execute() {
 
 		IAbstractNode parent = fMethodParameterNode.getParent();
-		
+
 		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
 				(IParametersAndConstraintsParentNode) parent;
 
@@ -105,23 +105,23 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 				fParameterConversionDefinition, 
 				getExtLanguageManager());
 
-		ParameterTransformer.convertChoicesAndConstraintsToType(
+		BasicParameterNodeHelper.convertChoicesAndConstraintsToType(
 				fMethodParameterNode, fParameterConversionDefinition);		
 
 		markModelUpdated();
 	}
 
 	private ArrayList<TestCaseNode> getTestCases(IAbstractNode parent) {
-		
+
 		if (parent instanceof ITestCasesParentNode) {
-		
+
 			ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
-			
+
 			return new ArrayList<>(testCasesParentNode.getTestCases());
 		}
-		
+
 		return new ArrayList<>();
-		
+
 	}
 
 	private void checkForDuplicateSignatureInExtLanguage(IParametersParentNode parametersParentNode) {
@@ -230,7 +230,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 			String newType,
 			IExtLanguageManager extLanguageManager, 
 			String currentDefaultValue) {
-		
+
 		ITypeAdapter<?> adapter = JavaLanguageHelper.getTypeAdapter(newType);
 
 		String newDefaultValue = 
@@ -264,19 +264,19 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 		public void execute() {
 
 			super.execute();
-			
+
 			IAbstractNode parent = fMethodParameterNode.getParent();
-			
+
 			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode 
-				= (IParametersAndConstraintsParentNode) parent;
-			
+			= (IParametersAndConstraintsParentNode) parent;
+
 			if (parent instanceof ITestCasesParentNode) {
-				
+
 				ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
 				testCasesParentNode.setTestCases(fOriginalTestCases);
 			}
 			parametersAndConstraintsParentNode.replaceConstraints(fOriginalConstraints);
-			
+
 			fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
 
 			ConstraintHelper.restoreOriginalConstraintValues(
