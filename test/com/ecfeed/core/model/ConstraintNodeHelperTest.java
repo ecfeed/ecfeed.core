@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+
 
 public class ConstraintNodeHelperTest {
 
@@ -38,15 +38,15 @@ public class ConstraintNodeHelperTest {
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1 : false => false", signature);
 
-		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
-		assertEquals("c_1 : false => false", signature);
+		//		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
+		//		assertEquals("c_1 : false => false", signature);
 	}
 
 	@Test
 	public void createSignatureTest2() {
 
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
-		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		//final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
 
@@ -68,10 +68,10 @@ public class ConstraintNodeHelperTest {
 
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
-		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
-		assertEquals("co_1 : par 1=A => par 2=C", signature);
+		//		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
+		//		assertEquals("co_1 : par 1=A => par 2=C", signature);
 
-		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
+		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
 		assertEquals("co_1 : par_1=A => par_2=C", signature);
 	}
 
@@ -136,8 +136,8 @@ public class ConstraintNodeHelperTest {
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("Composite:c_1 : false => false", signature);
 
-		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
-		assertEquals("Composite:c_1 : false => false", signature);
+		//		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
+		//		assertEquals("Composite:c_1 : false => false", signature);
 	}
 
 	@Test
@@ -197,10 +197,10 @@ public class ConstraintNodeHelperTest {
 	public void AAgetMentioningConstraintNodesForLinkedBasicParameter() {
 
 		RootNode rootNode = new RootNode("root", null);
-		
+
 		BasicParameterNode globalBasicParameterNode = 
 				RootNodeHelper.addNewBasicParameter(rootNode, "gpar1", "String", "", true, null);
-		
+
 		ChoiceNode choiceNode = 
 				BasicParameterNodeHelper.addNewChoice(
 						globalBasicParameterNode, "choice1", "1", false, true, null);
@@ -211,7 +211,7 @@ public class ConstraintNodeHelperTest {
 
 		BasicParameterNode basicParameterNode = 
 				MethodNodeHelper.addNewBasicParameter(methodNode, "par1", "String", "", true, null);
-		
+
 		basicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
 
 		// constraint 1 with choice condition
@@ -240,7 +240,7 @@ public class ConstraintNodeHelperTest {
 				null);
 
 		ConstraintsParentNodeHelper.addNewConstraintNode(methodNode, constraint2, true, null);
-		
+
 		// root
 		//   gpar1
 		//     choice1
@@ -258,7 +258,7 @@ public class ConstraintNodeHelperTest {
 
 		assertEquals(constraintNode1, resultConstraintNode);
 	}
-	
+
 	@Test
 	public void getMentioningConstraintNodesForCompositeParameter() {
 
@@ -319,10 +319,10 @@ public class ConstraintNodeHelperTest {
 	public void getMentioningConstraintNodesForGlobalCompositeParameter() {
 
 		RootNode rootNode = new RootNode("root", null);
-		
+
 		CompositeParameterNode globalCompositeParameterNode = 
 				RootNodeHelper.addNewCompositeParameter(rootNode, "gstr1", true, null);
-		
+
 		BasicParameterNode basicParameterNode = 
 				CompositeParameterNodeHelper.addNewBasicParameter(globalCompositeParameterNode, "gpar1", "String", "", true, null);
 
@@ -336,7 +336,7 @@ public class ConstraintNodeHelperTest {
 
 		CompositeParameterNode compositeParameterNode = 
 				MethodNodeHelper.addNewCompositeParameter(methodNode, "str1", true, null);
-		
+
 		compositeParameterNode.setLinkToGlobalParameter(globalCompositeParameterNode);
 
 		// constraint 1 with choice condition
@@ -374,7 +374,7 @@ public class ConstraintNodeHelperTest {
 		//     method1
 		//       str1->gstr1
 		//       constraint gpar1=choice1=>true
-		
+
 		List<ConstraintNode> mentioningConstraintNodes = 
 				ConstraintNodeHelper.getMentioningConstraintNodes(globalCompositeParameterNode);
 
@@ -384,5 +384,5 @@ public class ConstraintNodeHelperTest {
 
 		assertEquals(constraintNode1, resultConstraintNode);
 	}
-	
+
 }

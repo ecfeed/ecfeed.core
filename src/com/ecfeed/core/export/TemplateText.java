@@ -27,6 +27,7 @@ public class TemplateText {
     private StringHolder fTestCaseTemplateText;
     private StringHolder fFooterTemplateText;
     private boolean fIsCorrect;
+    //private boolean fIsStandardized;
     private String fErrorMessage;
 
     public TemplateText(String completeTemplateText) {
@@ -45,10 +46,16 @@ public class TemplateText {
         setTemplateText(completeTemplateText);
     }
 
-    public void setTemplateText(String completeTemplateText) {
+    public boolean setTemplateText(String completeTemplateText) {
 
         fCurrentTemplateText = completeTemplateText;
 
+        if (completeTemplateText.startsWith("RFC")) {
+            fIsCorrect = true;
+            //fIsStandardized = true;
+        	return true;
+        }
+        
         try {
             divideIntoSubtemplates(
                     completeTemplateText,
@@ -59,7 +66,10 @@ public class TemplateText {
         } catch (Exception e) {
 
             markTemplateAsFaulty(e.getMessage());
+            return false;
         }
+        
+        return true;
     }
 
     private void divideIntoSubtemplates(

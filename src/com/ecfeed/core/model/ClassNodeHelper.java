@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NameHelper;
@@ -60,7 +61,7 @@ public class ClassNodeHelper {
 		return methodNode;
 	}
 
-	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	public static String getNameWithoutPackage(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = getNonQualifiedName(classNode.getName());
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
@@ -107,7 +108,7 @@ public class ClassNodeHelper {
 
 		String nameInInternalLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
-		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
+		if (!NodeNameHelper.classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
 			return RegexHelper.createMessageAllowedCharsForClass(extLanguageManager);
 		}
 
@@ -141,33 +142,55 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String generateNewMethodName(
+	public static String generateUniqueMethodName(
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
+			String availableMethodNameInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage =
-				MethodNodeHelper.verifyMethodNameIsValid(
-						startMethodNameInExtLanguage, extLanguageManager);
+		String startMethodNameInIntrLanguage = 
+				extLanguageManager.convertTextFromExtToIntrLanguage(startMethodNameInExtLanguage);
 
-		if (errorMessage != null) {
-			ExceptionHelper.reportRuntimeException(errorMessage);
-			return null;
+		String availableMethodNameInIntrLanguage = 
+				extLanguageManager.convertTextFromExtToIntrLanguage(availableMethodNameInExtLanguage);
+
+		String uniqueMethodNameInIntrLanguage = 
+				generateUniqueMethodName(
+						classNode, startMethodNameInIntrLanguage, availableMethodNameInIntrLanguage);
+
+		String uniqueMethodNameInExtLanguage = 
+				extLanguageManager.convertTextFromIntrToExtLanguage(uniqueMethodNameInIntrLanguage);
+
+		return uniqueMethodNameInExtLanguage;
+	}
+
+	public static String generateUniqueMethodName(
+			ClassNode classNode,
+			String startMethodName,
+			String availableMethodName) {
+
+		if (!NodeNameHelper.methodNameCompliesWithNamingRules(startMethodName)) {
+			ExceptionHelper.reportRuntimeException("Method name is invalid.");
+		}
+		
+		if (availableMethodName != null && StringHelper.isEqual(startMethodName, availableMethodName)) {
+			return availableMethodName;
 		}
 
-		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodNameInExtLanguage);
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
 
 		for (int i = 1;   ; i++) {
 
-			String newMethodNameInExtLanguage = oldNameCore + String.valueOf(i);
+			String newMethodName = oldNameCore + String.valueOf(i);
 
-			MethodNode methodNode = findMethodByExtLanguage(
-					classNode,
-					newMethodNameInExtLanguage,
-					extLanguageManager);
+			if (availableMethodName != null && StringHelper.isEqual(newMethodName, availableMethodName)) {
+				return availableMethodName;
+			}
+
+			MethodNode methodNode = MethodNodeHelper.findMethodByName(classNode, newMethodName);
 
 			if (methodNode == null) {
-				return newMethodNameInExtLanguage;
+				return newMethodName;
 			}
 		}
 	}
@@ -198,7 +221,7 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-	public static MethodNode findMethodByExtLanguage(
+	public static MethodNode findMethodByName(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
 			IExtLanguageManager extLanguageManager) {
@@ -215,15 +238,6 @@ public class ClassNodeHelper {
 		}
 
 		return null;
-	}
-
-	private static boolean classNameCompliesWithJavaNamingRules(String className) {
-
-		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public static ClassNode findClassNode(IAbstractNode anyNode) {
@@ -281,6 +295,53 @@ public class ClassNodeHelper {
 		int lastDotIndex = qualifiedName.lastIndexOf('.');
 
 		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
+	}
+
+	public static ClassNode findClassByName(
+			String classNameInIntrLanguage,
+			RootNode rootNode) {
+
+		List<ClassNode> classes = rootNode.getClasses();
+
+		for (ClassNode node : classes) {
+
+			String currentName = node.getName();
+
+			if (StringHelper.isEqual(currentName, classNameInIntrLanguage)) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
+	public static String correctsClassName(
+			String name,
+			String availableName,
+			RootNode rootNode) {
+
+		String correctedNameInIntrLanguage = 
+				NodeNameHelper.correctSyntaxClassNameWithoutPackage(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedNameInIntrLanguage, rootNode, availableName);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			RootNode rootNode,
+			String availableClassName) {
+
+		if (null == ClassNodeHelper.findClassByName(nameInIntrLanguage, rootNode)) {
+			return nameInIntrLanguage;
+		}
+
+		String uniqueName = 
+				RootNodeHelper.generateUniqueClassName(rootNode, nameInIntrLanguage,availableClassName);
+
+		return uniqueName;
 	}
 
 }

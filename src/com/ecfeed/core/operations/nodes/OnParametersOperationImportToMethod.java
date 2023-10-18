@@ -63,7 +63,7 @@ public class OnParametersOperationImportToMethod extends GenericOperationImportP
 			String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
 
 			MethodNode foundMethodNode = 
-					ClassNodeHelper.findMethodByExtLanguage(
+					ClassNodeHelper.findMethodByName(
 							parentClassNode, methodNameInExtLanguage, extLanguageManager);
 
 			if (foundMethodNode != null) {

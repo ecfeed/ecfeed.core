@@ -53,7 +53,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		List<String> constraintNames = ConstraintHelper.createListOfConstraintNames(iConstraints);
 
-		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
+		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, false, new ExtLanguageManagerForJava());
 
 		String requestText = createRequestText(
 				sessionId, 
@@ -94,9 +94,9 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		testCasesUserInput.setDataSource(generatorType.toString());
 
-//		if  (!allChoicesSelected) {
-//			testCasesUserInput.setChoices(argsAndChoiceNames);
-//		}
+		if  (!allChoicesSelected) {
+			testCasesUserInput.setChoices(argsAndChoiceNames);
+		}
 
 		setConstraints(allConstraintsSelected, constraintNames, testCasesUserInput);
 

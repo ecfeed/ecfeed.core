@@ -60,7 +60,7 @@ public class ModelParserForParameterHelper {
 				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 			}
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
@@ -82,7 +82,7 @@ public class ModelParserForParameterHelper {
 			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			nameOfCompositeParameter = ModelParserHelper.getElementName(element, errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
@@ -127,7 +127,7 @@ public class ModelParserForParameterHelper {
 							parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, outErrorList);
 
 		} catch (Exception e) {
-			outErrorList.add(e.getMessage());
+			outErrorList.addIfUnique(e.getMessage());
 			return;
 		}
 
@@ -147,7 +147,7 @@ public class ModelParserForParameterHelper {
 		// old convention - to be removed in next release when all models would be converted to new convention
 		return ((MethodNode)parametersParentNode).getClassNode().findGlobalParameter(linkPath); 
 	}
-	
+
 	public static AbstractParameterNode findLink2(String linkPath, IParametersParentNode parametersParentNode) { // TODO REMOVE ? 
 
 		AbstractParameterNode link = AbstractParameterNodeHelper.findParameter(linkPath, parametersParentNode);
@@ -174,7 +174,7 @@ public class ModelParserForParameterHelper {
 
 		return link;
 	}
-	
+
 
 	public static void parseLocalConstraints(
 			Element element, 
@@ -204,7 +204,7 @@ public class ModelParserForParameterHelper {
 					if (constraint != null) {
 						constraintsParentNode.addConstraint(constraint);
 					} else {
-						errorList.add("Cannot parse constraint of parent structure: " + constraintsParentNode.getName() + ".");
+						errorList.addIfUnique("Cannot parse constraint of parent structure: " + constraintsParentNode.getName() + ".");
 					}
 
 				} catch (Exception e) {
@@ -287,7 +287,7 @@ public class ModelParserForParameterHelper {
 				elementToNodeMapper.addMappings(parameterElement, basicParameterNode);
 				parametersParentNode.addParameter(basicParameterNode);
 			} else {
-				inOutErrorList.add("Cannot parse parameter for method: " + parametersParentNode.getName() + ".");
+				inOutErrorList.addIfUnique("Cannot parse parameter for method: " + parametersParentNode.getName() + ".");
 			}
 
 			return;
@@ -306,13 +306,13 @@ public class ModelParserForParameterHelper {
 				elementToNodeMapper.addMappings(parameterElement, compositeParameterNode);
 				parametersParentNode.addParameter(compositeParameterNode);
 			} else {
-				inOutErrorList.add("Cannot parse structure for method: " + parametersParentNode.getName() + ".");
+				inOutErrorList.addIfUnique("Cannot parse structure for method: " + parametersParentNode.getName() + ".");
 			}
 
 			return;
 		}
 
-		inOutErrorList.add("Invalid type of parameter element.");
+		inOutErrorList.addIfUnique("Invalid type of parameter element.");
 	}
 
 }

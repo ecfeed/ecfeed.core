@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.Decorations;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.ExtendedName;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper.TypeIncluded;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContextHelper;
 import com.ecfeed.core.utils.CommonConstants;
@@ -181,17 +182,26 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+	//	public static String createSignature(
+	//			MethodNode methodNode, 
+	//			boolean isParamNameAdded, 
+	//			boolean expectedDecorationsAdded, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		return createSignature( 
+	//				methodNode,
+	//				isParamNameAdded,
+	//				false, extLanguageManager);
+	//	}
+	//
+	public static String createLongSignature(
+			MethodNode methodNode, 
+			boolean isParamNameAdded,
+			boolean expectedDecorationsAdded,
+			IExtLanguageManager extLanguageManager) {
 
-		return createSignature( 
-				methodNode,
-				isParamNameAdded,
-				false, extLanguageManager);
-	}
-
-	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
-
-		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
+		String shortSignature = 
+				createSignature(methodNode, isParamNameAdded, expectedDecorationsAdded, extLanguageManager);
 
 		IAbstractNode parent = methodNode.getParent();
 
@@ -1006,5 +1016,71 @@ public class MethodNodeHelper {
 
 		return false;
 	}
+
+	public static MethodNode findMethodByName(
+			ClassNode classNode,
+			String methodNameInIntrLanguage) {
+
+		List<MethodNode> methods = classNode.getMethods();
+
+		for (MethodNode methodNode : methods) {
+
+			String currentMethodName = methodNode.getName();
+
+			if (currentMethodName.equals(methodNameInIntrLanguage)){
+				return methodNode;
+			}
+		}
+
+		return null;
+	}
+
+	public static String generateUniqueTestSuiteName(MethodNode methodNode) {
+
+		String startName = "test suite ";
+
+		for (int i = 1;   ; i++) {
+
+			String newTestSuiteName = startName + String.valueOf(i);
+
+			TestSuiteNode testSuiteNode = methodNode.findTestSuite(newTestSuiteName);
+
+			if (testSuiteNode == null) {
+				return newTestSuiteName;
+			}
+		}
+	}
+
+	public static String correctMethodName(
+			String name,
+			String availableName,
+			ClassNode classNode) {
+
+		String correctedName = 
+				NodeNameHelper.correctMethodNameSyntax(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedName, availableName, classNode);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			ClassNode classNode) {
+
+		if (null == MethodNodeHelper.findMethodByName(classNode, nameInIntrLanguage)) {
+
+			return nameInIntrLanguage;
+		}
+
+		String uniqueNameInIntrLanguage =
+				ClassNodeHelper.generateUniqueMethodName(
+						classNode,  nameInIntrLanguage, availableNameInIntrLanguage);
+
+		return uniqueNameInIntrLanguage;
+	}
+
 
 }

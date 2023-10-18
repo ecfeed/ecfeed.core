@@ -20,7 +20,8 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersParentNodeHelper {
 
-	public static List<String> getParameterTypes(IParametersParentNode parameterParentNode, IExtLanguageManager extLanguageManager) {
+	public static List<String> getParameterTypes(
+			IParametersParentNode parameterParentNode, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -64,6 +65,28 @@ public class ParametersParentNodeHelper {
 		return result;
 	}
 
+	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
+
+		List<String> parameterTypes = new ArrayList<String>();
+
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+
+			if (abstractParameterNode instanceof BasicParameterNode) {
+
+				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
+
+				String parameterType = methodParameterNode.getType();
+				parameterTypes.add(parameterType);
+
+			} else {
+
+				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+			}
+		}
+
+		return parameterTypes;
+	}
+	
 	public static AbstractParameterNode findGlobalParameter(
 			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
 
@@ -95,40 +118,86 @@ public class ParametersParentNodeHelper {
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
 		return null;
 	}
+	
+	
+//<<<<<<< HEAD
+//	public static AbstractParameterNode findGlobalParameter(
+//			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
+//=======
+//	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
+//>>>>>>> develop
+//
+//		List<String> parameterTypes = new ArrayList<String>();
+//
+//		for (AbstractParameterNode abstractParameterNode : parameters) {
+//
+//<<<<<<< HEAD
+//		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParametersParentNode);
+//=======
+//			if (abstractParameterNode instanceof BasicParameterNode) {
+//>>>>>>> develop
+//
+//				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
+//
+//<<<<<<< HEAD
+//		if (StringHelper.isEqual(className, parentName)) {
+//			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+//			return abstractParameterNode;
+//		}
+//=======
+//				String parameterType = methodParameterNode.getType();
+//				parameterTypes.add(parameterType);
+//>>>>>>> develop
+//
+//			} else {
+//
+//<<<<<<< HEAD
+//		if (parentName == null || rootName.equals(parentName)) {
+//			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+//			return abstractParameterNode;
+//=======
+//				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+//			}
+//>>>>>>> develop
+//		}
+//
+//		return parameterTypes;
+//	}
 
-	public static BasicParameterNode getBasicParameter(int parameterNumber, IParametersParentNode parametersParentNode) {
+	public static String generateUniqueParameterName(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			IParametersParentNode parametersParent) {
 
-		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
-
-		if (!(abstractParameterNode instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
+		if (availableNameInIntrLanguage != null 
+				&& StringHelper.isEqual(nameInIntrLanguage, availableNameInIntrLanguage)) {
+			return availableNameInIntrLanguage;
 		}
 
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+		String nameCore = StringHelper.removeFromNumericPostfix(nameInIntrLanguage);
 
-		return basicParameterNode;
+		String newName = generateUniqueParameterNameFromNameCore(nameCore, availableNameInIntrLanguage, parametersParent);
+
+		return newName;
 	}
 
-	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
+	private static String generateUniqueParameterNameFromNameCore(
+			String startNameCore,
+			String availableName,
+			IParametersParentNode parametersParent) {
 
-		List<String> parameterTypes = new ArrayList<String>();
+		for (int i = 1;   ; i++) {
 
-		for (AbstractParameterNode abstractParameterNode : parameters) {
+			String newName = startNameCore + String.valueOf(i);
 
-			if (abstractParameterNode instanceof BasicParameterNode) {
+			if (availableName != null && StringHelper.isEqual(newName, availableName)) {
+				return availableName;
+			}
 
-				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-				String parameterType = methodParameterNode.getType();
-				parameterTypes.add(parameterType);
-
-			} else {
-
-				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+			if (null == AbstractParameterNodeHelper.findParameterByName(newName, parametersParent)) {
+				return newName;
 			}
 		}
-
-		return parameterTypes;
 	}
 
 	//----------------------------------------------------------------------------

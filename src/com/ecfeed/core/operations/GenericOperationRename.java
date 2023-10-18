@@ -26,6 +26,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -62,7 +63,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
 		fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
 
-		fJavaNameRegex = getJavaNameRegex(target);
+		fJavaNameRegex = NodeNameHelper.getNameRegex(target);
 		fExtLanguageManager = extLanguageManager;
 	}
 
@@ -191,14 +192,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 	}
 
-	private String getJavaNameRegex(IAbstractNode target) {
-		try{
-			return (String)fTargetAbstractNode.accept(new JavaNameRegexProvider());
-		}catch(Exception e){
-			LogHelperCore.logCatch(e);}
-		return "*";
-	}
-
 	private static String getRegexProblemMessage(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager){
 		try{
 			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguageManager));
@@ -261,55 +254,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
 			return OperationMessages.CONSTRAINT_NOT_ALLOWED;
-		}
-
-	}
-
-	private class JavaNameRegexProvider implements IModelVisitor {
-
-		@Override
-		public Object visit(RootNode node) throws Exception {
-			return RegexHelper.REGEX_ROOT_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(ClassNode node) throws Exception {
-			return RegexHelper.REGEX_CLASS_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(MethodNode node) throws Exception {
-			return RegexHelper.REGEX_METHOD_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(BasicParameterNode node) throws Exception {
-			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(CompositeParameterNode node) throws Exception {
-			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
-		}
-		
-		@Override
-		public Object visit(TestSuiteNode node) throws Exception {
-			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(TestCaseNode node) throws Exception {
-			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(ConstraintNode node) throws Exception {
-			return RegexHelper.REGEX_CONSTRAINT_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(ChoiceNode node) throws Exception {
-			return RegexHelper.REGEX_PARTITION_NODE_NAME;
 		}
 
 	}

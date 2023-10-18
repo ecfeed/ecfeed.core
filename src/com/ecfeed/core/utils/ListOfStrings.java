@@ -31,6 +31,15 @@ public class ListOfStrings {
 		return false;
 	}
 
+	public void addIfUnique(String string) {
+
+		if (fStrings.contains(string)) {
+			return;
+		}
+
+		fStrings.add(string);
+	}
+
 	public List<String> getCollectionOfStrings() {
 
 		return fStrings;

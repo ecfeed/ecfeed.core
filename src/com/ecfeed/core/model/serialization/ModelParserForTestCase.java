@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
@@ -46,7 +46,7 @@ public class ModelParserForTestCase {
 		List<ParameterWithLinkingContext> deployedParameters = method.getDeployedParametersWithLinkingContexts();
 
 		if (deployedParameters.size() != choiceElements.size()) {
-			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(targetTestCaseNode.getName()));
+			errorList.addIfUnique(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(targetTestCaseNode.getName()));
 			return null;
 		}
 
@@ -124,7 +124,7 @@ public class ModelParserForTestCase {
 			return choiceNode;
 		}
 
-		errorList.add("Invalid name of test data element.");
+		errorList.addIfUnique("Invalid name of test data element.");
 		return Optional.empty();
 
 	}
@@ -141,12 +141,12 @@ public class ModelParserForTestCase {
 							choiceElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, errorList);
 
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return Optional.empty();
 		}
 
 		if (valueString == null) {
-			errorList.add(Messages.MISSING_VALUE_ATTRIBUTE_IN_TEST_CASE_ELEMENT);
+			errorList.addIfUnique(Messages.MISSING_VALUE_ATTRIBUTE_IN_TEST_CASE_ELEMENT);
 			return Optional.empty();
 		}
 
@@ -173,11 +173,11 @@ public class ModelParserForTestCase {
 					choiceElement, SerializationHelperVersion1.getChoiceAttributeName(), 
 					errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return Optional.empty();
 		}
 
-		ChoiceNode choiceNode = BasicParameterNodeHelper.findChoice(choicesParentParameter, choiceQualifiedName);
+		ChoiceNode choiceNode = ChoiceNodeHelper.findChoiceByQualifiedName(choicesParentParameter, choiceQualifiedName);
 
 		if (choiceNode == null) {
 			return Optional.empty();
@@ -202,7 +202,7 @@ public class ModelParserForTestCase {
 			return name;
 
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 	}

@@ -23,11 +23,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -1065,6 +1067,72 @@ public class ChoiceNodeHelper {
 		for(String label : labels){
 			BooleanHelper.assertIsTrue(labels2.contains(label), "Label2 should contain label1");
 		}
+	}
+
+	public static ChoiceNode findChoiceByName(
+			IChoicesParentNode choicesParentNode,
+			String methodNameInIntrLanguage) {
+
+		List<ChoiceNode> choices = choicesParentNode.getChoices();
+
+		for (ChoiceNode choiceNode : choices) {
+
+			String currentName = choiceNode.getName();
+
+			if (currentName.equals(methodNameInIntrLanguage)){
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
+	public static ChoiceNode findChoiceByQualifiedName(
+			BasicParameterNode basicParameterNode, 
+			String choiceQualifiedName) {
+
+		Set<ChoiceNode> choiceNodes = basicParameterNode.getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
+	public static String correctChoiceName(
+			String name,
+			String availableName,
+			IChoicesParentNode parametersParent) {
+
+		String correctedNameInIntrLanguage = NodeNameHelper.correctParameterNameSyntax(name);
+
+		String correctedUniqueName = 
+				correctUniqueness(correctedNameInIntrLanguage, availableName, parametersParent);
+
+		return correctedUniqueName;
+	}
+
+	private static String correctUniqueness(
+			String nameInIntrLanguage, 
+			String availableNameInIntrLanguage,
+			IChoicesParentNode parametersParent) {
+
+		if (null == ChoiceNodeHelper.findChoiceByName(parametersParent, nameInIntrLanguage)) {
+			return nameInIntrLanguage;
+		}
+
+		String uniqueName = 
+				ChoicesParentNodeHelper.generateUniqueChoiceName(
+						parametersParent, nameInIntrLanguage, availableNameInIntrLanguage);
+
+		return uniqueName;
 	}
 
 }

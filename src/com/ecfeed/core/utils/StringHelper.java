@@ -568,11 +568,11 @@ public class StringHelper {
 				return ("Line: " + (lineIndex + 1) + " differs.");
 			}
 		}
-		
+
 		if (expectedResultLines.length != resultLines.length) {
 			return "Count of lines does not match";
 		}
-		
+
 		return null;
 	}	
 
@@ -585,5 +585,67 @@ public class StringHelper {
 		ExceptionHelper.reportRuntimeException(errorMessage);
 	}
 
-	
+	public static String replaceCharacterInString(String originalString, char replacementChar, int indexToReplace) {
+
+		if (indexToReplace < 0) {
+			ExceptionHelper.reportRuntimeException("Invalid index - below zero.");
+		}
+
+		if (indexToReplace >= originalString.length()) {
+			ExceptionHelper.reportRuntimeException("Invalid index - too big.");
+		}
+
+		char[] originalStrArray = originalString.toCharArray();
+
+		originalStrArray[indexToReplace] = replacementChar;
+
+		String result = new String(originalStrArray);
+
+		return result;
+	}
+
+	public static String replaceAllSubstrings(String strg, String stringToFind, String stringToReplace) {
+
+		String result = strg;
+
+		for(;;) {
+
+			int index = result.indexOf(stringToFind);
+
+			if (index < 0) {
+				return result;
+			}
+
+			result = result.replace(stringToFind, stringToReplace);
+		}
+	}
+
+	public static String trimmStringByCharacter(String fromString, char characterToTrimm) {
+
+		int firstIndex = 0;
+
+		for (int index = 0; index < fromString.length(); index++) {
+
+			char charAt = fromString.charAt(index);
+
+			if (charAt != characterToTrimm) {
+				firstIndex = index;
+				break;
+			}
+		}
+
+		int lastIndex = fromString.length() - 1;
+
+		for (int index = fromString.length() - 1; index > 0; index--) {
+
+			char charAt = fromString.charAt(index);
+
+			if (charAt != characterToTrimm) {
+				lastIndex = index;
+				break;
+			}
+		}
+
+		return fromString.substring(firstIndex, lastIndex + 1);
+	}
 }

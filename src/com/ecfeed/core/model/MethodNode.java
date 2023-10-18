@@ -116,13 +116,14 @@ public class MethodNode extends AbstractNode
 
 	public List<String> getParameterTypes() {
 
-		return ParametersParentNodeHelper.getParameterTypes(getParameters());
+		return ParametersParentNodeHelper.
+				getParameterTypes(getParameters());
 	}
 
 	@Override
 	public String toString() {
 
-		return MethodNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava()); 
+		return MethodNodeHelper.createSignature(this, true, true, new ExtLanguageManagerForJava()); 
 	}
 
 	@Override

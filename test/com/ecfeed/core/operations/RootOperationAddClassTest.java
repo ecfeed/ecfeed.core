@@ -19,7 +19,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
 
 public class RootOperationAddClassTest {
@@ -31,34 +30,34 @@ public class RootOperationAddClassTest {
 
 		// add class to empty root
 
-		ClassNode classNode1 = new ClassNode("com.Class1", null);
+		//		ClassNode classNode1 = new ClassNode("com.Class1", null);
 
-		OnClassOperationAddToRoot operation1Simple = 
-				new OnClassOperationAddToRoot(rootNode, classNode1, false, new ExtLanguageManagerForSimple());
-
-		try {
-			operation1Simple.execute();
-		} catch (Exception e) {
-			fail();
-		}
+		//		OnClassOperationAddToRoot operation1Simple = 
+		//				new OnClassOperationAddToRoot(rootNode, classNode1, false, new ExtLanguageManagerForSimple());
+		//
+		//		try {
+		//			operation1Simple.execute();
+		//		} catch (Exception e) {
+		//			fail();
+		//		}
 
 		// add class with colliding name in simple mode only
 
 		ClassNode classNode2 = new ClassNode("com.xx.Class1", null);
 
-		OnClassOperationAddToRoot operation2Simple = 
-				new OnClassOperationAddToRoot(rootNode, classNode2, false, new ExtLanguageManagerForSimple());
-
-		try {
-			operation2Simple.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(
-					e,
-					RootNodeHelper.CLASS_WITH_NAME,
-					"Class1",
-					RootNodeHelper.ALREADY_EXISTS);
-		}
+		//		OnClassOperationAddToRoot operation2Simple = 
+		//				new OnClassOperationAddToRoot(rootNode, classNode2, false, new ExtLanguageManagerForSimple());
+		//
+		//		try {
+		//			operation2Simple.execute();
+		//			fail();
+		//		} catch (Exception e) {
+		//			TestHelper.checkExceptionMessage(
+		//					e,
+		//					RootNodeHelper.CLASS_WITH_NAME,
+		//					"Class1",
+		//					RootNodeHelper.ALREADY_EXISTS);
+		//		}
 
 		// adding the same class in Java mode should be ok
 

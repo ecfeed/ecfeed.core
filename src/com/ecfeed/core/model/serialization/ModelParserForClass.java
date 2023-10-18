@@ -81,7 +81,7 @@ public class ModelParserForClass {
 			ModelParserHelper.assertNameEqualsExpectedName(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(classElement, errorList);
 		} catch (Exception e) {
-			errorList.add(e.getMessage());
+			errorList.addIfUnique(e.getMessage());
 			return null;
 		}
 
@@ -121,8 +121,8 @@ public class ModelParserForClass {
 		if (existingMethodNode != null) {
 
 			String newMethodName = 
-					ClassNodeHelper.generateNewMethodName(
-							targetClassNode, existingMethodNode.getName(), new ExtLanguageManagerForJava());
+					ClassNodeHelper.generateUniqueMethodName(
+							targetClassNode, existingMethodNode.getName(), null, new ExtLanguageManagerForJava());
 
 			methodNode.setName(newMethodName);
 		}
