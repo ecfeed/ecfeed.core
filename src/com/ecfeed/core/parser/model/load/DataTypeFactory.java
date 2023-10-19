@@ -1,4 +1,4 @@
-package com.ecfeed.core.parser.model;
+package com.ecfeed.core.parser.model.load;
 
 public class DataTypeFactory {
 	

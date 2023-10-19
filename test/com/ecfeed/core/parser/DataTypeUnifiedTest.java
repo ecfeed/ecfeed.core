@@ -1,7 +1,7 @@
 package com.ecfeed.core.parser;
 
-import com.ecfeed.core.parser.model.DataType;
-import com.ecfeed.core.parser.model.DataTypeFactory;
+import com.ecfeed.core.parser.model.load.DataType;
+import com.ecfeed.core.parser.model.load.DataTypeFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.ecfeed.core.parser;
 
-import com.ecfeed.core.parser.model.ModelDataCSVLineProcessor;
+import com.ecfeed.core.parser.model.load.ModelDataCSVLineProcessor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

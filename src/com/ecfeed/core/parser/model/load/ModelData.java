@@ -1,15 +1,20 @@
-package com.ecfeed.core.parser.model;
+package com.ecfeed.core.parser.model.load;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 
 public interface ModelData {
 
-    List<BasicParameterNode> parse(IParametersParentNode node);
+    int getLimit();
+
+    void setLimit(int limit);
+
+    List<AbstractParameterNode> parse(IParametersParentNode node);
 
     List<String> getRaw();
 
@@ -19,9 +24,5 @@ public interface ModelData {
 
     List<Set<String>> getParameters();
 
-    int getLimit();
-    
-    void setLimit(int limit);
-    
     Optional<String> getWarning();
 }

@@ -3,16 +3,12 @@ package com.ecfeed.core.parser;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelChangeRegistrator;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.parser.model.ModelData;
-import com.ecfeed.core.parser.model.ModelDataFactory;
+import com.ecfeed.core.parser.model.load.ModelData;
+import com.ecfeed.core.parser.model.load.ModelDataFactory;
 
 public class ModelParserTest {
 
@@ -81,19 +77,19 @@ public class ModelParserTest {
         Assertions.assertEquals(36, body.get(10).size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
         Assertions.assertNotNull(parentRootData.get(0));
 
         ClassNode parentClass = new ClassNode("test", parentRoot.getModelChangeRegistrator());
-        List<BasicParameterNode> parentClassData = model.parse(parentClass);
+        List<AbstractParameterNode> parentClassData = model.parse(parentClass);
 
         Assertions.assertEquals(11, parentClassData.size());
         Assertions.assertNotNull(parentClassData.get(0));
 
         MethodNode parentMethod = new MethodNode("test", parentRoot.getModelChangeRegistrator());
-        List<BasicParameterNode> parentMethodData = model.parse(parentMethod);
+        List<AbstractParameterNode> parentMethodData = model.parse(parentMethod);
 
         Assertions.assertEquals(11, parentMethodData.size());
         Assertions.assertNotNull(parentMethodData.get(0));
@@ -180,19 +176,19 @@ public class ModelParserTest {
         Assertions.assertEquals(2, body.get(10).size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
         Assertions.assertNotNull(parentRootData.get(0));
 
         ClassNode parentClass = new ClassNode("test", parentRoot.getModelChangeRegistrator());
-        List<BasicParameterNode> parentClassData = model.parse(parentClass);
+        List<AbstractParameterNode> parentClassData = model.parse(parentClass);
 
         Assertions.assertEquals(11, parentClassData.size());
         Assertions.assertNotNull(parentClassData.get(0));
 
         MethodNode parentMethod = new MethodNode("test", parentRoot.getModelChangeRegistrator());
-        List<BasicParameterNode> parentMethodData = model.parse(parentMethod);
+        List<AbstractParameterNode> parentMethodData = model.parse(parentMethod);
 
         Assertions.assertEquals(11, parentMethodData.size());
         Assertions.assertNotNull(parentMethodData.get(0));
@@ -243,7 +239,7 @@ public class ModelParserTest {
         }
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
     }
@@ -259,7 +255,7 @@ public class ModelParserTest {
         Assertions.assertEquals(11, header.size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
     }
@@ -282,7 +278,7 @@ public class ModelParserTest {
         Assertions.assertEquals(11, header.size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(11, parentRootData.size());
     }
@@ -302,7 +298,7 @@ public class ModelParserTest {
         Assertions.assertEquals(20, body.size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
+        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
 
         Assertions.assertEquals(20, parentRootData.size());
     }
