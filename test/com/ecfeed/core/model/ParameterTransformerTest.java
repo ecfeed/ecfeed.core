@@ -1505,6 +1505,184 @@ public class ParameterTransformerTest {
 		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(localChoiceNode1, choiceNodeFromPostcondition);
 	}
+	
+	@Test
+	public void linkingStructureWithNestetParameterToRootStructureBasicUseCaseForChoices() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global structures
+
+		CompositeParameterNode globalCompositeParameterNode1 = 
+				RootNodeHelper.addNewCompositeParameter(rootNode, "GSTR", true, null);
+
+		// add global parameter and choice for root node
+
+		final String globalParameterName = "GPAR";
+		final String globalChoiceName1 = "GC";
+
+		BasicParameterNode globalParameterNode =
+				CompositeParameterNodeHelper.addNewBasicParameter(
+						globalCompositeParameterNode1, globalParameterName, "String", "", true, null);
+
+		ChoiceNode globalChoiceNode = 
+				BasicParameterNodeHelper.addNewChoice(
+						globalParameterNode, globalChoiceName1, "0", false, true, null);
+
+		// add class node
+
+		ClassNode classNode = RootNodeHelper.addNewClassNode(rootNode, "Class", true, null);
+
+		// add methodNode 
+
+		MethodNode methodNode = ClassNodeHelper.addNewMethod(classNode, "Method", true, null);
+
+		CompositeParameterNode localCompositeParameterNode1 =
+				MethodNodeHelper.addNewCompositeParameter(methodNode, "LSTR1", true, null);
+
+		CompositeParameterNode localCompositeParameterNode2 =
+				CompositeParameterNodeHelper.addNewCompositeParameter(
+						localCompositeParameterNode1, "LSTR2", true, null);
+		
+		// add parameter and choice to structure
+
+		final String localParameterName = "LPAR";
+		final String localChoiceName1 = "LC";
+
+		BasicParameterNode localParameterNode = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(
+						localCompositeParameterNode2, localParameterName, "String");
+
+		ChoiceNode localChoiceNode1 = 
+				MethodParameterNodeHelper.addNewChoice(localParameterNode, localChoiceName1, "0");
+
+		// add constraint
+
+		TestHelper.addSimpleChoiceConstraintToMethod(
+				methodNode, "Constraint", localParameterNode, localChoiceNode1, localChoiceNode1);
+
+		// creating choice conversion list
+
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+		ParameterConversionItemPartForChoice srcPart = 
+				new ParameterConversionItemPartForChoice(
+						localParameterNode, null, localChoiceNode1);
+
+		ParameterConversionItemPartForChoice dstPart = 
+				new ParameterConversionItemPartForChoice(
+						globalParameterNode, localCompositeParameterNode1, globalChoiceNode);
+
+		ParameterConversionItem parameterConversionItemForChoice = 
+				new ParameterConversionItem(srcPart, dstPart, (String)null);
+
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
+
+		// before linking
+
+		// Root
+		//   GSTR
+		//     GP
+		//       GC
+		//   Class
+		//     Method
+		//       LSTR1
+		//         LSTR2
+		//           LPAR
+		//             LC
+		//   constraint: LSTR:LPAR=LC 
+
+
+		// linking
+
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		NodeMapper nodeMapper = new NodeMapper();
+		ParameterTransformer.linkLocalParameteToGlobalParameter(
+				localCompositeParameterNode1, 
+				globalCompositeParameterNode1, 
+				parameterConversionDefinition, 
+				reverseOperations, 
+				Optional.of(nodeMapper),
+				extLanguageManager);
+
+		// after linking
+
+		// Root
+		//   GSTR
+		//     GP
+		//       GC
+		//   Class
+		//     Method
+		//       LSTR->GSTR
+		//   constraint: LSTR->GSTR:GPAR=GC 
+
+		// check global parameter of class
+
+		assertEquals(1, rootNode.getParametersCount());
+		assertEquals(1, globalParameterNode.getChoiceCount());
+		ChoiceNode choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+
+		// check local structure 
+
+		assertEquals(1, methodNode.getParametersCount());
+		CompositeParameterNode resultLocalCompositeParameterNode = 
+				(CompositeParameterNode)methodNode.getParameter(0);
+		
+		assertTrue(resultLocalCompositeParameterNode.isLinked());
+		assertEquals(globalCompositeParameterNode1, resultLocalCompositeParameterNode.getLinkToGlobalParameter());
+
+		// check choices from constraints
+
+		assertEquals(1, methodNode.getConstraintsCount());
+		Constraint constraint2 = methodNode.getConstraintNodes().get(0).getConstraint();
+		AbstractStatement postcondition = constraint2.getPostcondition();
+
+		if (!(postcondition instanceof RelationStatement)) {
+			fail();
+		}
+
+		RelationStatement relationStatement2 = (RelationStatement) postcondition;
+		BasicParameterNode basicParameterNode2 = relationStatement2.getLeftParameter();
+		assertEquals(globalParameterNode, basicParameterNode2);
+
+		CompositeParameterNode compositeParameterNode2 = relationStatement2.getLeftParameterLinkingContext();
+		assertEquals(localCompositeParameterNode1, compositeParameterNode2);
+
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(globalChoiceNode, choiceNodeFromPostcondition);
+
+		// reverse operation
+
+		reverseOperations.executeFromTail();
+
+		// check global parameter
+
+		assertEquals(1, rootNode.getParametersCount());
+		assertEquals(1, globalParameterNode.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(1, localParameterNode.getChoiceCount());
+
+		CompositeParameterNode compositeParameterNode3 = (CompositeParameterNode)methodNode.getParameter(0);
+		assertFalse(compositeParameterNode3.isLinked());
+		assertNull(compositeParameterNode3.getLinkToGlobalParameter());
+
+		ChoiceNode choiceNodeFromMethodParam = localParameterNode.getChoice(localChoiceName1);
+		assertEquals(localChoiceNode1, choiceNodeFromMethodParam);
+
+		// check choices from constraints
+
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(localChoiceNode1, choiceNodeFromPostcondition);
+	}
+	
 
 	private void addSimpleLabelConstraintToMethod(
 			MethodNode methodNode,
