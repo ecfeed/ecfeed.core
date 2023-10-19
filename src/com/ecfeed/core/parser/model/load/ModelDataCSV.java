@@ -146,7 +146,7 @@ public class ModelDataCSV implements ModelData {
     }
 
     @Override
-    public List<AbstractParameterNode> parse(IParametersParentNode node) {
+    public List<AbstractParameterNode> parse(IModelChangeRegistrator registrator) {
         List<AbstractParameterNode> list = new ArrayList<>();
 
         for (int i = 0 ; i < this.header.size() ; i++) {
@@ -164,17 +164,7 @@ public class ModelDataCSV implements ModelData {
                 choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
 
-            BasicParameterNode parameter;
-
-//            if (node instanceof MethodNode) {
-//                parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
-//            } else if (node instanceof ClassNode) {
-//                parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
-//            } else if (node instanceof RootNode) {
-                parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, node.getModelChangeRegistrator());
-//            } else {
-//                throw new IllegalArgumentException("The node type is not supported.");
-//            }
+            BasicParameterNode parameter = new BasicParameterNode(this.header.get(i), type.determine(), "0", false, registrator);
 
             choices.forEach(parameter::addChoice);
 

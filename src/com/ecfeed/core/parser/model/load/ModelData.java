@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.IParametersParentNode;
 
 public interface ModelData {
@@ -14,7 +15,7 @@ public interface ModelData {
 
     void setLimit(int limit);
 
-    List<AbstractParameterNode> parse(IParametersParentNode node);
+    List<AbstractParameterNode> parse(IModelChangeRegistrator registrator);
 
     List<String> getRaw();
 
