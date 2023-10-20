@@ -56,7 +56,7 @@ public class ModelParserTest {
 
         List<String> data = model.getRaw();
         List<String> header = model.getHeader();
-        List<Set<String>> body = model.getParameters();
+        List<Set<String>> body = model.getBody();
 
         Assertions.assertEquals(37, data.size());
         Assertions.assertTrue(data.stream().anyMatch(e -> e.equals("Country,Name,Address,Product,Color,Size,Quantity,Payment,Delivery,Phone,Email")));
@@ -128,7 +128,7 @@ public class ModelParserTest {
 
         model.setLimit(5);
 
-        Assertions.assertEquals(3, model.getHeaderAffected().size());
+        Assertions.assertEquals(3, model.getHeaderOverflow().size());
         Assertions.assertTrue(model.getWarning().isPresent());
     }
 
@@ -142,7 +142,7 @@ public class ModelParserTest {
 
         List<String> data = model.getRaw();
         List<String> header = model.getHeader();
-        List<Set<String>> body = model.getParameters();
+        List<Set<String>> body = model.getBody();
 
         Assertions.assertEquals(3, data.size());
         Assertions.assertTrue(data.stream().anyMatch(e -> e.equals("Country;Name;Address;Product;Color;Size;Quantity;Payment;Delivery;Phone;Email")));
@@ -264,7 +264,7 @@ public class ModelParserTest {
 
         Assertions.assertEquals(20, header.size());
 
-        List<Set<String>> body = model.getParameters();
+        List<Set<String>> body = model.getBody();
 
         Assertions.assertEquals(20, body.size());
 
