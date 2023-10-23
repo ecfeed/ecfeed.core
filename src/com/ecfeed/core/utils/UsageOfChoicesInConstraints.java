@@ -23,6 +23,7 @@ import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintsParentNodeHelper;
 import com.ecfeed.core.model.IConstraintsParentNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
 
 public class UsageOfChoicesInConstraints {
@@ -31,7 +32,8 @@ public class UsageOfChoicesInConstraints {
 
 	public UsageOfChoicesInConstraints(AbstractParameterNode abstractParameterNode) {
 
-		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) abstractParameterNode.getParent();
+		IConstraintsParentNode constraintsParentNode =
+				MethodNodeHelper.findMethodNode(abstractParameterNode);
 
 		List<ConstraintNode> constraintNodes = 
 				ConstraintsParentNodeHelper.findChildConstraints(constraintsParentNode);

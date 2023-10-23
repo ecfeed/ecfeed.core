@@ -91,11 +91,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 			AbstractParameterNode localTopParameterNode) {
 
 		IParametersAndConstraintsParentNode parent =
-				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
-
-		if (!(parent instanceof MethodNode)) {
-			ExceptionHelper.reportRuntimeException("Invalid position of parameter - top parameter expected.");
-		}
+				MethodNodeHelper.findMethodNode(localTopParameterNode);
 
 		Set<BasicParameterWithChoice> resultSet = createResultSet(localTopParameterNode, parent);
 
@@ -223,11 +219,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 			AbstractParameterNode localTopParameterNode) {
 
 		IParametersAndConstraintsParentNode parent =
-				(IParametersAndConstraintsParentNode) localTopParameterNode.getParent();
-
-		if (!(parent instanceof MethodNode)) {
-			ExceptionHelper.reportRuntimeException("Invalid position of parameter - top parameter expected.");
-		}
+				MethodNodeHelper.findMethodNode(localTopParameterNode);
 
 		MethodNode parentMethodNode = (MethodNode)parent;
 
