@@ -11,6 +11,8 @@ public interface ModelData {
 
     int getLimit();
 
+    void setLimit(int limit);
+
     List<String> getRaw();
 
     List<AbstractParameterNode> parse(IModelChangeRegistrator registrator);

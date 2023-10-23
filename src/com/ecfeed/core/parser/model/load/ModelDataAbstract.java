@@ -22,6 +22,12 @@ public abstract class ModelDataAbstract implements ModelData {
     }
 
     @Override
+    public void setLimit(int limit) {
+
+        this.limit = limit;
+    }
+
+    @Override
     public List<String> getRaw() {
 
         return raw;
