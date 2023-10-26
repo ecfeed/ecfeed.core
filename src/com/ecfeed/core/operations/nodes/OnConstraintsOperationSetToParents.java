@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.ConstraintNode;
@@ -17,27 +18,36 @@ import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.operations.AbstractOneWayModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnConstraintsOperationSetOnMethod extends AbstractOneWayModelOperation {
+public class OnConstraintsOperationSetToParents extends AbstractOneWayModelOperation {
 
-	private IConstraintsParentNode fMethodNode;
 	private List<ConstraintNode> fConstraintNodes;
 
-	public OnConstraintsOperationSetOnMethod(
-			IConstraintsParentNode methodNode, List<ConstraintNode> constraintNodes, IExtLanguageManager extLanguageManager){
+	public OnConstraintsOperationSetToParents(
+			List<ConstraintNode> constraintNodes, 
+			IExtLanguageManager extLanguageManager){
 
-		super("Set constraints", extLanguageManager);
+		super("Set constraints to parent nodes", extLanguageManager);
 
-		fMethodNode = methodNode;
 		fConstraintNodes = constraintNodes;
 	}
 
 	@Override
 	public void execute() {
 
-		fMethodNode.removeAllConstraints();
+		List<IConstraintsParentNode> parentsWithRemovedConstraints = new ArrayList<>();
 
 		for (ConstraintNode constraintNode : fConstraintNodes) {
-			fMethodNode.addConstraint(constraintNode);
+
+			IConstraintsParentNode constraintsParentNode = 
+					(IConstraintsParentNode) constraintNode.getParent();
+
+			if (!parentsWithRemovedConstraints.contains(constraintsParentNode)) {
+
+				constraintsParentNode.removeAllConstraints();
+				parentsWithRemovedConstraints.add(constraintsParentNode);
+			}
+
+			constraintsParentNode.addConstraint(constraintNode);
 		}
 	}
 

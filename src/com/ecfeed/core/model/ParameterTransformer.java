@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import com.ecfeed.core.operations.link.OperationSimpleSetLink;
 import com.ecfeed.core.operations.nodes.OnChoiceOperationAddSimple;
-import com.ecfeed.core.operations.nodes.OnConstraintsOperationSetOnMethod;
+import com.ecfeed.core.operations.nodes.OnConstraintsOperationSetToParents;
 import com.ecfeed.core.operations.nodes.OnMethodParameterOperationSimpleSetType;
 import com.ecfeed.core.operations.nodes.OnTestCasesOperationSimpleSet;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -220,7 +220,7 @@ public class ParameterTransformer {
 				parameterConversionDefinition.createListOfUniqueSourceLocalParameters();
 
 		for (BasicParameterNode localBasicParameterNode : localBasicParameterNodes) {
-			OnConstraintsOperationSetOnMethod reverseOperation = 
+			OnConstraintsOperationSetToParents reverseOperation = 
 					createReverseOperationSetConstraints(localBasicParameterNode, nodeMapper, extLanguageManager);
 
 			outReverseOperations.add(reverseOperation);
@@ -361,26 +361,29 @@ public class ParameterTransformer {
 	}
 
 
-	private static OnConstraintsOperationSetOnMethod createReverseOperationSetConstraints(
+	private static OnConstraintsOperationSetToParents createReverseOperationSetConstraints(
 			BasicParameterNode srcParameterNode,
 			Optional<NodeMapper> nodeMapper,
 			IExtLanguageManager extLanguageManager) {
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(srcParameterNode);
 
-		List<ConstraintNode> constraintNodes =  methodNode.getConstraintNodes();
+		List<ConstraintNode> constraintNodes = 
+				MethodNodeHelper.getChildConstraintNodes(methodNode);
 
 		List<ConstraintNode> listOfClonedConstraintNodes = new ArrayList<>();
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
 			ConstraintNode clone = constraintNode.makeClone(nodeMapper);
+
+			IAbstractNode parent = constraintNode.getParent();
+			clone.setParent(parent);
 			listOfClonedConstraintNodes.add(clone);
 		}
 
-		OnConstraintsOperationSetOnMethod reverseOperation = 
-				new OnConstraintsOperationSetOnMethod(
-						methodNode, listOfClonedConstraintNodes, extLanguageManager);
+		OnConstraintsOperationSetToParents reverseOperation = 
+				new OnConstraintsOperationSetToParents(listOfClonedConstraintNodes, extLanguageManager);
 
 		return reverseOperation;
 	}

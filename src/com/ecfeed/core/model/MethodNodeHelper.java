@@ -970,7 +970,7 @@ public class MethodNodeHelper {
 		return resultConstraintNodes;
 	}
 
-	public static List<ConstraintNode> getChildConstraintNodes(MethodNode methodNode) { 
+	public static List<ConstraintNode> getChildConstraintNodes(MethodNode methodNode) { // XYX move to constraint node helper
 
 		List<ConstraintNode> result = new ArrayList<>();
 
