@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterSignatureHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.CompositeParameterNode;
@@ -76,5 +77,21 @@ public abstract class ParameterConversionItemPartHelper {
 		return parameterConversionItemPartForChoice;
 	}
 
+	public static String createSignatureOfConversionItemPart(
+			IParameterConversionItemPart srcPart,
+			IExtLanguageManager extLanguageManager) {
+		
+		String parameterDescription = 
+				AbstractParameterSignatureHelper.createSignatureOfParameterWithContextOrLinkNewStandard(
+						srcPart.getParameter(), srcPart.getLinkingContext(), extLanguageManager);
+
+		String description = 
+				parameterDescription 
+				+ SignatureHelper.SIGNATURE_NAME_SEPARATOR 
+				+ srcPart.getStr();
+
+		return description;
+	}
+	
 }
 

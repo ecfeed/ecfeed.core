@@ -86,7 +86,7 @@ public class ParametersParentNodeHelper {
 
 		return parameterTypes;
 	}
-	
+
 	public static AbstractParameterNode findGlobalParameter(
 			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
 
@@ -118,51 +118,6 @@ public class ParametersParentNodeHelper {
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
 		return null;
 	}
-	
-	
-//<<<<<<< HEAD
-//	public static AbstractParameterNode findGlobalParameter(
-//			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
-//=======
-//	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
-//>>>>>>> develop
-//
-//		List<String> parameterTypes = new ArrayList<String>();
-//
-//		for (AbstractParameterNode abstractParameterNode : parameters) {
-//
-//<<<<<<< HEAD
-//		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParametersParentNode);
-//=======
-//			if (abstractParameterNode instanceof BasicParameterNode) {
-//>>>>>>> develop
-//
-//				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-//
-//<<<<<<< HEAD
-//		if (StringHelper.isEqual(className, parentName)) {
-//			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-//			return abstractParameterNode;
-//		}
-//=======
-//				String parameterType = methodParameterNode.getType();
-//				parameterTypes.add(parameterType);
-//>>>>>>> develop
-//
-//			} else {
-//
-//<<<<<<< HEAD
-//		if (parentName == null || rootName.equals(parentName)) {
-//			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-//			return abstractParameterNode;
-//=======
-//				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
-//			}
-//>>>>>>> develop
-//		}
-//
-//		return parameterTypes;
-//	}
 
 	public static String generateUniqueParameterName(
 			String nameInIntrLanguage, 
