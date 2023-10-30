@@ -21,7 +21,7 @@ import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ConstraintsParentNodeHelper;
+import com.ecfeed.core.model.ConstraintNodeHelper;
 import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.utils.BasicParameterWithChoice;
@@ -36,7 +36,7 @@ public class UsageOfChoicesInConstraints {
 				MethodNodeHelper.findMethodNode(abstractParameterNode);
 
 		List<ConstraintNode> constraintNodes = 
-				ConstraintsParentNodeHelper.findChildConstraints(constraintsParentNode);
+				ConstraintNodeHelper.findChildConstraints(constraintsParentNode);
 
 		List<BasicParameterNode> basicParameterNodes = 
 				BasicParameterNodeHelper.getBasicChildParameterNodes(abstractParameterNode);
