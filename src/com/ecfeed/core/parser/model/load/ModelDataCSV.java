@@ -12,6 +12,13 @@ public class ModelDataCSV extends ModelDataAbstract {
     private ModelDataCSVLineProcessor processor;
 
     @Override
+    public void setLimit(int limit) {
+        super.setLimit(limit);
+
+        validateSize();
+    }
+
+    @Override
     protected final void createInternal() {
         updateProperties();
 
