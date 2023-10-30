@@ -1,14 +1,12 @@
 package com.ecfeed.core.parser;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelChangeRegistrator;
 import com.ecfeed.core.parser.model.load.ModelData;
 import com.ecfeed.core.parser.model.load.ModelDataFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Set;
 
 public class ModelParserJSONTest {
     public static String SEPARATOR = "&";
@@ -55,7 +53,11 @@ public class ModelParserJSONTest {
             Assertions.assertEquals(3, header.size());
         });
 
-        System.out.println("test");
+        List<AbstractParameterNode> parameters = model.parse(null);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(2, parameters.size());
+        });
     }
 
     @Test
@@ -97,13 +99,17 @@ public class ModelParserJSONTest {
             Assertions.assertTrue(header.contains("Person" + SEPARATOR + "sex"));
             Assertions.assertTrue(header.contains("Person" + SEPARATOR + "height"));
             Assertions.assertTrue(header.contains("Person" + SEPARATOR + "name"));
-            Assertions.assertTrue(header.contains("id"));
             Assertions.assertTrue(header.contains("Person" + SEPARATOR + "additional" + SEPARATOR + "license"));
             Assertions.assertTrue(header.contains("Person" + SEPARATOR + "age"));
             Assertions.assertTrue(header.contains("timestamp"));
+            Assertions.assertTrue(header.contains("id"));
         });
 
-        System.out.println("test");
+        List<AbstractParameterNode> parameters = model.parse(null);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(3, parameters.size());
+        });
     }
 
     @Test
@@ -130,10 +136,40 @@ public class ModelParserJSONTest {
 
         List<String> header = model.getHeader();
 
-//        Assertions.assertAll(() -> {
-//            Assertions.assertEquals(3, header.size());
-//        });
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(3, header.size());
+        });
 
-        System.out.println("test");
+        List<AbstractParameterNode> parameters = model.parse(null);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(2, parameters.size());
+        });
+    }
+
+    @Test
+    void parseModelCSVTestD() {
+
+        ModelData model = ModelDataFactory.create("" +
+                        "{\n" +
+                        "    \"index\": 0,\n" +
+                        "    \"Person\": {\n" +
+                        "      \"name\": \"John\",\n" +
+                        "      \"age\": \"50\"\n" +
+                        "    }\n" +
+                        "}",
+                ModelDataFactory.Type.JSON);
+
+        List<String> header = model.getHeader();
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(3, header.size());
+        });
+
+        List<AbstractParameterNode> parameters = model.parse(null);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(2, parameters.size());
+        });
     }
 }

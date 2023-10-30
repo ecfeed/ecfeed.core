@@ -1,12 +1,12 @@
 package com.ecfeed.core.parser.model.load;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ModelDataJSON extends ModelDataAbstract {
     private JSONObject rawJSON;
@@ -133,33 +133,37 @@ public class ModelDataJSON extends ModelDataAbstract {
 
         if (!isArrayOfObjects(element)) {
             for (int i = 0; i < element.length() ; i++) {
-                choices.add(element.get(i).toString());
+                if (choices.size() < this.limit) {
+                    choices.add(element.get(i).toString());
+                } else {
+                    break;
+                }
             }
         }
     }
 
     private void addValuePrimitive(Set<String> choices, Object element) {
 
-        choices.add(element.toString());
+        if (choices.size() < this.limit) {
+            choices.add(element.toString());
+        }
     }
 
     private JSONArray getTopArray() {
 
-        if (this.rawJSON.keySet().size() != 1) {
-            throw new RuntimeException("The root node must consist of exactly one parameter (array type).");
-        }
+        if (this.rawJSON.keySet().size() == 1) {
 
-        JSONArray tests = null;
-        for (String element : this.rawJSON.keySet()) {
+            for (String element : this.rawJSON.keySet()) {
+                Object node = this.rawJSON.get(element);
 
-            if (this.rawJSON.get(element) instanceof JSONArray) {
-                tests = (JSONArray) this.rawJSON.get(element);
-            } else {
-                throw new RuntimeException("The root node must consist of exactly one parameter (array type).");
+                return node instanceof JSONArray ? (JSONArray) node : new JSONArray().put(node);
             }
+        } else {
+
+            return new JSONArray().put(this.rawJSON);
         }
 
-        return tests;
+        throw new RuntimeException("The JSON object could not be parsed!");
     }
 
     private boolean isArrayOfObjects(JSONArray array) {
@@ -178,8 +182,72 @@ public class ModelDataJSON extends ModelDataAbstract {
 
     @Override
     public List<AbstractParameterNode> parse(IModelChangeRegistrator registrator) {
-        return null;
+        List<AbstractParameterNode> list = new ArrayList<>();
+
+        for (int i = 0 ; i < this.header.size() ; i++) {
+            List<ChoiceNode> choices = new ArrayList<>();
+            DataType type = DataTypeFactory.create(false);
+
+            int j = 0;
+            for (String choice : this.body.get(i)) {
+
+                if (j >= this.limit) {
+                    break;
+                }
+
+                type.feed(choice);
+                choices.add(new ChoiceNode("choice" + (j++), choice, null));
+            }
+
+            BasicParameterNode parameter = parseParameter(list, this.header.get(i), type, registrator);
+
+            choices.forEach(parameter::addChoice);
+        }
+
+        return list;
     }
 
+    private BasicParameterNode parseParameter(List<AbstractParameterNode> parameters, String path, DataType type, IModelChangeRegistrator registrator) {
+        BasicParameterNode result;
 
+        if (path.contains("&")) {
+            String[] elements = path.split("&");
+
+            IParametersParentNode composite = null;
+            Map<String, AbstractParameterNode> compositeNames;
+
+            for (int i = 0 ; i < elements.length - 1 ; i++) {
+
+                if (composite == null) {
+                    compositeNames = parameters.stream().collect(Collectors.toMap(AbstractNode::getName, e -> e));
+                } else {
+                    compositeNames = composite.getParameters().stream().collect(Collectors.toMap(AbstractNode::getName, e -> e));
+                }
+
+                if (compositeNames.containsKey(elements[i])) {
+                    composite = (CompositeParameterNode) compositeNames.get(elements[i]);
+                } else {
+                    CompositeParameterNode compositeCandidate = new CompositeParameterNode(elements[i], registrator);
+
+                    if (composite == null) {
+                        parameters.add(compositeCandidate);
+                    } else {
+                        composite.addParameter(compositeCandidate);
+                    }
+
+                    composite = compositeCandidate;
+                }
+            }
+
+            result = new BasicParameterNode(elements[elements.length -1], type.determine(), "0", false, registrator);
+
+            composite.addParameter(result);
+        } else {
+            result = new BasicParameterNode(path, type.determine(), "0", false, registrator);
+
+            parameters.add(result);
+        }
+
+        return result;
+    }
 }
