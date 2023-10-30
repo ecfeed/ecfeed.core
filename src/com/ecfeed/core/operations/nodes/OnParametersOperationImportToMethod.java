@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterSignatureHelper;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
@@ -29,12 +29,12 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class OnParametersOperationImportToMethod extends GenericOperationImportParameters {
 
 	List<TestCaseNode> fRemovedTestCases;
-	List<BasicParameterNode> fAbstractParameterNodes;
+	List<AbstractParameterNode> fAbstractParameterNodes;
 	MethodNode fMethodNode;
 
 	public OnParametersOperationImportToMethod(
 			MethodNode methodNode, 
-			List<BasicParameterNode> abstractParameterNodes,
+			List<AbstractParameterNode> abstractParameterNodes,
 			IExtLanguageManager extLanguageManager) {
 
 		super(methodNode, abstractParameterNodes, extLanguageManager);
@@ -51,7 +51,7 @@ public class OnParametersOperationImportToMethod extends GenericOperationImportP
 		List<String> paremeterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
 		int index = 0;
-		for (BasicParameterNode node : fAbstractParameterNodes) {
+		for (AbstractParameterNode node : fAbstractParameterNodes) {
 			String newParameterType = AbstractParameterSignatureHelper.createSignatureOfType(node, extLanguageManager);
 			paremeterTypesInExtLanguage.add(index++, newParameterType);
 		}

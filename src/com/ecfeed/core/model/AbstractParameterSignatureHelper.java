@@ -427,14 +427,18 @@ public abstract class AbstractParameterSignatureHelper {
 	}
 
 	// OBSOLETE
-	public static String createSignatureOfType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfType(AbstractParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		printObsoleteInfo();
 
-		String type = globalParameterNode.getType();
-		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-
-		return type;
+		if (globalParameterNode instanceof BasicParameterNode) {
+			String type = ((BasicParameterNode) globalParameterNode).getType();
+			type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
+	
+			return type;
+		}
+		
+		return "Structure";
 	}
 
 	//	public static String getQualifiedName( 
