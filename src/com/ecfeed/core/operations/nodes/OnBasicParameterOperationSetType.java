@@ -105,7 +105,7 @@ public class OnBasicParameterOperationSetType extends OnAbstractParameterOperati
 				fParameterConversionDefinition, 
 				getExtLanguageManager());
 
-		BasicParameterNodeHelper.convertChoicesAndConstraintsToType(
+		BasicParameterNodeHelper.checkConversionOfChoicesAndConstraintsToType(
 				fMethodParameterNode, fParameterConversionDefinition);		
 
 		markModelUpdated();

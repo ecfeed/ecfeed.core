@@ -471,8 +471,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 						parameterConversionItem, this, fRightCondition);
 	}
 
-
-	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) { // XYX move to helper
+	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) {
 
 		BasicParameterNode dstParameter = 
 				(BasicParameterNode) parameterConversionItem.getDstPart().getParameter();

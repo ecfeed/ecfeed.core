@@ -826,7 +826,7 @@ public class BasicParameterNodeHelper {
 		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
 
-	public static void convertChoicesAndConstraintsToType(
+	public static void checkConversionOfChoicesAndConstraintsToType(
 			BasicParameterNode methodParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 

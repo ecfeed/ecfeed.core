@@ -221,7 +221,7 @@ public class BasicParameterNodeHelperTest {
 						value);
 			}
 
-			BasicParameterNodeHelper.verifyConversionOfParameterToType( // XYX this is the tested function
+			BasicParameterNodeHelper.verifyConversionOfParameterToType(
 					newType, fMethodParameterNode, fParameterConversionDefinition);
 
 			if (successExpected == SuccessExpected.TRUE) {
@@ -279,7 +279,7 @@ public class BasicParameterNodeHelperTest {
 
 			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
 
-			BasicParameterNodeHelper.convertChoicesAndConstraintsToType( // XYX this is tested function
+			BasicParameterNodeHelper.checkConversionOfChoicesAndConstraintsToType(
 					fMethodParameterNode, fParameterConversionDefinition);
 		}
 

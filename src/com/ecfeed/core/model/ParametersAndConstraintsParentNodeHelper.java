@@ -255,7 +255,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return result;
 	}
 
-	public static Collection<String> getLabelsUsedInConstraints( // XYX obsolete ?
+	public static Collection<String> getLabelsUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
 
 		Set<String> labels = new HashSet<>();
@@ -270,7 +270,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return labels;
 	}
 
-	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?
+	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) {
 
 		List<String> resultLabels = new ArrayList<>();
 
