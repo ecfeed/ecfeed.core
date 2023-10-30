@@ -1135,4 +1135,27 @@ public class ChoiceNodeHelper {
 		return uniqueName;
 	}
 
+	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
+
+		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
+
+		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
+				(IParametersAndConstraintsParentNode) methodParameterNode.getParent();
+
+		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			List<ChoiceNode> choiceNodesForConstraint = 
+					ConstraintNodeHelper.getChoicesUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultChoiceNodes.addAll(choiceNodesForConstraint);
+		}
+
+		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
+
+		return resultChoiceNodes;
+	}
+
 }

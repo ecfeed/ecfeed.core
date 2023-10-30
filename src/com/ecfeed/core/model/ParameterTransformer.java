@@ -369,7 +369,7 @@ public class ParameterTransformer {
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(srcParameterNode);
 
 		List<ConstraintNode> constraintNodes = 
-				MethodNodeHelper.getChildConstraintNodes(methodNode);
+				ConstraintNodeHelper.getChildConstraintNodes(methodNode);
 
 		List<ConstraintNode> listOfClonedConstraintNodes = new ArrayList<>();
 

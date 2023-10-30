@@ -111,7 +111,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		MethodNode parentMethodNode = (MethodNode)parent;
 
-		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
+		List<ConstraintNode> constraintNodes = ConstraintNodeHelper.getChildConstraintNodes(parentMethodNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
@@ -192,29 +192,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return result;
 	}
 
-	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) { // XYX obsolete ?
-
-		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
-
-		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
-				(IParametersAndConstraintsParentNode) methodParameterNode.getParent();
-
-		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-
-			List<ChoiceNode> choiceNodesForConstraint = 
-					ConstraintNodeHelper.getChoicesUsedInConstraint(
-							constraintNode, methodParameterNode);
-
-			resultChoiceNodes.addAll(choiceNodesForConstraint);
-		}
-
-		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
-
-		return resultChoiceNodes;
-	}
-
 	public static List<BasicParameterWithString> getParametersWithLabelsUsedInConstraints(
 			AbstractParameterNode localTopParameterNode) {
 
@@ -228,7 +205,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		List<BasicParameterNode> basicParameterNodes = 
 				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
 
-		List<ConstraintNode> constraintNodes = MethodNodeHelper.getChildConstraintNodes(parentMethodNode);
+		List<ConstraintNode> constraintNodes = ConstraintNodeHelper.getChildConstraintNodes(parentMethodNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
