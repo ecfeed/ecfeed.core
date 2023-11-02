@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NameHelper;
-import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
@@ -149,7 +148,7 @@ public class RootNodeHelper {
 			String startClassNameCore,
 			String availableClassName) {
 
-		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
+		//boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
 		for (int i = 1;   ; i++) {
 
@@ -159,7 +158,8 @@ public class RootNodeHelper {
 				return availableClassName;
 			}
 
-			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
+			Optional<String> validatedNewClassName = 
+					validateClassName(rootNode, newClassName/*, defaultPackage*/);
 
 			if (validatedNewClassName.isPresent()) {
 				return validatedNewClassName.get();
@@ -167,38 +167,43 @@ public class RootNodeHelper {
 		}
 	}
 
-	private static Optional<String> validateClassName(RootNode rootNode, String newClassName, boolean defaultPackage) {
+	private static Optional<String> validateClassName(
+			RootNode rootNode, String newClassName/*, boolean defaultPackage*/) {
 
-		if (rootNode.getClass(newClassName) == null) {
-			return validateClassPackage(rootNode, newClassName, defaultPackage);
-		}
-
-		return Optional.empty();
-	}
-
-	private static Optional<String> validateClassPackage(RootNode rootNode, String newClassName, boolean defaultPackage) {
-
-		if (defaultPackage) {
-			if (isUniqueAcrossPackages(rootNode, newClassName)) {
-				return Optional.of(newClassName);
-			}
-		} else {
-			return Optional.of(newClassName);
-		}
+		//		if (rootNode.getClass(newClassName) == null) {
+		//			return validateClassPackage(rootNode, newClassName/*, defaultPackage*/);
+		//		}
 
 		return Optional.empty();
 	}
 
-	private static boolean isUniqueAcrossPackages(RootNode rootNode, String newClassName) {
+	//	private static Optional<String> validateClassPackage(
+	//			RootNode rootNode, 
+	//			String newClassName//, 
+	//			//boolean defaultPackage
+	//			) {
+	//
+	//		if (defaultPackage) {
+	//			if (isUniqueAcrossPackages(rootNode, newClassName)) {
+	//				return Optional.of(newClassName);
+	//			}
+	//		} else {
+	//			return Optional.of(newClassName);
+	//		}
+	//
+	//		return Optional.empty();
+	//	}
 
-		for (ClassNode node : rootNode.getClasses()) {
-			if (node.getName().endsWith(newClassName)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
+	//	private static boolean isUniqueAcrossPackages(RootNode rootNode, String newClassName) {
+	//
+	//		for (ClassNode node : rootNode.getClasses()) {
+	//			if (node.getName().endsWith(newClassName)) {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		return true;
+	//	}
 
 	public static RootNode findRootNode(IAbstractNode anyNode) {
 

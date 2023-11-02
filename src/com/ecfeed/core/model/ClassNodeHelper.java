@@ -41,7 +41,7 @@ public class ClassNodeHelper {
 		if (setParent) {
 			globalParameterNode.setParent(classNode);
 		}
-		
+
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
@@ -91,12 +91,12 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
-
-		String name = classNode.getName();
-
-		return extLanguageManager.getPackageName(name);
-	}
+	//	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		String name = classNode.getName();
+	//
+	//		return extLanguageManager.getPackageName(name);
+	//	}
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
@@ -172,7 +172,7 @@ public class ClassNodeHelper {
 		if (!NodeNameHelper.methodNameCompliesWithNamingRules(startMethodName)) {
 			ExceptionHelper.reportRuntimeException("Method name is invalid.");
 		}
-		
+
 		if (availableMethodName != null && StringHelper.isEqual(startMethodName, availableMethodName)) {
 			return availableMethodName;
 		}
@@ -290,12 +290,12 @@ public class ClassNodeHelper {
 		return childCompositeParameterNode;
 	}
 
-	public static String getPackageName(String qualifiedName) {
-
-		int lastDotIndex = qualifiedName.lastIndexOf('.');
-
-		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
-	}
+	//	public static String getPackageName(String qualifiedName) {
+	//
+	//		int lastDotIndex = qualifiedName.lastIndexOf('.');
+	//
+	//		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
+	//	}
 
 	public static ClassNode findClassByName(
 			String classNameInIntrLanguage,

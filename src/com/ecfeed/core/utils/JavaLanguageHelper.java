@@ -1496,17 +1496,18 @@ public final class JavaLanguageHelper {
 		return OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM;
 	}
 
-	public static String createQualifiedName(String packageName, String nonQualifiedName) {
+	public static String createQualifiedName(/*String packageName,*/ String nonQualifiedName) {
 
-		if (packageName == null) {
-			return nonQualifiedName;
-		}
-
-		if (packageName.isEmpty()) {
-			return nonQualifiedName;
-		}
-
-		return packageName + "." + nonQualifiedName;
+		//		if (packageName == null) {
+		//			return nonQualifiedName;
+		//		}
+		//
+		//		if (packageName.isEmpty()) {
+		//			return nonQualifiedName;
+		//		}
+		//
+		//		return packageName + "." + nonQualifiedName;
+		return nonQualifiedName;
 	}
 
 	public static String correctJavaIdentifier(String identifier) {

@@ -38,7 +38,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
-		
+
 		if (text == null) {
 			return null;
 		}
@@ -54,7 +54,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String convertTextFromIntrToExtLanguage(String text) {
-		
+
 		String errorMessage = JavaLanguageHelper.verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
@@ -117,11 +117,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return typeList;
 	}
 
-	@Override
-	public String getPackageName(String name) {
-
-		return QualifiedNameHelper.getPackage(name);
-	}
+	//	@Override
+	//	public String getPackageName(String name) {
+	//
+	//		return QualifiedNameHelper.getPackage(name);
+	//	}
 
 	@Override
 	public String getQualifiedName(String qualfiedName) {
@@ -152,20 +152,21 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return JavaLanguageHelper.getSupportedJavaTypes();
 	}
 
+	//	@Override
+	//	public boolean getPackageVisibility() {
+	//
+	//		return true;
+	//	}
+
 	@Override
-	public boolean getPackageVisibility() {
+	public String createQualifiedName(/*String packageName,*/ String nonQualifiedName) {
 
-		return true;
-	}
-
-	@Override
-	public String createQualifiedName(String packageName, String nonQualifiedName) {
-
-		if (packageName == null || packageName.isEmpty()) {
-			return nonQualifiedName;
-		}
-
-		return packageName + "." + nonQualifiedName;
+		//		if (packageName == null || packageName.isEmpty()) {
+		//			return nonQualifiedName;
+		//		}
+		//
+		//		return packageName + "." + nonQualifiedName;
+		return nonQualifiedName;
 	}
 
 	@Override
