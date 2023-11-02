@@ -33,8 +33,8 @@ public class ClassNodeHelperTest {
 		//		assertEquals("class 1", simpleName);
 
 
-		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
-		assertEquals("pack", packageName);
+		//		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
+		//		assertEquals("pack", packageName);
 
 		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("", packageName);
@@ -58,8 +58,8 @@ public class ClassNodeHelperTest {
 		//		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("class 1", simpleName);
 
-		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
-		assertEquals("", packageName);
+		//		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
+		//		assertEquals("", packageName);
 
 		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("", packageName);

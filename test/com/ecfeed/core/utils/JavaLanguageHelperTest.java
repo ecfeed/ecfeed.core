@@ -68,36 +68,36 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isJavaKeyword("x"));
 	}
 
-    @Test
-    public void isMatchWithJavaComplexIdenfifierTest() {
+	@Test
+	public void isMatchWithJavaComplexIdenfifierTest() {
 
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("class"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("if"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("for"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("int"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("String"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("java.lang.String"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com.xxx.Class"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("class"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("if"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("for"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("int"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("String"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("java.lang.String"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com.xxx.Class"));
 
-        assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com-xxx-Class"));
-        assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("&"));
-    }
+		assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com-xxx-Class"));
+		assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("&"));
+	}
 
-    @Test
-    public void isMatchWithJavaSimpleIdenfifierTest() {
+	@Test
+	public void isMatchWithJavaSimpleIdenfifierTest() {
 
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("class"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("if"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("for"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("int"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("String"));
-        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("User"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("class"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("if"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("for"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("int"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("String"));
+		assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("User"));
 
-        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("java.lang.String"));
-        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com.xxx.Class"));
-        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com-xxx-Class"));
-        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("&"));
-    }
+		assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("java.lang.String"));
+		assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com.xxx.Class"));
+		assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com-xxx-Class"));
+		assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("&"));
+	}
 
 	@Test
 	public void isValidJavaIdentifierTest() {
@@ -120,10 +120,10 @@ public class JavaLanguageHelperTest {
 	@Test
 	public void isValidTypeNameTest() {
 
-        assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("boolean"));
-        assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("String"));
-        assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("int"));
-        assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("Integer"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("boolean"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("String"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("int"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("Integer"));
 		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("default.UserType"));
 		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.Xx"));
 		assertFalse(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.X*x"));
@@ -864,58 +864,58 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
-    public void isNumericTypeLager() {
+	public void isNumericTypeLager() {
 
-        assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
-        assertFalse(JavaLanguageHelper.isNumericTypeLarger("byte", "short"));
+		assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
+		assertFalse(JavaLanguageHelper.isNumericTypeLarger("byte", "short"));
 
-        assertTrue(JavaLanguageHelper.isNumericTypeLarger("int", "short"));
-        assertFalse(JavaLanguageHelper.isNumericTypeLarger("short", "int"));
+		assertTrue(JavaLanguageHelper.isNumericTypeLarger("int", "short"));
+		assertFalse(JavaLanguageHelper.isNumericTypeLarger("short", "int"));
 
-        assertTrue(JavaLanguageHelper.isNumericTypeLarger("long", "int"));
-        assertFalse(JavaLanguageHelper.isNumericTypeLarger("int", "long"));
+		assertTrue(JavaLanguageHelper.isNumericTypeLarger("long", "int"));
+		assertFalse(JavaLanguageHelper.isNumericTypeLarger("int", "long"));
 
-        assertTrue(JavaLanguageHelper.isNumericTypeLarger("float", "long"));
-        assertFalse(JavaLanguageHelper.isNumericTypeLarger("long", "float"));
+		assertTrue(JavaLanguageHelper.isNumericTypeLarger("float", "long"));
+		assertFalse(JavaLanguageHelper.isNumericTypeLarger("long", "float"));
 
-        assertTrue(JavaLanguageHelper.isNumericTypeLarger("double", "float"));
-        assertFalse(JavaLanguageHelper.isNumericTypeLarger("float", "double"));
+		assertTrue(JavaLanguageHelper.isNumericTypeLarger("double", "float"));
+		assertFalse(JavaLanguageHelper.isNumericTypeLarger("float", "double"));
 
-        try {
-            JavaLanguageHelper.isNumericTypeLarger("String", "int");
-            fail();
-        } catch (Exception e) {
-        }
+		try {
+			JavaLanguageHelper.isNumericTypeLarger("String", "int");
+			fail();
+		} catch (Exception e) {
+		}
 
-        try {
-            JavaLanguageHelper.isNumericTypeLarger("int", "String");
-            fail();
-        } catch (Exception e) {
-        }
-    }
-
-    @Test
-    public void validateTypeTest() {
-
-        assertNull(JavaLanguageHelper.validateBasicJavaType("byte"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("short"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("int"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("long"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("float"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("double"));
-	    assertNull(JavaLanguageHelper.validateBasicJavaType("boolean"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("char"));
-        assertNull(JavaLanguageHelper.validateBasicJavaType("String"));
-
-        assertNotNull(JavaLanguageHelper.validateBasicJavaType("User"));
-    }
+		try {
+			JavaLanguageHelper.isNumericTypeLarger("int", "String");
+			fail();
+		} catch (Exception e) {
+		}
+	}
 
 	@Test
-	public void createQualifiedName() {
+	public void validateTypeTest() {
 
-		assertEquals("com.xx.User", JavaLanguageHelper.createQualifiedName("com.xx", "User"));
-		assertEquals("User", JavaLanguageHelper.createQualifiedName(null, "User"));
-		assertEquals("User", JavaLanguageHelper.createQualifiedName("", "User"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("byte"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("short"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("int"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("long"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("float"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("double"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("boolean"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("char"));
+		assertNull(JavaLanguageHelper.validateBasicJavaType("String"));
+
+		assertNotNull(JavaLanguageHelper.validateBasicJavaType("User"));
 	}
+
+	//	@Test
+	//	public void createQualifiedName() {
+	//
+	//		assertEquals("com.xx.User", JavaLanguageHelper.createQualifiedName("com.xx", "User"));
+	//		assertEquals("User", JavaLanguageHelper.createQualifiedName(null, "User"));
+	//		assertEquals("User", JavaLanguageHelper.createQualifiedName("", "User"));
+	//	}
 
 }

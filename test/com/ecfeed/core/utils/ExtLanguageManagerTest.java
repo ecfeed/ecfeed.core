@@ -263,15 +263,15 @@ public class ExtLanguageManagerTest {
 		assertFalse(javaExtLanguageManager.isLogicalTypeName("x"));
 	}
 
-	@Test
-	public void getPackageVisibilityTest() {
-
-		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
-
-		assertTrue(javaExtLanguageManager.getPackageVisibility());
-		//assertFalse(simpleExtLanguageManager.getPackageVisibility());
-	}
+	//	@Test
+	//	public void getPackageVisibilityTest() {
+	//
+	//		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+	//		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+	//
+	//		assertTrue(javaExtLanguageManager.getPackageVisibility());
+	//		//assertFalse(simpleExtLanguageManager.getPackageVisibility());
+	//	}
 
 	//	@Test
 	//	public void getExtendedTypeForValueTest() {
@@ -304,25 +304,25 @@ public class ExtLanguageManagerTest {
 	//		assertEquals("boolean", simpleExtLanguageManager.getExtendedTypeForValue("4t", "boolean", false));
 	//	}
 
-	@Test
-	public void createQualifiedNameTest() {
+	//	@Test
+	//	public void createQualifiedNameTest() {
+	//
+	//		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+	//		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+	//
+	//		assertEquals("com.User", javaExtLanguageManager.createQualifiedName("com", "User"));
+	//		//assertEquals("User", simpleExtLanguageManager.createQualifiedName("com", "User"));
+	//	}
 
-		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
-
-		assertEquals("com.User", javaExtLanguageManager.createQualifiedName("com", "User"));
-		//assertEquals("User", simpleExtLanguageManager.createQualifiedName("com", "User"));
-	}
-
-	@Test
-	public void getPackageNameTest() {
-
-		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
-
-		assertEquals("com", javaExtLanguageManager.getPackageName("com.User"));
-		//assertEquals("", simpleExtLanguageManager.getPackageName("com.User"));
-	}
+	//	@Test
+	//	public void getPackageNameTest() {
+	//
+	//		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+	//		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+	//
+	//		assertEquals("com", javaExtLanguageManager.getPackageName("com.User"));
+	//		//assertEquals("", simpleExtLanguageManager.getPackageName("com.User"));
+	//	}
 
 	@Test
 	public void isModelCompatibleWithExtLanguageTest() {

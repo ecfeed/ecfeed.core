@@ -65,7 +65,7 @@ public class FactoryRenameOperationTest {
 		IModelOperation modelOperation2 =
 				FactoryRenameOperation.getRenameOperation(
 						classNode2,
-						"com.xx",
+						/*"com.xx",*/
 						"Class1",
 						extLanguageManagerForJava);
 
@@ -115,7 +115,7 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
+						/*null,*/
 						"method1",
 						extLanguageManagerForJava);
 
@@ -145,7 +145,7 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
+						/*null,*/
 						"method2c",
 						extLanguageManagerForJava);
 
@@ -206,7 +206,7 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
+						/*null,*/
 						"method1",
 						extLanguageManagerForJava);
 
@@ -237,7 +237,7 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
+						/*null,*/
 						"method2c",
 						extLanguageManagerForJava);
 
@@ -293,7 +293,7 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
+						/*null,*/
 						"par1",
 						extLanguageManagerForJava);
 
@@ -356,7 +356,7 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
+						/*null,*/
 						"par1c",
 						extLanguageManagerForJava);
 
@@ -371,7 +371,7 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
+						/*null,*/
 						"par 1c",
 						extLanguageManagerForJava);
 
@@ -387,7 +387,7 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
+						/*null,*/
 						"p=ar1c",
 						extLanguageManagerForJava);
 
