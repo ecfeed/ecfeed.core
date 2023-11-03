@@ -72,19 +72,19 @@ public class CustomExportTemplate extends AbstractExportTemplate {
 		return template;
 	}
 
-	private static String createParameterTemplate(String parameterTag, int methodParametersCount) {
-
-		String template = new String();
-
-		for (int cnt = 1; cnt <= methodParametersCount; ++cnt) {
-			if (cnt > 1) {
-				template = template + ",";
-			}
-			String paramDescription = "($" + cnt + "." + parameterTag + ").min_width(25, LEFT)";
-			template = template + paramDescription;
-		}
-
-		return template;
-	}
+	//	private static String createParameterTemplate(String parameterTag, int methodParametersCount) {
+	//
+	//		String template = new String();
+	//
+	//		for (int cnt = 1; cnt <= methodParametersCount; ++cnt) {
+	//			if (cnt > 1) {
+	//				template = template + ",";
+	//			}
+	//			String paramDescription = "($" + cnt + "." + parameterTag + ").min_width(25, LEFT)";
+	//			template = template + paramDescription;
+	//		}
+	//
+	//		return template;
+	//	}
 
 }
