@@ -117,11 +117,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return typeList;
 	}
 
-	@Override
-	public String getPackageName(String name) {
-
-		return QualifiedNameHelper.getPackage(name);
-	}
+//	@Override
+//	public String getPackageName(String name) {
+//
+//		return QualifiedNameHelper.getPackage(name);
+//	}
 
 	@Override
 	public String getQualifiedName(String qualfiedName) {

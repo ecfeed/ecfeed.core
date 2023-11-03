@@ -17,7 +17,7 @@ public interface IExtLanguageManager {
 	public String conditionallyConvertSpecialValueToExtLanguage(String valueInIntrLanguage, String typeInIntrLanguage);
 	public List<String> getSymbolicNamesOfSpecialValues(String typeName);
 	public String[] createListListOfSupportedTypes();
-	public String getPackageName(String name);
+	//public String getPackageName(String name);
 	public String getQualifiedName(String qualfiedName);
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);

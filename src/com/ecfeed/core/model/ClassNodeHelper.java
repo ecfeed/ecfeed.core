@@ -91,12 +91,13 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
-
-		String name = classNode.getName();
-
-		return extLanguageManager.getPackageName(name);
-	}
+	//	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		String name = classNode.getName();
+	//
+	//		return extLanguageManager.getPackageName(name);
+	//		return name;
+	//	}
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
