@@ -1,13 +1,13 @@
 package com.ecfeed.core.parser.export.gherkin;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.parser.export.ModelParserExportHelper;
 import com.ecfeed.core.parser.model.export.ModelDataExport;
-import com.ecfeed.core.parser.model.export.ModelDataExportCSV;
 import com.ecfeed.core.parser.model.export.ModelDataExportGherkin;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class ModelParserExportGherkinTest {
 

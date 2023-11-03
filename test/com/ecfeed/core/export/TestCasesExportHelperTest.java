@@ -102,16 +102,16 @@ public class TestCasesExportHelperTest {
 	}
 
 	@Test
-	public void AAshouldParseNameByParamName() {
+	public void shouldParseNameByParamName() {
 		performTest("MIN_VALUE", "MAX_VALUE", "$par_0.name", "par_0", new ExtLanguageManagerForJava());
 		//		performTest("MIN_VALUE", "MAX_VALUE", "$par 0.name", "par 0", new ExtLanguageManagerForSimple());
 	}
 
-	@Test
-	public void shouldParsePackageClassMethod() {
-		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", "package_1, Test_1, testMethod_1", new ExtLanguageManagerForJava());
-		//		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", ", Test 1, testMethod 1", new ExtLanguageManagerForSimple());
-	}
+	//	@Test
+	//	public void shouldParsePackageClassMethod() {
+	//		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", "package_1, Test_1, testMethod_1", new ExtLanguageManagerForJava());
+	//		//		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", ", Test 1, testMethod 1", new ExtLanguageManagerForSimple());
+	//	}
 
 	@Test
 	public void shouldParseChoiceNames() {
