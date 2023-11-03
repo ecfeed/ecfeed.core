@@ -13,9 +13,27 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IModelVisitor;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperatopRename;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
+import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryRenameOperation {
 
@@ -26,16 +44,16 @@ public class FactoryRenameOperation {
 
 		public ClassOperationRename(
 				IAbstractNode target, 
-				String newPackageName, 
+				//String newPackageName, 
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
 
-			super(target, newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager);
+			super(target, /*newPackageName,*/ newNonQualifiedNameInExtLanguage, extLanguageManager);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), getOriginalPackageName(), getOriginalNonQualifiedName(), getExtLanguageManager());
+			return new ClassOperationRename(getOwnNode(), /*getOriginalPackageName(),*/ getOriginalNonQualifiedName(), getExtLanguageManager());
 		}
 
 		@Override
@@ -61,7 +79,7 @@ public class FactoryRenameOperation {
 
 		public MethodOperationRename(MethodNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -100,7 +118,7 @@ public class FactoryRenameOperation {
 
 		public GlobalParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -135,7 +153,7 @@ public class FactoryRenameOperation {
 		IExtLanguageManager fExtLanguageManager;
 
 		public MethodParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 			fExtLanguageManager = extLanguageManager;
 		}
 
@@ -169,7 +187,7 @@ public class FactoryRenameOperation {
 		IExtLanguageManager fExtLanguageManager;
 
 		public BasicParameterOfStructureOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 			fExtLanguageManager = extLanguageManager;
 		}
 
@@ -204,7 +222,7 @@ public class FactoryRenameOperation {
 
 		public CompositeParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -242,7 +260,7 @@ public class FactoryRenameOperation {
 
 		public ChoiceOperationRename(ChoiceNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, null, newName, extLanguageManager);
+			super(target, /*null,*/ newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -267,25 +285,28 @@ public class FactoryRenameOperation {
 
 	private static class RenameOperationProvider implements IModelVisitor{
 
-		private String fNewPackageName;
+		//private String fNewPackageName;
 		private String fNewNonQualifiedNameInExtLanguage;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public RenameOperationProvider(String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager) {
+		public RenameOperationProvider(
+				String newPackageName, // XYX remove
+				String newNonQualifiedNameInExtLanguage, 
+				IExtLanguageManager extLanguageManager) {
 
-			fNewPackageName  = newPackageName;
+			//fNewPackageName  = newPackageName;
 			fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new GenericOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new ClassOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new ClassOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
@@ -296,7 +317,7 @@ public class FactoryRenameOperation {
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return new GenericOperationRename(node, null, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new GenericOperationRename(node, /*null,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 		
 		@Override
@@ -332,7 +353,7 @@ public class FactoryRenameOperation {
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new GenericOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override

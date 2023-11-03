@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NameHelper;
-import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
@@ -149,7 +148,8 @@ public class RootNodeHelper {
 			String startClassNameCore,
 			String availableClassName) {
 
-		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
+		//boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
+		boolean defaultPackage = true; // XYX
 
 		for (int i = 1;   ; i++) {
 

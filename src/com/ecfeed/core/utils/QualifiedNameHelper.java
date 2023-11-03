@@ -13,25 +13,25 @@ package com.ecfeed.core.utils;
 public class QualifiedNameHelper {
 
 
-	public static final String PACKAGE_CLASS_SEPARATOR = ".";
+	//public static final String PACKAGE_CLASS_SEPARATOR = ".";
 
-	public static String getPackage(String packageWithClass) {
-		String result = StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);	
-		return result == null ? "" : result;		
-	}
+//	public static String getPackage(String packageWithClass) {
+//		String result = StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);	
+//		return result == null ? "" : result;		
+//	}
 
-	public static String getNonQualifiedName(String qualifiedName) {
-		return StringHelper.getLastTokenOrInputString(qualifiedName, PACKAGE_CLASS_SEPARATOR);
-	}
+//	public static String getNonQualifiedName(String qualifiedName) {
+//		return StringHelper.getLastTokenOrInputString(qualifiedName, PACKAGE_CLASS_SEPARATOR);
+//	}
 
-	public static boolean hasPackageName(String packageWithClass) {
-		String trimmedPackageWithClass = packageWithClass.trim();
-
-		if (trimmedPackageWithClass.startsWith(".") || !trimmedPackageWithClass.contains(".")) {
-			return false;
-		}
-		
-		return true;
-	}	
+//	public static boolean hasPackageName(String packageWithClass) {
+//		String trimmedPackageWithClass = packageWithClass.trim();
+//
+//		if (trimmedPackageWithClass.startsWith(".") || !trimmedPackageWithClass.contains(".")) {
+//			return false;
+//		}
+//		
+//		return true;
+//	}	
 
 }

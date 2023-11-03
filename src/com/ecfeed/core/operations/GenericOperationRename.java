@@ -29,19 +29,17 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.model.utils.NodeNameHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
-import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
 	private IAbstractNode fTargetAbstractNode;
 
-	private String fNewPackageName;
+	//private String fNewPackageName;
 	private String fNewNonQualifiedNameInExtLanguage;
 
-	private String fOriginalPackageName;
+	//private String fOriginalPackageName;
 	private String fOriginalNonQualifiedNameInExtLanguage;
 
 	private String fJavaNameRegex;
@@ -49,7 +47,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	public GenericOperationRename(
 			IAbstractNode target,
-			String newPackageName,
+			//String newPackageName,
 			String newNonQualifiedNameInExtLanguage, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -57,11 +55,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		fTargetAbstractNode = target;
 
-		fNewPackageName = newPackageName;
+		//fNewPackageName = newPackageName;
 		fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
 
-		fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
-		fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
+		//fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
+		//fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
+		fOriginalNonQualifiedNameInExtLanguage = target.getName();
 
 		fJavaNameRegex = NodeNameHelper.getNameRegex(target);
 		fExtLanguageManager = extLanguageManager;
@@ -83,8 +82,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	private String prepareNewQualifiedName() {
 
-		String newQualifiedNameInExtLanguage = 
-				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
+//		String newQualifiedNameInExtLanguage = 
+//				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
+		
+		String newQualifiedNameInExtLanguage = fNewNonQualifiedNameInExtLanguage;
 
 		verifyNewName(newQualifiedNameInExtLanguage);
 
@@ -92,8 +93,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 				AbstractNodeHelper.convertTextFromExtToIntrLanguage(
 						fTargetAbstractNode, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 
-		String newQualifiedNameInIntrLanguage = 
-				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
+//		String newQualifiedNameInIntrLanguage = 
+//				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
+		
+		String newQualifiedNameInIntrLanguage = newNonQualifiedNameInIntrLanguage;
 
 		if (!(fTargetAbstractNode instanceof RootNode)) {
 			verifyNameWithRegex(
@@ -154,7 +157,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public IModelOperation getReverseOperation() {
 		return new GenericOperationRename(
 				getOwnNode(), 
-				getOriginalPackageName(),
+				/*getOriginalPackageName(),*/
 				getOriginalNonQualifiedName(),
 				fExtLanguageManager);
 	}
@@ -167,13 +170,13 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fOriginalNonQualifiedNameInExtLanguage;
 	}
 
-	protected String getOriginalPackageName(){
-		return fOriginalPackageName;
-	}
+//	protected String getOriginalPackageName(){
+//		return fOriginalPackageName;
+//	}
 
-	public String getNewPackageName() {
-		return fNewPackageName;
-	}
+//	public String getNewPackageName() {
+//		return fNewPackageName;
+//	}
 
 	protected void verifyNewName(String newNameInExtLanguage) {
 	}
