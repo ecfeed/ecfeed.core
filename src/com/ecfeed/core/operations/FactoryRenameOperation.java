@@ -290,7 +290,7 @@ public class FactoryRenameOperation {
 		private IExtLanguageManager fExtLanguageManager;
 
 		public RenameOperationProvider(
-				String newPackageName, // XYX remove
+				//String newPackageName, // XYX remove
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
 
@@ -363,11 +363,15 @@ public class FactoryRenameOperation {
 
 	}
 
-	public static IModelOperation getRenameOperation(IAbstractNode target, String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
+	public static IModelOperation getRenameOperation(
+			IAbstractNode target, 
+			//String newPackageName, 
+			String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(
-					newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager));
+					//newPackageName, 
+					newNonQualifiedNameInExtLanguage, extLanguageManager));
 		} catch(Exception e) {
 			LogHelperCore.logCatch(e);
 		}

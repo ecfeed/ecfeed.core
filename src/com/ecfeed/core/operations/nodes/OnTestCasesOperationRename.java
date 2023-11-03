@@ -36,7 +36,10 @@ public class OnTestCasesOperationRename extends CompositeOperation {
 		}
 
 		for(TestCaseNode testCase : testCases){
-			addOperation(FactoryRenameOperation.getRenameOperation(testCase, null, newName, extLanguageManager));
+			addOperation(FactoryRenameOperation.getRenameOperation(
+					testCase, 
+					//null, 
+					newName, extLanguageManager));
 		}
 	}
 
