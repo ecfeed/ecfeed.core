@@ -23,7 +23,7 @@ public interface IExtLanguageManager {
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName);
 	public String[] getSupportedTypes();
-	public boolean getPackageVisibility();
+	//public boolean getPackageVisibility();
 	public String createQualifiedName(String packageName, String name);
 	public boolean isSymbolicValueAllowed();
 	public String formatNumber(String number);

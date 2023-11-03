@@ -152,11 +152,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return JavaLanguageHelper.getSupportedJavaTypes();
 	}
 
-	@Override
-	public boolean getPackageVisibility() {
-
-		return true;
-	}
+	//	@Override
+	//	public boolean getPackageVisibility() {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public String createQualifiedName(String packageName, String nonQualifiedName) {
