@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersParentNodeHelper {
 
-	public static List<String> getParameterTypes(IParametersParentNode parameterParentNode, IExtLanguageManager extLanguageManager) {
+	public static List<String> getParameterTypes(
+			IParametersParentNode parameterParentNode, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -83,6 +85,38 @@ public class ParametersParentNodeHelper {
 		}
 
 		return parameterTypes;
+	}
+
+	public static AbstractParameterNode findGlobalParameter(
+			IParametersParentNode localParametersParentNode, String globalParameterExtendedName) {
+
+		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
+			return null;
+		}
+
+		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
+		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(localParametersParentNode);
+
+		ClassNode classNode = methodNode.getClassNode();
+		String className = classNode.getName();
+
+		if (StringHelper.isEqual(className, parentName)) {
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return abstractParameterNode;
+		}
+
+		RootNode rootNode = classNode.getRoot();
+		String rootName = rootNode.getName();
+
+		if (parentName == null || rootName.equals(parentName)) {
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return abstractParameterNode;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
+		return null;
 	}
 
 	public static String generateUniqueParameterName(

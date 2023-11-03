@@ -10,10 +10,16 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+
 public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForLabel(String label) {
-		super(label);
+	public ParameterConversionItemPartForLabel(
+			BasicParameterNode basicParameterNode, 
+			CompositeParameterNode linkingContext,
+			String label) {
+		super(basicParameterNode, linkingContext, label);
 	}
 
 	@Override
@@ -26,10 +32,10 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 		return 1;
 	}
 
-	@Override
-	public String getDescription() {
-		return super.getDescription(ItemPartType.LABEL.getCode());
-	}
+	//	@Override
+	//	public String getDescription() {
+	//		return super.getDescription(ItemPartType.LABEL.getCode());
+	//	}
 
 	public String getLabel() {
 		return super.getStr();
@@ -39,7 +45,7 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForLabel clone = 
-				new ParameterConversionItemPartForLabel(getLabel());
+				new ParameterConversionItemPartForLabel(getParameter(), getLinkingContext(), getLabel());
 
 		return clone;
 	}

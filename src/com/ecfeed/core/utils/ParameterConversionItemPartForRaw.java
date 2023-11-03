@@ -10,25 +10,22 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+
 public class ParameterConversionItemPartForRaw extends ParameterConversionItemPart {
 
 	String fCode;
 
-	public ParameterConversionItemPartForRaw(String code, String name) {
-		super(name);
+	public ParameterConversionItemPartForRaw(
+			BasicParameterNode basicParameterNode, 
+			CompositeParameterNode linkingContext,
+			String code, 
+			String name) {
+
+		super(basicParameterNode, linkingContext, name);
 
 		fCode = code;
-	}
-
-	@Override
-	public String toString() {
-		return getDescription();
-	}
-
-	@Override
-	public String getDescription() {
-
-		return super.getDescription(fCode);
 	}
 
 	@Override
@@ -67,10 +64,30 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForRaw clone = 
-				new ParameterConversionItemPartForRaw(getCode(), getStr());
+				new ParameterConversionItemPartForRaw(getParameter(), getLinkingContext(), getCode(), getStr());
 
 		return clone;
 	}
+
+	@Override
+	public String getTypeDescription() {
+
+		String rawTypeDescription = 
+				IParameterConversionItemPart.ItemPartType.convertCodeToDescription(getCode());
+
+		return rawTypeDescription;
+	}
+
+	//	public String createDescription() {
+	//
+	//		String rawTypeDescription = 
+	//				IParameterConversionItemPart.ItemPartType.convertCodeToDescription(getCode());
+	//		return 
+	//				getParameter().getName() + 
+	//				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+	//				getStr() + 
+	//				"[" + rawTypeDescription + "]";
+	//	}
 
 }
 

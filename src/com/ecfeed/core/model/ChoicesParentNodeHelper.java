@@ -38,14 +38,16 @@ public abstract class ChoicesParentNodeHelper {
 		}
 	}
 
-	public static void createCopyOfChoicesSubTreesBetweenParameters(
+	public static void createCopyOfChoicesAndConversionList(
+			BasicParameterNode srcBasicParameterNode,
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
 			List<ParameterConversionItem> parameterConversionItems,
 			IExtLanguageManager extLanguageManager) {
 
-		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, parameterConversionItems);
+		createCopyOfChoicesAndConversionListRecursive(
+				srcBasicParameterNode, srcParentNode, dstParentNode, parameterConversionItems);
 
 		OnChoicesOperationSimpleRemoveAll reverseOperation = 
 				new OnChoicesOperationSimpleRemoveAll(dstParentNode, extLanguageManager);
@@ -53,7 +55,8 @@ public abstract class ChoicesParentNodeHelper {
 		inOutReverseOperations.add(reverseOperation);
 	}
 
-	private static void createCopyOfChoicesSubtreesRecursive(
+	private static void createCopyOfChoicesAndConversionListRecursive(
+			BasicParameterNode srcBasicParameterNode,
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
 			List<ParameterConversionItem> inOutParameterConversionItems) {
@@ -67,14 +70,18 @@ public abstract class ChoicesParentNodeHelper {
 		for (ChoiceNode choiceNode : childChoiceNodes) {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+			//clonedChoiceNode.setName("Cloned-" + clonedChoiceNode.getName()); // debug only
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
 			if (inOutParameterConversionItems != null) {
 
-				ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(choiceNode);
-				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
+				ParameterConversionItemPartForChoice srcPart = 
+						new ParameterConversionItemPartForChoice(srcBasicParameterNode, null, choiceNode);
+				
+				ParameterConversionItemPartForChoice dstPart = 
+						new ParameterConversionItemPartForChoice(srcBasicParameterNode, null, clonedChoiceNode);
 
 				boolean isRandomized = choiceNode.isRandomizedValue();
 
@@ -84,7 +91,8 @@ public abstract class ChoicesParentNodeHelper {
 				inOutParameterConversionItems.add(parameterConversionItemForChoice);
 			}
 
-			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode, inOutParameterConversionItems);
+			createCopyOfChoicesAndConversionListRecursive(
+					srcBasicParameterNode, choiceNode, clonedChoiceNode, inOutParameterConversionItems);
 		}
 	}
 

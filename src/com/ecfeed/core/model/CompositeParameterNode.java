@@ -333,6 +333,12 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	}
 
 	@Override
+	public int getConstraintsCount()
+	{
+		return fConstraintNodeListHolder.getConstraintListSize();
+	}
+
+	@Override
 	public List<Constraint> getConstraints() {
 
 		return fConstraintNodeListHolder.getConstraints();

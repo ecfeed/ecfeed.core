@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+
 public class TypeHelper {
 
 	public enum TypeCathegory {
@@ -64,5 +66,16 @@ public class TypeHelper {
 		ExceptionHelper.reportRuntimeException("Integers do not match." + " " + message);
 	}
 
+	public static boolean isValueCompatibleWithType(
+			String value, 
+			String newType, 
+			boolean isChoiceRandomized) {
+
+		ITypeAdapter<?> typeAdapter = JavaLanguageHelper.getTypeAdapter(newType);
+
+		boolean isCompatible = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
+
+		return isCompatible;
+	}
 
 }

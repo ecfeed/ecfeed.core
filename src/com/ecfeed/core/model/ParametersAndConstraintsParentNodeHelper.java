@@ -12,10 +12,14 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.utils.BasicParameterWithChoice;
+import com.ecfeed.core.model.utils.BasicParameterWithString;
 import com.ecfeed.core.utils.*;
 
 public class ParametersAndConstraintsParentNodeHelper {
@@ -47,20 +51,20 @@ public class ParametersAndConstraintsParentNodeHelper {
 	//		return constraints;
 	//	}
 
-	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
-			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
-
-		Set<ChoiceNode> choices = new HashSet<>();
-
-		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
-			for (ConstraintNode constraint : constraints) {
-
-				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
-			}
-		}
-
-		return choices;
-	}
+	//	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
+	//			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+	//
+	//		Set<ChoiceNode> choices = new HashSet<>();
+	//
+	//		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
+	//			for (ConstraintNode constraint : constraints) {
+	//
+	//				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
+	//			}
+	//		}
+	//
+	//		return choices;
+	//	}
 
 	public static Collection<BasicParameterNode> getParametersUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
@@ -83,6 +87,174 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return parameters;
 	}
 
+	public static List<BasicParameterWithChoice> getParametersWithChoicesUsedInConstraints(
+			AbstractParameterNode localTopParameterNode) {
+
+		IParametersAndConstraintsParentNode parent =
+				MethodNodeHelper.findMethodNode(localTopParameterNode);
+
+		Set<BasicParameterWithChoice> resultSet = createResultSet(localTopParameterNode, parent);
+
+		List<BasicParameterWithChoice> resultList = createResultList(resultSet);
+
+		return resultList;
+	}
+
+	private static Set<BasicParameterWithChoice> createResultSet(
+			AbstractParameterNode localTopParameterNode,
+			IParametersAndConstraintsParentNode parent) {
+
+		Set<BasicParameterWithChoice> resultSet = new HashSet<BasicParameterWithChoice>();
+
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
+
+		MethodNode parentMethodNode = (MethodNode)parent;
+
+		List<ConstraintNode> constraintNodes = ConstraintNodeHelper.getChildConstraintNodes(parentMethodNode);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			Set<BasicParameterWithChoice> resultForOneConstraint = 
+					getParametersWithChoicesUsedInOneConstraint(constraintNode, basicParameterNodes);
+
+			resultSet.addAll(resultForOneConstraint);
+		}
+
+		return resultSet;
+	}
+
+	private static List<BasicParameterWithChoice> createResultList(Set<BasicParameterWithChoice> resultSet) {
+
+		List<BasicParameterWithChoice> list = new ArrayList<>(resultSet);
+
+		Collections.sort(list, new Comparator<BasicParameterWithChoice>() {
+
+			@Override
+			public int compare(BasicParameterWithChoice paramWithChoice1, BasicParameterWithChoice paramWithChoice2) {
+
+				String parameterName1 = paramWithChoice1.getBasicParameterNode().getName();
+				String parameterName2 = paramWithChoice2.getBasicParameterNode().getName();
+
+				int result = parameterName1.compareTo(parameterName2);
+
+				if (result != 0) {
+					return result;
+				}
+
+				String choiceName1 = paramWithChoice1.getChoiceNode().getQualifiedName();
+				String choiceName2 = paramWithChoice2.getChoiceNode().getQualifiedName();
+
+				result = choiceName1.compareTo(choiceName2);
+
+				return result;
+			}
+		});
+
+		return list;
+	}
+
+	private static Set<BasicParameterWithChoice> getParametersWithChoicesUsedInOneConstraint(
+			ConstraintNode constraintNode, List<BasicParameterNode> basicParameterNodes) {
+
+		Set<BasicParameterWithChoice> result = new HashSet<>();
+
+		for (int parameterIndex = 0; parameterIndex < basicParameterNodes.size(); parameterIndex++) {
+
+			BasicParameterNode basicParameterNode = basicParameterNodes.get(parameterIndex);
+
+			Set<BasicParameterWithChoice> resultForOneParameter = 
+					getParameterWithChoicesUsedInConstraint(constraintNode, basicParameterNode);			
+
+			result.addAll(resultForOneParameter);
+		}
+
+		return result; 
+	}
+
+	private static Set<BasicParameterWithChoice> getParameterWithChoicesUsedInConstraint(
+			ConstraintNode constraintNode,
+			BasicParameterNode basicParameterNode) {
+
+		List<ChoiceNode> choiceNodesForConstraint = 
+				ConstraintNodeHelper.getChoicesUsedInConstraint(
+						constraintNode, basicParameterNode);
+
+		Set<BasicParameterWithChoice> result = new HashSet<>();
+
+		for (int choiceIndex = 0; choiceIndex < choiceNodesForConstraint.size(); choiceIndex++) {
+
+			ChoiceNode choiceNode = choiceNodesForConstraint.get(choiceIndex); 
+
+			result.add(new BasicParameterWithChoice(basicParameterNode, choiceNode));
+		}
+
+		return result;
+	}
+
+	public static List<BasicParameterWithString> getParametersWithLabelsUsedInConstraints(
+			AbstractParameterNode localTopParameterNode) {
+
+		IParametersAndConstraintsParentNode parent =
+				MethodNodeHelper.findMethodNode(localTopParameterNode);
+
+		MethodNode parentMethodNode = (MethodNode)parent;
+
+		Set<BasicParameterWithString> resultSet = new HashSet<>();
+
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getBasicChildParameterNodes(localTopParameterNode);
+
+		List<ConstraintNode> constraintNodes = ConstraintNodeHelper.getChildConstraintNodes(parentMethodNode);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			Set<BasicParameterWithString> resultForOneConstraint = 
+					getParametersWithLabelsUsedInOneConstraint(constraintNode, basicParameterNodes);
+
+			resultSet.addAll(resultForOneConstraint);
+		}
+
+		return new ArrayList<>(resultSet);
+	}
+
+	private static Set<BasicParameterWithString> getParametersWithLabelsUsedInOneConstraint(
+			ConstraintNode constraintNode, List<BasicParameterNode> basicParameterNodes) {
+
+		Set<BasicParameterWithString> result = new HashSet<>();
+
+		for (int parameterIndex = 0; parameterIndex < basicParameterNodes.size(); parameterIndex++) {
+
+			BasicParameterNode basicParameterNode = basicParameterNodes.get(parameterIndex);
+
+			Set<BasicParameterWithString> resultForOneParameter = 
+					getParameterWithLabelsUsedInConstraint(constraintNode, basicParameterNode);			
+
+			result.addAll(resultForOneParameter);
+		}
+
+		return result; 
+	}
+
+	private static Set<BasicParameterWithString> getParameterWithLabelsUsedInConstraint(
+			ConstraintNode constraintNode,
+			BasicParameterNode basicParameterNode) {
+
+		List<String> labelsForConstraint = 
+				ConstraintNodeHelper.getLabelsUsedInConstraint(constraintNode, basicParameterNode);
+
+		Set<BasicParameterWithString> result = new HashSet<>();
+
+		for (int choiceIndex = 0; choiceIndex < labelsForConstraint.size(); choiceIndex++) {
+
+			String label = labelsForConstraint.get(choiceIndex); 
+
+			result.add(new BasicParameterWithString(basicParameterNode, label));
+		}
+
+		return result;
+	}
+
 	public static Collection<String> getLabelsUsedInConstraints(
 			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
 
@@ -96,28 +268,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		}
 
 		return labels;
-	}
-
-	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
-		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
-
-		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
-				(IParametersAndConstraintsParentNode) methodParameterNode.getParent();
-
-		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-
-			List<ChoiceNode> choiceNodesForConstraint = 
-					ConstraintNodeHelper.getChoicesUsedInConstraint(
-							constraintNode, methodParameterNode);
-
-			resultChoiceNodes.addAll(choiceNodesForConstraint);
-		}
-
-		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
-
-		return resultChoiceNodes;
 	}
 
 	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) {

@@ -13,11 +13,20 @@ package com.ecfeed.core.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.ecfeed.core.model.BasicParameterNode;
 
 public class ParameterConversionDefinition {
 
 	private List<ParameterConversionItem> fParameterConversionItems;
+
+	@Override
+	public String toString() {
+		return "(" + fParameterConversionItems.size() + ") " + fParameterConversionItems.toString(); 
+	}
 
 	public ParameterConversionDefinition() {
 		fParameterConversionItems = new ArrayList<>();
@@ -194,5 +203,22 @@ public class ParameterConversionDefinition {
 
 		fParameterConversionItems.clear();
 	}
+
+	public List<BasicParameterNode> createListOfUniqueSourceLocalParameters() {
+
+		Set<BasicParameterNode> uniqueBasicParameters = new HashSet<>();
+
+		for (ParameterConversionItem parameterConversionItem : fParameterConversionItems) {
+
+			BasicParameterNode srcBasicParameterNode = 
+					(BasicParameterNode) parameterConversionItem.getSrcPart().getParameter();
+
+			uniqueBasicParameters.add(srcBasicParameterNode);
+
+		}
+
+		return new ArrayList<>(uniqueBasicParameters);
+	}
+
 
 }

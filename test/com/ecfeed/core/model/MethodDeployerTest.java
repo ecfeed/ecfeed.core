@@ -123,7 +123,7 @@ public class MethodDeployerTest {
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
 		methodParameterNode.addChoice(sourceChoiceNode);
 
-		TestHelper.addSimpleChoiceConstraintToMethod(
+		TestHelper.addSimpleChoiceConstraintToParent(
 				sourceMethod, "c", methodParameterNode, sourceChoiceNode, sourceChoiceNode);
 
 		NodeMapper nodeMapper = new NodeMapper();

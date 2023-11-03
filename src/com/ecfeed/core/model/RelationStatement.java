@@ -24,13 +24,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
-import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -461,131 +457,31 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getChoices(methodParameterNode);
 	}
 
-	//	public boolean isRightParameterTypeAllowed(String rightParameterType) {
-	//
-	//		BasicParameterNode leftParameter = getLeftParameter();
-	//		String leftParameterType =  leftParameter.getType();
-	//
-	//		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-	//				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
-	//				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
-	//				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
-	//				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
-	//				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
-	//				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-	//
-	//			return false;
-	//		}
-	//
-	//		return true;
-	//	}
-
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
 
-		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
-		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-
-		IParameterConversionItemPart.ItemPartType srcType = srcPart.getType();
-		IParameterConversionItemPart.ItemPartType dstType = dstPart.getType();
-
-		if (srcType == dstType) {
-			fRightCondition.convert(parameterConversionItem);
+		if (!RelationStatementHelper.shouldConvertRelation(this, parameterConversionItem)) {
 			return;
 		}
 
-		if (srcType == IParameterConversionItemPart.ItemPartType.LABEL && 
-				fRightCondition instanceof LabelCondition) {
+		convertParameterAndLinkingContext(parameterConversionItem);
 
-			convertLabelPartToChoicePart(srcPart, dstPart);
-			return;
-		}
-
-		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
-				fRightCondition instanceof ChoiceCondition) {
-
-			convertChoicePartToLabelPart(srcPart, dstPart);
-			return;
-		}
-
+		fRightCondition = 
+				StatementConditionHelper.createConvertedRightCondition(
+						parameterConversionItem, this, fRightCondition);
 	}
 
-	private void convertLabelPartToChoicePart(
-			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart) {
+	private void convertParameterAndLinkingContext(ParameterConversionItem parameterConversionItem) {
 
-		LabelCondition labelCondition = (LabelCondition) fRightCondition;
-		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
-				(ParameterConversionItemPartForLabel) srcPart;
+		BasicParameterNode dstParameter = 
+				(BasicParameterNode) parameterConversionItem.getDstPart().getParameter();
 
-		String labelOfCondition = labelCondition.getRightLabel();
-		String labelOfItemPart = parameterConversionItemPartForLabel.getLabel();
+		fLeftParameter = dstParameter;
 
+		CompositeParameterNode dstLinkingContext = 
+				parameterConversionItem.getDstPart().getLinkingContext();
 
-		if (!StringHelper.isEqual(labelOfCondition, labelOfItemPart)) {
-			return;
-		}
-
-		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForChoice) dstPart;
-
-		ChoiceNode choiceNode = parameterConversionItemPartForChoice.getChoiceNode();
-
-		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode,	this);
-
-		fRightCondition = choiceCondition;
-	}
-
-	private void convertChoicePartToLabelPart(
-			IParameterConversionItemPart srcPart,
-			IParameterConversionItemPart dstPart) {
-
-		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
-
-		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
-				(ParameterConversionItemPartForChoice) srcPart;
-
-		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
-		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
-
-
-		if (!choiceOfCondition.equals(choiceOfItemPart)) {
-			return;
-		}
-
-		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
-				(ParameterConversionItemPartForLabel) dstPart;
-
-		String label = parameterConversionItemPartForLabel.getLabel();
-
-		LabelCondition labelCondition = new LabelCondition(label, this);
-
-		fRightCondition = labelCondition;
+		fLeftParameterLinkingContext = dstLinkingContext;
 	}
 
 	@Override

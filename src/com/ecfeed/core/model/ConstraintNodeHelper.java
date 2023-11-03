@@ -38,20 +38,6 @@ public class ConstraintNodeHelper {
 		constraint.convert(parameterConversionItem);
 	}
 
-	//	public static void updateParameterReferences(
-	//			ConstraintNode constraintNode,
-	//			MethodParameterNode oldMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices) {
-	//
-	//		Constraint constraint = constraintNode.getConstraint();
-	//
-	//		if (constraint == null) {
-	//			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
-	//		}
-	//
-	//		//		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-	//	}
-
 	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,
 			BasicParameterNode methodParameterNode) {
@@ -358,6 +344,67 @@ public class ConstraintNodeHelper {
 
 			if (parent == null || !(parent instanceof IConstraintsParentNode)) {
 				return resultConstraintNodes;
+			}
+		}
+	}
+
+	public static List<ConstraintNode> findChildConstraints(IConstraintsParentNode constraintsParentNode) {
+
+		return findChildConstraintsRecursive(constraintsParentNode);
+	}
+
+	private static List<ConstraintNode> findChildConstraintsRecursive(IConstraintsParentNode constraintsParentNode) {
+
+		List<ConstraintNode> resultConstraintNodes = new ArrayList<>();
+
+		List<IAbstractNode> children = constraintsParentNode.getChildren();
+
+		for (IAbstractNode child : children) {
+
+			if (child instanceof ConstraintNode) {
+				resultConstraintNodes.add((ConstraintNode) child);
+			}
+		}
+
+		for (IAbstractNode child : children) {
+
+			if (child instanceof CompositeParameterNode) {
+				List<ConstraintNode> constraintNodesOfChild = 
+						findChildConstraintsRecursive((CompositeParameterNode) child);
+
+				resultConstraintNodes.addAll(constraintNodesOfChild);
+			}
+		}
+
+
+		return resultConstraintNodes;
+	}
+
+	public static List<ConstraintNode> getChildConstraintNodes(MethodNode methodNode) {
+
+		List<ConstraintNode> result = new ArrayList<>();
+
+		accumulateConstraintsRecursively(methodNode, result);
+
+		return result;
+	}
+
+	private static void accumulateConstraintsRecursively(
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode,
+			List<ConstraintNode> inOutResult) {
+
+		List<ConstraintNode> localConstraints = parametersAndConstraintsParentNode.getConstraintNodes();
+		inOutResult.addAll(localConstraints);
+
+		List<AbstractParameterNode> abstractParameters = parametersAndConstraintsParentNode.getParameters();
+
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+
+				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) abstractParameterNode; 
+
+				accumulateConstraintsRecursively(compositeParameterNode, inOutResult);
 			}
 		}
 	}

@@ -25,6 +25,13 @@ public class NodeMapper {
 	private final Map<AbstractNode, AbstractNode> fSourceToDestination = new HashMap<>();
 	private final Map<AbstractNode, AbstractNode> fDestinationToSource = new HashMap<>();
 
+	@Override
+	public String toString() {
+	
+		return "S to D" + fSourceToDestination.toString() + "\n" +
+				"D to S" + fDestinationToSource.toString();
+	}
+	
 	public MappingDirection getReverseMappingDirection(MappingDirection mappingDirection) {
 		
 		if (mappingDirection == MappingDirection.SOURCE_TO_DESTINATION) {

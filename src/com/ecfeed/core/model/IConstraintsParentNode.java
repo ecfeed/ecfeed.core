@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface IConstraintsParentNode extends IAbstractNode {
-	
+
 	public ConstraintNodeListHolder.ConstraintsItr getIterator();
 	public boolean hasNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator);
 	public ConstraintNode getNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator);
@@ -24,6 +24,7 @@ public interface IConstraintsParentNode extends IAbstractNode {
 	public List<ConstraintNode> getConstraintNodes();
 	public List<ConstraintNode> getConstraintNodes(String name);
 	public List<Constraint> getConstraints();
+	public int getConstraintsCount();
 	public void setConstraints(List<ConstraintNode> constraints);
 	public List<Constraint> getConstraints(String name);
 	public Set<String> getNamesOfConstraints();
@@ -36,5 +37,5 @@ public interface IConstraintsParentNode extends IAbstractNode {
 	public void replaceConstraints(List<ConstraintNode> constraints);
 	public void removeAllConstraints();
 	public void removeMentioningConstraints(BasicParameterNode methodParameter);
-	
+
 }

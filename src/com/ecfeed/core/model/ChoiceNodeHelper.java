@@ -233,7 +233,8 @@ public class ChoiceNodeHelper {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(choiceNode.getValueString());
+				new ParameterConversionItemPartForValue(
+						choiceNode.getParameter(), null, choiceNode.getValueString());
 
 		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
 
@@ -1132,6 +1133,29 @@ public class ChoiceNodeHelper {
 						parametersParent, nameInIntrLanguage, availableNameInIntrLanguage);
 
 		return uniqueName;
+	}
+
+	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
+
+		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
+
+		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
+				(IParametersAndConstraintsParentNode) methodParameterNode.getParent();
+
+		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			List<ChoiceNode> choiceNodesForConstraint = 
+					ConstraintNodeHelper.getChoicesUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultChoiceNodes.addAll(choiceNodesForConstraint);
+		}
+
+		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
+
+		return resultChoiceNodes;
 	}
 
 }

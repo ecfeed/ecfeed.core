@@ -24,6 +24,10 @@ import com.ecfeed.core.model.utils.ParameterWithLinkingContext;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPart;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.TypeHelper;
 
@@ -188,6 +192,39 @@ public class BasicParameterNodeHelper {
 
 			if (qualifiedName.equals(parameterName)) {
 				return parameter;
+			}
+		}
+
+		return null;
+	}
+
+	public static BasicParameterNode findBasicParameterWithoutChoices(AbstractParameterNode topAbstractParameterNode) {
+
+		if (topAbstractParameterNode instanceof BasicParameterNode) {
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) topAbstractParameterNode;
+
+			if (basicParameterNode.getChoiceCount() == 0) {
+				return basicParameterNode;
+			}
+
+			return null;
+		}
+
+		BasicParameterNode basicParameterNode = 
+				findBasicParameterWithoutChoicesForComposite((CompositeParameterNode) topAbstractParameterNode);
+
+		return basicParameterNode;
+	}
+
+	public static BasicParameterNode findBasicParameterWithoutChoicesForComposite(CompositeParameterNode compositeParameterNode) {
+
+		List<BasicParameterNode> basicParameterNodes = 
+				BasicParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
+
+		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+			if (basicParameterNode.getChoiceCount() == 0) {
+				return basicParameterNode;
 			}
 		}
 
@@ -691,9 +728,9 @@ public class BasicParameterNodeHelper {
 		return null;
 	}
 
-	public static List<BasicParameterNode> findBasicParameters(List<IAbstractNode> selectedNodes) {
+	public static List<BasicParameterNode> filterBasicParameters(List<IAbstractNode> abstractNodes) {
 
-		List<BasicParameterNode> parameters = selectedNodes.stream()
+		List<BasicParameterNode> parameters = abstractNodes.stream()
 				.filter(e -> e instanceof BasicParameterNode)
 				.map(e -> (BasicParameterNode)e)
 				.collect(Collectors.toList());
@@ -720,13 +757,91 @@ public class BasicParameterNodeHelper {
 		for (CompositeParameterNode compositeParameterNode : compositeParametesNodes) {
 
 			List<BasicParameterNode> currentBasicParameterNodes = 
-					CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
+					BasicParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
 
 			basicParameterNodesToReturn.addAll(currentBasicParameterNodes);
 		}
 
 		return basicParameterNodesToReturn;
 	}
+
+	public static List<BasicParameterNode> getBasicChildParameterNodes(AbstractParameterNode localTopParameterNode) {
+
+		if (localTopParameterNode instanceof BasicParameterNode) {
+
+			List<BasicParameterNode> result = new ArrayList<>();
+			result.add((BasicParameterNode) localTopParameterNode);
+
+			return result;
+		}
+
+		CompositeParameterNode topCompositeParameterNode = (CompositeParameterNode) localTopParameterNode;
+
+		List<BasicParameterNode> result = 
+				BasicParameterNodeHelper.getBasicParametersForParentNodeSubtree(topCompositeParameterNode);
+
+		return result;
+	}
+
+	public static void verifyConversionOfParameterToType(
+			String newType, 
+			BasicParameterNode abstractParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
+
+			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
+
+			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
+			return;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
+
+		if (basicParameterNode.isExpected()) {
+			addDefaultValueToConversionDefinition(
+					basicParameterNode, basicParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
+		}
+
+		ChoiceNodeHelper.verifyConversionOfChoices(
+				basicParameterNode, newType, inOutParameterConversionDefinition);
+
+		ConstraintHelper.verifyConversionOfConstraints(
+				basicParameterNode, newType, inOutParameterConversionDefinition);
+	}
+
+	private static void addDefaultValueToConversionDefinition(
+			BasicParameterNode basicParameterNode,
+			String defaultValue,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		ParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForValue(basicParameterNode, null, defaultValue);
+
+		boolean isRandomized = false;
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, isRandomized, "default value");
+
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
+	}
+
+	public static void checkConversionOfChoicesAndConstraintsToType(
+			BasicParameterNode methodParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
+
+		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+	}
+
+	public static void convertChoicesToType(
+			BasicParameterNode abstractParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
+	}
+
 
 	public static BasicParameterNode findGlobalBasicParameter(
 			IParametersParentNode parametersParentNode, String globalParameterExtendedName) {
@@ -772,6 +887,34 @@ public class BasicParameterNodeHelper {
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 
 		return basicParameterNode;
+	}
+
+	public static List<BasicParameterNode> getAllChildBasicParameters(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<BasicParameterNode> result = new ArrayList<>();
+
+		getAllChildBasicParametersRecursive(compositeParameterNode, result);
+
+		return result;
+	}
+
+	private static void getAllChildBasicParametersRecursive(
+			CompositeParameterNode compositeParameterNode,
+			List<BasicParameterNode> inOutBasicParameterNodes) {
+
+		List<IAbstractNode> children = compositeParameterNode.getChildren();
+
+		for (IAbstractNode abstractNode : children) {
+
+			if (abstractNode instanceof BasicParameterNode) {
+				inOutBasicParameterNodes.add((BasicParameterNode) abstractNode);
+			}
+
+			if (abstractNode instanceof CompositeParameterNode) {
+				getAllChildBasicParametersRecursive((CompositeParameterNode) abstractNode, inOutBasicParameterNodes);
+			}
+		}
 	}
 
 }

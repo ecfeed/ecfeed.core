@@ -18,7 +18,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ConstraintsParentNodeHelper;
+import com.ecfeed.core.model.ConstraintNodeHelper;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -137,7 +137,7 @@ public class OnParameterOperationConvertToGlobalNew extends AbstractModelOperati
 			NodeMapper.MappingDirection mappingDirection) {
 
 		List<ConstraintNode> constraintsToConvert = 
-				ConstraintsParentNodeHelper.findChildConstraints(methodNode);
+				ConstraintNodeHelper.findChildConstraints(methodNode);
 
 		for (ConstraintNode constraintNode : constraintsToConvert) {
 

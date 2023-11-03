@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ParameterTransformer;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -23,7 +23,7 @@ public class OnGlobalParameterOperationSetType extends CompositeOperation {
 
 	BasicParameterNode fGlobalParameterNode;
 	ParameterConversionDefinition fParameterConversionDefinition;
-	
+
 	public OnGlobalParameterOperationSetType(
 			BasicParameterNode globalParameterNode, 
 			String newType, 
@@ -38,7 +38,7 @@ public class OnGlobalParameterOperationSetType extends CompositeOperation {
 
 		fGlobalParameterNode = globalParameterNode;
 		fParameterConversionDefinition = parameterConversionDefinition;
-		
+
 		OnAbstractParameterOperationSetType abstractParameterOperationSetType = 
 				new OnAbstractParameterOperationSetType(
 						globalParameterNode, 
@@ -52,16 +52,15 @@ public class OnGlobalParameterOperationSetType extends CompositeOperation {
 		//			addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
 		//		}
 	}
-	
+
 	@Override
 	public void execute() {
 
 		super.execute();
 
-		ParameterTransformer.convertChoicesToType(fGlobalParameterNode, fParameterConversionDefinition);
-		
+		BasicParameterNodeHelper.convertChoicesToType(fGlobalParameterNode, fParameterConversionDefinition);
+
 		markModelUpdated();
 	}
-	
 
 }

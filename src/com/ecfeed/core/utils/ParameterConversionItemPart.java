@@ -10,25 +10,58 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+
 public abstract class ParameterConversionItemPart implements IParameterConversionItemPart {
 
 	private String fStr;
+	private BasicParameterNode fAbstractParameterNode;
+	private CompositeParameterNode fLinkingContext;
 
 	public abstract Integer getTypeSortOrder();
 
-	public ParameterConversionItemPart(String str) {
+	public ParameterConversionItemPart(
+			BasicParameterNode abstractParameterNode,
+			CompositeParameterNode linkingContext,
+			String str) {
 
 		if (str == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
 		}
 
+		fAbstractParameterNode = abstractParameterNode; 
+		fLinkingContext = linkingContext;
 		fStr = str;
 	}
 
 	@Override
 	public String toString() {
 
-		return fStr;
+		if (fLinkingContext == null) {
+			return 
+					getParameter().getName() + 
+					SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+					getStr() + 
+					"[" + getTypeDescription() + "]";
+		}
+
+		return 
+				getLinkingContext().getName() + SignatureHelper.SIGNATURE_LINK_ARROW + getParameter().getName() + 
+				SignatureHelper.SIGNATURE_NAME_SEPARATOR + 
+				getStr() + 
+				"[" + getTypeDescription() + "]";
+
+	}
+
+	@Override
+	public BasicParameterNode getParameter() {
+		return fAbstractParameterNode;
+	}
+
+	@Override
+	public CompositeParameterNode getLinkingContext() {
+		return fLinkingContext;
 	}
 
 	@Override
@@ -51,13 +84,22 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	public int compareTo(IParameterConversionItemPart other) {
 
 		return getStr().compareTo(other.getStr());
-
 	}
 
-	public String getDescription(String code) {
+	@Override
+	public String getTypeDescription() {
 
-		String typeDescription = ItemPartType.convertCodeToDescription(code);
-		return getStr() + "[" + typeDescription +"]";
+		ItemPartType itemPartType = getType();
+
+		String typeDescription = ItemPartType.convertCodeToDescription(itemPartType.getCode());
+
+		return typeDescription;
+	}
+
+	@Override 
+	public String getDescription() {
+
+		return fStr + "[" + getTypeDescription() + "]";
 	}
 
 	public static boolean isMatch(IParameterConversionItemPart part1, IParameterConversionItemPart part2) {

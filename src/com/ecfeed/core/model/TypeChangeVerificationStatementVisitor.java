@@ -41,17 +41,18 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
-		
+
 		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
-		verifyConversionOfValue(fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
+		verifyConversionOfValue(
+				fMethodParameterNode, fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
 
 		return null;
 	}
@@ -69,15 +70,15 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	public Object visit(ValueCondition condition) throws Exception {
 
 		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
-		
+
 		BasicParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
-		
+
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(fOldType, valueString, false, fConstraintName + "(constraint)");
+		verifyConversionOfValue(fMethodParameterNode, fOldType, valueString, false, fConstraintName + "(constraint)");
 
 		return null;
 	}
@@ -114,15 +115,19 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	}
 
 	private void verifyConversionOfValue(
-			String oldType, String valueString, boolean isRandomized, String objectsContainingItem) {
+			BasicParameterNode basicParameterNode,
+			String oldType, 
+			String valueString, 
+			boolean isRandomized, 
+			String objectsContainingItem) {
 
 		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(oldType, valueString, false);
 
 		if (!canConvert) {
 
 			ParameterConversionItemPartForValue srcPart = 
-					new ParameterConversionItemPartForValue(valueString);
-			
+					new ParameterConversionItemPartForValue(basicParameterNode, null, valueString);
+
 			ParameterConversionItem parameterConversionItem = 
 					new ParameterConversionItem(
 							srcPart, null, isRandomized, objectsContainingItem);

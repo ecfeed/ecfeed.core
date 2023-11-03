@@ -59,14 +59,14 @@ public class OnChoiceOperationRenameLabel extends AbstractModelOperation {
 
 		if (abstractParameterNode instanceof BasicParameterNode) {
 
-			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
+			BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			choiceNode.renameLabel(currentLabel, newLabel);
 
 			ParameterConversionDefinition parameterConversionDefinition = 
-					createParameterConversionDefinition(currentLabel, newLabel);
+					createParameterConversionDefinition(basicParameterNode, currentLabel, newLabel);
 
-			ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+			ConstraintHelper.convertValuesOfConstraintsToType(basicParameterNode, parameterConversionDefinition);
 			return;
 		} 
 
@@ -113,12 +113,16 @@ public class OnChoiceOperationRenameLabel extends AbstractModelOperation {
 	}
 
 
-	private ParameterConversionDefinition createParameterConversionDefinition(String currentLabel, String newLabel) {
+	private ParameterConversionDefinition createParameterConversionDefinition(
+			BasicParameterNode basicParameterNode, String currentLabel, String newLabel) {
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
-		IParameterConversionItemPart srcPart = new ParameterConversionItemPartForLabel(currentLabel);
-		IParameterConversionItemPart dstPart = new ParameterConversionItemPartForLabel(newLabel);
+		IParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForLabel(basicParameterNode, null, currentLabel);
+		
+		IParameterConversionItemPart dstPart = 
+				new ParameterConversionItemPartForLabel(basicParameterNode, null, newLabel);
 
 		boolean isRandomized = false;
 

@@ -6,6 +6,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -46,8 +47,8 @@ public class TestHelper {
 		}
 	}
 
-	public static void addSimpleChoiceConstraintToMethod(
-			MethodNode methodNode,
+	public static void addSimpleChoiceConstraintToParent(
+			IConstraintsParentNode constraintsParentNode,
 			String constraintName,
 			BasicParameterNode methodParameterNode,
 			ChoiceNode choiceNode1,
@@ -70,7 +71,7 @@ public class TestHelper {
 
 		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
 
-		methodNode.addConstraint(constraintNode);
+		constraintsParentNode.addConstraint(constraintNode);
 	}
 
 	public static ChoiceNode getChoiceNodeFromConstraintPrecondition(
@@ -107,9 +108,9 @@ public class TestHelper {
 	}
 
 	public static ChoiceNode getChoiceNodeFromConstraintPostcondition(
-			MethodNode methodNode, int constraintIndex) {
+			IConstraintsParentNode constraintsParentNode, int constraintIndex) {
 
-		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
+		ConstraintNode constraintNode = constraintsParentNode.getConstraintNodes().get(constraintIndex);
 
 		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
 

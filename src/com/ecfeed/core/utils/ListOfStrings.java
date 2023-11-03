@@ -12,16 +12,12 @@ public class ListOfStrings {
 		fStrings = new ArrayList<>();
 	}
 
-	public void add(String string) {
-
-		fStrings.add(string);
+	@Override
+	public String toString() {
+		return fStrings.toString();
 	}
 
-	public void addIfUnique(String string) {
-
-		if (fStrings.contains(string)) {
-			return;
-		}
+	public void add(String string) {
 
 		fStrings.add(string);
 	}
@@ -35,6 +31,15 @@ public class ListOfStrings {
 		return false;
 	}
 
+	public void addIfUnique(String string) {
+
+		if (fStrings.contains(string)) {
+			return;
+		}
+
+		fStrings.add(string);
+	}
+
 	public List<String> getCollectionOfStrings() {
 
 		return fStrings;
@@ -45,7 +50,16 @@ public class ListOfStrings {
 		return fStrings.get(0);
 	}
 
-	public String getErrorsAsText() {
+	public boolean contains(String strg) {
+
+		if (fStrings.contains(strg)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public String getErrorsAsOneString() {
 
 		String text = "";
 
@@ -56,4 +70,24 @@ public class ListOfStrings {
 
 		return text;
 	}
+
+	public String getAsStringWithSeparators(String separator) {
+
+		int listSize = fStrings.size();
+		int lastIndex = listSize - 1;
+
+		String convertedString = "";
+
+		for (int index = 0; index < listSize; index++) {
+
+			convertedString += fStrings.get(index);
+
+			if (index < lastIndex) {
+				convertedString += separator;
+			}
+		}
+
+		return convertedString;
+	}
+
 }

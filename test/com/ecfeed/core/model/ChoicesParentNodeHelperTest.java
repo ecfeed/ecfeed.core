@@ -114,7 +114,8 @@ public class ChoicesParentNodeHelperTest {
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+		ChoicesParentNodeHelper.createCopyOfChoicesAndConversionList(
+				methodParameterNode2,
 				methodParameterNode1, methodParameterNode2, 
 				reverseOperations, 
 				null,
@@ -168,7 +169,8 @@ public class ChoicesParentNodeHelperTest {
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+		ChoicesParentNodeHelper.createCopyOfChoicesAndConversionList(
+				methodParameterNode2,
 				methodParameterNode1, methodParameterNode2, 
 				reverseOperations, 
 				null,

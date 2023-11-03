@@ -10,10 +10,16 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
+
 public class ParameterConversionItemPartForValue extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForValue(String value) {
-		super(value);
+	public ParameterConversionItemPartForValue(
+			BasicParameterNode basicParameterNode, 
+			CompositeParameterNode linkingContext,
+			String value) {
+		super(basicParameterNode, linkingContext, value);
 	}
 
 	@Override
@@ -26,10 +32,10 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 		return 1;
 	}
 
-	@Override
-	public String getDescription() {
-		return super.getDescription(ItemPartType.VALUE.getCode());
-	}
+	//	@Override
+	//	public String getDescription() {
+	//		return super.getDescription(ItemPartType.VALUE.getCode());
+	//	}
 
 	public String getValue() {
 		return super.getStr();
@@ -39,7 +45,7 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 	public IParameterConversionItemPart makeClone() {
 
 		ParameterConversionItemPartForValue clone = 
-				new ParameterConversionItemPartForValue(getValue());
+				new ParameterConversionItemPartForValue(getParameter(), getLinkingContext(), getValue());
 
 		return clone;
 	}

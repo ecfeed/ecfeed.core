@@ -976,8 +976,6 @@ public class MethodNodeHelper {
 
 		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
 
-		// remark: links only at the top 
-
 		for (AbstractParameterNode currentAbstractParameterNode : methodParameters) {
 
 			AbstractParameterNode link = currentAbstractParameterNode.getLinkToGlobalParameter();

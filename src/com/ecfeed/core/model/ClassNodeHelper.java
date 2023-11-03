@@ -27,15 +27,21 @@ public class ClassNodeHelper {
 	public static final String CONTAINS_METHOD_WITH_IDENTICAL_NAME = "contains method with identical name";
 
 
-	public static BasicParameterNode addNewGlobalBasicParameter(
+	public static BasicParameterNode addNewBasicParameter(
 			ClassNode classNode, 
 			String name, 
 			String type,
+			String defaultValue,
+			boolean setParent, 
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
-				BasicParameterNode.createGlobalParameter(name, type, modelChangeRegistrator);
+				BasicParameterNode.createGlobalParameter(name, type, defaultValue, modelChangeRegistrator);
 
+		if (setParent) {
+			globalParameterNode.setParent(classNode);
+		}
+		
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;
