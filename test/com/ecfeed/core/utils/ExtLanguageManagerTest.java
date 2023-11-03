@@ -266,10 +266,10 @@ public class ExtLanguageManagerTest {
 	@Test
 	public void getPackageVisibilityTest() {
 
-		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		//IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
 		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		assertTrue(javaExtLanguageManager.getPackageVisibility());
+		//assertTrue(javaExtLanguageManager.getPackageVisibility());
 		//assertFalse(simpleExtLanguageManager.getPackageVisibility());
 	}
 

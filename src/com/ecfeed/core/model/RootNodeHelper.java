@@ -170,14 +170,16 @@ public class RootNodeHelper {
 	private static Optional<String> validateClassName(RootNode rootNode, String newClassName, boolean defaultPackage) {
 
 		if (rootNode.getClass(newClassName) == null) {
-			return validateClassPackage(rootNode, newClassName, defaultPackage);
+			return validateClassPackage(rootNode, newClassName);
 		}
 
 		return Optional.empty();
 	}
 
-	private static Optional<String> validateClassPackage(RootNode rootNode, String newClassName, boolean defaultPackage) {
+	private static Optional<String> validateClassPackage(RootNode rootNode, String newClassName) {
 
+		boolean defaultPackage = true; // XYX
+		
 		if (defaultPackage) {
 			if (isUniqueAcrossPackages(rootNode, newClassName)) {
 				return Optional.of(newClassName);
