@@ -22,21 +22,21 @@ import static org.junit.Assert.*;
 public class ClassNodeHelperTest {
 
 	@Test
-	public void getNameAndPackageTest(){
+	public void getNameTest(){
 
 		ClassNode classNode = new ClassNode("pack.class_1", null);
 
-		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		//		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
+		//		simpleName = ClassNodeHelper.getNameWithoutPa ckage(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("class 1", simpleName);
 
 
-//		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
+//		String packageName = ClassNodeHelper.getPa ckageName(classNode, new ExtLanguageManagerForJava());
 //		assertEquals("pack", packageName);
 
-		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
+		//		packageName = ClassNodeHelper.getPa ckageName(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("", packageName);
 
 
@@ -48,20 +48,20 @@ public class ClassNodeHelperTest {
 	}
 
 	@Test
-	public void getNameAndDefaultPackageTest(){
+	public void getNameTest2(){
 
 		ClassNode classNode = new ClassNode("class_1", null);
 
-		String simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForJava());
+		String simpleName = ClassNodeHelper.getName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		//		simpleName = ClassNodeHelper.getNameWithoutPackage(classNode, new ExtLanguageManagerForSimple());
+		//		simpleName = ClassNodeHelper.getNameWithoutPa ckage(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("class 1", simpleName);
 
-//		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
+//		String packageName = ClassNodeHelper.getPa ckageName(classNode, new ExtLanguageManagerForJava());
 //		assertEquals("", packageName);
 
-		//		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
+		//		packageName = ClassNodeHelper.getPa ckageName(classNode, new ExtLanguageManagerForSimple());
 		//		assertEquals("", packageName);
 
 

@@ -108,7 +108,7 @@ public class TestCasesExportHelperTest {
 	}
 
 	//	@Test
-	//	public void shouldParsePackageClassMethod() {
+	//	public void shouldParsePa ckageClassMethod() {
 	//		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", "package_1, Test_1, testMethod_1", new ExtLanguageManagerForJava());
 	//		//		performTest("MIN_VALUE", "MAX_VALUE", "%package, %class, %method", ", Test 1, testMethod 1", new ExtLanguageManagerForSimple());
 	//	}

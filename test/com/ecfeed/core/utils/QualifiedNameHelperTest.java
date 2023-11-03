@@ -23,8 +23,8 @@
 //	private static final String PACKAGE_WITH_CLASS = PACKAGE + QualifiedNameHelper.PACKAGE_CLASS_SEPARATOR + CLASS;
 //
 //	@Test
-//	public void shouldGetPackage(){
-//		String result = QualifiedNameHelper.getPackage(PACKAGE_WITH_CLASS);
+//	public void shouldGetPa ckage(){
+//		String result = QualifiedNameHelper.getPa ckage(PACKAGE_WITH_CLASS);
 //		assertEquals(PACKAGE, result);
 //	}
 //
@@ -35,9 +35,9 @@
 //	}
 //
 //	@Test
-//	public void hasPackageNameTest(){
-//		assertTrue(QualifiedNameHelper.hasPackageName(PACKAGE_WITH_CLASS));
-//		assertFalse(QualifiedNameHelper.hasPackageName(CLASS));
+//	public void hasPa ckageNameTest(){
+//		assertTrue(QualifiedNameHelper.hasPa ckageName(PACKAGE_WITH_CLASS));
+//		assertFalse(QualifiedNameHelper.hasPa ckageName(CLASS));
 //	}
 //
 //}

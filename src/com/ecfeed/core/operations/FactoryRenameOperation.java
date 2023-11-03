@@ -44,16 +44,16 @@ public class FactoryRenameOperation {
 
 		public ClassOperationRename(
 				IAbstractNode target, 
-				//String newPackageName, 
+				//String newPa-ckageName, 
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
 
-			super(target, /*newPackageName,*/ newNonQualifiedNameInExtLanguage, extLanguageManager);
+			super(target, /*newPa-ckageName,*/ newNonQualifiedNameInExtLanguage, extLanguageManager);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), /*getOriginalPackageName(),*/ getOriginalNonQualifiedName(), getExtLanguageManager());
+			return new ClassOperationRename(getOwnNode(), /*getOriginalPa ckageName(),*/ getOriginalNonQualifiedName(), getExtLanguageManager());
 		}
 
 		@Override
@@ -285,28 +285,28 @@ public class FactoryRenameOperation {
 
 	private static class RenameOperationProvider implements IModelVisitor{
 
-		//private String fNewPackageName;
+		//private String fNewPa ckageName;
 		private String fNewNonQualifiedNameInExtLanguage;
 		private IExtLanguageManager fExtLanguageManager;
 
 		public RenameOperationProvider(
-				//String newPackageName,
+				//String newPa-ckageName,
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
 
-			//fNewPackageName  = newPackageName;
+			//fNewPa ckageName  = newPa-ckageName;
 			fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return new GenericOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new GenericOperationRename(node, /*fNewPa ckageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new ClassOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new ClassOperationRename(node, /*fNewPa ckageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
@@ -353,7 +353,7 @@ public class FactoryRenameOperation {
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new GenericOperationRename(node, /*fNewPackageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new GenericOperationRename(node, /*fNewPa ckageName,*/ fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
@@ -365,12 +365,12 @@ public class FactoryRenameOperation {
 
 	public static IModelOperation getRenameOperation(
 			IAbstractNode target, 
-			//String newPackageName, 
+			//String newPa-ckageName, 
 			String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(
-					//newPackageName, 
+					//newPa-ckageName, 
 					newNonQualifiedNameInExtLanguage, extLanguageManager));
 		} catch(Exception e) {
 			LogHelperCore.logCatch(e);

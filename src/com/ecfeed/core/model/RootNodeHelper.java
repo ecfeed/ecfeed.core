@@ -148,8 +148,8 @@ public class RootNodeHelper {
 			String startClassNameCore,
 			String availableClassName) {
 
-		//boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
-		//boolean defaultPackage = true; 
+		//boolean defaultPa ckage = !QualifiedNameHelper.hasPa ckageName(startClassNameCore);
+		//boolean defaultPa ckage = true; 
 
 		for (int i = 1;   ; i++) {
 
@@ -159,7 +159,7 @@ public class RootNodeHelper {
 				return availableClassName;
 			}
 
-			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName /*, defaultPackage*/);
+			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName /*, defaultPa ckage*/);
 
 			if (validatedNewClassName.isPresent()) {
 				return validatedNewClassName.get();
@@ -170,22 +170,22 @@ public class RootNodeHelper {
 	private static Optional<String> validateClassName(
 			RootNode rootNode, 
 			String newClassName//, 
-			//boolean defaultPackage
+			//boolean defaultPa ckage
 			) {
 
 		if (rootNode.getClass(newClassName) == null) {
-			return validateClassPackage(rootNode, newClassName);
+			return validateClassName2(rootNode, newClassName);
 		}
 
 		return Optional.empty();
 	}
 
-	private static Optional<String> validateClassPackage(RootNode rootNode, String newClassName) {
+	private static Optional<String> validateClassName2(RootNode rootNode, String newClassName) {
 
-		//		boolean defaultPackage = true;
+		//		boolean defaultPa ckage = true;
 		//		
-		//		if (defaultPackage) {
-		//			if (isUniqueAcrossPackages(rootNode, newClassName)) {
+		//		if (defaultPa ckage) {
+		//			if (isUniqueAcrossPa ckages(rootNode, newClassName)) {
 		//				return Optional.of(newClassName);
 		//			}
 		//		} else {
@@ -194,14 +194,14 @@ public class RootNodeHelper {
 		//
 		//		return Optional.empty();
 
-		if (isUniqueAcrossPackages(rootNode, newClassName)) {
+		if (isUnique(rootNode, newClassName)) {
 			return Optional.of(newClassName);
 		}
 		
 		return Optional.empty();
 	}
 
-	private static boolean isUniqueAcrossPackages(RootNode rootNode, String newClassName) {
+	private static boolean isUnique(RootNode rootNode, String newClassName) {
 
 		for (ClassNode node : rootNode.getClasses()) {
 			if (node.getName().endsWith(newClassName)) {

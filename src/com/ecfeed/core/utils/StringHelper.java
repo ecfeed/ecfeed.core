@@ -249,7 +249,7 @@ public class StringHelper {
 		return str.substring(0, separatorPosition);
 	}
 
-	public static String getPackageWithClass(String methodSignature) {
+	public static String getPackageWithClass(String methodSignature) { // XYX
 
 		String signatureWithoutModifiers = methodSignature
 				.replaceAll("public", "")

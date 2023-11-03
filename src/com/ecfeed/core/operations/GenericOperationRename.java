@@ -36,10 +36,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	private IAbstractNode fTargetAbstractNode;
 
-	//private String fNewPackageName;
+	//private String fNewPa-ckageName;
 	private String fNewNonQualifiedNameInExtLanguage;
 
-	//private String fOriginalPackageName;
+	//private String fOriginalPa-ckageName;
 	private String fOriginalNonQualifiedNameInExtLanguage;
 
 	private String fJavaNameRegex;
@@ -47,7 +47,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	public GenericOperationRename(
 			IAbstractNode target,
-			//String newPackageName,
+			//String newPa-ckageName,
 			String newNonQualifiedNameInExtLanguage, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -55,10 +55,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		fTargetAbstractNode = target;
 
-		//fNewPackageName = newPackageName;
+		//fNewPa-ckageName = newPa-ckageName;
 		fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
 
-		//fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
+		//fOriginalPa-ckageName = QualifiedNameHelper.getPa-ckage(target.getName());
 		//fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
 		fOriginalNonQualifiedNameInExtLanguage = target.getName();
 
@@ -83,7 +83,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String prepareNewQualifiedName() {
 
 //		String newQualifiedNameInExtLanguage = 
-//				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
+//				fExtLanguageManager.createQualifiedName(fNewPa-ckageName, fNewNonQualifiedNameInExtLanguage);
 		
 		String newQualifiedNameInExtLanguage = fNewNonQualifiedNameInExtLanguage;
 
@@ -94,7 +94,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 						fTargetAbstractNode, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 
 //		String newQualifiedNameInIntrLanguage = 
-//				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
+//				JavaLanguageHelper.createQualifiedName(fNewPa-ckageName, newNonQualifiedNameInIntrLanguage);
 		
 		String newQualifiedNameInIntrLanguage = newNonQualifiedNameInIntrLanguage;
 
@@ -157,7 +157,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public IModelOperation getReverseOperation() {
 		return new GenericOperationRename(
 				getOwnNode(), 
-				/*getOriginalPackageName(),*/
+				/*getOriginalPa-ckageName(),*/
 				getOriginalNonQualifiedName(),
 				fExtLanguageManager);
 	}
@@ -170,12 +170,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fOriginalNonQualifiedNameInExtLanguage;
 	}
 
-//	protected String getOriginalPackageName(){
-//		return fOriginalPackageName;
+//	protected String getOriginalPa-ckageName(){
+//		return fOriginalPa-ckageName;
 //	}
 
-//	public String getNewPackageName() {
-//		return fNewPackageName;
+//	public String getNewPa ckageName() {
+//		return fNewPa-ckageName;
 //	}
 
 	protected void verifyNewName(String newNameInExtLanguage) {

@@ -43,7 +43,7 @@
 //		}
 //
 //		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
-//		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
+//		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPa ckageName(method.getClassNode(), extLanguageManager));
 //		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 //
 //		result = replaceParameterNameSequences(method, result);
@@ -62,7 +62,7 @@
 //		}
 //
 //		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
-//		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
+//		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPa ckageName(method.getClassNode(), extLanguageManager));
 //		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 //		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 //		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getName());

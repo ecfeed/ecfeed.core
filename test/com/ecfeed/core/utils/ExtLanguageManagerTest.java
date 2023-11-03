@@ -263,15 +263,15 @@ public class ExtLanguageManagerTest {
 		assertFalse(javaExtLanguageManager.isLogicalTypeName("x"));
 	}
 
-	@Test
-	public void getPackageVisibilityTest() {
-
-		//IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
-
-		//assertTrue(javaExtLanguageManager.getPackageVisibility());
-		//assertFalse(simpleExtLanguageManager.getPackageVisibility());
-	}
+	//	@Test
+	//	public void getPa ckageVisibilityTest() {
+	//
+	//		//IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+	//		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+	//
+	//		//assertTrue(javaExtLanguageManager.getPa ckageVisibility());
+	//		//assertFalse(simpleExtLanguageManager.getPa ckageVisibility());
+	//	}
 
 	//	@Test
 	//	public void getExtendedTypeForValueTest() {
@@ -315,13 +315,13 @@ public class ExtLanguageManagerTest {
 	}
 
 	//	@Test
-	//	public void getPackageNameTest() {
+	//	public void getPa ckageNameTest() {
 	//
 	//		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
 	//		//IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 	//
-	//		//assertEquals("com", javaExtLanguageManager.getPackageName("com.User"));
-	//		//assertEquals("", simpleExtLanguageManager.getPackageName("com.User"));
+	//		//assertEquals("com", javaExtLanguageManager.getPa ckageName("com.User"));
+	//		//assertEquals("", simpleExtLanguageManager.getPa ckageName("com.User"));
 	//	}
 
 	@Test

@@ -118,9 +118,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 //	@Override
-//	public String getPackageName(String name) {
+//	public String getPa ckageName(String name) {
 //
-//		return QualifiedNameHelper.getPackage(name);
+//		return QualifiedNameHelper.get Pa ckage(name);
 //	}
 
 	@Override
@@ -153,7 +153,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	//	@Override
-	//	public boolean getPackageVisibility() {
+	//	public boolean getPa ckageVisibility() {
 	//
 	//		return true;
 	//	}
