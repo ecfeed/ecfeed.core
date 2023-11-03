@@ -290,7 +290,7 @@ public class FactoryRenameOperation {
 		private IExtLanguageManager fExtLanguageManager;
 
 		public RenameOperationProvider(
-				//String newPackageName, // XYX remove
+				//String newPackageName,
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
 

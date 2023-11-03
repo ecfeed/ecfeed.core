@@ -149,7 +149,7 @@ public class RootNodeHelper {
 			String availableClassName) {
 
 		//boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
-		boolean defaultPackage = true; // XYX
+		//boolean defaultPackage = true; 
 
 		for (int i = 1;   ; i++) {
 
@@ -159,7 +159,7 @@ public class RootNodeHelper {
 				return availableClassName;
 			}
 
-			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
+			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName /*, defaultPackage*/);
 
 			if (validatedNewClassName.isPresent()) {
 				return validatedNewClassName.get();
@@ -167,7 +167,11 @@ public class RootNodeHelper {
 		}
 	}
 
-	private static Optional<String> validateClassName(RootNode rootNode, String newClassName, boolean defaultPackage) {
+	private static Optional<String> validateClassName(
+			RootNode rootNode, 
+			String newClassName//, 
+			//boolean defaultPackage
+			) {
 
 		if (rootNode.getClass(newClassName) == null) {
 			return validateClassPackage(rootNode, newClassName);
@@ -178,16 +182,22 @@ public class RootNodeHelper {
 
 	private static Optional<String> validateClassPackage(RootNode rootNode, String newClassName) {
 
-		boolean defaultPackage = true; // XYX
-		
-		if (defaultPackage) {
-			if (isUniqueAcrossPackages(rootNode, newClassName)) {
-				return Optional.of(newClassName);
-			}
-		} else {
+		//		boolean defaultPackage = true;
+		//		
+		//		if (defaultPackage) {
+		//			if (isUniqueAcrossPackages(rootNode, newClassName)) {
+		//				return Optional.of(newClassName);
+		//			}
+		//		} else {
+		//			return Optional.of(newClassName);
+		//		}
+		//
+		//		return Optional.empty();
+
+		if (isUniqueAcrossPackages(rootNode, newClassName)) {
 			return Optional.of(newClassName);
 		}
-
+		
 		return Optional.empty();
 	}
 
