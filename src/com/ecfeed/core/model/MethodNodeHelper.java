@@ -1053,5 +1053,29 @@ public class MethodNodeHelper {
 		return uniqueNameInIntrLanguage;
 	}
 
+	public static String getMethodName(String methodSignature) {
+
+		String signatureWithoutModifiers = methodSignature
+				.replaceAll("public", "")
+				.replaceAll("void", "");
+
+		String signatureSimplified;
+
+		if (signatureWithoutModifiers.contains("(")) {
+			signatureSimplified = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
+		} else {
+			signatureSimplified = signatureWithoutModifiers;
+		}
+
+		String packageWithClass;
+
+		if (signatureSimplified.contains(".")) {
+			packageWithClass = signatureSimplified.substring(0, signatureSimplified.lastIndexOf('.'));
+		} else {
+			packageWithClass = "";
+		}
+
+		return packageWithClass.trim();
+	}
 
 }
