@@ -117,11 +117,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return typeList;
 	}
 
-	@Override
-	public String getPackageName(String name) {
-
-		return QualifiedNameHelper.getPackage(name);
-	}
+//	@Override
+//	public String getPa ckageName(String name) {
+//
+//		return QualifiedNameHelper.get Pa ckage(name);
+//	}
 
 	@Override
 	public String getQualifiedName(String qualfiedName) {
@@ -152,11 +152,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return JavaLanguageHelper.getSupportedJavaTypes();
 	}
 
-	@Override
-	public boolean getPackageVisibility() {
-
-		return true;
-	}
+	//	@Override
+	//	public boolean getPa ckageVisibility() {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public String createQualifiedName(String packageName, String nonQualifiedName) {

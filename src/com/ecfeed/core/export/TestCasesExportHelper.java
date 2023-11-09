@@ -38,7 +38,7 @@ import com.ecfeed.core.utils.StringHelper;
 public class TestCasesExportHelper {
 
 	private static final String CLASS_NAME_SEQUENCE = "%class";
-	private static final String PACKAGE_NAME_SEQUENCE = "%package";
+	//private static final String PACKAGE_NAME_SEQUENCE = "%package";
 	private static final String METHOD_NAME_SEQUENCE = "%method";
 	private static final String TEST_SUITE_NAME_SEQUENCE = "%suite";
 	private static final String TEST_CASE_INDEX_NAME_SEQUENCE = "%index";
@@ -68,8 +68,7 @@ public class TestCasesExportHelper {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(method.getClassNode(), extLanguageManager));
-		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getName(method.getClassNode(), extLanguageManager));
 		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 
 		result = replaceParameterNameSequences(method, deployedParameters, result, extLanguageManager);
@@ -91,8 +90,7 @@ public class TestCasesExportHelper {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNameWithoutPackage(methodNode.getClassNode(), extLanguageManager));
-		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(methodNode.getClassNode(), extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getName(methodNode.getClassNode(), extLanguageManager));
 		result = result.replace(METHOD_NAME_SEQUENCE, AbstractNodeHelper.getName(methodNode, extLanguageManager));
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, AbstractNodeHelper.getName(testCaseNode, extLanguageManager));

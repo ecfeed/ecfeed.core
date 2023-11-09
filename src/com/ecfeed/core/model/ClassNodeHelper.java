@@ -61,7 +61,7 @@ public class ClassNodeHelper {
 		return methodNode;
 	}
 
-	public static String getNameWithoutPackage(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = getNonQualifiedName(classNode.getName());
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
@@ -91,12 +91,13 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
-
-		String name = classNode.getName();
-
-		return extLanguageManager.getPackageName(name);
-	}
+	//	public static String getPa ckageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		String name = classNode.getName();
+	//
+	//		return extLanguageManager.getPa ckageName(name);
+	//		return name;
+	//	}
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
@@ -290,12 +291,12 @@ public class ClassNodeHelper {
 		return childCompositeParameterNode;
 	}
 
-	public static String getPackageName(String qualifiedName) {
-
-		int lastDotIndex = qualifiedName.lastIndexOf('.');
-
-		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
-	}
+	//	public static String getPa ckageName(String qualifiedName) {
+	//
+	//		int lastDotIndex = qualifiedName.lastIndexOf('.');
+	//
+	//		return (lastDotIndex == -1)? "" : qualifiedName.substring(0, lastDotIndex);
+	//	}
 
 	public static ClassNode findClassByName(
 			String classNameInIntrLanguage,
@@ -321,7 +322,7 @@ public class ClassNodeHelper {
 			RootNode rootNode) {
 
 		String correctedNameInIntrLanguage = 
-				NodeNameHelper.correctSyntaxClassNameWithoutPackage(name);
+				NodeNameHelper.correctSyntaxOfClassName(name);
 
 		String correctedUniqueName = 
 				correctUniqueness(correctedNameInIntrLanguage, rootNode, availableName);

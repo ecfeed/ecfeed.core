@@ -65,7 +65,6 @@ public class FactoryRenameOperationTest {
 		IModelOperation modelOperation2 =
 				FactoryRenameOperation.getRenameOperation(
 						classNode2,
-						"com.xx",
 						"Class1",
 						extLanguageManagerForJava);
 
@@ -115,7 +114,6 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
 						"method1",
 						extLanguageManagerForJava);
 
@@ -145,7 +143,6 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
 						"method2c",
 						extLanguageManagerForJava);
 
@@ -206,7 +203,6 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
 						"method1",
 						extLanguageManagerForJava);
 
@@ -237,7 +233,6 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodNode2,
-						null,
 						"method2c",
 						extLanguageManagerForJava);
 
@@ -293,7 +288,7 @@ public class FactoryRenameOperationTest {
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
+						/*null,*/
 						"par1",
 						extLanguageManagerForJava);
 
@@ -356,7 +351,6 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
 						"par1c",
 						extLanguageManagerForJava);
 
@@ -371,7 +365,6 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
 						"par 1c",
 						extLanguageManagerForJava);
 
@@ -387,7 +380,6 @@ public class FactoryRenameOperationTest {
 		operation =
 				FactoryRenameOperation.getRenameOperation(
 						methodParameterNode2,
-						null,
 						"p=ar1c",
 						extLanguageManagerForJava);
 

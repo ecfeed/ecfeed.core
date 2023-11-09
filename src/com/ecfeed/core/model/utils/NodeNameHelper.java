@@ -52,7 +52,7 @@ public class NodeNameHelper {
 		return false;
 	}
 
-	public static String correctSyntaxClassNameWithoutPackage(String classNameInIntrLanguage) {
+	public static String correctSyntaxOfClassName(String classNameInIntrLanguage) {
 
 		String corrected = JavaLanguageHelper.correctJavaIdentifier(classNameInIntrLanguage);
 

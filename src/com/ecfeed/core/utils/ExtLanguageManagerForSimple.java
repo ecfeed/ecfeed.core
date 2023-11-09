@@ -132,7 +132,7 @@
 //	}
 //
 //	@Override
-//	public String getPackageName(String name) {
+//	public String getPa-ckageName(String name) {
 //
 //		return "";
 //	}
@@ -140,9 +140,9 @@
 //	@Override
 //	public String getQualifiedName(String qualfiedName) {
 //
-//		final String nameWithoutPackage = QualifiedNameHelper.getNonQualifiedName(qualfiedName);
+//		final String nameWithoutPa-ckage = QualifiedNameHelper.getNonQualifiedName(qualfiedName);
 //
-//		return nameWithoutPackage;
+//		return nameWithoutPa-ckage;
 //	}
 //
 //	@Override
@@ -172,7 +172,7 @@
 //	}
 //
 //	@Override
-//	public boolean getPackageVisibility() {
+//	public boolean getPa-ckageVisibility() {
 //
 //		return false;
 //	}

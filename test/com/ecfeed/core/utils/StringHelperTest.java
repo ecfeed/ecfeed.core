@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.MethodNodeHelper;
+
 public class StringHelperTest{
 
 	@Test
@@ -260,7 +262,7 @@ public class StringHelperTest{
 		String methodSignature = "public void com.ecfeed.test.FlightFinderTest.findFlightsTest" +
 				"(String, String, int, boolean, int, com.ecfeed.test.TicketClass, float)";
 
-		assertEquals("com.ecfeed.test.FlightFinderTest", StringHelper.getPackageWithClass(methodSignature));
+		assertEquals("com.ecfeed.test.FlightFinderTest", MethodNodeHelper.getMethodName(methodSignature));
 	}
 
 	@Test
@@ -268,7 +270,7 @@ public class StringHelperTest{
 
 		String methodSignature = "test.Class1.testMethod(String, String)";
 
-		assertEquals("test.Class1", StringHelper.getPackageWithClass(methodSignature));
+		assertEquals("test.Class1", MethodNodeHelper.getMethodName(methodSignature));
 	}
 
 	@Test
